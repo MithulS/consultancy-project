@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Register from './components/register';
 import RegisterModern from './components/RegisterModern';
-import VerifyOTP from './components/verifyotp';
-import VerifyOTPModern from './components/VerifyOTPModern';
 import VerifyOTPEnhanced from './components/VerifyOTPEnhanced';
-import Login from './components/login';
 import LoginModern from './components/LoginModern';
 import Dashboard from './components/Dashboard';
 import ForgotPassword from './components/ForgotPassword';
@@ -16,19 +12,25 @@ export default function App() {
   useEffect(() => {
     // Handle hash-based routing
     const handleHashChange = () => {
-      let hash = window.location.hash.substring(1) || 'login';
-      
-      // Extract just the path part before any query parameters
-      // E.g., "verify-otp?email=..." becomes "verify-otp"
-      if (hash.includes('?')) {
-        hash = hash.split('?')[0];
-      }
-      
-      // Check if it's reset password page with query params
-      if (window.location.search.includes('token') && window.location.search.includes('email')) {
-        setCurrentPage('reset-password');
-      } else {
-        setCurrentPage(hash);
+      try {
+        let hash = window.location.hash.substring(1) || 'login';
+        console.log('🔀 Route change:', hash);
+        
+        // Extract just the path part before any query parameters
+        // E.g., "verify-otp?email=..." becomes "verify-otp"
+        if (hash.includes('?')) {
+          hash = hash.split('?')[0];
+        }
+        
+        // Check if it's reset password page with query params
+        if (window.location.search.includes('token') && window.location.search.includes('email')) {
+          setCurrentPage('reset-password');
+        } else {
+          setCurrentPage(hash);
+        }
+      } catch (error) {
+        console.error('❌ Route handling error:', error);
+        setCurrentPage('login'); // Fallback to login on error
       }
     };
 

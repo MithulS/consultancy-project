@@ -90,8 +90,14 @@ export default function Register() {
         throw new Error(`Server returned non-JSON response (${res.status}). Server may be misconfigured.`);
       }
       
-      const data = await res.json();
-      console.log('📦 Response data:', data);
+      let data;
+      try {
+        data = await res.json();
+        console.log('📦 Response data:', data);
+      } catch (jsonError) {
+        console.error('❌ JSON parse error:', jsonError);
+        throw new Error(`Server returned invalid JSON. Response status: ${res.status}`);
+      }
       
       if (!res.ok) {
         // Server returned error response
@@ -106,7 +112,13 @@ export default function Register() {
       try {
         localStorage.setItem('pendingVerificationEmail', form.email);
         sessionStorage.setItem('pendingVerificationEmail', form.email);
+        
+        // Set OTP expiry time (10 minutes from now)
+        const expiry = new Date(Date.now() + 10 * 60 * 1000);
+        localStorage.setItem('otpExpiry', expiry.toISOString());
+        
         console.log('📧 Email stored in localStorage and sessionStorage');
+        console.log('⏱️ OTP expiry set to:', expiry.toISOString());
       } catch (storageError) {
         console.error('⚠️ Storage error:', storageError);
         // Continue anyway - URL param will work as backup

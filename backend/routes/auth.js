@@ -12,7 +12,9 @@ const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 // Nodemailer transporter (Gmail App Password recommended)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587, // Use port 587 (TLS) instead of 465 (SSL) - less likely to be blocked
+  secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -39,20 +41,63 @@ function genOTP() {
 }
 
 async function sendOtpEmail(toEmail, name, otpPlain) {
-  const html = `
-    <p>Hi ${name || ''},</p>
-    <p>Your verification code is: <b>${otpPlain}</b></p>
-    <p>This code will expire in 10 minutes.</p>
-  `;
-  const mailOptions = {
-    from: `"No-Reply" <${process.env.EMAIL_USER}>`,
-    to: toEmail,
-    subject: 'Your verification OTP',
-    html
-  };
-
-  // sendMail returns a Promise
-  return transporter.sendMail(mailOptions);
+  // DEVELOPMENT MODE: Log OTP to console if email fails
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+  
+  if (isDevelopment) {
+    console.log('\n' + '='.repeat(60));
+    console.log('📧 OTP EMAIL (DEVELOPMENT MODE)');
+    console.log('='.repeat(60));
+    console.log(`To: ${toEmail}`);
+    console.log(`Name: ${name}`);
+    console.log(`OTP CODE: ${otpPlain}`);
+    console.log(`Expires: 10 minutes`);
+    console.log('='.repeat(60) + '\n');
+    
+    // Try to send email, but don't fail if it times out
+    try {
+      const html = `
+        <p>Hi ${name || ''},</p>
+        <p>Your verification code is: <b>${otpPlain}</b></p>
+        <p>This code will expire in 10 minutes.</p>
+      `;
+      const mailOptions = {
+        from: `"No-Reply" <${process.env.EMAIL_USER}>`,
+        to: toEmail,
+        subject: 'Your verification OTP',
+        html
+      };
+      
+      // Set shorter timeout for email (5 seconds)
+      const sendPromise = transporter.sendMail(mailOptions);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Email timeout')), 5000)
+      );
+      
+      await Promise.race([sendPromise, timeoutPromise]);
+      console.log('✅ Email sent successfully to', toEmail);
+    } catch (emailError) {
+      console.log('⚠️  Email sending failed (using console OTP instead):', emailError.message);
+      // Don't throw error - OTP is already logged to console
+    }
+    
+    // Always succeed in development mode
+    return Promise.resolve({ accepted: [toEmail], response: 'DEV MODE - Check console for OTP' });
+  } else {
+    // PRODUCTION MODE: Must send email successfully
+    const html = `
+      <p>Hi ${name || ''},</p>
+      <p>Your verification code is: <b>${otpPlain}</b></p>
+      <p>This code will expire in 10 minutes.</p>
+    `;
+    const mailOptions = {
+      from: `"No-Reply" <${process.env.EMAIL_USER}>`,
+      to: toEmail,
+      subject: 'Your verification OTP',
+      html
+    };
+    return transporter.sendMail(mailOptions);
+  }
 }
 
 // --------------------- Register ---------------------

@@ -59,18 +59,28 @@ export default function VerifyOTPEnhanced() {
     // Initialize or restore countdown
     const expiryTime = localStorage.getItem('otpExpiry');
     if (expiryTime) {
-      const remaining = Math.floor((new Date(expiryTime) - new Date()) / 1000);
+      const expiryDate = new Date(expiryTime);
+      const now = new Date();
+      const remaining = Math.floor((expiryDate - now) / 1000);
+      
+      console.log('⏱️ Expiry time:', expiryTime);
+      console.log('⏱️ Current time:', now.toISOString());
+      console.log('⏱️ Remaining seconds:', remaining);
+      
       if (remaining > 0) {
         setTimeRemaining(remaining);
-        console.log('⏱️ Countdown restored:', remaining, 'seconds');
+        console.log('✅ Countdown restored:', remaining, 'seconds');
       } else {
-        console.log('⏱️ OTP expired');
+        console.log('❌ OTP expired');
+        setTimeRemaining(0);
         setCanResend(true);
         setMsg('Your OTP has expired. Please request a new one.');
         setMsgType('error');
       }
     } else {
-      // Set initial 10-minute expiry
+      // No expiry found - set initial 10-minute expiry
+      // This shouldn't happen normally as registration sets it
+      console.warn('⚠️ No OTP expiry found, creating new one');
       const expiry = new Date(Date.now() + 10 * 60 * 1000);
       localStorage.setItem('otpExpiry', expiry.toISOString());
       setTimeRemaining(600); // 10 minutes in seconds
@@ -81,7 +91,8 @@ export default function VerifyOTPEnhanced() {
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
-  }, [storedEmail]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
 
   // Countdown timer effect
   useEffect(() => {
