@@ -104,6 +104,7 @@ app.use((req, res) => {
       'POST /api/auth/register',
       'POST /api/auth/verify-otp',
       'POST /api/auth/login',
+      'POST /api/auth/admin-login (requires admin key)',
       'POST /api/auth/resend-otp',
       'GET /api/products',
       'GET /api/products/:id',

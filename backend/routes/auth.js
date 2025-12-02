@@ -462,4 +462,69 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 });
 
+// --------------------- Admin Login ---------------------
+router.post('/admin-login', authLimiter, async (req, res) => {
+  try {
+    const { email, password, adminKey } = req.body;
+    
+    if (!email || !password || !adminKey) {
+      await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Missing credentials' });
+      return res.status(400).json({ msg: 'All fields are required' });
+    }
+
+    // Verify admin key from environment variable
+    const ADMIN_KEY = process.env.ADMIN_KEY || 'admin123secret';
+    
+    if (adminKey !== ADMIN_KEY) {
+      await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Invalid admin key' });
+      return res.status(401).json({ msg: 'Invalid admin access key' });
+    }
+
+    // Find user and verify credentials
+    const user = await User.findOne({ email });
+    if (!user) {
+      await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'User not found' });
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    if (!user.isVerified) {
+      await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Email not verified' });
+      return res.status(400).json({ msg: 'Please verify your email first' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Invalid password' });
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    // Generate JWT token with admin flag
+    const payload = { 
+      userId: user._id,
+      isAdmin: true 
+    };
+    
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
+
+    await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_SUCCESS', req, details: 'Admin logged in successfully' });
+    console.log(`✅ Admin logged in: ${email}`);
+
+    return res.json({ 
+      msg: 'Admin login successful',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        isAdmin: true
+      }
+    });
+  } catch (err) {
+    console.error('Admin login error:', err && err.message ? err.message : err);
+    await logAuditEvent({ email: req.body.email, action: 'ADMIN_LOGIN_FAILED', req, details: err.message });
+    return res.status(500).json({ msg: 'Server error', error: err && err.message ? err.message : String(err) });
+  }
+});
+
 module.exports = router;

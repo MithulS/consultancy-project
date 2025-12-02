@@ -5,6 +5,8 @@ import LoginModern from './components/LoginModern';
 import Dashboard from './components/Dashboard';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('login');
@@ -52,6 +54,10 @@ export default function App() {
         return <ResetPassword />;
       case 'dashboard':
         return <Dashboard />;
+      case 'secret-admin-login':
+        return <AdminLogin />;
+      case 'admin-dashboard':
+        return <AdminDashboard />;
       case 'login':
       default:
         return <LoginModern />;
