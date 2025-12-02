@@ -91,6 +91,7 @@ app.get('/api/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/products', require('./routes/products'));
 
 // 404 handler
 app.use((req, res) => {
@@ -103,7 +104,12 @@ app.use((req, res) => {
       'POST /api/auth/register',
       'POST /api/auth/verify-otp',
       'POST /api/auth/login',
-      'POST /api/auth/resend-otp'
+      'POST /api/auth/resend-otp',
+      'GET /api/products',
+      'GET /api/products/:id',
+      'POST /api/products (auth required)',
+      'PUT /api/products/:id (auth required)',
+      'DELETE /api/products/:id (auth required)'
     ]
   });
 });
