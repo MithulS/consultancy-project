@@ -2,6 +2,15 @@
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Helper function to get full image URL
+const getImageUrl = (imageUrl) => {
+  if (!imageUrl) return 'https://via.placeholder.com/300x300?text=No+Image';
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  }
+  return `${API}${imageUrl}`;
+};
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
@@ -9,7 +18,6 @@ export default function Dashboard() {
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  const [showAdmin, setShowAdmin] = useState(false);
 
   const categories = ['All', 'Smartphones', 'Laptops', 'Tablets', 'Accessories', 'Audio', 'Cameras', 'Gaming', 'Wearables', 'Smart Home'];
 
@@ -257,17 +265,7 @@ export default function Dashboard() {
       <div style={styles.header}>
         <h1 style={styles.logo}>🛒 ElectroStore</h1>
         <div style={styles.userSection}>
-          {user && (
-            <>
-              <span style={styles.userName}>👤 {user.name}</span>
-              <button 
-                style={{...styles.button, ...styles.adminBtn}}
-                onClick={() => setShowAdmin(!showAdmin)}
-              >
-                ⚙️ Admin Panel
-              </button>
-            </>
-          )}
+          {user && <span style={styles.userName}>👤 {user.name}</span>}
           <button 
             style={{...styles.button, ...styles.logoutBtn}}
             onClick={logout}
@@ -276,24 +274,6 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-
-      {/* Admin Panel Toggle */}
-      {showAdmin && (
-        <div style={{ padding: '24px 32px', backgroundColor: '#fef3c7', borderBottom: '2px solid #fbbf24' }}>
-          <h3 style={{ margin: '0 0 16px 0', color: '#92400e' }}>⚡ Admin Panel</h3>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button style={{...styles.button, backgroundColor: '#10b981', color: 'white'}}>
-              ➕ Add New Product
-            </button>
-            <button style={{...styles.button, backgroundColor: '#3b82f6', color: 'white'}}>
-              📦 Manage Inventory
-            </button>
-            <button style={{...styles.button, backgroundColor: '#8b5cf6', color: 'white'}}>
-              📊 View Analytics
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Filters Section */}
       <div style={styles.filtersSection}>
@@ -343,7 +323,7 @@ export default function Dashboard() {
               }}
             >
               <img 
-                src={product.imageUrl} 
+                src={getImageUrl(product.imageUrl)} 
                 alt={product.name}
                 style={styles.productImage}
                 onError={(e) => {
@@ -355,7 +335,7 @@ export default function Dashboard() {
                 <h3 style={styles.productName}>{product.name}</h3>
                 <p style={styles.productDescription}>{product.description}</p>
                 <div style={styles.priceContainer}>
-                  <span style={styles.price}>${product.price.toFixed(2)}</span>
+                  <span style={styles.price}>₹{product.price.toFixed(2)}</span>
                   <span style={{
                     ...styles.stockBadge,
                     ...(product.inStock ? styles.inStock : styles.outOfStock)

@@ -27,14 +27,27 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// verify transporter on startup
-transporter.verify((err, success) => {
-  if (err) {
-    console.error('Mail transporter error (verify):', err && err.message ? err.message : err);
-  } else {
-    console.log('Mail transporter ready');
-  }
+// DEBUG ROUTE - Remove in production
+router.get('/debug-env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    isDevelopment: process.env.NODE_ENV !== 'production',
+    EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT SET',
+    EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT SET'
+  });
 });
+
+// verify transporter on startup (non-blocking, with timeout)
+setTimeout(() => {
+  transporter.verify((err, success) => {
+    if (err) {
+      console.error('⚠️  Mail transporter error (verify):', err && err.message ? err.message : err);
+      console.log('📧 Email delivery unavailable - using console OTP in development mode');
+    } else {
+      console.log('✅ Mail transporter ready');
+    }
+  });
+}, 1000); // Verify after 1 second, don't block startup
 
 function genOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -44,44 +57,47 @@ async function sendOtpEmail(toEmail, name, otpPlain) {
   // DEVELOPMENT MODE: Log OTP to console if email fails
   const isDevelopment = process.env.NODE_ENV !== 'production';
   
+  console.log('🔍 DEBUG: sendOtpEmail called with:', { toEmail, name, otpPlain, isDevelopment, NODE_ENV: process.env.NODE_ENV });
+  
   if (isDevelopment) {
-    console.log('\n' + '='.repeat(60));
-    console.log('📧 OTP EMAIL (DEVELOPMENT MODE)');
-    console.log('='.repeat(60));
-    console.log(`To: ${toEmail}`);
-    console.log(`Name: ${name}`);
-    console.log(`OTP CODE: ${otpPlain}`);
-    console.log(`Expires: 10 minutes`);
-    console.log('='.repeat(60) + '\n');
+    console.log('\n' + '█'.repeat(70));
+    console.log('█' + ' '.repeat(68) + '█');
+    console.log('█  📧 OTP EMAIL (DEVELOPMENT MODE)' + ' '.repeat(33) + '█');
+    console.log('█' + ' '.repeat(68) + '█');
+    console.log('█'.repeat(70));
+    console.log('█  To: ' + toEmail + ' '.repeat(Math.max(0, 61 - toEmail.length)) + '█');
+    console.log('█  Name: ' + (name || '') + ' '.repeat(Math.max(0, 59 - (name || '').length)) + '█');
+    console.log('█' + ' '.repeat(68) + '█');
+    console.log('█  🔑 OTP CODE: ' + otpPlain + ' '.repeat(49) + '█');
+    console.log('█' + ' '.repeat(68) + '█');
+    console.log('█  ⏰ Expires: 10 minutes' + ' '.repeat(43) + '█');
+    console.log('█' + ' '.repeat(68) + '█');
+    console.log('█'.repeat(70) + '\n');
     
-    // Try to send email, but don't fail if it times out
-    try {
-      const html = `
-        <p>Hi ${name || ''},</p>
-        <p>Your verification code is: <b>${otpPlain}</b></p>
-        <p>This code will expire in 10 minutes.</p>
-      `;
-      const mailOptions = {
-        from: `"No-Reply" <${process.env.EMAIL_USER}>`,
-        to: toEmail,
-        subject: 'Your verification OTP',
-        html
-      };
-      
-      // Set shorter timeout for email (5 seconds)
-      const sendPromise = transporter.sendMail(mailOptions);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email timeout')), 5000)
-      );
-      
-      await Promise.race([sendPromise, timeoutPromise]);
-      console.log('✅ Email sent successfully to', toEmail);
-    } catch (emailError) {
-      console.log('⚠️  Email sending failed (using console OTP instead):', emailError.message);
-      // Don't throw error - OTP is already logged to console
-    }
+    // Try to send email in background, but don't wait for it
+    // Set a very short timeout so we don't block registration
+    setTimeout(async () => {
+      try {
+        const html = `
+          <p>Hi ${name || ''},</p>
+          <p>Your verification code is: <b>${otpPlain}</b></p>
+          <p>This code will expire in 10 minutes.</p>
+        `;
+        const mailOptions = {
+          from: `"No-Reply" <${process.env.EMAIL_USER}>`,
+          to: toEmail,
+          subject: 'Your verification OTP',
+          html
+        };
+        
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Email sent successfully to', toEmail);
+      } catch (emailError) {
+        console.log('⚠️  Email sending failed (using console OTP instead):', emailError.message);
+      }
+    }, 100); // Try in background, don't block
     
-    // Always succeed in development mode
+    // Always succeed immediately in development mode
     return Promise.resolve({ accepted: [toEmail], response: 'DEV MODE - Check console for OTP' });
   } else {
     // PRODUCTION MODE: Must send email successfully
@@ -99,6 +115,26 @@ async function sendOtpEmail(toEmail, name, otpPlain) {
     return transporter.sendMail(mailOptions);
   }
 }
+
+// --------------------- TEST ROUTE (Remove in production) ---------------------
+router.post('/test-otp-display', async (req, res) => {
+  try {
+    const testEmail = 'test@example.com';
+    const testName = 'Test User';
+    const testOTP = genOTP();
+    
+    console.log('\n🧪 TEST ROUTE: Manually triggering OTP display...\n');
+    await sendOtpEmail(testEmail, testName, testOTP);
+    
+    res.json({ 
+      msg: 'OTP display test complete. Check server console for OTP box.',
+      otp: testOTP  // Only for testing
+    });
+  } catch (error) {
+    console.error('Test route error:', error);
+    res.status(500).json({ msg: 'Test failed', error: error.message });
+  }
+});
 
 // --------------------- Register ---------------------
 router.post('/register', registrationLimiter, async (req, res) => {
@@ -465,19 +501,11 @@ router.get('/profile', authMiddleware, async (req, res) => {
 // --------------------- Admin Login ---------------------
 router.post('/admin-login', authLimiter, async (req, res) => {
   try {
-    const { email, password, adminKey } = req.body;
+    const { email, password } = req.body;
     
-    if (!email || !password || !adminKey) {
+    if (!email || !password) {
       await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Missing credentials' });
       return res.status(400).json({ msg: 'All fields are required' });
-    }
-
-    // Verify admin key from environment variable
-    const ADMIN_KEY = process.env.ADMIN_KEY || 'admin123secret';
-    
-    if (adminKey !== ADMIN_KEY) {
-      await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Invalid admin key' });
-      return res.status(401).json({ msg: 'Invalid admin access key' });
     }
 
     // Find user and verify credentials

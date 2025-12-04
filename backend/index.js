@@ -89,9 +89,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve static files - uploaded images
+app.use('/uploads', express.static('uploads'));
+
 // API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
+app.use('/api/admin', require('./routes/adminManagement'));
+app.use('/api/upload', require('./routes/upload'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 // 404 handler
 app.use((req, res) => {
@@ -108,9 +115,20 @@ app.use((req, res) => {
       'POST /api/auth/resend-otp',
       'GET /api/products',
       'GET /api/products/:id',
-      'POST /api/products (auth required)',
-      'PUT /api/products/:id (auth required)',
-      'DELETE /api/products/:id (auth required)'
+      'POST /api/products (admin required)',
+      'PUT /api/products/:id (admin required)',
+      'DELETE /api/products/:id (admin required)',
+      'POST /api/orders (auth required)',
+      'GET /api/orders/my-orders (auth required)',
+      'GET /api/orders/:id (auth required)',
+      'GET /api/orders (admin required)',
+      'PUT /api/orders/:id/status (admin required)',
+      'GET /api/reviews/product/:productId',
+      'POST /api/reviews (auth required, verified purchase only)',
+      'PUT /api/reviews/:id (auth required, own review)',
+      'DELETE /api/reviews/:id (auth required, own review)',
+      'GET /api/reviews/my-reviews (auth required)',
+      'GET /api/reviews/can-review/:productId (auth required)'
     ]
   });
 });

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AdminLogin() {
-  const [form, setForm] = useState({ email: '', password: '', adminKey: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +11,7 @@ export default function AdminLogin() {
   async function handleSubmit(e) {
     e.preventDefault();
     
-    if (!form.email || !form.password || !form.adminKey) {
+    if (!form.email || !form.password) {
       setMsg('❌ All fields are required');
       return;
     }
@@ -250,23 +250,6 @@ export default function AdminLogin() {
                 {showPassword ? '👁️' : '👁️‍🗨️'}
               </button>
             </div>
-          </div>
-
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>
-              🛡️ Admin Access Key
-            </label>
-            <input
-              type="password"
-              style={styles.input}
-              value={form.adminKey}
-              onChange={(e) => setForm({ ...form, adminKey: e.target.value })}
-              placeholder="Enter admin key"
-              required
-              autoComplete="off"
-              onFocus={(e) => e.target.style.borderColor = '#1e1b4b'}
-              onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-            />
           </div>
 
           {msg && (

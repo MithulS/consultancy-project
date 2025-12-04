@@ -58,11 +58,14 @@ const productSchema = new mongoose.Schema({
     type: Number,
     min: 0,
     max: 5,
-    default: 0
+    default: 0,
+    // This is calculated from customer reviews, not set by admin
+    // See Review model and calculateProductRating function
   },
   numReviews: {
     type: Number,
-    default: 0
+    default: 0,
+    // This is calculated from customer reviews count
   },
   specifications: {
     type: Map,
@@ -83,10 +86,17 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Update inStock based on stock quantity
-productSchema.pre('save', function(next) {
+// Update inStock based on stock quantity before saving
+productSchema.pre('save', function() {
   this.inStock = this.stock > 0;
-  next();
+});
+
+// Also handle findOneAndUpdate scenarios
+productSchema.pre('findOneAndUpdate', function() {
+  const update = this.getUpdate();
+  if (update.stock !== undefined) {
+    update.inStock = update.stock > 0;
+  }
 });
 
 // Index for searching and filtering

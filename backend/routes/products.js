@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
-const verifyToken = require('../middleware/auth');
+const { verifyToken, verifyAdmin } = require('../middleware/auth');
 
 // Get all products (public) - with filtering, sorting, pagination
 router.get('/', async (req, res) => {
@@ -81,8 +81,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create product (admin only - requires authentication)
-router.post('/', verifyToken, async (req, res) => {
+// Create product (admin only - requires admin token)
+router.post('/', verifyAdmin, async (req, res) => {
   try {
     const {
       name,
@@ -95,8 +95,6 @@ router.post('/', verifyToken, async (req, res) => {
       brand,
       stock,
       featured,
-      rating,
-      numReviews,
       specifications,
       tags
     } = req.body;
@@ -109,6 +107,8 @@ router.post('/', verifyToken, async (req, res) => {
       });
     }
 
+    const stockQuantity = stock || 0;
+    
     const product = new Product({
       name,
       description,
@@ -118,10 +118,12 @@ router.post('/', verifyToken, async (req, res) => {
       images: images || [],
       category,
       brand,
-      stock: stock || 0,
+      stock: stockQuantity,
+      inStock: stockQuantity > 0, // Explicitly set inStock based on stock
       featured: featured || false,
-      rating: rating || 0,
-      numReviews: numReviews || 0,
+      // rating and numReviews are calculated from customer reviews, not set by admin
+      rating: 0,
+      numReviews: 0,
       specifications: specifications || {},
       tags: tags || [],
       createdBy: req.userId
@@ -140,8 +142,8 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// Update product (admin only)
-router.put('/:id', verifyToken, async (req, res) => {
+// Update product (admin only - requires admin token)
+router.put('/:id', verifyAdmin, async (req, res) => {
   try {
     const updates = req.body;
     
@@ -150,16 +152,26 @@ router.put('/:id', verifyToken, async (req, res) => {
     delete updates.createdBy;
     delete updates.createdAt;
     delete updates.updatedAt;
+    delete updates.rating; // Rating is calculated from customer reviews, not set by admin
+    delete updates.numReviews; // Review count is calculated, not set by admin
 
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { $set: updates },
-      { new: true, runValidators: true }
-    );
-
+    // Find the product first
+    const product = await Product.findById(req.params.id);
+    
     if (!product) {
       return res.status(404).json({ success: false, msg: 'Product not found' });
     }
+
+    // Apply updates
+    Object.keys(updates).forEach(key => {
+      product[key] = updates[key];
+    });
+
+    // Auto-calculate inStock based on stock quantity
+    product.inStock = product.stock > 0;
+
+    // Save (this triggers the pre-save hook)
+    await product.save();
 
     res.json({ 
       success: true, 
@@ -172,8 +184,8 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Delete product (admin only)
-router.delete('/:id', verifyToken, async (req, res) => {
+// Delete product (admin only - requires admin token)
+router.delete('/:id', verifyAdmin, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 

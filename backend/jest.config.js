@@ -6,7 +6,9 @@ module.exports = {
     'models/**/*.js',
     'middleware/**/*.js',
     'utils/**/*.js',
-    '!**/node_modules/**'
+    'config/**/*.js',
+    '!**/node_modules/**',
+    '!**/tests/**'
   ],
   testMatch: ['**/tests/**/*.test.js'],
   verbose: true,
@@ -14,5 +16,14 @@ module.exports = {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
-  testTimeout: 30000
+  testTimeout: 30000,
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 75,
+      lines: 80,
+      statements: 80
+    }
+  },
+  maxWorkers: 1 // Run tests sequentially to avoid conflicts
 };
