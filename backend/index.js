@@ -99,6 +99,13 @@ app.use('/api/admin', require('./routes/adminManagement'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/inventory', require('./routes/inventory'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/payments', require('./routes/payments'));
+app.use('/api/wishlist', require('./routes/wishlist'));
+app.use('/api/comparison', require('./routes/comparison'));
+app.use('/api/cart', require('./routes/cart'));
 
 // 404 handler
 app.use((req, res) => {
@@ -128,7 +135,14 @@ app.use((req, res) => {
       'PUT /api/reviews/:id (auth required, own review)',
       'DELETE /api/reviews/:id (auth required, own review)',
       'GET /api/reviews/my-reviews (auth required)',
-      'GET /api/reviews/can-review/:productId (auth required)'
+      'GET /api/reviews/can-review/:productId (auth required)',
+      'GET /api/inventory/logs/:productId (admin required)',
+      'GET /api/inventory/logs (admin required)',
+      'GET /api/inventory/stats (admin required)',
+      'GET /api/inventory/alerts/low-stock (admin required)',
+      'GET /api/inventory/alerts/out-of-stock (admin required)',
+      'POST /api/inventory/adjust (admin required)',
+      'GET /api/inventory/report (admin required)'
     ]
   });
 });

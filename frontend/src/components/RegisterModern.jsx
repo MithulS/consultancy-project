@@ -1,9 +1,10 @@
 // Modern, attractive Registration component with single email
 import React, { useState } from 'react';
+import PasswordStrength from './PasswordStrength';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function Register() {
-  const [form, setForm] = useState({ username: '', name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [msg, setMsg] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -48,8 +49,6 @@ export default function Register() {
     e.preventDefault();
     
     const newErrors = {};
-    if (!form.username.trim()) newErrors.username = 'Username is required';
-    if (form.username.length < 3) newErrors.username = 'Username must be at least 3 characters';
     if (!form.name.trim()) newErrors.name = 'Full name is required';
     if (!validateEmail(form.email)) newErrors.email = 'Invalid email format';
     if (passwordErrors.length > 0) newErrors.password = 'Password does not meet requirements';
@@ -67,7 +66,7 @@ export default function Register() {
     try {
       console.log('🚀 Initiating registration request...');
       console.log('📍 API URL:', `${API}/api/auth/register`);
-      console.log('📦 Payload:', { username: form.username, name: form.name, email: form.email });
+      console.log('📦 Payload:', { name: form.name, email: form.email });
       
       // Add timeout to detect hung requests
       const controller = new AbortController();
@@ -125,7 +124,7 @@ export default function Register() {
       }
       
       // Clear form
-      setForm({ username: '', name: '', email: '', password: '' });
+      setForm({ name: '', email: '', password: '' });
       
       // Redirect with email as URL parameter (backup method)
       const encodedEmail = encodeURIComponent(form.email);
@@ -373,27 +372,6 @@ export default function Register() {
 
         <form onSubmit={submit}>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Username</label>
-            <input 
-              type="text"
-              placeholder="Choose a unique username"
-              value={form.username} 
-              onChange={e => setForm({...form, username: e.target.value})} 
-              style={{
-                ...styles.input,
-                ...(errors.username && styles.inputError)
-              }}
-              required 
-              autoComplete="username"
-            />
-            {errors.username && (
-              <div style={styles.errorText}>
-                <span>⚠️</span> {errors.username}
-              </div>
-            )}
-          </div>
-
-          <div style={styles.inputGroup}>
             <label style={styles.label}>Full Name</label>
             <input 
               type="text"
@@ -463,44 +441,7 @@ export default function Register() {
               </button>
             </div>
             
-            {form.password && (
-              <>
-                <div style={styles.strengthBar}>
-                  <div style={{
-                    ...styles.strengthFill,
-                    width: getStrengthWidth(),
-                    backgroundColor: getStrengthColor()
-                  }}></div>
-                </div>
-                <div style={{ ...styles.strengthText, color: getStrengthColor() }}>
-                  Password Strength: {passwordStrength}
-                </div>
-              </>
-            )}
-            
-            {form.password && (focusedField === 'password' || passwordErrors.length > 0) && (
-              <div style={styles.requirements}>
-                <div style={{ fontWeight: '600', marginBottom: '8px', color: '#2d3748' }}>
-                  Password must contain:
-                </div>
-                {[
-                  { text: 'At least 8 characters', valid: form.password.length >= 8 },
-                  { text: 'One uppercase letter', valid: /[A-Z]/.test(form.password) },
-                  { text: 'One lowercase letter', valid: /[a-z]/.test(form.password) },
-                  { text: 'One number', valid: /[0-9]/.test(form.password) },
-                  { text: 'One special character', valid: /[!@#$%^&*]/.test(form.password) }
-                ].map((req, i) => (
-                  <div key={i} style={styles.requirementItem}>
-                    <span style={{ fontSize: '16px' }}>
-                      {req.valid ? '✅' : '⭕'}
-                    </span>
-                    <span style={{ color: req.valid ? '#48bb78' : '#718096' }}>
-                      {req.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+            {form.password && <PasswordStrength password={form.password} />}
             
             {errors.password && (
               <div style={styles.errorText}>

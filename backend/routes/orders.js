@@ -1,15 +1,24 @@
-// Order routes - Customer orders
+// Order routes - Customer orders with comprehensive inventory management
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/order');
 const Product = require('../models/product');
 const { verifyToken, verifyAdmin } = require('../middleware/auth');
+const {
+  reserveStock,
+  confirmStockDeduction,
+  restoreStock,
+  checkStockAvailability,
+  getInventoryStats,
+  getLowStockProducts,
+  getOutOfStockProducts
+} = require('../utils/inventoryManager');
 
 // Create an order (customers only)
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { items, shippingAddress, paymentMethod } = req.body;
-    const userId = req.userId;
+    const userId = req.user.userId;
 
     // Validate required fields
     if (!items || items.length === 0) {
@@ -26,9 +35,27 @@ router.post('/', verifyToken, async (req, res) => {
       });
     }
 
+    // Check stock availability BEFORE processing
+    const stockCheck = await checkStockAvailability(items);
+    const unavailableItems = stockCheck.filter(item => !item.available);
+
+    if (unavailableItems.length > 0) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Some items are out of stock or have insufficient quantity',
+        unavailableItems: unavailableItems.map(item => ({
+          product: item.productName,
+          requested: item.requestedQuantity,
+          available: item.availableStock,
+          reason: item.reason
+        }))
+      });
+    }
+
     // Validate and process items
     let totalAmount = 0;
     const orderItems = [];
+    const stockReservations = [];
 
     for (const item of items) {
       const product = await Product.findById(item.productId);
@@ -37,13 +64,6 @@ router.post('/', verifyToken, async (req, res) => {
         return res.status(404).json({
           success: false,
           msg: `Product not found: ${item.productId}`
-        });
-      }
-
-      if (!product.inStock || product.stock < item.quantity) {
-        return res.status(400).json({
-          success: false,
-          msg: `Product "${product.name}" is out of stock or insufficient quantity`
         });
       }
 
@@ -56,29 +76,52 @@ router.post('/', verifyToken, async (req, res) => {
       });
 
       totalAmount += product.price * item.quantity;
-
-      // Decrease product stock
-      product.stock -= item.quantity;
-      product.inStock = product.stock > 0;
-      await product.save();
+      stockReservations.push({
+        productId: product._id,
+        quantity: item.quantity
+      });
     }
 
-    // Create order
+    // Create order first
     const order = new Order({
       user: userId,
       items: orderItems,
       totalAmount,
       shippingAddress,
       paymentMethod: paymentMethod || 'cod',
-      paymentStatus: paymentMethod === 'cod' ? 'pending' : 'completed'
+      paymentStatus: paymentMethod === 'cod' ? 'pending' : 'completed',
+      stockReserved: true,
+      stockDeducted: false
     });
 
     await order.save();
 
+    // Reserve stock for each product
+    try {
+      for (const reservation of stockReservations) {
+        await reserveStock(
+          reservation.productId,
+          reservation.quantity,
+          userId,
+          order._id
+        );
+      }
+    } catch (stockError) {
+      // If stock reservation fails, delete the order
+      await Order.findByIdAndDelete(order._id);
+      
+      return res.status(400).json({
+        success: false,
+        msg: 'Failed to reserve stock',
+        error: stockError.message
+      });
+    }
+
     res.status(201).json({
       success: true,
-      msg: 'Order placed successfully',
-      order
+      msg: 'Order placed successfully. Stock has been reserved.',
+      order,
+      notification: 'Your order has been received and is being processed. Inventory has been updated.'
     });
   } catch (err) {
     console.error('Create order error:', err);
@@ -93,7 +136,7 @@ router.post('/', verifyToken, async (req, res) => {
 // Get user's orders (customers only)
 router.get('/my-orders', verifyToken, async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
     const { page = 1, limit = 10 } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
@@ -141,7 +184,7 @@ router.get('/:id', verifyToken, async (req, res) => {
     }
 
     // Check authorization - user can only view their own orders unless admin
-    if (order.user._id.toString() !== req.userId && !req.isAdmin) {
+    if (order.user._id.toString() !== req.user.userId && !req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         msg: 'You can only view your own orders'
@@ -203,10 +246,11 @@ router.get('/', verifyAdmin, async (req, res) => {
   }
 });
 
-// Update order status (admin only)
+// Update order status (admin only) - WITH INVENTORY MANAGEMENT
 router.put('/:id/status', verifyAdmin, async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, cancelReason } = req.body;
+    const adminUserId = req.user.userId;
 
     if (!status) {
       return res.status(400).json({
@@ -223,6 +267,90 @@ router.put('/:id/status', verifyAdmin, async (req, res) => {
       });
     }
 
+    const order = await Order.findById(req.params.id).populate('items.product');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Order not found'
+      });
+    }
+
+    const previousStatus = order.status;
+
+    // Handle DELIVERED status - Confirm stock deduction
+    if (status === 'delivered' && previousStatus !== 'delivered') {
+      const stockResults = await confirmStockDeduction(order, adminUserId);
+      
+      order.status = status;
+      order.deliveredAt = new Date();
+      order.stockDeducted = true;
+      await order.save();
+
+      return res.json({
+        success: true,
+        msg: 'Order marked as delivered. Stock deduction confirmed.',
+        order,
+        stockUpdate: stockResults,
+        notification: 'Inventory has been updated. Customer has been notified of delivery.'
+      });
+    }
+
+    // Handle CANCELLED status - Restore stock
+    if (status === 'cancelled' && previousStatus !== 'cancelled') {
+      if (order.stockDeducted) {
+        return res.status(400).json({
+          success: false,
+          msg: 'Cannot cancel order - already delivered and stock deducted'
+        });
+      }
+
+      const stockResults = await restoreStock(
+        order,
+        adminUserId,
+        cancelReason || 'Order cancelled by admin'
+      );
+      
+      order.status = status;
+      order.cancelledAt = new Date();
+      order.cancelReason = cancelReason || 'Cancelled by admin';
+      order.stockReserved = false;
+      await order.save();
+
+      return res.json({
+        success: true,
+        msg: 'Order cancelled. Stock has been restored to inventory.',
+        order,
+        stockUpdate: stockResults,
+        notification: 'Customer has been notified. Stock returned to inventory.'
+      });
+    }
+
+    // Regular status update (no inventory impact)
+    order.status = status;
+    await order.save();
+
+    res.json({
+      success: true,
+      msg: `Order status updated to ${status}`,
+      order
+    });
+  } catch (err) {
+    console.error('Update order status error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Cancel order (customer can cancel their own pending orders)
+router.put('/:id/cancel', verifyToken, async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const userId = req.user.userId;
+
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -232,21 +360,127 @@ router.put('/:id/status', verifyAdmin, async (req, res) => {
       });
     }
 
-    order.status = status;
-    
-    if (status === 'delivered') {
-      order.deliveredAt = new Date();
+    // Verify ownership
+    if (order.user.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        msg: 'You can only cancel your own orders'
+      });
     }
 
+    // Can only cancel pending or processing orders
+    if (!['pending', 'processing'].includes(order.status)) {
+      return res.status(400).json({
+        success: false,
+        msg: `Cannot cancel order with status: ${order.status}`
+      });
+    }
+
+    // Restore stock
+    const stockResults = await restoreStock(
+      order,
+      userId,
+      reason || 'Cancelled by customer'
+    );
+
+    order.status = 'cancelled';
+    order.cancelledAt = new Date();
+    order.cancelReason = reason || 'Cancelled by customer';
+    order.stockReserved = false;
     await order.save();
 
     res.json({
       success: true,
-      msg: 'Order status updated successfully',
-      order
+      msg: 'Order cancelled successfully. Stock has been restored.',
+      order,
+      stockUpdate: stockResults,
+      notification: 'Your order has been cancelled. Stock returned to inventory.'
     });
   } catch (err) {
-    console.error('Update order status error:', err);
+    console.error('Cancel order error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Get inventory statistics (admin only)
+router.get('/admin/inventory-stats', verifyAdmin, async (req, res) => {
+  try {
+    const { productId } = req.query;
+    
+    const stats = await getInventoryStats(productId || null);
+    const lowStock = await getLowStockProducts(10);
+    const outOfStock = await getOutOfStockProducts();
+
+    res.json({
+      success: true,
+      inventoryStats: stats,
+      alerts: {
+        lowStock: lowStock.length,
+        outOfStock: outOfStock.length,
+        lowStockProducts: lowStock,
+        outOfStockProducts: outOfStock
+      }
+    });
+  } catch (err) {
+    console.error('Get inventory stats error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Get order history with inventory impact (admin only)
+router.get('/admin/order-history', verifyAdmin, async (req, res) => {
+  try {
+    const { startDate, endDate, page = 1, limit = 50 } = req.query;
+
+    const query = {};
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) query.createdAt.$gte = new Date(startDate);
+      if (endDate) query.createdAt.$lte = new Date(endDate);
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const orders = await Order.find(query)
+      .sort('-createdAt')
+      .skip(skip)
+      .limit(Number(limit))
+      .populate('user', 'name email')
+      .populate('items.product', 'name stock');
+
+    const total = await Order.countDocuments(query);
+
+    // Calculate metrics
+    const metrics = {
+      totalOrders: total,
+      delivered: await Order.countDocuments({ ...query, status: 'delivered' }),
+      cancelled: await Order.countDocuments({ ...query, status: 'cancelled' }),
+      pending: await Order.countDocuments({ ...query, status: 'pending' }),
+      processing: await Order.countDocuments({ ...query, status: 'processing' }),
+      shipped: await Order.countDocuments({ ...query, status: 'shipped' })
+    };
+
+    res.json({
+      success: true,
+      orders,
+      metrics,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        pages: Math.ceil(total / Number(limit))
+      }
+    });
+  } catch (err) {
+    console.error('Get order history error:', err);
     res.status(500).json({
       success: false,
       msg: 'Server error',

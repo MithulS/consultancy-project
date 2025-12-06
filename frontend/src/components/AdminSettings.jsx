@@ -1,8 +1,41 @@
-// Admin Settings Component - Secure credential management
+// Admin Settings Component - Secure credential management with modern UI
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AdminSettings() {
+  // Inject CSS animations
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+      @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
   // ============================================================
   // STATE MANAGEMENT
   // ============================================================
@@ -17,6 +50,7 @@ export default function AdminSettings() {
     currentPassword: '',
     newEmail: '',
     newUsername: '',
+    newPhoneNumber: '',
     newPassword: '',
     confirmPassword: ''
   });
@@ -92,7 +126,7 @@ export default function AdminSettings() {
     }
 
     // At least one field must be filled
-    if (!formData.newEmail && !formData.newUsername && !formData.newPassword) {
+    if (!formData.newEmail && !formData.newUsername && !formData.newPhoneNumber && !formData.newPassword) {
       showMessage('error', 'Please fill at least one field to update');
       setUpdating(false);
       return;
@@ -140,6 +174,9 @@ export default function AdminSettings() {
       if (formData.newUsername && formData.newUsername.trim()) {
         requestBody.newUsername = formData.newUsername.trim();
       }
+      if (formData.newPhoneNumber && formData.newPhoneNumber.trim()) {
+        requestBody.newPhoneNumber = formData.newPhoneNumber.trim();
+      }
       if (formData.newPassword && formData.newPassword.trim()) {
         requestBody.newPassword = formData.newPassword.trim();
         requestBody.confirmPassword = formData.confirmPassword.trim();
@@ -178,6 +215,7 @@ export default function AdminSettings() {
           currentPassword: '',
           newEmail: '',
           newUsername: '',
+          newPhoneNumber: '',
           newPassword: '',
           confirmPassword: ''
         });
@@ -279,82 +317,108 @@ export default function AdminSettings() {
   const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
 
   // ============================================================
-  // STYLES
+  // MODERN DESIGN SYSTEM STYLES
   // ============================================================
   
   const styles = {
     container: {
       minHeight: '100vh',
-      backgroundColor: '#f5f7fa'
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+      backgroundSize: '200% 200%',
+      animation: 'gradientFlow 15s ease infinite'
     },
     header: {
-      backgroundColor: '#1e1b4b',
-      color: 'white',
-      padding: '20px 32px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      background: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(20px)',
+      color: '#1e1b4b',
+      padding: '24px 40px',
+      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.3)'
     },
     title: {
-      fontSize: '28px',
+      fontSize: '32px',
       fontWeight: '700',
-      margin: 0
+      margin: 0,
+      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px'
     },
     backBtn: {
-      padding: '10px 20px',
-      borderRadius: '8px',
+      padding: '12px 24px',
+      borderRadius: '12px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '14px',
+      fontSize: '15px',
       fontWeight: '600',
-      backgroundColor: '#3b82f6',
+      background: 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
+      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+      transition: 'all 0.3s ease',
       transition: 'all 0.2s'
     },
     content: {
-      maxWidth: '800px',
-      margin: '40px auto',
-      padding: '0 20px'
+      maxWidth: '900px',
+      margin: '48px auto',
+      padding: '0 24px',
+      animation: 'fadeIn 0.6s ease-out'
     },
     card: {
-      backgroundColor: 'white',
-      borderRadius: '16px',
-      padding: '32px',
-      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-      marginBottom: '24px'
+      background: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(20px)',
+      borderRadius: '24px',
+      padding: '40px',
+      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2), 0 2px 8px rgba(0, 0, 0, 0.05)',
+      marginBottom: '28px',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      animation: 'slideUp 0.7s ease-out'
     },
     sectionTitle: {
-      fontSize: '20px',
-      fontWeight: '600',
-      color: '#1e1b4b',
-      marginBottom: '24px',
-      borderBottom: '2px solid #e5e7eb',
-      paddingBottom: '12px'
+      fontSize: '24px',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      marginBottom: '28px',
+      borderBottom: '3px solid',
+      borderImage: 'linear-gradient(90deg, #667eea, #764ba2, transparent) 1',
+      paddingBottom: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px'
     },
     infoGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '16px',
-      marginBottom: '24px'
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gap: '20px',
+      marginBottom: '32px'
     },
     infoItem: {
-      padding: '16px',
-      backgroundColor: '#f9fafb',
-      borderRadius: '8px',
-      border: '1px solid #e5e7eb'
+      padding: '20px',
+      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(244, 147, 251, 0.05))',
+      borderRadius: '16px',
+      border: '2px solid rgba(102, 126, 234, 0.15)',
+      transition: 'all 0.3s ease',
+      cursor: 'default'
     },
     label: {
-      fontSize: '12px',
-      color: '#6b7280',
-      fontWeight: '600',
+      fontSize: '11px',
+      color: '#667eea',
+      fontWeight: '700',
       textTransform: 'uppercase',
-      marginBottom: '4px'
+      letterSpacing: '1px',
+      marginBottom: '8px'
     },
     value: {
-      fontSize: '16px',
-      color: '#1f2937',
-      fontWeight: '500'
+      fontSize: '18px',
+      color: '#1e1b4b',
+      fontWeight: '600',
+      wordBreak: 'break-word'
     },
     form: {
       display: 'flex',
@@ -376,13 +440,15 @@ export default function AdminSettings() {
     },
     input: {
       width: '100%',
-      padding: '12px 40px 12px 12px',
-      borderRadius: '8px',
-      border: '2px solid #e5e7eb',
-      fontSize: '14px',
+      padding: '14px 40px 14px 16px',
+      borderRadius: '12px',
+      border: '2px solid rgba(102, 126, 234, 0.2)',
+      fontSize: '15px',
       outline: 'none',
-      transition: 'border-color 0.2s',
-      boxSizing: 'border-box'
+      transition: 'all 0.3s ease',
+      boxSizing: 'border-box',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      fontWeight: '500'
     },
     eyeButton: {
       position: 'absolute',
@@ -396,44 +462,53 @@ export default function AdminSettings() {
       color: '#6b7280'
     },
     strengthBar: {
-      height: '4px',
-      backgroundColor: '#e5e7eb',
-      borderRadius: '2px',
+      height: '6px',
+      backgroundColor: 'rgba(102, 126, 234, 0.1)',
+      borderRadius: '8px',
       overflow: 'hidden',
-      marginTop: '8px'
+      marginTop: '12px',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
     },
     strengthFill: {
       height: '100%',
-      transition: 'all 0.3s'
+      transition: 'all 0.4s ease',
+      borderRadius: '8px'
     },
     strengthLabel: {
-      fontSize: '12px',
-      marginTop: '4px',
-      fontWeight: '500'
+      fontSize: '13px',
+      marginTop: '8px',
+      fontWeight: '600'
     },
     hint: {
-      fontSize: '12px',
-      color: '#6b7280',
-      marginTop: '4px'
+      fontSize: '13px',
+      color: '#764ba2',
+      marginTop: '8px',
+      fontWeight: '500',
+      opacity: 0.8
     },
     message: {
-      padding: '12px 16px',
-      borderRadius: '8px',
-      marginBottom: '20px',
-      fontSize: '14px',
-      fontWeight: '500'
+      padding: '16px 20px',
+      borderRadius: '16px',
+      marginBottom: '24px',
+      fontSize: '15px',
+      fontWeight: '600',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      animation: 'scaleIn 0.3s ease-out'
     },
     submitBtn: {
-      padding: '14px 28px',
-      borderRadius: '8px',
+      padding: '16px 32px',
+      borderRadius: '14px',
       border: 'none',
       cursor: 'pointer',
       fontSize: '16px',
-      fontWeight: '600',
-      backgroundColor: '#10b981',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #10b981, #059669)',
       color: 'white',
-      transition: 'all 0.2s',
-      marginTop: '8px'
+      transition: 'all 0.3s ease',
+      marginTop: '12px',
+      boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
+      letterSpacing: '0.5px',
+      textTransform: 'uppercase'
     }
   };
 
@@ -443,8 +518,34 @@ export default function AdminSettings() {
   
   if (loading) {
     return (
-      <div style={{ ...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <h2>⏳ Loading settings...</h2>
+      <div style={{ 
+        ...styles.container, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '24px'
+      }}>
+        <div style={{
+          width: '80px',
+          height: '80px',
+          border: '6px solid rgba(255, 255, 255, 0.3)',
+          borderTop: '6px solid white',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }}></div>
+        <h2 style={{
+          color: 'white',
+          fontSize: '24px',
+          fontWeight: '600',
+          animation: 'pulse 2s ease-in-out infinite'
+        }}>⏳ Loading settings...</h2>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -453,8 +554,25 @@ export default function AdminSettings() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h1 style={styles.title}>⚙️ Admin Settings</h1>
-        <button style={styles.backBtn} onClick={goToDashboard}>
+        <h1 style={styles.title}>
+          <span style={{
+            fontSize: '36px',
+            filter: 'drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3))'
+          }}>⚙️</span>
+          Admin Settings
+        </h1>
+        <button 
+          style={styles.backBtn} 
+          onClick={goToDashboard}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.5)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+          }}
+        >
           ← Back to Dashboard
         </button>
       </div>
@@ -462,22 +580,89 @@ export default function AdminSettings() {
       <div style={styles.content}>
         {/* Current Profile Information */}
         <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>📋 Current Profile</h2>
+          <h2 style={styles.sectionTitle}>
+            <span style={{ fontSize: '28px' }}>📋</span>
+            Current Profile
+          </h2>
           <div style={styles.infoGrid}>
-            <div style={styles.infoItem}>
-              <div style={styles.label}>Username</div>
+            <div 
+              style={styles.infoItem}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.25)';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.15)';
+              }}
+            >
+              <div style={styles.label}>👤 Username</div>
               <div style={styles.value}>{admin?.username}</div>
             </div>
-            <div style={styles.infoItem}>
-              <div style={styles.label}>Name</div>
+            <div 
+              style={styles.infoItem}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.25)';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.15)';
+              }}
+            >
+              <div style={styles.label}>✨ Name</div>
               <div style={styles.value}>{admin?.name}</div>
             </div>
-            <div style={styles.infoItem}>
-              <div style={styles.label}>Email</div>
+            <div 
+              style={styles.infoItem}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.25)';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.15)';
+              }}
+            >
+              <div style={styles.label}>📧 Email</div>
               <div style={styles.value}>{admin?.email}</div>
             </div>
-            <div style={styles.infoItem}>
-              <div style={styles.label}>Account Status</div>
+            <div 
+              style={styles.infoItem}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.25)';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.15)';
+              }}
+            >
+              <div style={styles.label}>📞 Phone Number</div>
+              <div style={styles.value}>{admin?.phoneNumber || <span style={{opacity: 0.5, fontStyle: 'italic'}}>Not set</span>}</div>
+            </div>
+            <div 
+              style={styles.infoItem}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.25)';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.15)';
+              }}
+            >
+              <div style={styles.label}>🛡️ Account Status</div>
               <div style={{...styles.value, color: '#10b981'}}>
                 {admin?.isVerified ? '✓ Verified' : '⚠ Not Verified'}
               </div>
@@ -487,7 +672,10 @@ export default function AdminSettings() {
 
         {/* Update Credentials Form */}
         <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>🔐 Update Credentials</h2>
+          <h2 style={styles.sectionTitle}>
+            <span style={{ fontSize: '28px' }}>🔐</span>
+            Update Credentials
+          </h2>
           
           {/* Success/Error Messages */}
           {message.text && (
@@ -516,11 +704,29 @@ export default function AdminSettings() {
                   onChange={handleInputChange}
                   placeholder="Enter your current password"
                   required
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#667eea';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                    e.target.style.transform = 'scale(1.01)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
+                    e.target.style.boxShadow = 'none';
+                    e.target.style.transform = 'scale(1)';
+                  }}
                 />
                 <button
                   type="button"
                   style={styles.eyeButton}
                   onClick={() => togglePasswordVisibility('current')}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.color = '#667eea';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.color = '#6b7280';
+                  }}
                 >
                   {showPasswords.current ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -540,6 +746,16 @@ export default function AdminSettings() {
                 value={formData.newEmail}
                 onChange={handleInputChange}
                 placeholder="Enter new email address"
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                  e.target.style.transform = 'scale(1.01)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
+                  e.target.style.boxShadow = 'none';
+                  e.target.style.transform = 'scale(1)';
+                }}
               />
               <div style={styles.hint}>Must be a valid email format (e.g., admin@example.com)</div>
             </div>
@@ -555,8 +771,42 @@ export default function AdminSettings() {
                 onChange={handleInputChange}
                 placeholder="Enter new username"
                 minLength={3}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                  e.target.style.transform = 'scale(1.01)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
+                  e.target.style.boxShadow = 'none';
+                  e.target.style.transform = 'scale(1)';
+                }}
               />
               <div style={styles.hint}>At least 3 characters, letters, numbers, and underscores only</div>
+            </div>
+
+            {/* New Phone Number */}
+            <div style={styles.formGroup}>
+              <label style={styles.formLabel}>📞 Phone Number (optional)</label>
+              <input
+                type="tel"
+                name="newPhoneNumber"
+                style={styles.input}
+                value={formData.newPhoneNumber}
+                onChange={handleInputChange}
+                placeholder="Enter phone number (e.g., +91-9876543210)"
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                  e.target.style.transform = 'scale(1.01)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
+                  e.target.style.boxShadow = 'none';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              />
+              <div style={styles.hint}>Used for out-of-stock notifications. Format: +country-number or any format</div>
             </div>
 
             <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '16px 0' }} />
@@ -573,11 +823,29 @@ export default function AdminSettings() {
                   onChange={handleInputChange}
                   placeholder="Enter new password"
                   minLength={6}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#667eea';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                    e.target.style.transform = 'scale(1.01)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
+                    e.target.style.boxShadow = 'none';
+                    e.target.style.transform = 'scale(1)';
+                  }}
                 />
                 <button
                   type="button"
                   style={styles.eyeButton}
                   onClick={() => togglePasswordVisibility('new')}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.color = '#667eea';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.color = '#6b7280';
+                  }}
                 >
                   {showPasswords.new ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -623,11 +891,31 @@ export default function AdminSettings() {
                     onChange={handleInputChange}
                     placeholder="Re-enter new password"
                     required={!!formData.newPassword}
+                    onFocus={(e) => {
+                      const isMatch = formData.newPassword === formData.confirmPassword;
+                      e.target.style.borderColor = isMatch ? '#667eea' : '#ef4444';
+                      e.target.style.boxShadow = isMatch ? '0 0 0 3px rgba(102, 126, 234, 0.1)' : '0 0 0 3px rgba(239, 68, 68, 0.1)';
+                      e.target.style.transform = 'scale(1.01)';
+                    }}
+                    onBlur={(e) => {
+                      const isMatch = formData.newPassword === formData.confirmPassword;
+                      e.target.style.borderColor = isMatch ? 'rgba(102, 126, 234, 0.2)' : '#ef4444';
+                      e.target.style.boxShadow = 'none';
+                      e.target.style.transform = 'scale(1)';
+                    }}
                   />
                   <button
                     type="button"
                     style={styles.eyeButton}
                     onClick={() => togglePasswordVisibility('confirm')}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.1)';
+                      e.target.style.color = '#667eea';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.color = '#6b7280';
+                    }}
                   >
                     {showPasswords.confirm ? '👁️' : '👁️‍🗨️'}
                   </button>
@@ -649,6 +937,20 @@ export default function AdminSettings() {
                 cursor: updating ? 'not-allowed' : 'pointer'
               }}
               disabled={updating}
+              onMouseEnter={(e) => {
+                if (!updating) {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 12px 28px rgba(16, 185, 129, 0.4)';
+                  e.target.style.background = 'linear-gradient(135deg, #059669, #10b981)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!updating) {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                  e.target.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                }
+              }}
             >
               {updating ? '⏳ Updating...' : '💾 Update Credentials'}
             </button>
@@ -658,10 +960,19 @@ export default function AdminSettings() {
         {/* Security Notice */}
         <div style={{
           ...styles.card,
-          backgroundColor: '#fef3c7',
-          border: '2px solid #fbbf24'
+          background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.15))',
+          border: '2px solid rgba(251, 191, 36, 0.4)',
+          backdropFilter: 'blur(10px)'
         }}>
-          <h3 style={{ margin: '0 0 12px 0', color: '#92400e' }}>🔒 Security Notice</h3>
+          <h3 style={{ 
+            margin: '0 0 12px 0', 
+            color: '#92400e',
+            fontSize: '20px',
+            fontWeight: 700
+          }}>
+            <span style={{ fontSize: '24px' }}>🔒</span>
+            {' '}Security Notice
+          </h3>
           <ul style={{ margin: 0, paddingLeft: '20px', color: '#92400e' }}>
             <li>Always use a strong, unique password for your admin account</li>
             <li>If you change your password, you'll be logged out and need to login again</li>

@@ -12,7 +12,7 @@ const { verifyAdmin } = require('../middleware/auth');
  */
 router.put('/update-credentials', verifyAdmin, async (req, res) => {
   try {
-    let { currentPassword, newEmail, newPassword, newUsername, confirmPassword } = req.body;
+    let { currentPassword, newEmail, newPassword, newUsername, confirmPassword, newPhoneNumber } = req.body;
     const adminId = req.userId; // From verifyAdmin middleware
 
     console.log('🔐 Update credentials request:', {
@@ -20,6 +20,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       hasCurrentPassword: !!currentPassword,
       newEmail: newEmail || '(empty)',
       newUsername: newUsername || '(empty)',
+      newPhoneNumber: newPhoneNumber || '(empty)',
       hasNewPassword: !!newPassword
     });
 
@@ -40,12 +41,13 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     newUsername = newUsername ? newUsername.trim() : '';
     newPassword = newPassword ? newPassword.trim() : '';
     confirmPassword = confirmPassword ? confirmPassword.trim() : '';
+    newPhoneNumber = newPhoneNumber ? newPhoneNumber.trim() : '';
 
     // At least one field must be provided to update
-    if (!newEmail && !newPassword && !newUsername) {
+    if (!newEmail && !newPassword && !newUsername && !newPhoneNumber) {
       return res.status(400).json({ 
         success: false, 
-        msg: 'Please provide at least one field to update (email, username, or password)' 
+        msg: 'Please provide at least one field to update (email, username, password, or phone number)' 
       });
     }
 
@@ -193,8 +195,40 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       }
     }
 
+    // ============================================================
+    // 6.5. VALIDATE PHONE NUMBER (if provided)
+    // ============================================================
+    
+    if (newPhoneNumber) {
+      // Skip validation if phone number hasn't changed
+      if (newPhoneNumber === admin.phoneNumber) {
+        console.log('⏭️ Phone number unchanged, skipping validation');
+        newPhoneNumber = ''; // Clear it so it won't be updated
+      } else {
+        // Basic phone number validation (flexible format)
+        // Allows: +1-234-567-8900, (123) 456-7890, 1234567890, +911234567890, etc.
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        
+        if (!phoneRegex.test(newPhoneNumber)) {
+          return res.status(400).json({ 
+            success: false, 
+            msg: 'Invalid phone number format. Use only numbers, spaces, dashes, parentheses, and plus sign.' 
+          });
+        }
+
+        // Check minimum length (at least 10 digits)
+        const digitsOnly = newPhoneNumber.replace(/\D/g, '');
+        if (digitsOnly.length < 10) {
+          return res.status(400).json({ 
+            success: false, 
+            msg: 'Phone number must contain at least 10 digits' 
+          });
+        }
+      }
+    }
+
     // Re-check if at least one field has a value after validation
-    if (!newEmail && !newPassword && !newUsername) {
+    if (!newEmail && !newPassword && !newUsername && !newPhoneNumber) {
       return res.status(400).json({ 
         success: false, 
         msg: 'No changes detected. Please modify at least one field.' 
@@ -217,6 +251,11 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       updateFields.username = newUsername;
     }
 
+    // Update phone number if provided
+    if (newPhoneNumber) {
+      updateFields.phoneNumber = newPhoneNumber;
+    }
+
     // Hash and update password if provided
     if (newPassword) {
       const salt = await bcrypt.genSalt(10);
@@ -234,6 +273,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     const updatedFields = [];
     if (newEmail) updatedFields.push('email');
     if (newUsername) updatedFields.push('username');
+    if (newPhoneNumber) updatedFields.push('phone number');
     if (newPassword) updatedFields.push('password');
 
     res.json({ 
@@ -243,7 +283,8 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
         id: admin._id,
         username: admin.username,
         name: admin.name,
-        email: admin.email
+        email: admin.email,
+        phoneNumber: admin.phoneNumber
       }
     });
 
@@ -280,6 +321,7 @@ router.get('/profile', verifyAdmin, async (req, res) => {
         username: admin.username,
         name: admin.name,
         email: admin.email,
+        phoneNumber: admin.phoneNumber,
         isVerified: admin.isVerified,
         createdAt: admin.createdAt
       }

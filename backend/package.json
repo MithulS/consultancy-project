@@ -22,7 +22,8 @@
     "mongoose": "^9.0.0",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "stripe": "^20.0.0"
   },
   "devDependencies": {
     "@types/express-validator": "^2.20.33",

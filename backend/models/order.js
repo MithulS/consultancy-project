@@ -50,7 +50,20 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'completed', 'failed', 'refunded'],
     default: 'pending'
   },
-  deliveredAt: Date
+  paymentIntentId: {
+    type: String // Stripe payment intent ID
+  },
+  stockReserved: {
+    type: Boolean,
+    default: true // Stock is reserved when order is created
+  },
+  stockDeducted: {
+    type: Boolean,
+    default: false // Stock permanently deducted when delivered
+  },
+  deliveredAt: Date,
+  cancelledAt: Date,
+  cancelReason: String
 }, {
   timestamps: true
 });

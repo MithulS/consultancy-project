@@ -59,3 +59,211 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* ============================================================
+   ACCESSIBILITY UTILITIES
+   ============================================================ */
+
+/* Screen reader only content - visually hidden but readable by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible styles for keyboard navigation */
+:focus-visible {
+  outline: 3px solid #667eea !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+}
+
+/* Remove focus outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enhanced button focus states */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #667eea !important;
+  outline-offset: 2px !important;
+}
+
+/* Form labels - ensure they're always associated */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Required field indicator */
+label.required::after {
+  content: " *";
+  color: #ef4444;
+}
+
+/* Form validation states */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+input[aria-invalid="false"]:valid,
+select[aria-invalid="false"]:valid,
+textarea[aria-invalid="false"]:valid {
+  border-color: #10b981 !important;
+}
+
+/* Error messages */
+[role="alert"],
+.error-message {
+  color: #dc2626;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+[role="alert"]::before {
+  content: "⚠";
+  font-size: 1.2em;
+}
+
+/* Success messages */
+[role="status"] {
+  color: #065f46;
+  background-color: #d1fae5;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Hint text for form fields */
+.hint,
+small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Password input wrapper for show/hide button */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 3rem;
+}
+
+.password-input-wrapper button {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.password-input-wrapper button:hover {
+  color: #374151;
+}
+
+/* Radio and checkbox groups */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.radio-group input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.radio-group label,
+.checkbox-group label {
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Fieldset styling */
+fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+fieldset legend {
+  font-weight: 600;
+  color: #1f2937;
+  padding: 0 0.5rem;
+}
+
+/* Disabled states */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline-width: 4px !important;
+  }
+  
+  button,
+  input,
+  select,
+  textarea {
+    border-width: 2px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

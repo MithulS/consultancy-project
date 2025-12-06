@@ -139,20 +139,19 @@ router.post('/test-otp-display', async (req, res) => {
 // --------------------- Register ---------------------
 router.post('/register', registrationLimiter, async (req, res) => {
   try {
-    const { username, name, email, password } = req.body;
-    if (!username || !name || !email || !password) return res.status(400).json({ msg: 'Missing fields' });
+    let { username, name, email, password } = req.body;
+    if (!name || !email || !password) return res.status(400).json({ msg: 'Missing fields' });
 
-    // Check if email or username already exists
+    // Auto-generate username from email if not provided
+    if (!username) {
+      username = email.split('@')[0] + '_' + Math.random().toString(36).substr(2, 6);
+    }
+
+    // Check if email already exists
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       await logAuditEvent({ email, action: 'REGISTER_FAILED', req, details: 'Email already registered' });
       return res.status(400).json({ msg: 'Email already registered' });
-    }
-    
-    const existingUsername = await User.findOne({ username });
-    if (existingUsername) {
-      await logAuditEvent({ email, action: 'REGISTER_FAILED', req, details: 'Username already taken' });
-      return res.status(400).json({ msg: 'Username already taken' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -488,6 +487,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,
+        role: user.role || 'user',
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }
@@ -495,6 +495,97 @@ router.get('/profile', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error('Profile error:', err && err.message ? err.message : err);
     return res.status(500).json({ msg: 'Server error', error: err && err.message ? err.message : String(err) });
+  }
+});
+
+// Update Profile
+router.put('/update-profile', authMiddleware, async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const userId = req.user.userId;
+
+    if (!name || !email) {
+      return res.status(400).json({ msg: 'Name and email are required' });
+    }
+
+    // Check if email is already taken by another user
+    if (email) {
+      const existingUser = await User.findOne({ email, _id: { $ne: userId } });
+      if (existingUser) {
+        return res.status(400).json({ msg: 'Email already in use' });
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, email },
+      { new: true, runValidators: true }
+    ).select('-password -otp -otpExpiresAt');
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    await logAuditEvent({ userId, email, action: 'PROFILE_UPDATED', req, details: 'Profile updated' });
+
+    return res.json({
+      success: true,
+      msg: 'Profile updated successfully',
+      user: {
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified,
+        role: user.role || 'user',
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    return res.status(500).json({ msg: 'Server error', error: err.message });
+  }
+});
+
+// Change Password
+router.put('/change-password', authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.userId;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ msg: 'Current and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ msg: 'New password must be at least 6 characters' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      await logAuditEvent({ userId, action: 'PASSWORD_CHANGE_FAILED', req, details: 'Invalid current password' });
+      return res.status(400).json({ msg: 'Current password is incorrect' });
+    }
+
+    // Hash and update new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    await logAuditEvent({ userId, action: 'PASSWORD_CHANGED', req, details: 'Password changed successfully' });
+
+    return res.json({
+      success: true,
+      msg: 'Password changed successfully'
+    });
+  } catch (err) {
+    console.error('Change password error:', err);
+    return res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 

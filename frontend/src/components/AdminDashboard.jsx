@@ -2,9 +2,42 @@
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Inject CSS animations
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+  @keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+`;
+if (!document.querySelector('[data-admin-dashboard-styles]')) {
+  styleSheet.setAttribute('data-admin-dashboard-styles', 'true');
+  document.head.appendChild(styleSheet);
+}
+
 // Helper function to get full image URL
 const getImageUrl = (imageUrl) => {
-  if (!imageUrl) return 'https://via.placeholder.com/60x60?text=No+Image';
+  if (!imageUrl) return 'https://placehold.co/60x60?text=No+Image';
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     return imageUrl;
   }
@@ -286,21 +319,36 @@ export default function AdminDashboard() {
   const styles = {
     container: {
       minHeight: '100vh',
-      backgroundColor: '#f8fafc'
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientFlow 15s ease infinite',
+      position: 'relative'
     },
     header: {
-      backgroundColor: '#1e1b4b',
-      color: 'white',
-      padding: '20px 32px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      background: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(20px)',
+      color: '#1e1b4b',
+      padding: '24px 40px',
+      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '0',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      animation: 'fadeInUp 0.6s ease-out'
     },
     title: {
-      fontSize: '28px',
-      fontWeight: '700',
-      margin: 0
+      fontSize: '32px',
+      fontWeight: '800',
+      margin: 0,
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+      letterSpacing: '-0.5px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px'
     },
     headerRight: {
       display: 'flex',
@@ -308,54 +356,74 @@ export default function AdminDashboard() {
       gap: '20px'
     },
     adminName: {
-      fontSize: '14px',
-      color: '#e0e7ff'
+      fontSize: '15px',
+      color: '#6b7280',
+      fontWeight: '600',
+      letterSpacing: '0.3px'
     },
     button: {
-      padding: '10px 20px',
-      borderRadius: '8px',
+      padding: '12px 24px',
+      borderRadius: '12px',
       border: 'none',
       cursor: 'pointer',
       fontSize: '14px',
-      fontWeight: '600',
-      transition: 'all 0.2s'
+      fontWeight: '700',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      letterSpacing: '0.3px',
+      position: 'relative',
+      overflow: 'hidden'
     },
     settingsBtn: {
-      backgroundColor: '#6366f1',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
-      marginRight: '12px'
+      marginRight: '0',
+      boxShadow: '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
     },
     logoutBtn: {
-      backgroundColor: '#dc2626',
-      color: 'white'
+      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      color: 'white',
+      boxShadow: '0 4px 16px rgba(245, 87, 108, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
     },
     statsContainer: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-      gap: '20px',
-      padding: '32px',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+      gap: '24px',
+      padding: '32px 40px',
       maxWidth: '1400px',
       margin: '0 auto'
     },
     statCard: {
-      backgroundColor: 'white',
-      padding: '24px',
-      borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%)',
+      backdropFilter: 'blur(20px)',
+      padding: '28px 24px',
+      borderRadius: '20px',
+      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      animation: 'scaleIn 0.6s ease-out',
+      position: 'relative',
+      overflow: 'hidden'
     },
     statLabel: {
-      fontSize: '14px',
+      fontSize: '13px',
       color: '#6b7280',
-      marginBottom: '8px',
-      fontWeight: '500'
+      marginBottom: '12px',
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px'
     },
     statValue: {
-      fontSize: '32px',
-      fontWeight: '700',
-      color: '#1e1b4b'
+      fontSize: '36px',
+      fontWeight: '800',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+      letterSpacing: '-1px'
     },
     content: {
-      padding: '0 32px 32px',
+      padding: '0 40px 40px',
       maxWidth: '1400px',
       margin: '0 auto'
     },
@@ -363,11 +431,13 @@ export default function AdminDashboard() {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: '24px'
+      marginBottom: '28px',
+      animation: 'slideInLeft 0.6s ease-out 0.2s backwards'
     },
     addBtn: {
-      backgroundColor: '#10b981',
-      color: 'white'
+      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      color: 'white',
+      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
     },
     table: {
       width: '100%',
@@ -380,31 +450,41 @@ export default function AdminDashboard() {
     },
     tableWrapper: {
       overflowX: 'auto',
-      backgroundColor: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+      background: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(20px)',
+      borderRadius: '20px',
+      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      animation: 'fadeInUp 0.6s ease-out 0.3s backwards'
     },
     tableHeader: {
-      backgroundColor: '#f9fafb',
-      padding: '16px',
-      fontSize: '14px',
-      fontWeight: '600',
-      color: '#374151',
+      background: 'linear-gradient(to bottom, rgba(102, 126, 234, 0.08), rgba(102, 126, 234, 0.02))',
+      padding: '18px 16px',
+      fontSize: '13px',
+      fontWeight: '700',
+      color: '#667eea',
       textAlign: 'left',
-      borderBottom: '2px solid #e5e7eb',
-      whiteSpace: 'nowrap'
+      borderBottom: '2px solid rgba(102, 126, 234, 0.2)',
+      whiteSpace: 'nowrap',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px'
     },
     tableCell: {
-      padding: '16px',
-      borderBottom: '1px solid #f3f4f6',
-      fontSize: '14px',
-      color: '#1f2937'
+      padding: '18px 16px',
+      borderBottom: '1px solid rgba(102, 126, 234, 0.08)',
+      fontSize: '15px',
+      color: '#374151',
+      fontWeight: '500',
+      transition: 'background 0.2s ease'
     },
     productImage: {
-      width: '60px',
-      height: '60px',
+      width: '70px',
+      height: '70px',
       objectFit: 'cover',
-      borderRadius: '8px'
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      border: '2px solid rgba(255, 255, 255, 0.8)',
+      transition: 'transform 0.3s ease'
     },
     actionButtons: {
       display: 'flex',
@@ -413,22 +493,28 @@ export default function AdminDashboard() {
       alignItems: 'center'
     },
     editBtn: {
-      backgroundColor: '#3b82f6',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
       color: 'white',
-      padding: '6px 12px',
-      borderRadius: '6px',
+      padding: '8px 16px',
+      borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '13px'
+      fontSize: '13px',
+      fontWeight: '600',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
     },
     deleteBtn: {
-      backgroundColor: '#ef4444',
+      background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
       color: 'white',
-      padding: '6px 12px',
-      borderRadius: '6px',
+      padding: '8px 16px',
+      borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '13px'
+      fontSize: '13px',
+      fontWeight: '600',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
     },
     modalOverlay: {
       position: 'fixed',
@@ -436,27 +522,36 @@ export default function AdminDashboard() {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      background: 'rgba(102, 126, 234, 0.4)',
+      backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000
+      zIndex: 1000,
+      animation: 'fadeInUp 0.3s ease-out'
     },
     modal: {
-      backgroundColor: 'white',
-      borderRadius: '16px',
-      padding: '32px',
+      background: 'rgba(255, 255, 255, 0.98)',
+      backdropFilter: 'blur(20px)',
+      borderRadius: '24px',
+      padding: '40px',
       maxWidth: '600px',
       width: '90%',
       maxHeight: '90vh',
       overflowY: 'auto',
-      boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+      boxShadow: '0 24px 80px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+      border: '1px solid rgba(255, 255, 255, 0.5)',
+      animation: 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
     },
     modalTitle: {
-      fontSize: '24px',
-      fontWeight: '700',
-      color: '#1e1b4b',
-      marginBottom: '24px'
+      fontSize: '28px',
+      fontWeight: '800',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+      marginBottom: '28px',
+      letterSpacing: '-0.5px'
     },
     form: {
       display: 'flex',
@@ -469,27 +564,36 @@ export default function AdminDashboard() {
       gap: '6px'
     },
     label: {
-      fontSize: '14px',
-      fontWeight: '600',
-      color: '#374151'
+      fontSize: '13px',
+      fontWeight: '700',
+      color: '#667eea',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px'
     },
     input: {
-      padding: '10px 12px',
-      borderRadius: '8px',
+      padding: '12px 16px',
+      borderRadius: '12px',
       border: '2px solid #e5e7eb',
-      fontSize: '14px',
+      fontSize: '15px',
       outline: 'none',
-      transition: 'border-color 0.2s'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      fontWeight: '500',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.04)'
     },
     textarea: {
-      padding: '10px 12px',
-      borderRadius: '8px',
+      padding: '12px 16px',
+      borderRadius: '12px',
       border: '2px solid #e5e7eb',
-      fontSize: '14px',
+      fontSize: '15px',
       outline: 'none',
-      minHeight: '80px',
+      minHeight: '100px',
       fontFamily: 'inherit',
-      resize: 'vertical'
+      resize: 'vertical',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      fontWeight: '500',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.04)'
     },
     checkbox: {
       display: 'flex',
@@ -503,45 +607,72 @@ export default function AdminDashboard() {
     },
     uploadButton: {
       display: 'inline-block',
-      padding: '12px 24px',
-      backgroundColor: '#3b82f6',
+      padding: '14px 28px',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
       color: 'white',
-      border: '2px solid #3b82f6',
-      borderRadius: '8px',
+      border: 'none',
+      borderRadius: '12px',
       fontSize: '14px',
-      fontWeight: '600',
+      fontWeight: '700',
       textAlign: 'center',
-      transition: 'all 0.2s',
-      cursor: 'pointer'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer',
+      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+      letterSpacing: '0.3px'
     },
     submitBtn: {
       flex: 1,
-      padding: '12px',
-      backgroundColor: '#10b981',
+      padding: '16px',
+      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
       color: 'white',
       border: 'none',
-      borderRadius: '8px',
+      borderRadius: '12px',
       fontSize: '16px',
-      fontWeight: '600',
-      cursor: 'pointer'
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+      letterSpacing: '0.5px'
     },
     cancelBtn: {
       flex: 1,
-      padding: '12px',
-      backgroundColor: '#6b7280',
+      padding: '16px',
+      background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
       color: 'white',
       border: 'none',
-      borderRadius: '8px',
+      borderRadius: '12px',
       fontSize: '16px',
-      fontWeight: '600',
-      cursor: 'pointer'
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 4px 16px rgba(107, 114, 128, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+      letterSpacing: '0.5px'
     }
   };
 
   if (loading) {
     return (
       <div style={{ ...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <h2>⏳ Loading admin panel...</h2>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          padding: '60px 80px',
+          borderRadius: '24px',
+          boxShadow: '0 24px 80px rgba(102, 126, 234, 0.3)',
+          textAlign: 'center',
+          animation: 'pulse 2s ease-in-out infinite'
+        }}>
+          <div style={{ fontSize: '64px', marginBottom: '24px' }}>⏳</div>
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            margin: 0
+          }}>Loading admin panel...</h2>
+        </div>
       </div>
     );
   }
@@ -555,7 +686,29 @@ export default function AdminDashboard() {
           {admin && <span style={styles.adminName}>👤 {admin.name || admin.email}</span>}
           <button 
             style={{...styles.button, ...styles.settingsBtn}}
+            onClick={() => window.location.hash = '#sales-analytics'}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px) scale(1.05)';
+              e.target.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+            }}
+          >
+            📊 Sales Analytics
+          </button>
+          <button 
+            style={{...styles.button, ...styles.settingsBtn}}
             onClick={goToSettings}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px) scale(1.05)';
+              e.target.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+            }}
           >
             ⚙️ Settings
           </button>
@@ -570,31 +723,92 @@ export default function AdminDashboard() {
 
       {/* Stats Cards */}
       <div style={styles.statsContainer}>
-        <div style={{...styles.statCard, borderLeft: '4px solid #5b21b6'}}>
+        <div 
+          style={{...styles.statCard, borderLeft: '4px solid #667eea'}}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+          }}
+        >
+          <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>📦</div>
           <div style={styles.statLabel}>📦 Total Products</div>
           <div style={styles.statValue}>{stats.total}</div>
         </div>
-        <div style={{...styles.statCard, borderLeft: '4px solid #10b981'}}>
+        <div 
+          style={{...styles.statCard, borderLeft: '4px solid #10b981'}}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+          }}
+        >
+          <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>✅</div>
           <div style={styles.statLabel}>✅ In Stock</div>
-          <div style={{...styles.statValue, color: '#10b981'}}>{stats.inStock}</div>
+          <div style={styles.statValue}>{stats.inStock}</div>
         </div>
-        <div style={{...styles.statCard, borderLeft: '4px solid #ef4444'}}>
+        <div 
+          style={{...styles.statCard, borderLeft: '4px solid #ef4444'}}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+          }}
+        >
+          <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>❌</div>
           <div style={styles.statLabel}>❌ Out of Stock</div>
-          <div style={{...styles.statValue, color: '#ef4444'}}>{stats.outOfStock}</div>
+          <div style={styles.statValue}>{stats.outOfStock}</div>
         </div>
-        <div style={{...styles.statCard, borderLeft: '4px solid #f59e0b'}}>
+        <div 
+          style={{...styles.statCard, borderLeft: '4px solid #f59e0b'}}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 16px 48px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+          }}
+        >
+          <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>💰</div>
           <div style={styles.statLabel}>💰 Total Inventory Value</div>
-          <div style={{...styles.statValue, fontSize: '28px', color: '#5b21b6'}}>₹{stats.totalValue.toFixed(2)}</div>
+          <div style={styles.statValue}>₹{stats.totalValue.toFixed(2)}</div>
         </div>
       </div>
 
       {/* Content */}
       <div style={styles.content}>
         <div style={styles.actionBar}>
-          <h2 style={{ margin: 0, color: '#1e1b4b' }}>Product Management</h2>
+          <h2 style={{ 
+            margin: 0, 
+            fontSize: '24px',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            letterSpacing: '-0.5px'
+          }}>Product Management</h2>
           <button 
             style={{...styles.button, ...styles.addBtn}}
             onClick={openAddModal}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px) scale(1.05)';
+              e.target.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+            }}
           >
             ➕ Add New Product
           </button>
@@ -618,15 +832,25 @@ export default function AdminDashboard() {
               {products.map(product => {
                 const isOutOfStock = product.stock === 0 || !product.inStock;
                 return (
-                <tr key={product._id} style={{ backgroundColor: isOutOfStock ? '#fef2f2' : 'transparent' }}>
+                <tr 
+                  key={product._id} 
+                  style={{ 
+                    backgroundColor: isOutOfStock ? '#fef2f2' : 'transparent',
+                    transition: 'background 0.2s ease'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = isOutOfStock ? '#fef2f2' : 'transparent'}
+                >
                   <td style={styles.tableCell}>
                     <img 
                       src={getImageUrl(product.imageUrl)} 
                       alt={product.name}
                       style={{...styles.productImage, opacity: isOutOfStock ? 0.6 : 1}}
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/60x60?text=No+Image';
+                        e.target.src = 'https://placehold.co/60x60?text=No+Image';
                       }}
+                      onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
+                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
                     />
                   </td>
                   <td style={styles.tableCell}>
@@ -667,12 +891,28 @@ export default function AdminDashboard() {
                       <button 
                         style={styles.editBtn}
                         onClick={() => openEditModal(product)}
+                        onMouseOver={(e) => {
+                          e.target.style.transform = 'translateY(-2px)';
+                          e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.5)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.transform = 'translateY(0)';
+                          e.target.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+                        }}
                       >
                         ✏️ Edit
                       </button>
                       <button 
                         style={styles.deleteBtn}
                         onClick={() => deleteProduct(product._id)}
+                        onMouseOver={(e) => {
+                          e.target.style.transform = 'translateY(-2px)';
+                          e.target.style.boxShadow = '0 4px 16px rgba(239, 68, 68, 0.5)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.transform = 'translateY(0)';
+                          e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+                        }}
                       >
                         🗑️ Delete
                       </button>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import './styles/design-system.css';
+import './styles/responsive.css';
 
 // Global error handlers for debugging
 window.addEventListener('unhandledrejection', (event) => {

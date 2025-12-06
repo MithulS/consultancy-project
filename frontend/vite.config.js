@@ -6,6 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    host: true, // Listen on all addresses
+    strictPort: false, // Try other ports if 5173 is busy
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+      clientPort: 5173
+    },
     proxy: {
       // Proxy API requests to backend (optional - bypasses CORS)
       // Uncomment to use proxy instead of CORS
