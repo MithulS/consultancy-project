@@ -1,4 +1,4 @@
-// Admin Dashboard - Product Management Interface
+  // Admin Dashboard - Product Management Interface
 import React, { useState, useEffect } from 'react';
 import ProductReports from './ProductReports';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
