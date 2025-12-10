@@ -13,17 +13,18 @@ const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 // Nodemailer transporter (Gmail App Password recommended)
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587, // Use port 587 (TLS) instead of 465 (SSL) - less likely to be blocked
-  secure: false, // true for 465, false for other ports
+  port: 465,
+  secure: true, // use SSL
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  logger: true,
-  debug: true,
+  connectionTimeout: 60000, // 60 seconds timeout
+  greetingTimeout: 30000,
+  socketTimeout: 60000,
   tls: {
-    // for local dev only; remove rejectUnauthorized:false in production
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    minVersion: 'TLSv1.2'
   }
 });
 
@@ -591,30 +592,47 @@ router.put('/change-password', authMiddleware, async (req, res) => {
 
 // --------------------- Admin Login ---------------------
 router.post('/admin-login', authLimiter, async (req, res) => {
+  console.log('🔥🔥🔥 ADMIN LOGIN ROUTE HIT! 🔥🔥🔥');
   try {
     const { email, password } = req.body;
+    console.log('🔐 ADMIN LOGIN ATTEMPT:', { email, passwordLength: password?.length });
     
     if (!email || !password) {
+      console.log('❌ Missing credentials');
       await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Missing credentials' });
       return res.status(400).json({ msg: 'All fields are required' });
     }
 
     // Find user and verify credentials
     const user = await User.findOne({ email });
+    console.log('👤 User lookup:', user ? { found: true, email: user.email, isVerified: user.isVerified, isAdmin: user.isAdmin } : { found: false });
+    
     if (!user) {
+      console.log('❌ User not found');
       await logAuditEvent({ email, action: 'ADMIN_LOGIN_FAILED', req, details: 'User not found' });
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
     if (!user.isVerified) {
+      console.log('❌ User not verified');
       await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Email not verified' });
       return res.status(400).json({ msg: 'Please verify your email first' });
     }
 
+    console.log('🔑 Comparing password...');
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('🔑 Password match result:', isMatch);
+    
     if (!isMatch) {
+      console.log('❌ Password mismatch');
       await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_FAILED', req, details: 'Invalid password' });
       return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    // Check if user has admin privileges
+    if (!user.isAdmin) {
+      await logAuditEvent({ userId: user._id, email, action: 'ADMIN_LOGIN_FAILED', req, details: 'User is not an admin' });
+      return res.status(403).json({ msg: 'Access denied. Admin privileges required.' });
     }
 
     // Generate JWT token with admin flag
@@ -643,6 +661,1080 @@ router.post('/admin-login', authLimiter, async (req, res) => {
     console.error('Admin login error:', err && err.message ? err.message : err);
     await logAuditEvent({ email: req.body.email, action: 'ADMIN_LOGIN_FAILED', req, details: err.message });
     return res.status(500).json({ msg: 'Server error', error: err && err.message ? err.message : String(err) });
+  }
+});
+
+// --------------------- Google OAuth Routes ---------------------
+
+// Initiate Google OAuth flow
+router.get('/google', (req, res) => {
+  // Store the original URL for redirect after auth
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback';
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  
+  if (!clientId) {
+    console.error('❌ GOOGLE_CLIENT_ID not configured in environment variables');
+    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5174'}/#/login?error=Google login not configured`);
+  }
+  
+  const scope = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
+  ].join(' ');
+  
+  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+    `client_id=${clientId}&` +
+    `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+    `response_type=code&` +
+    `scope=${encodeURIComponent(scope)}&` +
+    `access_type=offline&` +
+    `prompt=consent`;
+  
+  console.log('🔄 Redirecting to Google OAuth...');
+  res.redirect(googleAuthUrl);
+});
+
+// Google OAuth callback
+router.get('/google/callback', async (req, res) => {
+  const { code, error } = req.query;
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+  
+  if (error) {
+    console.error('❌ Google OAuth error:', error);
+    await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: `OAuth error: ${error}` });
+    return res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(error)}`);
+  }
+  
+  if (!code) {
+    console.error('❌ No authorization code received from Google');
+    await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: 'No authorization code' });
+    return res.redirect(`${frontendUrl}/#login?error=No authorization code received`);
+  }
+  
+  try {
+    // Exchange authorization code for access token
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback',
+        grant_type: 'authorization_code'
+      })
+    });
+    
+    const tokenData = await tokenResponse.json();
+    
+    if (!tokenResponse.ok) {
+      throw new Error(tokenData.error_description || 'Failed to get access token');
+    }
+    
+    // Fetch user info from Google
+    const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+    });
+    
+    const googleUser = await userInfoResponse.json();
+    
+    if (!userInfoResponse.ok) {
+      throw new Error('Failed to fetch user info from Google');
+    }
+    
+    console.log('✅ Google user info received:', googleUser.email);
+    
+    // Check if user exists in database
+    let user = await User.findOne({ email: googleUser.email });
+    
+    if (!user) {
+      // Create new user from Google profile
+      const username = googleUser.email.split('@')[0] + '_' + Math.random().toString(36).substr(2, 6);
+      
+      user = new User({
+        username,
+        name: googleUser.name,
+        email: googleUser.email,
+        password: await bcrypt.hash(Math.random().toString(36), 10), // Random password
+        isVerified: true, // Google accounts are pre-verified
+        googleId: googleUser.id,
+        profilePicture: googleUser.picture
+      });
+      
+      await user.save();
+      await logAuditEvent({ userId: user._id, email: user.email, action: 'GOOGLE_REGISTER_SUCCESS', req, details: 'New user via Google OAuth' });
+      console.log(`✅ New user created via Google: ${user.email}`);
+    } else {
+      // Update existing user with Google info if not already set
+      if (!user.googleId) {
+        user.googleId = googleUser.id;
+      }
+      if (!user.profilePicture && googleUser.picture) {
+        user.profilePicture = googleUser.picture;
+      }
+      if (!user.isVerified) {
+        user.isVerified = true; // Auto-verify if logging in with Google
+      }
+      await user.save();
+      await logAuditEvent({ userId: user._id, email: user.email, action: 'GOOGLE_LOGIN_SUCCESS', req });
+      console.log(`✅ Existing user logged in via Google: ${user.email}`);
+    }
+    
+    // Generate JWT token
+    const payload = { userId: user._id };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
+    // Redirect to frontend with token
+    res.redirect(`${frontendUrl}/#login?token=${token}`);
+  } catch (err) {
+    console.error('❌ Google OAuth callback error:', err);
+    await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: err.message });
+    res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
+// Get current user info (for OAuth callback)
+router.get('/me', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ msg: 'No token provided' });
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    const user = await User.findById(decoded.userId).select('-password -otp');
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      isVerified: user.isVerified
+    });
+  } catch (err) {
+    console.error('Get user info error:', err);
+    res.status(401).json({ msg: 'Invalid token' });
+  }
+});
+
+// ============================================================
+// ADMIN PASSWORD RESET ROUTES
+// ============================================================
+
+/**
+ * @route   POST /api/auth/admin-forgot-password
+ * @desc    Request password reset for admin account
+ * @access  Public (with rate limiting)
+ */
+router.post('/admin-forgot-password', authLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validation
+    if (!email || !email.trim()) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Email address is required' 
+      });
+    }
+
+    // Find admin user
+    const admin = await User.findOne({ 
+      email: email.trim().toLowerCase(), 
+      isAdmin: true 
+    });
+
+    // Always return success (security: don't reveal if email exists)
+    // But only send email if admin exists
+    if (admin) {
+      // Generate reset token (valid for 1 hour)
+      const resetToken = jwt.sign(
+        { userId: admin._id, type: 'password-reset' },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      // Store reset token in user document (for additional validation)
+      admin.resetPasswordToken = resetToken;
+      admin.resetPasswordExpiresAt = new Date(Date.now() + 3600000); // 1 hour
+      await admin.save();
+
+      // Create reset URL
+      const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/#admin-reset-password?token=${resetToken}`;
+
+      // Send email
+      const emailTemplate = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; }
+            .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
+            .footer { background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 10px 10px; }
+            .security-tips { background: #eff6ff; padding: 15px; border-radius: 8px; margin: 15px 0; }
+            .security-tips h4 { margin: 0 0 10px 0; color: #1e40af; }
+            .security-tips ul { margin: 0; padding-left: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🔐 Admin Password Reset</h1>
+            </div>
+            <div class="content">
+              <p>Hello <strong>${admin.name || 'Admin'}</strong>,</p>
+              
+              <p>We received a request to reset your admin account password. If you made this request, click the button below to reset your password:</p>
+              
+              <p style="text-align: center;">
+                <a href="${resetUrl}" class="button">Reset Password</a>
+              </p>
+              
+              <p>Or copy and paste this link into your browser:</p>
+              <p style="background: #f3f4f6; padding: 12px; border-radius: 6px; word-break: break-all; font-family: monospace; font-size: 12px;">
+                ${resetUrl}
+              </p>
+              
+              <div class="warning">
+                <strong>⚠️ Important Security Information:</strong>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                  <li><strong>This link will expire in 1 hour</strong> for your security</li>
+                  <li>The link can only be used <strong>once</strong></li>
+                  <li>If you didn't request this reset, <strong>please ignore this email</strong> or contact support immediately</li>
+                </ul>
+              </div>
+              
+              <div class="security-tips">
+                <h4>🛡️ Security Tips</h4>
+                <ul>
+                  <li>Never share your password reset link with anyone</li>
+                  <li>Create a strong password with at least 8 characters</li>
+                  <li>Include uppercase, lowercase, numbers, and special characters</li>
+                  <li>Don't reuse passwords from other accounts</li>
+                </ul>
+              </div>
+              
+              <p style="margin-top: 30px; color: #6b7280;">If you're having trouble clicking the button, copy and paste the URL into your web browser.</p>
+            </div>
+            <div class="footer">
+              <p><strong>This is an automated security message</strong></p>
+              <p>Request Time: ${new Date().toLocaleString()}</p>
+              <p>IP Address: ${req.ip || 'Unknown'}</p>
+              <p style="margin-top: 15px;">If you didn't request a password reset, your account is still secure. No changes have been made.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      await transporter.sendMail({
+        from: `"Admin Security" <${process.env.EMAIL_USER}>`,
+        to: admin.email,
+        subject: '🔐 Admin Password Reset Request',
+        html: emailTemplate
+      });
+
+      console.log(`✅ Password reset email sent to: ${admin.email}`);
+
+      // Log audit event
+      await logAuditEvent({
+        adminId: null,
+        action: 'admin_password_reset_requested',
+        target: 'admin',
+        targetId: admin._id,
+        details: { email: admin.email }
+      });
+    } else {
+      console.log(`⚠️ Password reset requested for non-existent admin: ${email}`);
+    }
+
+    // Always return success (security best practice)
+    res.json({
+      success: true,
+      msg: 'If an admin account exists with this email, a password reset link has been sent.'
+    });
+
+  } catch (err) {
+    console.error('❌ Admin forgot password error:', err);
+    res.status(500).json({ 
+      success: false, 
+      msg: 'Failed to process password reset request' 
+    });
+  }
+});
+
+/**
+ * @route   POST /api/auth/admin-validate-reset-token
+ * @desc    Validate password reset token
+ * @access  Public
+ */
+router.post('/admin-validate-reset-token', async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Reset token is required' 
+      });
+    }
+
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.type !== 'password-reset') {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Invalid token type' 
+      });
+    }
+
+    // Check if user exists and token matches
+    const admin = await User.findOne({
+      _id: decoded.userId,
+      isAdmin: true,
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() }
+    });
+
+    if (!admin) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Invalid or expired reset token' 
+      });
+    }
+
+    res.json({
+      success: true,
+      msg: 'Token is valid'
+    });
+
+  } catch (err) {
+    console.error('❌ Token validation error:', err);
+    
+    if (err.name === 'TokenExpiredError') {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Reset link has expired. Please request a new one.' 
+      });
+    }
+    
+    res.status(400).json({ 
+      success: false, 
+      msg: 'Invalid reset token' 
+    });
+  }
+});
+
+/**
+ * @route   POST /api/auth/admin-reset-password
+ * @desc    Reset admin password using valid token
+ * @access  Public (with valid token)
+ */
+router.post('/admin-reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Validation
+    if (!token || !newPassword) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Token and new password are required' 
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Password must be at least 8 characters long' 
+      });
+    }
+
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.type !== 'password-reset') {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Invalid token type' 
+      });
+    }
+
+    // Find admin with valid token
+    const admin = await User.findOne({
+      _id: decoded.userId,
+      isAdmin: true,
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() }
+    });
+
+    if (!admin) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Invalid or expired reset token' 
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password and clear reset token
+    admin.password = hashedPassword;
+    admin.resetPasswordToken = undefined;
+    admin.resetPasswordExpiresAt = undefined;
+    await admin.save();
+
+    console.log(`✅ Admin password reset successful: ${admin.email}`);
+
+    // Send confirmation email
+    const confirmationEmail = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; }
+          .success { background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; }
+          .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #2563eb, #1e40af); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+          .footer { background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 10px 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Password Reset Successful</h1>
+          </div>
+          <div class="content">
+            <p>Hello <strong>${admin.name || 'Admin'}</strong>,</p>
+            
+            <div class="success">
+              <p style="margin: 0;"><strong>✅ Your admin password has been successfully changed</strong></p>
+            </div>
+            
+            <p>Your admin account password has been updated. You can now log in with your new password.</p>
+            
+            <p style="text-align: center;">
+              <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/#secret-admin-login" class="button">Go to Admin Login</a>
+            </p>
+            
+            <p style="background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+              <strong>⚠️ If you didn't make this change:</strong><br>
+              Your account may be compromised. Please contact support immediately at <a href="mailto:${process.env.EMAIL_USER}">${process.env.EMAIL_USER}</a>
+            </p>
+          </div>
+          <div class="footer">
+            <p><strong>Password Changed Successfully</strong></p>
+            <p>Change Time: ${new Date().toLocaleString()}</p>
+            <p>IP Address: ${req.ip || 'Unknown'}</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await transporter.sendMail({
+      from: `"Admin Security" <${process.env.EMAIL_USER}>`,
+      to: admin.email,
+      subject: '✅ Admin Password Changed Successfully',
+      html: confirmationEmail
+    });
+
+    // Log audit event
+    await logAuditEvent({
+      adminId: admin._id,
+      action: 'admin_password_reset_completed',
+      target: 'admin',
+      targetId: admin._id,
+      details: { email: admin.email }
+    });
+
+    res.json({
+      success: true,
+      msg: 'Password has been reset successfully. You can now log in with your new password.'
+    });
+
+  } catch (err) {
+    console.error('❌ Admin reset password error:', err);
+    
+    if (err.name === 'TokenExpiredError') {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Reset link has expired. Please request a new one.' 
+      });
+    }
+    
+    res.status(500).json({ 
+      success: false, 
+      msg: 'Failed to reset password' 
+    });
+  }
+});
+
+/**
+ * @route   POST /api/auth/admin-send-reset-otp
+ * @desc    Generate and send OTP for admin password reset
+ * @access  Public (Rate Limited)
+ */
+router.post('/admin-send-reset-otp', authLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Email is required'
+      });
+    }
+
+    // Find admin user
+    console.log('🔍 Searching for admin with email:', email.toLowerCase().trim());
+    const admin = await User.findOne({ 
+      email: email.toLowerCase().trim(),
+      isAdmin: true
+    });
+
+    console.log('🔍 Admin found:', admin ? `Yes (${admin.email})` : 'No');
+
+    // Security: Don't reveal whether account exists
+    if (!admin) {
+      console.log('⚠️ No admin found with email:', email);
+      return res.json({
+        success: true,
+        msg: 'If an admin account with that email exists, an OTP has been sent.'
+      });
+    }
+
+    // Generate 6-digit OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('🔐 Generated OTP for', admin.email, ':', otpCode);
+    
+    // Hash OTP before storing
+    const hashedOTP = await bcrypt.hash(otpCode, 10);
+    
+    // Store OTP with 10-minute expiry
+    admin.otp = hashedOTP;
+    admin.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    admin.otpAttempts = 0; // Reset attempts
+    await admin.save();
+    console.log('✅ OTP saved to database for', admin.email);
+
+    // Send OTP email
+    const otpEmail = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 40px 20px;
+            border-radius: 16px;
+          }
+          .card {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+          }
+          .title {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+          }
+          .subtitle {
+            color: #64748b;
+            font-size: 14px;
+          }
+          .otp-box {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: 12px;
+            text-align: center;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+          }
+          .info-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
+          .warning-box {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
+          .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+          }
+          ul {
+            margin: 12px 0;
+            padding-left: 20px;
+          }
+          li {
+            margin: 8px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="card">
+            <div class="header">
+              <div class="icon">🔐</div>
+              <h1 class="title">Admin Password Reset</h1>
+              <p class="subtitle">Your One-Time Password</p>
+            </div>
+            
+            <p>Hello <strong>${admin.name || 'Admin'}</strong>,</p>
+            
+            <p>You requested to reset your admin password. Use the OTP code below to continue:</p>
+            
+            <div class="otp-box">
+              ${otpCode}
+            </div>
+            
+            <div class="info-box">
+              <strong>⏱️ This OTP will expire in 10 minutes</strong><br>
+              <small>Requested at: ${new Date().toLocaleString()}</small>
+            </div>
+            
+            <div class="info-box">
+              <strong>📋 Next Steps:</strong>
+              <ul>
+                <li>Go back to the admin password reset page</li>
+                <li>Enter this 6-digit OTP code</li>
+                <li>Create your new password</li>
+              </ul>
+            </div>
+            
+            <div class="warning-box">
+              <strong>⚠️ Security Alert:</strong>
+              <ul>
+                <li>Never share this OTP with anyone</li>
+                <li>Our team will never ask for your OTP</li>
+                <li>If you didn't request this, contact support immediately</li>
+                <li>Request IP: ${req.ip || 'Unknown'}</li>
+              </ul>
+            </div>
+            
+            <div class="footer">
+              <p><strong>Admin Security System</strong></p>
+              <p>This is an automated message. Please do not reply.</p>
+              <p>If you need assistance, contact: ${process.env.EMAIL_USER}</p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // In development, log OTP to console
+    if (process.env.NODE_ENV !== 'production') {
+      const otpMessage = `
+==============================================
+🔐 DEVELOPMENT MODE - OTP CODE
+==============================================
+📧 Email: ${email}
+🔢 OTP: ${otpCode}
+⏰ Valid until: ${admin.otpExpiresAt.toLocaleString()}
+==============================================
+`;
+      console.log(otpMessage);
+      process.stdout.write(otpMessage + '\n');
+    }
+
+    // Try to send email, but don't fail if it doesn't work in development
+    try {
+      console.log('📧 Attempting to send email to:', admin.email);
+      await transporter.sendMail({
+        from: `"Admin Security" <${process.env.EMAIL_USER}>`,
+        to: admin.email,
+        subject: '🔐 Your Admin Password Reset OTP',
+        html: otpEmail
+      });
+      console.log('✅ Email sent successfully to:', admin.email);
+    } catch (emailError) {
+      console.error('⚠️  Email send failed:', emailError.message);
+      if (process.env.NODE_ENV === 'production') {
+        throw emailError; // In production, fail if email doesn't send
+      }
+      console.log('📝 Continuing in development mode - OTP logged to console');
+    }
+
+    // Log audit event
+    await logAuditEvent({
+      adminId: admin._id,
+      action: 'admin_password_reset_otp_sent',
+      target: 'admin',
+      targetId: admin._id,
+      details: { email: admin.email, ip: req.ip }
+    });
+
+    console.log('✅ OTP request completed successfully for:', admin.email);
+    res.json({
+      success: true,
+      msg: 'OTP has been sent to your email address'
+    });
+
+  } catch (err) {
+    console.error('❌ Send reset OTP error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Failed to send OTP. Please try again later.'
+    });
+  }
+});
+
+/**
+ * @route   POST /api/auth/admin-verify-reset-otp
+ * @desc    Verify OTP for admin password reset (optional validation step)
+ * @access  Public (Rate Limited)
+ */
+router.post('/admin-verify-reset-otp', otpLimiter, async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Email and OTP are required'
+      });
+    }
+
+    // Find admin user
+    const admin = await User.findOne({
+      email: email.toLowerCase().trim(),
+      isAdmin: true
+    });
+
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Invalid email or OTP'
+      });
+    }
+
+    // Check if OTP exists
+    if (!admin.otp) {
+      return res.status(400).json({
+        success: false,
+        msg: 'No OTP found. Please request a new one.'
+      });
+    }
+
+    // Check if OTP has expired
+    if (!admin.otpExpiresAt || admin.otpExpiresAt < new Date()) {
+      return res.status(400).json({
+        success: false,
+        msg: 'OTP has expired. Please request a new one.'
+      });
+    }
+
+    // Check failed attempts
+    if (admin.otpAttempts >= 3) {
+      return res.status(429).json({
+        success: false,
+        msg: 'Too many failed attempts. Please request a new OTP.'
+      });
+    }
+
+    // Verify OTP
+    const isValidOTP = await bcrypt.compare(otp.trim(), admin.otp);
+
+    if (!isValidOTP) {
+      // Increment failed attempts
+      admin.otpAttempts = (admin.otpAttempts || 0) + 1;
+      await admin.save();
+
+      return res.status(400).json({
+        success: false,
+        msg: `Invalid OTP. ${3 - admin.otpAttempts} attempts remaining.`
+      });
+    }
+
+    // OTP is valid
+    res.json({
+      success: true,
+      msg: 'OTP verified successfully'
+    });
+
+  } catch (err) {
+    console.error('❌ Verify reset OTP error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Failed to verify OTP'
+    });
+  }
+});
+
+/**
+ * @route   POST /api/auth/admin-reset-password-with-otp
+ * @desc    Reset admin password using OTP
+ * @access  Public (Rate Limited)
+ */
+router.post('/admin-reset-password-with-otp', otpLimiter, async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    // Validation
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Email, OTP, and new password are required'
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Password must be at least 8 characters long'
+      });
+    }
+
+    // Find admin user
+    const admin = await User.findOne({
+      email: email.toLowerCase().trim(),
+      isAdmin: true
+    });
+
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Invalid email or OTP'
+      });
+    }
+
+    // Check if OTP exists
+    if (!admin.otp) {
+      return res.status(400).json({
+        success: false,
+        msg: 'No OTP found. Please request a new one.'
+      });
+    }
+
+    // Check if OTP has expired
+    if (!admin.otpExpiresAt || admin.otpExpiresAt < new Date()) {
+      return res.status(400).json({
+        success: false,
+        msg: 'OTP has expired. Please request a new one.'
+      });
+    }
+
+    // Check failed attempts
+    if (admin.otpAttempts >= 3) {
+      return res.status(429).json({
+        success: false,
+        msg: 'Too many failed attempts. Please request a new OTP.'
+      });
+    }
+
+    // Verify OTP
+    const isValidOTP = await bcrypt.compare(otp.trim(), admin.otp);
+
+    if (!isValidOTP) {
+      // Increment failed attempts
+      admin.otpAttempts = (admin.otpAttempts || 0) + 1;
+      await admin.save();
+
+      return res.status(400).json({
+        success: false,
+        msg: `Invalid OTP. ${3 - admin.otpAttempts} attempts remaining.`
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password and clear OTP
+    admin.password = hashedPassword;
+    admin.otp = undefined;
+    admin.otpExpiresAt = undefined;
+    admin.otpAttempts = 0;
+    await admin.save();
+
+    // Send confirmation email
+    const confirmationEmail = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 40px 20px;
+            border-radius: 16px;
+          }
+          .card {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+          }
+          .title {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+          }
+          .success-box {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
+          .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
+          .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            margin: 16px 0;
+          }
+          .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="card">
+            <div class="header">
+              <div class="icon">✅</div>
+              <h1 class="title">Password Changed Successfully</h1>
+            </div>
+            
+            <p>Hello <strong>${admin.name || 'Admin'}</strong>,</p>
+            
+            <div class="success-box">
+              <strong>🔒 Your admin password has been successfully changed</strong><br>
+              <small>Changed at: ${new Date().toLocaleString()}</small>
+            </div>
+            
+            <p>You can now log in to your admin account with your new password.</p>
+            
+            <p style="text-align: center;">
+              <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/#secret-admin-login" class="button">
+                Go to Admin Login
+              </a>
+            </p>
+            
+            <div class="warning-box">
+              <strong>⚠️ If you didn't make this change:</strong><br>
+              Your account may be compromised. Please contact support immediately at 
+              <a href="mailto:${process.env.EMAIL_USER}">${process.env.EMAIL_USER}</a>
+              <br><br>
+              <strong>Change Details:</strong><br>
+              • Time: ${new Date().toLocaleString()}<br>
+              • IP Address: ${req.ip || 'Unknown'}
+            </div>
+            
+            <div class="footer">
+              <p><strong>Admin Security System</strong></p>
+              <p>This is an automated message. Please do not reply.</p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await transporter.sendMail({
+      from: `"Admin Security" <${process.env.EMAIL_USER}>`,
+      to: admin.email,
+      subject: '✅ Admin Password Changed Successfully',
+      html: confirmationEmail
+    });
+
+    // Log audit event
+    await logAuditEvent({
+      adminId: admin._id,
+      action: 'admin_password_reset_with_otp_completed',
+      target: 'admin',
+      targetId: admin._id,
+      details: { email: admin.email, ip: req.ip }
+    });
+
+    res.json({
+      success: true,
+      msg: 'Password has been reset successfully. You can now log in with your new password.'
+    });
+
+  } catch (err) {
+    console.error('❌ Reset password with OTP error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Failed to reset password. Please try again.'
+    });
   }
 });
 

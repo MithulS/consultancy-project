@@ -98,7 +98,12 @@ export default function ProductComparison({ productIds, onNavigate }) {
               <th style={styles.th}>Feature</th>
               {products.map(product => (
                 <th key={product.id} style={styles.th}>
-                  <img src={product.imageUrl} alt={product.name} style={styles.productImage} />
+                  <img 
+                    src={product.imageUrl} 
+                    alt={`${product.name}, ${product.category}, ₹${product.price}${product.brand ? ' by ' + product.brand : ''}`}
+                    title={`${product.name} - ${product.brand || ''} - ₹${product.price}`}
+                    style={styles.productImage} 
+                  />
                   <div style={styles.productName}>{product.name}</div>
                 </th>
               ))}

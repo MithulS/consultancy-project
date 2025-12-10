@@ -27,14 +27,19 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Product image URL is required'],
     default: 'https://via.placeholder.com/300x300?text=No+Image'
   },
+  imageAltText: {
+    type: String,
+    maxlength: [125, 'Alt text cannot exceed 125 characters'],
+    trim: true
+  },
   images: [{
     type: String // Additional product images
   }],
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['Smartphones', 'Laptops', 'Tablets', 'Accessories', 'Audio', 'Cameras', 'Gaming', 'Wearables', 'Smart Home', 'Other'],
-    default: 'Other'
+    enum: ['Electrical', 'Plumbing', 'Hardware', 'Tools', 'Lighting', 'Paints', 'Heating', 'Safety', 'Accessories'],
+    default: 'Hardware'
   },
   brand: {
     type: String,

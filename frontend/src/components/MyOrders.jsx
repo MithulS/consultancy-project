@@ -1,5 +1,6 @@
 // My Orders Component - Enhanced with Design System
 import React, { useState, useEffect } from 'react';
+import OrderTracking from './OrderTracking';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const getImageUrl = (imageUrl) => {
@@ -15,6 +16,8 @@ export default function MyOrders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [showTracking, setShowTracking] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -24,7 +27,13 @@ export default function MyOrders() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        window.location.hash = '#login';
+        // Store the intended destination before redirecting
+        sessionStorage.setItem('redirectAfterLogin', '#my-orders');
+        setError('Please login to view your orders');
+        setLoading(false);
+        setTimeout(() => {
+          window.location.replace('#login');
+        }, 1000);
         return;
       }
 
@@ -33,6 +42,18 @@ export default function MyOrders() {
           'Authorization': `Bearer ${token}`
         }
       });
+
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        sessionStorage.setItem('redirectAfterLogin', '#my-orders');
+        setError('Session expired. Please login again');
+        setLoading(false);
+        setTimeout(() => {
+          window.location.replace('#login');
+        }, 1000);
+        return;
+      }
 
       const data = await res.json();
 
@@ -88,6 +109,16 @@ export default function MyOrders() {
       cancelled: 'badge-error'
     };
     return badges[status] || 'badge-warning';
+  }
+
+  function openTracking(orderId) {
+    setSelectedOrderId(orderId);
+    setShowTracking(true);
+  }
+
+  function closeTracking() {
+    setShowTracking(false);
+    setSelectedOrderId(null);
   }
 
   const filteredOrders = statusFilter === 'all' 
@@ -243,7 +274,8 @@ export default function MyOrders() {
                     >
                       <img 
                         src={getImageUrl(item.imageUrl)} 
-                        alt={item.name}
+                        alt={`${item.name}, ₹${item.price}, Qty: ${item.quantity}`}
+                        title={`${item.name} - ₹${item.price} x ${item.quantity}`}
                         className="rounded-lg shadow-sm"
                         style={{ 
                           width: '80px', 
@@ -301,20 +333,36 @@ export default function MyOrders() {
                   }}>
                     Total: ₹{order.totalAmount.toFixed(2)}
                   </div>
-                  {canCancel && (
+                  <div style={{ display: 'flex', gap: '12px' }}>
                     <button 
-                      className="btn btn-error transition-all"
-                      onClick={() => cancelOrder(order._id)}
+                      className="btn btn-primary transition-all"
+                      onClick={() => openTracking(order._id)}
                     >
-                      ❌ Cancel Order
+                      📦 Track Order
                     </button>
-                  )}
+                    {canCancel && (
+                      <button 
+                        className="btn btn-error transition-all"
+                        onClick={() => cancelOrder(order._id)}
+                      >
+                        ❌ Cancel Order
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
           })
         )}
       </div>
+
+      {/* Order Tracking Modal */}
+      {showTracking && selectedOrderId && (
+        <OrderTracking 
+          orderId={selectedOrderId}
+          onClose={closeTracking}
+        />
+      )}
     </div>
   );
 }

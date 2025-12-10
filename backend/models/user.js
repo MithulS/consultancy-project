@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
   otpLockedUntil: { type: Date }, // Lock account after too many failed attempts
   resetPasswordToken: { type: String }, // hashed reset token
   resetPasswordExpiresAt: { type: Date },
+  // Google OAuth fields
+  googleId: { type: String, unique: true, sparse: true },
+  profilePicture: { type: String },
   // Loyalty & Referral System
   referralCode: { type: String, unique: true, sparse: true },
   referredBy: { type: String },

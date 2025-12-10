@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/design-system.css';
+import { PRODUCT_CATEGORIES, CATEGORY_CONFIG } from '../utils/constants';
 
 /**
  * EnhancedDashboard - Modern UI Design System Implementation
@@ -16,11 +17,11 @@ const EnhancedDashboard = () => {
   const products = [
     {
       id: 1,
-      name: 'iPhone 15 Pro Max',
-      category: 'Smartphones',
-      price: 1299,
-      originalPrice: 1599,
-      image: 'https://images.unsplash.com/photo-1592286927505-c7d33fae0dcc?w=640',
+      name: 'LED Light Bulbs 12-Pack',
+      category: 'Lighting',
+      price: 299,
+      originalPrice: 399,
+      image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=640',
       rating: 4.8,
       reviews: 1234,
       badge: 'SALE',
@@ -29,11 +30,11 @@ const EnhancedDashboard = () => {
     },
     {
       id: 2,
-      name: 'MacBook Pro 16"',
-      category: 'Laptops',
+      name: 'DeWalt Power Drill Kit',
+      category: 'Tools',
       price: 2499,
       originalPrice: null,
-      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=640',
+      image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=640',
       rating: 4.9,
       reviews: 856,
       badge: 'NEW',
@@ -42,11 +43,11 @@ const EnhancedDashboard = () => {
     },
     {
       id: 3,
-      name: 'AirPods Pro 2',
-      category: 'Audio',
+      name: 'Exterior Paint 5L',
+      category: 'Paints',
       price: 249,
       originalPrice: 299,
-      image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=640',
+      image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=640',
       rating: 4.7,
       reviews: 2341,
       badge: 'HOT',
@@ -55,11 +56,11 @@ const EnhancedDashboard = () => {
     },
     {
       id: 4,
-      name: 'Sony A7 IV Camera',
-      category: 'Cameras',
-      price: 2499,
+      name: 'Safety Goggles & Gloves',
+      category: 'Safety',
+      price: 499,
       originalPrice: null,
-      image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=640',
+      image: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=640',
       rating: 4.9,
       reviews: 567,
       badge: 'LIMITED',
@@ -70,13 +71,11 @@ const EnhancedDashboard = () => {
 
   const categories = [
     { name: 'All', icon: '🏪', active: true },
-    { name: 'Smartphones', icon: '📱', active: false },
-    { name: 'Laptops', icon: '💻', active: false },
-    { name: 'Tablets', icon: '📱', active: false },
-    { name: 'Audio', icon: '🎧', active: false },
-    { name: 'Cameras', icon: '📷', active: false },
-    { name: 'Gaming', icon: '🎮', active: false },
-    { name: 'Wearables', icon: '⌚', active: false }
+    ...PRODUCT_CATEGORIES.map(cat => ({
+      name: cat,
+      icon: CATEGORY_CONFIG[cat]?.icon || '🛠️',
+      active: false
+    }))
   ];
 
   const getBadgeStyle = (badge) => {
@@ -319,7 +318,8 @@ const EnhancedDashboard = () => {
               <div className="card-product-image-wrapper">
                 <img
                   src={product.image}
-                  alt={`${product.name} - ${product.category}`}
+                  alt={`${product.name}, ${product.category}, ₹${product.price}${product.originalPrice ? ' was ₹' + product.originalPrice : ''}${product.badge ? ', ' + product.badge : ''}`}
+                  title={`${product.name} - ₹${product.price} - ${product.stockCount} in stock`}
                   className="card-product-image"
                   loading="lazy"
                 />

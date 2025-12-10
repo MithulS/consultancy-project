@@ -1,5 +1,7 @@
 // Admin Dashboard - Product Management Interface
 import React, { useState, useEffect } from 'react';
+import ProductReports from './ProductReports';
+import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Inject CSS animations
@@ -49,10 +51,11 @@ export default function AdminDashboard() {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showReportsModal, setShowReportsModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [stats, setStats] = useState({ total: 0, inStock: 0, outOfStock: 0, totalValue: 0 });
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', originalPrice: '', imageUrl: '',
+    name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
     category: '', brand: '', stock: '', featured: false, rating: 0
   });
   
@@ -131,7 +134,7 @@ export default function AdminDashboard() {
 
   function openAddModal() {
     setFormData({
-      name: '', description: '', price: '', originalPrice: '', imageUrl: '',
+      name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
       category: '', brand: '', stock: '', featured: false, rating: 0
     });
     setShowAddModal(true);
@@ -145,6 +148,7 @@ export default function AdminDashboard() {
       price: product.price,
       originalPrice: product.originalPrice || '',
       imageUrl: product.imageUrl,
+      imageAltText: product.imageAltText || '',
       category: product.category,
       brand: product.brand || '',
       stock: product.stock,
@@ -162,7 +166,7 @@ export default function AdminDashboard() {
     setShowAddModal(false);
     setEditingProduct(null);
     setFormData({
-      name: '', description: '', price: '', originalPrice: '', imageUrl: '',
+      name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
       category: '', brand: '', stock: '', featured: false, rating: 0
     });
     setImageFile(null);
@@ -374,14 +378,26 @@ export default function AdminDashboard() {
       position: 'relative',
       overflow: 'hidden'
     },
+    reportsBtn: {
+      backgroundImage: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      color: 'white',
+      marginRight: '0',
+      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+    },
     settingsBtn: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
       marginRight: '0',
       boxShadow: '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
     },
+    trackingBtn: {
+      backgroundImage: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+      color: 'white',
+      marginRight: '0',
+      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+    },
     logoutBtn: {
-      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      backgroundImage: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       color: 'white',
       boxShadow: '0 4px 16px rgba(245, 87, 108, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
     },
@@ -685,6 +701,20 @@ export default function AdminDashboard() {
         <div style={styles.headerRight}>
           {admin && <span style={styles.adminName}>👤 {admin.name || admin.email}</span>}
           <button 
+            style={{...styles.button, ...styles.reportsBtn}}
+            onClick={() => setShowReportsModal(true)}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px) scale(1.05)';
+              e.target.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+            }}
+          >
+            📊 Reports
+          </button>
+          <button 
             style={{...styles.button, ...styles.settingsBtn}}
             onClick={() => window.location.hash = '#sales-analytics'}
             onMouseOver={(e) => {
@@ -696,7 +726,21 @@ export default function AdminDashboard() {
               e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
             }}
           >
-            📊 Sales Analytics
+            📈 Analytics
+          </button>
+          <button 
+            style={{...styles.button, ...styles.trackingBtn}}
+            onClick={() => window.location.hash = '#admin-order-tracking'}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px) scale(1.05)';
+              e.target.style.boxShadow = '0 8px 24px rgba(245, 158, 11, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+            }}
+          >
+            📦 Order Tracking
           </button>
           <button 
             style={{...styles.button, ...styles.settingsBtn}}
@@ -844,10 +888,12 @@ export default function AdminDashboard() {
                   <td style={styles.tableCell}>
                     <img 
                       src={getImageUrl(product.imageUrl)} 
-                      alt={product.name}
+                      alt={generateAdminAltText(product)}
+                      title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price} - Stock: ${product.stock}`}
                       style={{...styles.productImage, opacity: isOutOfStock ? 0.6 : 1}}
                       onError={(e) => {
                         e.target.src = 'https://placehold.co/60x60?text=No+Image';
+                        e.target.alt = `${product.name} - Image unavailable`;
                       }}
                       onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
                       onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
@@ -1098,14 +1144,11 @@ export default function AdminDashboard() {
                     required
                   >
                     <option value="">Select category</option>
-                    <option value="Smartphones">Smartphones</option>
-                    <option value="Laptops">Laptops</option>
-                    <option value="Tablets">Tablets</option>
-                    <option value="Audio">Audio</option>
-                    <option value="Wearables">Wearables</option>
-                    <option value="Cameras">Cameras</option>
-                    <option value="Gaming">Gaming</option>
-                    <option value="Accessories">Accessories</option>
+                    {PRODUCT_CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>
+                        {CATEGORY_CONFIG[cat]?.icon || ''} {cat}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -1117,6 +1160,26 @@ export default function AdminDashboard() {
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
                   />
+                </div>
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.label}>
+                  Image Alt Text 
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: 'normal', marginLeft: '8px' }}>
+                    (For accessibility - auto-generated if empty, max 125 chars)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  style={styles.input}
+                  value={formData.imageAltText || ''}
+                  onChange={(e) => setFormData({...formData, imageAltText: e.target.value})}
+                  placeholder="Auto-generated: Product name, price, brand, stock..."
+                  maxLength="125"
+                />
+                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>
+                  {formData.imageAltText ? `${formData.imageAltText.length}/125 characters` : 'Leave empty for auto-generation'}
                 </div>
               </div>
 
@@ -1168,6 +1231,11 @@ export default function AdminDashboard() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Product Reports Modal */}
+      {showReportsModal && (
+        <ProductReports onClose={() => setShowReportsModal(false)} />
       )}
     </div>
   );

@@ -1,5 +1,8 @@
 // Modern E-Commerce Dashboard - Product Showcase
 import React, { useState, useEffect } from 'react';
+import AuthModal from './AuthModal';
+import analytics from '../utils/analytics';
+import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateProductAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Inject CSS animations for modern UI
@@ -62,13 +65,59 @@ export default function Dashboard() {
   const [cart, setCart] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingProduct, setPendingProduct] = useState(null);
+  const [firstTimeUser, setFirstTimeUser] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
-  const categories = ['All', 'Smartphones', 'Laptops', 'Tablets', 'Accessories', 'Audio', 'Cameras', 'Gaming', 'Wearables', 'Smart Home'];
+  // Use shared categories from constants
+  const categories = ['All', ...PRODUCT_CATEGORIES];
 
   useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+      analytics.setUser(JSON.parse(userData)._id || JSON.parse(userData).id, 'customer');
+      analytics.pageView('dashboard-authenticated');
+    } else {
+      // Track as guest user
+      setFirstTimeUser(true);
+      analytics.pageView('dashboard-guest');
+    }
+    
     fetchProfile();
     fetchProducts();
     loadCart();
+    
+    // Check if there's a pending product from Google OAuth
+    const pendingCartProduct = sessionStorage.getItem('pendingCartProduct');
+    if (pendingCartProduct && token) {
+      const product = JSON.parse(pendingCartProduct);
+      addToCartAuthenticated(product);
+      sessionStorage.removeItem('pendingCartProduct');
+    }
+    
+    // Check if user just logged in
+    const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+    if (justLoggedIn === 'true' && user) {
+      setShowWelcome(true);
+      sessionStorage.removeItem('justLoggedIn');
+      
+      setTimeout(() => {
+        setShowWelcome(false);
+      }, 4000);
+    }
+    
+    // Track page load for analytics
+    if (token) {
+      analytics.track('dashboard_loaded_authenticated');
+    } else {
+      analytics.track('dashboard_loaded_guest');
+    }
   }, []);
 
   useEffect(() => {
@@ -92,20 +141,48 @@ export default function Dashboard() {
 
   async function fetchProducts() {
     try {
+      setLoading(true);
+      setError('');
+      
       const query = new URLSearchParams();
       if (selectedCategory !== 'All') query.append('category', selectedCategory);
       if (searchTerm) query.append('search', searchTerm);
       
-      const res = await fetch(`${API}/api/products?${query}`);
+      // Add timeout for better UX
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      const res = await fetch(`${API}/api/products?${query}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+      
       const data = await res.json();
       
       if (data.success) {
         setProducts(data.products);
+        setError(''); // Clear any previous errors
+      } else {
+        throw new Error(data.msg || 'Failed to load products');
       }
       setLoading(false);
     } catch (err) {
       console.error('Fetch products error:', err);
-      setError('Failed to load products');
+      
+      // Provide helpful error messages based on error type
+      if (err.name === 'AbortError') {
+        setError('⏱️ Connection timeout. Retrying...');
+        setTimeout(() => fetchProducts(), 2000); // Auto-retry after 2 seconds
+      } else if (err.message.includes('Failed to fetch')) {
+        setError('🔌 Cannot connect to server. Please ensure backend is running on port 5000.');
+      } else {
+        setError(`⚠️ ${err.message || 'Failed to load products. Please refresh the page.'}`);
+      }
       setLoading(false);
     }
   }
@@ -119,7 +196,37 @@ export default function Dashboard() {
     return cart.reduce((total, item) => total + item.quantity, 0);
   }
 
+  // Cart interceptor - prompts for login/register on first add to cart
   function addToCart(product) {
+    const token = localStorage.getItem('token');
+    
+    // Check if user is logged in
+    if (!token) {
+      // Track cart abandonment attempt
+      analytics.track('cart_abandoned_auth_required', {
+        product: product.name,
+        price: product.price,
+        category: product.category
+      });
+      
+      // Store pending product and show auth modal
+      setPendingProduct(product);
+      setShowAuthModal(true);
+      
+      // Show notification
+      setNotificationMsg('⚠️ Please login or sign up to add items to cart');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 4000);
+      
+      return;
+    }
+    
+    // User is logged in, proceed with adding to cart
+    addToCartAuthenticated(product);
+  }
+  
+  // Actually add product to cart (used when user is authenticated)
+  function addToCartAuthenticated(product) {
     const existingItem = cart.find(item => item._id === product._id);
     let updatedCart;
     
@@ -136,22 +243,60 @@ export default function Dashboard() {
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
+    // Track cart addition
+    analytics.track('product_added_to_cart', {
+      product: product.name,
+      price: product.price,
+      category: product.category,
+      cartSize: updatedCart.length
+    });
+    
     // Show notification
-    setNotificationMsg(`${product.name} added to cart!`);
+    setNotificationMsg(`✅ ${product.name} added to cart!`);
     setShowNotification(true);
     setTimeout(() => setShowNotification(false), 3000);
+  }
+  
+  // Handle successful authentication from modal
+  function handleAuthSuccess(userData) {
+    setUser(userData);
+    setShowAuthModal(false);
+    analytics.setUser(userData._id || userData.id, 'customer');
+    analytics.track('user_authenticated_from_cart', {
+      method: 'email',
+      firstTimeUser: firstTimeUser
+    });
+    
+    // Add the pending product to cart
+    if (pendingProduct) {
+      addToCartAuthenticated(pendingProduct);
+      setPendingProduct(null);
+    }
   }
 
   function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.hash = '#login';
+    localStorage.removeItem('cart');
+    
+    // Dispatch logout event
+    window.dispatchEvent(new CustomEvent('userLoggedOut'));
+    
+    // Track logout
+    analytics.track('user_logged_out');
+    
+    setUser(null);
+    setCart([]);
+    
+    setTimeout(() => {
+      window.location.hash = '#login';
+    }, 100);
   }
 
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+      backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
       backgroundSize: '200% 200%',
       animation: 'gradientFlow 15s ease infinite',
       position: 'relative'
@@ -173,7 +318,7 @@ export default function Dashboard() {
     logo: {
       fontSize: '28px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       margin: 0,
@@ -189,7 +334,7 @@ export default function Dashboard() {
     cartBtn: {
       position: 'relative',
       padding: '10px 20px',
-      background: 'linear-gradient(135deg, #10b981, #059669)',
+      backgroundImage: 'linear-gradient(135deg, #10b981, #059669)',
       color: 'white',
       border: 'none',
       borderRadius: '12px',
@@ -219,7 +364,7 @@ export default function Dashboard() {
     },
     ordersBtn: {
       padding: '10px 20px',
-      background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+      backgroundImage: 'linear-gradient(135deg, #3b82f6, #2563eb)',
       color: 'white',
       border: 'none',
       borderRadius: '12px',
@@ -248,7 +393,7 @@ export default function Dashboard() {
       color: 'white'
     },
     logoutBtn: {
-      background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+      backgroundImage: 'linear-gradient(135deg, #ef4444, #dc2626)',
       color: 'white',
       boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)'
     },
@@ -284,7 +429,9 @@ export default function Dashboard() {
     categoryBtn: {
       padding: '10px 24px',
       borderRadius: '24px',
-      border: '2px solid rgba(102, 126, 234, 0.3)',
+      borderWidth: '2px',
+      borderStyle: 'solid',
+      borderColor: 'rgba(102, 126, 234, 0.3)',
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
       cursor: 'pointer',
       fontSize: '14px',
@@ -294,7 +441,7 @@ export default function Dashboard() {
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
     },
     categoryBtnActive: {
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      backgroundImage: 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
       borderColor: 'transparent',
       boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
@@ -372,19 +519,19 @@ export default function Dashboard() {
       fontWeight: '600'
     },
     inStock: {
-      background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+      backgroundImage: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
       color: '#065f46',
       boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
     },
     outOfStock: {
-      background: 'linear-gradient(135deg, #fee2e2, #fecaca)',
+      backgroundImage: 'linear-gradient(135deg, #fee2e2, #fecaca)',
       color: '#991b1b',
       boxShadow: '0 2px 8px rgba(239, 68, 68, 0.2)'
     },
     addToCartBtn: {
       width: '100%',
       padding: '14px',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      backgroundImage: 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
       border: 'none',
       borderRadius: '12px',
@@ -405,7 +552,7 @@ export default function Dashboard() {
       position: 'fixed',
       top: '90px',
       right: '32px',
-      background: 'linear-gradient(135deg, #10b981, #059669)',
+      backgroundImage: 'linear-gradient(135deg, #10b981, #059669)',
       color: 'white',
       padding: '18px 28px',
       borderRadius: '16px',
@@ -419,15 +566,16 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) {
+  if (loading || isTransitioning) {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.logo}>🛒 ElectroStore</h1>
+          <h1 style={styles.logo}>🔨 HomeHardware</h1>
         </div>
         <div style={styles.emptyState}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
-          <h2>Loading products...</h2>
+          <div style={{ fontSize: '48px', marginBottom: '16px', animation: 'pulse 1.5s ease-in-out infinite' }}>⏳</div>
+          <h2>{isTransitioning ? 'Loading your dashboard...' : 'Loading products...'}</h2>
+          {isTransitioning && <p style={{ color: '#667eea', marginTop: '8px' }}>Welcome back!</p>}
         </div>
       </div>
     );
@@ -437,7 +585,7 @@ export default function Dashboard() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h1 style={styles.logo}>🛒 ElectroStore</h1>
+        <h1 style={styles.logo}>🔨 HomeHardware</h1>
         <div style={styles.userSection}>
           {user && <span style={styles.userName}>👤 {user.name}</span>}
           <button 
@@ -501,6 +649,19 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
+
+      {/* Welcome Message */}
+      {showWelcome && user && (
+        <div style={{
+          ...styles.notification,
+          backgroundImage: 'linear-gradient(135deg, #10b981, #059669)',
+          fontSize: '16px',
+          padding: '16px 24px',
+          animation: 'slideDown 0.5s ease-out'
+        }}>
+          🎉 Welcome back, {user.name}! Happy shopping!
+        </div>
+      )}
 
       {/* Notification */}
       {showNotification && (
@@ -588,13 +749,15 @@ export default function Dashboard() {
               <div style={{ overflow: 'hidden', height: '280px' }}>
                 <img 
                   src={getImageUrl(product.imageUrl)} 
-                  alt={product.name}
+                  alt={generateProductAltText(product)}
+                  title={`${product.name}${product.brand ? ' by ' + product.brand : ''} - ₹${product.price}`}
                   style={{
                     ...styles.productImage,
                     transition: 'transform 0.4s ease'
                   }}
                   onError={(e) => {
                     e.target.src = 'https://placehold.co/300x300?text=No+Image';
+                    e.target.alt = `${product.name} - Image not available`;
                   }}
                   onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
                   onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
@@ -616,7 +779,7 @@ export default function Dashboard() {
                 <button 
                   style={{
                     ...styles.addToCartBtn,
-                    background: product.inStock ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'linear-gradient(135deg, #9ca3af, #6b7280)',
+                    backgroundImage: product.inStock ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'linear-gradient(135deg, #9ca3af, #6b7280)',
                     cursor: product.inStock ? 'pointer' : 'not-allowed',
                     opacity: product.inStock ? 1 : 0.6
                   }}
@@ -626,14 +789,14 @@ export default function Dashboard() {
                     if (product.inStock) {
                       e.currentTarget.style.transform = 'translateY(-2px)';
                       e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
-                      e.currentTarget.style.background = 'linear-gradient(135deg, #764ba2, #667eea)';
+                      e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #764ba2, #667eea)';
                     }
                   }}
                   onMouseOut={(e) => {
                     if (product.inStock) {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
-                      e.currentTarget.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                      e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #667eea, #764ba2)';
                     }
                   }}
                 >
@@ -644,6 +807,18 @@ export default function Dashboard() {
           ))}
         </div>
       )}
+      
+      {/* Auth Modal - Shows when user tries to add to cart without login */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => {
+          setShowAuthModal(false);
+          setPendingProduct(null);
+          analytics.track('auth_modal_closed', { hadPendingProduct: !!pendingProduct });
+        }}
+        onAuthSuccess={handleAuthSuccess}
+        pendingProduct={pendingProduct}
+      />
     </div>
   );
 }

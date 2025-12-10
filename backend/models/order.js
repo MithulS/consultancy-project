@@ -61,9 +61,53 @@ const orderSchema = new mongoose.Schema({
     type: Boolean,
     default: false // Stock permanently deducted when delivered
   },
+  // Order Tracking System
+  trackingNumber: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  trackingHistory: [{
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'processing', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'],
+      required: true
+    },
+    location: String,
+    description: String,
+    timestamp: {
+      type: Date,
+      default: Date.now
+    },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  }],
+  estimatedDelivery: Date,
+  actualDelivery: Date,
+  courierPartner: {
+    name: String,
+    trackingUrl: String,
+    contactNumber: String
+  },
+  deliveryInstructions: String,
   deliveredAt: Date,
   cancelledAt: Date,
-  cancelReason: String
+  cancelReason: String,
+  // Customer interaction tracking
+  lastViewedAt: Date,
+  notificationsSent: [{
+    type: {
+      type: String,
+      enum: ['order_placed', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'delayed']
+    },
+    sentAt: Date,
+    channel: {
+      type: String,
+      enum: ['email', 'sms', 'push', 'in_app']
+    }
+  }]
 }, {
   timestamps: true
 });

@@ -17,6 +17,18 @@ export default function Wishlist({ onNavigate }) {
       const res = await fetch(`${API}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setMessage('Please login to view wishlist');
+        setTimeout(() => {
+          window.location.hash = '#login';
+        }, 2000);
+        setLoading(false);
+        return;
+      }
+      
       const data = await res.json();
 
       if (data.success) {
@@ -114,7 +126,12 @@ export default function Wishlist({ onNavigate }) {
 
           return (
             <div key={product._id} style={styles.card}>
-              <img src={product.imageUrl} alt={product.name} style={styles.image} />
+              <img 
+                src={product.imageUrl} 
+                alt={`${product.name}${product.brand ? ' by ' + product.brand : ''}, ₹${product.price}${product.stock > 0 ? ', In stock' : ', Out of stock'}`}
+                title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price}`}
+                style={styles.image} 
+              />
               
               <div style={styles.cardContent}>
                 <h3 style={styles.productName}>{product.name}</h3>

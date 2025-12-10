@@ -444,9 +444,7 @@ export default function Checkout() {
                     style={styles.select}
                   >
                     <option value="cod">Cash on Delivery</option>
-                    <option value="card">Credit/Debit Card</option>
-                    <option value="upi">UPI Payment</option>
-                    <option value="netbanking">Net Banking</option>
+                    <option value="gpay">Google Pay</option>
                   </select>
                 </div>
               </div>
@@ -459,7 +457,12 @@ export default function Checkout() {
 
             {cart.map(item => (
               <div key={item._id} style={styles.cartItem}>
-                <img src={getImageUrl(item.imageUrl)} alt={item.name} style={styles.itemImage} />
+                <img 
+                  src={getImageUrl(item.imageUrl)} 
+                  alt={`${item.name}, ₹${item.price}, Qty: ${item.quantity}`}
+                  title={`${item.name} - ₹${item.price} x ${item.quantity}`}
+                  style={styles.itemImage} 
+                />
                 <div style={styles.itemDetails}>
                   <div style={styles.itemName}>{item.name}</div>
                   <div style={styles.itemPrice}>

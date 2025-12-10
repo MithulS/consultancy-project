@@ -32,7 +32,11 @@ class Analytics {
     };
 
     this.events.push(event);
-    console.log('📊 Analytics Event:', event);
+    
+    // Only log in development mode
+    if (import.meta.env.DEV) {
+      console.log('📊 Analytics:', eventName, properties);
+    }
 
     // Send to backend
     this.sendToBackend(event);

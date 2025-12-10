@@ -1,6 +1,47 @@
-// Modern, attractive Login component
+// Modern, attractive Login component with Google OAuth
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+// Google logo SVG component
+const GoogleLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <title>Google Logo</title>
+    <g fill="none" fillRule="evenodd">
+      <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </g>
+  </svg>
+);
+
+// Analytics helper function
+const trackLoginEvent = (method, success = true) => {
+  try {
+    // Google Analytics tracking
+    if (window.gtag) {
+      window.gtag('event', 'login_attempt', {
+        method: method,
+        success: success,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    // Custom analytics endpoint (if you have one)
+    fetch(`${API}/api/analytics/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'login_attempt',
+        method: method,
+        success: success,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(() => {}); // Silent fail for analytics
+  } catch (error) {
+    console.log('Analytics tracking failed:', error);
+  }
+};
 
 // Inject CSS animations
 const styleSheet = document.createElement('style');
@@ -41,6 +82,7 @@ export default function Login() {
   const [msg, setMsg] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // Check for messages from other pages (OTP verification)
@@ -101,14 +143,37 @@ export default function Login() {
         localStorage.setItem('rememberMe', 'true');
       }
       
+      // Track successful login
+      trackLoginEvent('email', true);
+      
       setMsg(`✅ Welcome back, ${data.user.name || data.user.email}!`);
       setForm({ email: '', password: '' });
       
+      // Set flag for welcome message
+      sessionStorage.setItem('justLoggedIn', 'true');
+      
+      // Trigger event to notify app of login
+      window.dispatchEvent(new CustomEvent('userLoggedIn', { 
+        detail: { user: data.user, token: data.token } 
+      }));
+      
+      // Check if there's a redirect destination stored
+      const redirectTo = sessionStorage.getItem('redirectAfterLogin');
+      
       setTimeout(() => {
-        window.location.hash = '#dashboard';
-      }, 1000);
+        if (redirectTo) {
+          sessionStorage.removeItem('redirectAfterLogin');
+          window.location.hash = redirectTo;
+        } else {
+          window.location.hash = '#dashboard';
+        }
+      }, 800);
     } catch (err) {
       console.error('Login error', err);
+      
+      // Track failed login
+      trackLoginEvent('email', false);
+      
       if (err.message === 'Email not verified') {
         setMsg('❌ Email not verified. Redirecting to verification page...');
         
@@ -132,6 +197,80 @@ export default function Login() {
       setLoading(false);
     }
   }
+
+  // Handle Google OAuth Login
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    setMsg('🔄 Redirecting to Google...');
+    setErrors({});
+    
+    try {
+      // Track Google login attempt
+      trackLoginEvent('google', true);
+      
+      // Redirect to backend Google OAuth endpoint
+      window.location.href = `${API}/api/auth/google`;
+    } catch (err) {
+      console.error('Google login error:', err);
+      setMsg('❌ Failed to initiate Google login. Please try again.');
+      setGoogleLoading(false);
+      trackLoginEvent('google', false);
+    }
+  };
+
+  // Handle OAuth callback (when returning from Google)
+  useEffect(() => {
+    // Handle both hash-based and query-based routing
+    const hash = window.location.hash;
+    const queryString = hash.includes('?') ? hash.split('?')[1] : window.location.search.substring(1);
+    const urlParams = new URLSearchParams(queryString);
+    const token = urlParams.get('token');
+    const error = urlParams.get('error');
+    
+    if (token) {
+      // Store token and redirect to dashboard
+      localStorage.setItem('token', token);
+      
+      // Fetch user info
+      fetch(`${API}/api/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          localStorage.setItem('user', JSON.stringify(data));
+          setMsg('✅ Google login successful!');
+          trackLoginEvent('google', true);
+          
+          // Set flag for welcome message
+          sessionStorage.setItem('justLoggedIn', 'true');
+          
+          // Trigger event to notify app of login
+          window.dispatchEvent(new CustomEvent('userLoggedIn', { 
+            detail: { user: data, token: token } 
+          }));
+          
+          // Check if there's a redirect destination stored
+          const redirectTo = sessionStorage.getItem('redirectAfterLogin');
+          
+          setTimeout(() => {
+            if (redirectTo) {
+              sessionStorage.removeItem('redirectAfterLogin');
+              window.location.hash = redirectTo;
+            } else {
+              window.location.hash = '#dashboard';
+            }
+          }, 800);
+        })
+        .catch(err => {
+          console.error('Failed to fetch user:', err);
+          setMsg('⚠️ Login successful but failed to load profile.');
+        });
+    } else if (error) {
+      setMsg(`❌ Google login failed: ${decodeURIComponent(error)}`);
+      trackLoginEvent('google', false);
+      setGoogleLoading(false);
+    }
+  }, []);
 
   const styles = {
     container: {
@@ -358,6 +497,92 @@ export default function Login() {
       filter: 'blur(70px)',
       animation: 'float 10s ease-in-out infinite reverse',
       pointerEvents: 'none'
+    },
+    googleButton: {
+      width: '100%',
+      padding: '16px 24px',
+      fontSize: '16px',
+      fontWeight: '600',
+      color: '#3c4043',
+      backgroundColor: '#ffffff',
+      border: '2px solid #dadce0',
+      borderRadius: '14px',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      display: 'flex !important',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '12px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+      position: 'relative',
+      overflow: 'visible',
+      marginBottom: '0',
+      zIndex: 10,
+      visibility: 'visible !important',
+      opacity: '1 !important'
+    },
+    googleButtonDisabled: {
+      opacity: '0.6',
+      cursor: 'not-allowed'
+    },
+    googleButtonText: {
+      fontSize: '16px',
+      fontWeight: '600',
+      color: '#3c4043',
+      letterSpacing: '0.25px'
+    },
+    loadingSpinner: {
+      display: 'inline-block',
+      width: '18px',
+      height: '18px',
+      border: '3px solid rgba(102, 126, 234, 0.2)',
+      borderTopColor: '#667eea',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite'
+    },
+    securityNote: {
+      fontSize: '13px',
+      color: '#64748b',
+      textAlign: 'center',
+      marginTop: '20px',
+      padding: '12px 16px',
+      backgroundColor: '#f8fafc',
+      borderRadius: '10px',
+      lineHeight: '1.6',
+      border: '1px solid #e2e8f0'
+    },
+    privacyLink: {
+      color: '#667eea',
+      textDecoration: 'none',
+      fontWeight: '600',
+      transition: 'opacity 0.2s'
+    },
+    tooltip: {
+      position: 'absolute',
+      bottom: '100%',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      backgroundColor: '#1e293b',
+      color: 'white',
+      padding: '8px 12px',
+      borderRadius: '8px',
+      fontSize: '13px',
+      whiteSpace: 'nowrap',
+      marginBottom: '8px',
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: 'opacity 0.2s ease',
+      zIndex: 10,
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+    },
+    tooltipArrow: {
+      position: 'absolute',
+      top: '100%',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      borderLeft: '6px solid transparent',
+      borderRight: '6px solid transparent',
+      borderTop: '6px solid #1e293b'
     }
   };
 
@@ -380,12 +605,34 @@ export default function Login() {
         button:not(:disabled):active {
           transform: translateY(-1px) scale(0.99);
         }
+        .google-btn:not(:disabled):hover {
+          background-color: #f8fafc;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          transform: translateY(-2px);
+          border-color: #667eea;
+        }
+        .google-btn:not(:disabled):active {
+          transform: translateY(0);
+        }
+        .google-btn:focus {
+          outline: 3px solid rgba(102, 126, 234, 0.3);
+          outline-offset: 2px;
+        }
         a:hover {
           color: #5a67d8 !important;
           text-decoration: none;
         }
         .checkbox-label:hover {
           color: #1e293b;
+        }
+        .privacy-link:hover {
+          opacity: 0.8;
+        }
+        .google-btn-wrapper:hover .tooltip {
+          opacity: 1;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
       
@@ -399,10 +646,71 @@ export default function Login() {
           <p style={styles.subtitle}>Login to your account</p>
         </div>
 
+        {/* Google Login Button */}
+        <div style={{ position: 'relative', marginBottom: '16px' }} className="google-btn-wrapper">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={googleLoading || loading}
+            style={{
+              ...styles.googleButton,
+              ...(googleLoading && styles.googleButtonDisabled),
+              display: 'flex !important',
+              visibility: 'visible !important',
+              opacity: 1
+            }}
+            className="google-btn"
+            aria-label="Continue with Google - Quick and secure access with your Google account"
+          >
+            {googleLoading ? (
+              <>
+                <div style={styles.loadingSpinner} role="status" aria-label="Loading"></div>
+                <span style={styles.googleButtonText}>Connecting to Google...</span>
+              </>
+            ) : (
+              <>
+                <GoogleLogo />
+                <span style={styles.googleButtonText}>Continue with Google</span>
+              </>
+            )}
+          </button>
+          
+          {/* Tooltip */}
+          <div style={styles.tooltip} className="tooltip" role="tooltip">
+            Quick and secure access with your Google account
+            <div style={styles.tooltipArrow}></div>
+          </div>
+        </div>
+
+        {/* OR Divider */}
+        <div style={{...styles.divider, margin: '24px 0'}}>
+          <span style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            padding: '0 16px',
+            position: 'relative',
+            zIndex: 1,
+            color: '#94a3b8',
+            fontSize: '14px',
+            fontWeight: '500'
+          }}>
+            OR
+          </span>
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: 0,
+            right: 0,
+            height: '1px',
+            backgroundColor: '#e2e8f0',
+            zIndex: 0
+          }}></div>
+        </div>
+
         <form onSubmit={submit}>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Email Address</label>
+            <label style={styles.label} htmlFor="email-input">Email Address</label>
             <input 
+              id="email-input"
               type="email"
               placeholder="you@example.com"
               value={form.email} 
@@ -413,18 +721,22 @@ export default function Login() {
               }}
               required 
               autoComplete="email"
+              aria-required="true"
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-describedby={errors.email ? 'email-error' : undefined}
             />
             {errors.email && (
-              <div style={styles.errorText}>
-                <span>⚠️</span> {errors.email}
+              <div style={styles.errorText} id="email-error" role="alert">
+                <span aria-hidden="true">⚠️</span> {errors.email}
               </div>
             )}
           </div>
           
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
+            <label style={styles.label} htmlFor="password-input">Password</label>
             <div style={styles.inputWrapper}>
               <input 
+                id="password-input"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={form.password} 
@@ -436,19 +748,23 @@ export default function Login() {
                 }}
                 required 
                 autoComplete="current-password"
+                aria-required="true"
+                aria-invalid={errors.password ? 'true' : 'false'}
+                aria-describedby={errors.password ? 'password-error' : undefined}
               />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={styles.passwordToggle}
+                aria-label={showPassword ? "Hide password" : "Show password"}
                 title={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
+                <span aria-hidden="true">{showPassword ? '👁️' : '👁️‍🗨️'}</span>
               </button>
             </div>
             {errors.password && (
-              <div style={styles.errorText}>
-                <span>⚠️</span> {errors.password}
+              <div style={styles.errorText} id="password-error" role="alert">
+                <span aria-hidden="true">⚠️</span> {errors.password}
               </div>
             )}
           </div>
@@ -475,49 +791,83 @@ export default function Login() {
           
           <button 
             type="submit" 
-            disabled={loading}
+            disabled={loading || googleLoading}
             style={{
               ...styles.button,
               ...(loading && styles.buttonDisabled)
             }}
+            aria-label="Login with email and password"
           >
-            {loading ? '⏳ Logging in...' : 'Login'}
+            {loading ? (
+              <>
+                <span style={styles.loadingSpinner} role="status" aria-label="Loading"></span>
+                <span style={{ marginLeft: '8px' }}>Logging in...</span>
+              </>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
         
         {msg && (
-          <div style={{
-            ...styles.message,
-            ...(msg.includes('✅') ? styles.messageSuccess : styles.messageError)
-          }}>
+          <div 
+            style={{
+              ...styles.message,
+              ...(msg.includes('✅') ? styles.messageSuccess : styles.messageError)
+            }}
+            role="alert"
+            aria-live="polite"
+          >
             {msg}
           </div>
         )}
 
-        <div style={styles.divider}>
-          <span style={{
-            backgroundColor: 'white',
-            padding: '0 16px',
-            position: 'relative',
-            zIndex: 1
-          }}>
-            OR
-          </span>
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: 0,
-            right: 0,
-            height: '1px',
-            backgroundColor: '#e2e8f0',
-            zIndex: 0
-          }}></div>
+        {/* Security & Privacy Notice */}
+        <div style={styles.securityNote}>
+          🔒 <strong>Secure Login:</strong> Your data is protected with industry-standard encryption. 
+          By logging in with Google, you agree to our{' '}
+          <a 
+            href="#privacy-policy" 
+            style={styles.privacyLink}
+            className="privacy-link"
+            aria-label="Read our privacy policy"
+          >
+            Privacy Policy
+          </a>
+          {' '}and{' '}
+          <a 
+            href="#terms" 
+            style={styles.privacyLink}
+            className="privacy-link"
+            aria-label="Read our terms of service"
+          >
+            Terms of Service
+          </a>.
         </div>
         
         <div style={styles.registerLink}>
           Don't have an account?
           <a href="#register" style={styles.link}>
             Create one now
+          </a>
+        </div>
+        
+        <div style={{textAlign: 'center', marginTop: '16px'}}>
+          <a 
+            href="#dashboard" 
+            style={{
+              color: 'rgba(255, 255, 255, 0.8)',
+              textDecoration: 'none',
+              fontSize: '14px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'color 0.3s ease'
+            }}
+            onMouseOver={(e) => e.target.style.color = '#fff'}
+            onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.8)'}
+          >
+            ← Back to Home
           </a>
         </div>
       </div>

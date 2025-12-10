@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Meta Tags -->
-    <title>ElectroStore - Premium Electronics & Gadgets Online Store</title>
-    <meta name="description" content="Shop the latest smartphones, laptops, tablets, and electronics at ElectroStore. Best prices, fast shipping, and excellent customer service. Free returns on all orders." />
-    <meta name="keywords" content="electronics, smartphones, laptops, tablets, gadgets, online store, tech shop" />
-    <meta name="author" content="ElectroStore" />
+    <title>HomeHardware - Quality Hardware & Home Improvement Supplies</title>
+    <meta name="description" content="Shop hardware, electrical supplies, plumbing, tools, paints, and home improvement products at HomeHardware. Quality products, competitive prices, and expert advice." />
+    <meta name="keywords" content="hardware, electrical supplies, plumbing, tools, paints, home improvement, fans, switchboards, water heater, hammer" />
+    <meta name="author" content="HomeHardware" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://electrostore.com" />
     
     <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="ElectroStore - Premium Electronics & Gadgets" />
-    <meta property="og:description" content="Shop the latest smartphones, laptops, tablets, and electronics at unbeatable prices." />
-    <meta property="og:image" content="https://electrostore.com/og-image.jpg" />
-    <meta property="og:url" content="https://electrostore.com" />
-    <meta property="og:site_name" content="ElectroStore" />
+    <meta property="og:title" content="HomeHardware - Quality Hardware & Supplies" />
+    <meta property="og:description" content="Shop quality hardware, electrical supplies, plumbing, tools, and home improvement products." />
+    <meta property="og:image" content="https://homehardware.com/og-image.jpg" />
+    <meta property="og:url" content="https://homehardware.com" />
+    <meta property="og:site_name" content="HomeHardware" />
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ElectroStore - Premium Electronics & Gadgets" />
-    <meta name="twitter:description" content="Shop the latest smartphones, laptops, tablets, and electronics at unbeatable prices." />
-    <meta name="twitter:image" content="https://electrostore.com/twitter-card.jpg" />
-    <meta name="twitter:site" content="@ElectroStore" />
+    <meta name="twitter:title" content="HomeHardware - Quality Hardware & Supplies" />
+    <meta name="twitter:description" content="Shop quality hardware, electrical supplies, plumbing, tools, and home improvement products." />
+    <meta name="twitter:image" content="https://homehardware.com/twitter-card.jpg" />
+    <meta name="twitter:site" content="@HomeHardware" />
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#667eea" />
@@ -37,7 +37,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="ElectroStore" />
+    <meta name="apple-mobile-web-app-title" content="HomeHardware" />
   </head>
   <body>
     <!-- Skip to main content link for accessibility -->
@@ -46,24 +46,30 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     
-    <!-- PWA Service Worker Registration -->
+    <!-- PWA Service Worker - Unregister existing workers -->
     <script>
+      // Unregister any existing service workers to prevent caching issues
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => {
+            registration.unregister().then(() => {
+              console.log('✅ Service Worker unregistered');
+            });
+          });
+        });
+      }
+      
+      // Service Worker registration disabled for development
+      // To enable in production, uncomment below and ensure sw.js exists
+      /*
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('✅ Service Worker registered:', registration.scope);
-              
-              // Check for updates every hour
-              setInterval(() => {
-                registration.update();
-              }, 3600000);
-            })
-            .catch((error) => {
-              console.error('❌ Service Worker registration failed:', error);
-            });
+            .then((registration) => console.log('✅ SW registered:', registration.scope))
+            .catch((error) => console.warn('⚠️ SW registration failed:', error));
         });
       }
+      */
     </script>
   </body>
 </html>

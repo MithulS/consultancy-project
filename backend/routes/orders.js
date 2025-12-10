@@ -489,4 +489,275 @@ router.get('/admin/order-history', verifyAdmin, async (req, res) => {
   }
 });
 
+// ==================== ORDER TRACKING SYSTEM ====================
+
+// Get detailed tracking information for an order
+router.get('/:id/tracking', verifyToken, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate('user', 'name email')
+      .populate('items.product', 'name imageUrl')
+      .populate('trackingHistory.updatedBy', 'name email');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Order not found'
+      });
+    }
+
+    // Only allow user to view their own orders (unless admin)
+    if (order.user._id.toString() !== req.user.userId && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        msg: 'Access denied'
+      });
+    }
+
+    // Update last viewed timestamp
+    order.lastViewedAt = new Date();
+    await order.save();
+
+    res.json({
+      success: true,
+      tracking: {
+        orderId: order._id,
+        orderNumber: order._id.toString().slice(-8).toUpperCase(),
+        trackingNumber: order.trackingNumber,
+        currentStatus: order.status,
+        estimatedDelivery: order.estimatedDelivery,
+        actualDelivery: order.actualDelivery,
+        courierPartner: order.courierPartner,
+        shippingAddress: order.shippingAddress,
+        trackingHistory: order.trackingHistory,
+        items: order.items,
+        totalAmount: order.totalAmount,
+        createdAt: order.createdAt
+      }
+    });
+  } catch (err) {
+    console.error('Get tracking error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Update order tracking status (Admin only)
+router.post('/:id/tracking/update', verifyAdmin, async (req, res) => {
+  try {
+    const { status, location, description, estimatedDelivery, courierPartner, trackingNumber } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Order not found'
+      });
+    }
+
+    // Add tracking history entry
+    const trackingEntry = {
+      status: status || order.status,
+      location: location || '',
+      description: description || '',
+      timestamp: new Date(),
+      updatedBy: req.user.userId
+    };
+
+    order.trackingHistory.push(trackingEntry);
+
+    // Update order status if provided
+    if (status) {
+      order.status = status;
+      
+      // Auto-update delivery dates based on status
+      if (status === 'delivered') {
+        order.actualDelivery = new Date();
+        order.deliveredAt = new Date();
+      }
+    }
+
+    // Update courier information if provided
+    if (courierPartner) {
+      order.courierPartner = {
+        ...order.courierPartner,
+        ...courierPartner
+      };
+    }
+
+    // Update tracking number if provided
+    if (trackingNumber) {
+      order.trackingNumber = trackingNumber;
+    }
+
+    // Update estimated delivery if provided
+    if (estimatedDelivery) {
+      order.estimatedDelivery = new Date(estimatedDelivery);
+    }
+
+    await order.save();
+
+    res.json({
+      success: true,
+      msg: 'Tracking updated successfully',
+      order: {
+        _id: order._id,
+        status: order.status,
+        trackingNumber: order.trackingNumber,
+        trackingHistory: order.trackingHistory,
+        estimatedDelivery: order.estimatedDelivery
+      }
+    });
+  } catch (err) {
+    console.error('Update tracking error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Generate tracking number for order (Admin only)
+router.post('/:id/tracking/generate', verifyAdmin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Order not found'
+      });
+    }
+
+    if (order.trackingNumber) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Tracking number already exists'
+      });
+    }
+
+    // Generate unique tracking number
+    const prefix = 'TRK';
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const trackingNumber = `${prefix}${timestamp}${random}`;
+
+    order.trackingNumber = trackingNumber;
+    
+    // Add initial tracking entry
+    order.trackingHistory.push({
+      status: 'confirmed',
+      location: 'Warehouse',
+      description: 'Order confirmed and tracking number generated',
+      timestamp: new Date(),
+      updatedBy: req.user.userId
+    });
+
+    await order.save();
+
+    res.json({
+      success: true,
+      msg: 'Tracking number generated successfully',
+      trackingNumber
+    });
+  } catch (err) {
+    console.error('Generate tracking number error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Track order by tracking number (Public - no auth required)
+router.get('/public/track/:trackingNumber', async (req, res) => {
+  try {
+    const order = await Order.findOne({ trackingNumber: req.params.trackingNumber })
+      .populate('items.product', 'name imageUrl')
+      .select('-user -paymentIntentId');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Invalid tracking number'
+      });
+    }
+
+    res.json({
+      success: true,
+      tracking: {
+        orderNumber: order._id.toString().slice(-8).toUpperCase(),
+        trackingNumber: order.trackingNumber,
+        currentStatus: order.status,
+        estimatedDelivery: order.estimatedDelivery,
+        actualDelivery: order.actualDelivery,
+        courierPartner: order.courierPartner,
+        trackingHistory: order.trackingHistory,
+        items: order.items.map(item => ({
+          name: item.name,
+          imageUrl: item.imageUrl,
+          quantity: item.quantity
+        })),
+        createdAt: order.createdAt
+      }
+    });
+  } catch (err) {
+    console.error('Public tracking error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
+// Bulk update tracking for multiple orders (Admin only)
+router.post('/tracking/bulk-update', verifyAdmin, async (req, res) => {
+  try {
+    const { orderIds, status, location, description } = req.body;
+
+    if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Order IDs array is required'
+      });
+    }
+
+    const trackingEntry = {
+      status: status,
+      location: location || '',
+      description: description || '',
+      timestamp: new Date(),
+      updatedBy: req.user.userId
+    };
+
+    const updateResult = await Order.updateMany(
+      { _id: { $in: orderIds } },
+      { 
+        $push: { trackingHistory: trackingEntry },
+        $set: { status: status }
+      }
+    );
+
+    res.json({
+      success: true,
+      msg: `${updateResult.modifiedCount} orders updated successfully`,
+      updatedCount: updateResult.modifiedCount
+    });
+  } catch (err) {
+    console.error('Bulk update tracking error:', err);
+    res.status(500).json({
+      success: false,
+      msg: 'Server error',
+      error: err.message
+    });
+  }
+});
+
 module.exports = router;

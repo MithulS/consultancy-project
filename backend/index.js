@@ -106,6 +106,7 @@ app.use('/api/payments', require('./routes/payments'));
 app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/comparison', require('./routes/comparison'));
 app.use('/api/cart', require('./routes/cart'));
+app.use('/api/admin/reports', require('./routes/reports'));
 
 // 404 handler
 app.use((req, res) => {

@@ -46,6 +46,17 @@ export default function Profile() {
       const res = await fetch(`${API}/api/auth/profile`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        showToast('Please login to view profile', 'error');
+        setTimeout(() => {
+          window.location.hash = '#login';
+        }, 1500);
+        return;
+      }
+      
       const data = await res.json();
       
       if (res.ok && data.user) {
@@ -73,6 +84,10 @@ export default function Profile() {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
+
+      if (ordersRes.status === 401 || wishlistRes.status === 401) {
+        return;
+      }
 
       const ordersData = await ordersRes.json();
       const wishlistData = await wishlistRes.json();
@@ -450,7 +465,7 @@ export default function Profile() {
         <div style={styles.card}>
           <div style={styles.cardHeader}>
             <h2 style={styles.cardTitle}>Security</h2>
-            {!passwordMode && (
+            {!passwordMode && !user?.googleId && (
               <button 
                 style={{...styles.btnPrimary, ...styles.btnDanger}}
                 onClick={() => setPasswordMode(true)}
@@ -460,7 +475,55 @@ export default function Profile() {
             )}
           </div>
 
-          {passwordMode ? (
+          {user?.googleId ? (
+            <div style={{
+              padding: '24px',
+              backgroundColor: '#f0f9ff',
+              border: '2px solid #bfdbfe',
+              borderRadius: '12px',
+              textAlign: 'center'
+            }}>
+              <div style={{fontSize: '48px', marginBottom: '16px'}}>🔐</div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: '600',
+                color: '#1e40af',
+                marginBottom: '8px'
+              }}>
+                Google Account
+              </h3>
+              <p style={{
+                color: '#64748b',
+                fontSize: '14px',
+                lineHeight: '1.6',
+                margin: '0'
+              }}>
+                You're signed in with Google. Your password is managed by Google.<br/>
+                To change your password, please visit your Google Account settings.
+              </p>
+              <a
+                href="https://myaccount.google.com/security"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  marginTop: '16px',
+                  padding: '10px 20px',
+                  backgroundColor: '#2563eb',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  transition: 'background-color 0.3s ease'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#1d4ed8'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#2563eb'}
+              >
+                Manage Google Account →
+              </a>
+            </div>
+          ) : passwordMode ? (
             <form onSubmit={handlePasswordUpdate}>
               <div style={styles.infoGroup}>
                 <label style={styles.label}>Current Password</label>

@@ -38,15 +38,33 @@ export default function AdminLogin() {
       return;
     }
 
+    if (isLocked) {
+      setMsg('🔒 Account is temporarily locked. Please wait.');
+      return;
+    }
+
     setLoading(true);
     setMsg('Verifying admin credentials...');
 
     try {
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const res = await fetch(`${API}/api/auth/admin-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
+
+      // Check if response is JSON
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned invalid response. Please try again.');
+      }
 
       const data = await res.json();
 
@@ -60,6 +78,7 @@ export default function AdminLogin() {
       localStorage.setItem('adminUser', JSON.stringify(data.user));
 
       setMsg('✅ Admin login successful! Redirecting...');
+      setLoginAttempts(0); // Reset attempts on success
       
       setTimeout(() => {
         window.location.hash = '#admin-dashboard';
@@ -67,20 +86,38 @@ export default function AdminLogin() {
 
     } catch (err) {
       console.error('Admin login error:', err);
-      setMsg('❌ ' + err.message);
       
-      // Track failed attempts
-      const newAttempts = loginAttempts + 1;
-      setLoginAttempts(newAttempts);
+      // Handle specific error types
+      let errorMessage = '❌ ';
       
-      if (newAttempts >= 3) {
-        setIsLocked(true);
-        setMsg('🔒 Too many failed attempts. Account temporarily locked for 5 minutes.');
-        setTimeout(() => {
-          setIsLocked(false);
-          setLoginAttempts(0);
-          setMsg('');
-        }, 300000); // 5 minutes
+      if (err.name === 'AbortError') {
+        errorMessage += 'Connection timeout. Please check your network and try again.';
+      } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+        errorMessage += 'Cannot connect to server. Please ensure backend is running on port 5000.';
+      } else if (err.message.includes('Invalid credentials')) {
+        errorMessage += 'Invalid email or password. Please check your credentials.';
+      } else if (err.message.includes('not an admin')) {
+        errorMessage += 'Access denied. Admin privileges required.';
+      } else {
+        errorMessage += err.message || 'Server error occurred. Please try again.';
+      }
+      
+      setMsg(errorMessage);
+      
+      // Track failed attempts only for credential errors
+      if (!err.message.includes('fetch') && !err.message.includes('timeout') && !err.name === 'AbortError') {
+        const newAttempts = loginAttempts + 1;
+        setLoginAttempts(newAttempts);
+        
+        if (newAttempts >= 3) {
+          setIsLocked(true);
+          setMsg('🔒 Too many failed attempts. Account temporarily locked for 5 minutes.');
+          setTimeout(() => {
+            setIsLocked(false);
+            setLoginAttempts(0);
+            setMsg('');
+          }, 300000); // 5 minutes
+        }
       }
     } finally {
       setLoading(false);
@@ -478,6 +515,32 @@ export default function AdminLogin() {
             {isLocked ? '🔒 Account Locked' : loading ? '🔄 Authenticating...' : '🚀 Access Admin Panel'}
           </button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
+          <a 
+            href="#admin-forgot-password"
+            style={{
+              color: '#2563eb',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: '600',
+              transition: 'all 0.3s ease',
+              display: 'inline-block',
+              padding: '8px 12px',
+              borderRadius: '8px'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = '#eff6ff';
+              e.target.style.textDecoration = 'underline';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.textDecoration = 'none';
+            }}
+          >
+            🔑 Forgot Password?
+          </a>
+        </div>
 
         <div style={styles.footer}>
           <a 
