@@ -56,7 +56,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({ total: 0, inStock: 0, outOfStock: 0, totalValue: 0 });
   const [formData, setFormData] = useState({
     name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
-    category: '', brand: '', stock: '', featured: false, rating: 0
+    category: '', brand: '', stock: '', featured: false
   });
   
   // Image upload states
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
   function openAddModal() {
     setFormData({
       name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
-      category: '', brand: '', stock: '', featured: false, rating: 0
+      category: '', brand: '', stock: '', featured: false
     });
     setShowAddModal(true);
     setEditingProduct(null);
@@ -152,8 +152,7 @@ export default function AdminDashboard() {
       category: product.category,
       brand: product.brand || '',
       stock: product.stock,
-      featured: product.featured || false,
-      rating: product.rating || 0
+      featured: product.featured || false
     });
     setImageFile(null);
     setImagePreview(''); // Will show existing imageUrl from formData
@@ -167,7 +166,7 @@ export default function AdminDashboard() {
     setEditingProduct(null);
     setFormData({
       name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
-      category: '', brand: '', stock: '', featured: false, rating: 0
+      category: '', brand: '', stock: '', featured: false
     });
     setImageFile(null);
     setImagePreview('');
@@ -277,8 +276,7 @@ export default function AdminDashboard() {
       imageUrl: imageUrl,
       price: parseFloat(formData.price),
       originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : undefined,
-      stock: parseInt(formData.stock),
-      rating: parseFloat(formData.rating)
+      stock: parseInt(formData.stock)
     };
 
     try {
@@ -1196,18 +1194,6 @@ export default function AdminDashboard() {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Rating (0-5)</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="5"
-                    style={styles.input}
-                    value={formData.rating}
-                    onChange={(e) => setFormData({...formData, rating: e.target.value})}
-                  />
-                </div>
               </div>
 
               <div style={styles.checkbox}>
