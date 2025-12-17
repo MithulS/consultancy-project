@@ -6,7 +6,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "jest --coverage --verbose",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:email": "node scripts/testEmail.js"
   },
   "keywords": [],
   "author": "",

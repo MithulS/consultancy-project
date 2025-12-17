@@ -107,6 +107,7 @@ app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/comparison', require('./routes/comparison'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/admin/reports', require('./routes/reports'));
+app.use('/api/email', require('./routes/emailMonitoring')); // Email diagnostics & monitoring
 
 // 404 handler
 app.use((req, res) => {

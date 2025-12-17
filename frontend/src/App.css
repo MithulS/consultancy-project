@@ -1,47 +1,9 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* Component-specific styles only - base styles in unifiedDesignSystem.css */
 
-body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
+/* Legacy support - can be removed after migration */
 #root {
   max-width: 100%;
   margin: 0;
   padding: 0;
-}
-
-input:focus, button:focus {
-  outline: 2px solid #2196f3;
-  outline-offset: 2px;
-}
-
-button:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-input {
-  font-family: inherit;
-}
-
-input::placeholder {
-  color: #999;
-}
-
-@media (max-width: 640px) {
-  body {
-    padding: 10px;
-  }
+  background-color: #F9FAFB;
 }

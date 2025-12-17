@@ -61,15 +61,30 @@ export default function OrderTracking({ orderId, onClose }) {
     }
   }
 
+  function getStatusLabel(status) {
+    const labels = {
+      pending: 'Order Confirmed', // specific requirement: initial status
+      confirmed: 'Order Confirmed',
+      processing: 'Order Confirmed', // Show confirmed until shipped
+      packed: 'Order Confirmed',     // Show confirmed until shipped
+      shipped: 'Order Shipped',
+      out_for_delivery: 'Out for Delivery',
+      delivered: 'Order Delivered',
+      cancelled: 'Order Cancelled',
+      returned: 'Order Returned'
+    };
+    return labels[status] || status.replace(/_/g, ' ');
+  }
+
   function getStatusIcon(status) {
     const icons = {
-      pending: '⏳',
+      pending: '✅',
       confirmed: '✅',
-      processing: '📦',
-      packed: '📦',
+      processing: '✅', // visual consistency
+      packed: '✅',
       shipped: '🚚',
       out_for_delivery: '🛵',
-      delivered: '✅',
+      delivered: '📦',
       cancelled: '❌',
       returned: '↩️'
     };
@@ -78,13 +93,13 @@ export default function OrderTracking({ orderId, onClose }) {
 
   function getStatusColor(status) {
     const colors = {
-      pending: '#f59e0b',
+      pending: '#10b981', // green for confirmed
       confirmed: '#10b981',
-      processing: '#3b82f6',
-      packed: '#8b5cf6',
-      shipped: '#06b6d4',
-      out_for_delivery: '#ec4899',
-      delivered: '#22c55e',
+      processing: '#10b981',
+      packed: '#10b981',
+      shipped: '#3b82f6', // blue
+      out_for_delivery: '#f59e0b', // orange/amber
+      delivered: '#22c55e', // green
       cancelled: '#ef4444',
       returned: '#f97316'
     };
@@ -93,12 +108,12 @@ export default function OrderTracking({ orderId, onClose }) {
 
   function getStatusProgress(status) {
     const progress = {
-      pending: 10,
-      confirmed: 20,
-      processing: 40,
-      packed: 50,
-      shipped: 70,
-      out_for_delivery: 90,
+      pending: 25,
+      confirmed: 25,
+      processing: 25,
+      packed: 25,
+      shipped: 50,
+      out_for_delivery: 75,
       delivered: 100,
       cancelled: 0,
       returned: 0
@@ -138,7 +153,7 @@ export default function OrderTracking({ orderId, onClose }) {
           <div style={{ textAlign: 'center', padding: '40px' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>❌</div>
             <h2>{error}</h2>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={onClose}
               style={{ marginTop: '20px' }}
@@ -167,7 +182,7 @@ export default function OrderTracking({ orderId, onClose }) {
               Order #{tracking.orderNumber}
             </p>
           </div>
-          <button 
+          <button
             onClick={onClose}
             style={styles.closeButton}
           >
@@ -178,8 +193,8 @@ export default function OrderTracking({ orderId, onClose }) {
         {/* Content */}
         <div style={styles.content}>
           {/* Current Status Card */}
-          <div style={{ 
-            ...styles.statusCard, 
+          <div style={{
+            ...styles.statusCard,
             backgroundColor: `${statusColor}15`,
             borderLeft: `4px solid ${statusColor}`
           }}>
@@ -188,14 +203,14 @@ export default function OrderTracking({ orderId, onClose }) {
                 {getStatusIcon(tracking.currentStatus)}
               </div>
               <div style={{ flex: 1 }}>
-                <h3 style={{ 
-                  margin: 0, 
-                  fontSize: '20px', 
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '20px',
                   color: statusColor,
                   textTransform: 'capitalize',
                   fontWeight: '700'
                 }}>
-                  {tracking.currentStatus.replace(/_/g, ' ')}
+                  {getStatusLabel(tracking.currentStatus)}
                 </h3>
                 {tracking.trackingNumber && (
                   <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
@@ -207,7 +222,7 @@ export default function OrderTracking({ orderId, onClose }) {
 
             {/* Progress Bar */}
             <div style={styles.progressBarContainer}>
-              <div 
+              <div
                 style={{
                   ...styles.progressBar,
                   width: `${currentProgress}%`,
@@ -215,9 +230,9 @@ export default function OrderTracking({ orderId, onClose }) {
                 }}
               />
             </div>
-            <div style={{ 
-              textAlign: 'right', 
-              fontSize: '12px', 
+            <div style={{
+              textAlign: 'right',
+              fontSize: '12px',
               color: '#6b7280',
               marginTop: '4px'
             }}>
@@ -276,7 +291,7 @@ export default function OrderTracking({ orderId, onClose }) {
                 📍 Tracking History
               </h3>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-                <input 
+                <input
                   type="checkbox"
                   checked={autoRefresh}
                   onChange={(e) => setAutoRefresh(e.target.checked)}
@@ -289,8 +304,8 @@ export default function OrderTracking({ orderId, onClose }) {
             <div style={styles.timeline}>
               {tracking.trackingHistory && tracking.trackingHistory.length > 0 ? (
                 [...tracking.trackingHistory].reverse().map((entry, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     style={styles.timelineItem}
                     className="animate-fadeIn"
                   >
@@ -302,7 +317,7 @@ export default function OrderTracking({ orderId, onClose }) {
                     </div>
                     <div style={styles.timelineContent}>
                       <div style={styles.timelineStatus}>
-                        {entry.status.replace(/_/g, ' ').toUpperCase()}
+                        {getStatusLabel(entry.status)}
                       </div>
                       {entry.description && (
                         <div style={styles.timelineDescription}>
@@ -335,7 +350,7 @@ export default function OrderTracking({ orderId, onClose }) {
             </h3>
             {tracking.items.map((item, index) => (
               <div key={index} style={styles.itemCard}>
-                <img 
+                <img
                   src={getImageUrl(item.imageUrl)}
                   alt={item.name}
                   style={styles.itemImage}
@@ -369,7 +384,7 @@ export default function OrderTracking({ orderId, onClose }) {
 
           {/* Courier Tracking Link */}
           {tracking.courierPartner?.trackingUrl && (
-            <a 
+            <a
               href={tracking.courierPartner.trackingUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -381,7 +396,7 @@ export default function OrderTracking({ orderId, onClose }) {
           )}
 
           {/* Refresh Button */}
-          <button 
+          <button
             className="btn btn-secondary"
             onClick={() => fetchTracking()}
             style={{ width: '100%' }}

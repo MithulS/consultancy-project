@@ -1,8 +1,9 @@
-  // Admin Dashboard - Product Management Interface
+// Admin Dashboard - Product Management Interface
 import React, { useState, useEffect } from 'react';
 import ProductReports from './ProductReports';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { getImageUrl } from '../utils/imageHandling';
 
 // Inject CSS animations
 const styleSheet = document.createElement('style');
@@ -37,15 +38,6 @@ if (!document.querySelector('[data-admin-dashboard-styles]')) {
   document.head.appendChild(styleSheet);
 }
 
-// Helper function to get full image URL
-const getImageUrl = (imageUrl) => {
-  if (!imageUrl) return 'https://placehold.co/60x60?text=No+Image';
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
-  }
-  return `${API}${imageUrl}`;
-};
-
 export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [admin, setAdmin] = useState(null);
@@ -58,7 +50,7 @@ export default function AdminDashboard() {
     name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
     category: '', brand: '', stock: '', featured: false
   });
-  
+
   // Image upload states
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
@@ -69,7 +61,7 @@ export default function AdminDashboard() {
     // Check if admin is logged in
     const isAdmin = localStorage.getItem('isAdmin');
     const adminToken = localStorage.getItem('adminToken');
-    
+
     if (!isAdmin || !adminToken) {
       window.location.hash = '#secret-admin-login';
       return;
@@ -77,7 +69,7 @@ export default function AdminDashboard() {
 
     const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
     setAdmin(adminUser);
-    
+
     fetchProducts();
   }, []);
 
@@ -91,7 +83,7 @@ export default function AdminDashboard() {
     const inStock = products.filter(p => p.stock > 0 || p.inStock).length;
     const outOfStock = total - inStock;
     const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
-    
+
     console.log('📊 Stats calculated:', { total, inStock, outOfStock, totalValue: totalValue.toFixed(2) });
     setStats({ total, inStock, outOfStock, totalValue });
   }
@@ -177,13 +169,13 @@ export default function AdminDashboard() {
   function handleImageSelect(e) {
     const file = e.target.files[0];
     setUploadError('');
-    
+
     if (!file) {
       setImageFile(null);
       setImagePreview('');
       return;
     }
-    
+
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
@@ -191,7 +183,7 @@ export default function AdminDashboard() {
       e.target.value = '';
       return;
     }
-    
+
     // Validate file size (5MB max)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
@@ -199,7 +191,7 @@ export default function AdminDashboard() {
       e.target.value = '';
       return;
     }
-    
+
     // Set file and create preview
     setImageFile(file);
     const reader = new FileReader();
@@ -212,14 +204,14 @@ export default function AdminDashboard() {
   // Upload image to server
   async function uploadImage() {
     if (!imageFile) return null;
-    
+
     setUploading(true);
     setUploadError('');
-    
+
     try {
       const formData = new FormData();
       formData.append('image', imageFile);
-      
+
       const token = localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/upload/image`, {
         method: 'POST',
@@ -228,16 +220,16 @@ export default function AdminDashboard() {
         },
         body: formData
       });
-      
+
       const data = await res.json();
-      
+
       if (!data.success) {
         throw new Error(data.msg || 'Upload failed');
       }
-      
+
       console.log('✅ Image uploaded:', data.imageUrl);
       return data.imageUrl;
-      
+
     } catch (error) {
       console.error('❌ Upload error:', error);
       setUploadError(error.message);
@@ -259,7 +251,7 @@ export default function AdminDashboard() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    
+
     // Upload image first if a new file is selected
     let imageUrl = formData.imageUrl;
     if (imageFile) {
@@ -270,7 +262,7 @@ export default function AdminDashboard() {
       }
       imageUrl = uploadedUrl;
     }
-    
+
     const productData = {
       ...formData,
       imageUrl: imageUrl,
@@ -281,10 +273,10 @@ export default function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const url = editingProduct 
+      const url = editingProduct
         ? `${API}/api/products/${editingProduct._id}`
         : `${API}/api/products`;
-      
+
       const res = await fetch(url, {
         method: editingProduct ? 'PUT' : 'POST',
         headers: {
@@ -698,8 +690,8 @@ export default function AdminDashboard() {
         <h1 style={styles.title}>🛡️ Admin Dashboard</h1>
         <div style={styles.headerRight}>
           {admin && <span style={styles.adminName}>👤 {admin.name || admin.email}</span>}
-          <button 
-            style={{...styles.button, ...styles.reportsBtn}}
+          <button
+            style={{ ...styles.button, ...styles.reportsBtn }}
             onClick={() => setShowReportsModal(true)}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.05)';
@@ -712,8 +704,8 @@ export default function AdminDashboard() {
           >
             📊 Reports
           </button>
-          <button 
-            style={{...styles.button, ...styles.settingsBtn}}
+          <button
+            style={{ ...styles.button, ...styles.settingsBtn }}
             onClick={() => window.location.hash = '#sales-analytics'}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.05)';
@@ -726,8 +718,8 @@ export default function AdminDashboard() {
           >
             📈 Analytics
           </button>
-          <button 
-            style={{...styles.button, ...styles.trackingBtn}}
+          <button
+            style={{ ...styles.button, ...styles.trackingBtn }}
             onClick={() => window.location.hash = '#admin-order-tracking'}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.05)';
@@ -740,8 +732,8 @@ export default function AdminDashboard() {
           >
             📦 Order Tracking
           </button>
-          <button 
-            style={{...styles.button, ...styles.settingsBtn}}
+          <button
+            style={{ ...styles.button, ...styles.settingsBtn }}
             onClick={goToSettings}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.05)';
@@ -754,8 +746,8 @@ export default function AdminDashboard() {
           >
             ⚙️ Settings
           </button>
-          <button 
-            style={{...styles.button, ...styles.logoutBtn}}
+          <button
+            style={{ ...styles.button, ...styles.logoutBtn }}
             onClick={logout}
           >
             🚪 Logout
@@ -765,8 +757,8 @@ export default function AdminDashboard() {
 
       {/* Stats Cards */}
       <div style={styles.statsContainer}>
-        <div 
-          style={{...styles.statCard, borderLeft: '4px solid #667eea'}}
+        <div
+          style={{ ...styles.statCard, borderLeft: '4px solid #667eea' }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
@@ -780,8 +772,8 @@ export default function AdminDashboard() {
           <div style={styles.statLabel}>📦 Total Products</div>
           <div style={styles.statValue}>{stats.total}</div>
         </div>
-        <div 
-          style={{...styles.statCard, borderLeft: '4px solid #10b981'}}
+        <div
+          style={{ ...styles.statCard, borderLeft: '4px solid #10b981' }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 16px 48px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
@@ -795,8 +787,8 @@ export default function AdminDashboard() {
           <div style={styles.statLabel}>✅ In Stock</div>
           <div style={styles.statValue}>{stats.inStock}</div>
         </div>
-        <div 
-          style={{...styles.statCard, borderLeft: '4px solid #ef4444'}}
+        <div
+          style={{ ...styles.statCard, borderLeft: '4px solid #ef4444' }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 16px 48px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
@@ -810,8 +802,8 @@ export default function AdminDashboard() {
           <div style={styles.statLabel}>❌ Out of Stock</div>
           <div style={styles.statValue}>{stats.outOfStock}</div>
         </div>
-        <div 
-          style={{...styles.statCard, borderLeft: '4px solid #f59e0b'}}
+        <div
+          style={{ ...styles.statCard, borderLeft: '4px solid #f59e0b' }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 16px 48px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
@@ -830,8 +822,8 @@ export default function AdminDashboard() {
       {/* Content */}
       <div style={styles.content}>
         <div style={styles.actionBar}>
-          <h2 style={{ 
-            margin: 0, 
+          <h2 style={{
+            margin: 0,
             fontSize: '24px',
             fontWeight: '800',
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -840,8 +832,8 @@ export default function AdminDashboard() {
             backgroundClip: 'text',
             letterSpacing: '-0.5px'
           }}>Product Management</h2>
-          <button 
-            style={{...styles.button, ...styles.addBtn}}
+          <button
+            style={{ ...styles.button, ...styles.addBtn }}
             onClick={openAddModal}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.05)';
@@ -861,109 +853,110 @@ export default function AdminDashboard() {
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={{...styles.tableHeader, width: '80px'}}>Image</th>
-                <th style={{...styles.tableHeader, minWidth: '200px'}}>Name</th>
-                <th style={{...styles.tableHeader, minWidth: '120px'}}>Category</th>
-                <th style={{...styles.tableHeader, minWidth: '100px'}}>Price (₹)</th>
-                <th style={{...styles.tableHeader, width: '80px', textAlign: 'center'}}>Stock</th>
-                <th style={{...styles.tableHeader, width: '120px', textAlign: 'center'}}>Status</th>
-                <th style={{...styles.tableHeader, minWidth: '180px', textAlign: 'center'}}>Actions</th>
+                <th style={{ ...styles.tableHeader, width: '80px' }}>Image</th>
+                <th style={{ ...styles.tableHeader, minWidth: '200px' }}>Name</th>
+                <th style={{ ...styles.tableHeader, minWidth: '120px' }}>Category</th>
+                <th style={{ ...styles.tableHeader, minWidth: '100px' }}>Price (₹)</th>
+                <th style={{ ...styles.tableHeader, width: '80px', textAlign: 'center' }}>Stock</th>
+                <th style={{ ...styles.tableHeader, width: '120px', textAlign: 'center' }}>Status</th>
+                <th style={{ ...styles.tableHeader, minWidth: '180px', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map(product => {
                 const isOutOfStock = product.stock === 0 || !product.inStock;
                 return (
-                <tr 
-                  key={product._id} 
-                  style={{ 
-                    backgroundColor: isOutOfStock ? '#fef2f2' : 'transparent',
-                    transition: 'background 0.2s ease'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
-                  onMouseOut={(e) => e.currentTarget.style.background = isOutOfStock ? '#fef2f2' : 'transparent'}
-                >
-                  <td style={styles.tableCell}>
-                    <img 
-                      src={getImageUrl(product.imageUrl)} 
-                      alt={generateAdminAltText(product)}
-                      title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price} - Stock: ${product.stock}`}
-                      style={{...styles.productImage, opacity: isOutOfStock ? 0.6 : 1}}
-                      onError={(e) => {
-                        e.target.src = 'https://placehold.co/60x60?text=No+Image';
-                        e.target.alt = `${product.name} - Image unavailable`;
-                      }}
-                      onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
-                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-                    />
-                  </td>
-                  <td style={styles.tableCell}>
-                    <strong style={{ color: isOutOfStock ? '#991b1b' : 'inherit' }}>{product.name}</strong>
-                    <br />
-                    <span style={{ fontSize: '12px', color: '#6b7280' }}>{product.brand}</span>
-                    {isOutOfStock && (
-                      <><br /><span style={{ fontSize: '11px', color: '#dc2626', fontWeight: '600' }}>⚠️ OUT OF STOCK</span></>
-                    )}
-                  </td>
-                  <td style={styles.tableCell}>{product.category}</td>
-                  <td style={styles.tableCell}>
-                    <strong style={{ color: '#5b21b6' }}>₹{product.price.toFixed(2)}</strong>
-                  </td>
-                  <td style={{...styles.tableCell, textAlign: 'center'}}>
-                    <strong style={{ 
-                      color: product.stock > 10 ? '#10b981' : product.stock > 0 ? '#f59e0b' : '#ef4444',
-                      fontSize: product.stock === 0 ? '16px' : '14px'
-                    }}>
-                      {product.stock}
-                    </strong>
-                  </td>
-                  <td style={{...styles.tableCell, textAlign: 'center'}}>
-                    <span style={{
-                      padding: '4px 12px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      backgroundColor: !isOutOfStock ? '#d1fae5' : '#fee2e2',
-                      color: !isOutOfStock ? '#065f46' : '#991b1b',
-                      display: 'inline-block'
-                    }}>
-                      {!isOutOfStock ? '✓ In Stock' : '✗ Out of Stock'}
-                    </span>
-                  </td>
-                  <td style={{...styles.tableCell, textAlign: 'center'}}>
-                    <div style={styles.actionButtons}>
-                      <button 
-                        style={styles.editBtn}
-                        onClick={() => openEditModal(product)}
-                        onMouseOver={(e) => {
-                          e.target.style.transform = 'translateY(-2px)';
-                          e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.5)';
+                  <tr
+                    key={product._id}
+                    style={{
+                      backgroundColor: isOutOfStock ? '#fef2f2' : 'transparent',
+                      transition: 'background 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
+                    onMouseOut={(e) => e.currentTarget.style.background = isOutOfStock ? '#fef2f2' : 'transparent'}
+                  >
+                    <td style={styles.tableCell}>
+                      <img
+                        src={getImageUrl(product.imageUrl)}
+                        alt={generateAdminAltText(product)}
+                        title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price} - Stock: ${product.stock}`}
+                        style={{ ...styles.productImage, opacity: isOutOfStock ? 0.6 : 1 }}
+                        onError={(e) => {
+                          e.target.src = 'https://placehold.co/60x60?text=No+Image';
+                          e.target.alt = `${product.name} - Image unavailable`;
                         }}
-                        onMouseOut={(e) => {
-                          e.target.style.transform = 'translateY(0)';
-                          e.target.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
-                        }}
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button 
-                        style={styles.deleteBtn}
-                        onClick={() => deleteProduct(product._id)}
-                        onMouseOver={(e) => {
-                          e.target.style.transform = 'translateY(-2px)';
-                          e.target.style.boxShadow = '0 4px 16px rgba(239, 68, 68, 0.5)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.target.style.transform = 'translateY(0)';
-                          e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
-                        }}
-                      >
-                        🗑️ Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );})}
+                        onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
+                        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                      />
+                    </td>
+                    <td style={styles.tableCell}>
+                      <strong style={{ color: isOutOfStock ? '#991b1b' : 'inherit' }}>{product.name}</strong>
+                      <br />
+                      <span style={{ fontSize: '12px', color: '#6b7280' }}>{product.brand}</span>
+                      {isOutOfStock && (
+                        <><br /><span style={{ fontSize: '11px', color: '#dc2626', fontWeight: '600' }}>⚠️ OUT OF STOCK</span></>
+                      )}
+                    </td>
+                    <td style={styles.tableCell}>{product.category}</td>
+                    <td style={styles.tableCell}>
+                      <strong style={{ color: '#5b21b6' }}>₹{product.price.toFixed(2)}</strong>
+                    </td>
+                    <td style={{ ...styles.tableCell, textAlign: 'center' }}>
+                      <strong style={{
+                        color: product.stock > 10 ? '#10b981' : product.stock > 0 ? '#f59e0b' : '#ef4444',
+                        fontSize: product.stock === 0 ? '16px' : '14px'
+                      }}>
+                        {product.stock}
+                      </strong>
+                    </td>
+                    <td style={{ ...styles.tableCell, textAlign: 'center' }}>
+                      <span style={{
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        backgroundColor: !isOutOfStock ? '#d1fae5' : '#fee2e2',
+                        color: !isOutOfStock ? '#065f46' : '#991b1b',
+                        display: 'inline-block'
+                      }}>
+                        {!isOutOfStock ? '✓ In Stock' : '✗ Out of Stock'}
+                      </span>
+                    </td>
+                    <td style={{ ...styles.tableCell, textAlign: 'center' }}>
+                      <div style={styles.actionButtons}>
+                        <button
+                          style={styles.editBtn}
+                          onClick={() => openEditModal(product)}
+                          onMouseOver={(e) => {
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.5)';
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+                          }}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          style={styles.deleteBtn}
+                          onClick={() => deleteProduct(product._id)}
+                          onMouseOver={(e) => {
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 4px 16px rgba(239, 68, 68, 0.5)';
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+                          }}
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -983,7 +976,7 @@ export default function AdminDashboard() {
                   type="text"
                   style={styles.input}
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </div>
@@ -993,7 +986,7 @@ export default function AdminDashboard() {
                 <textarea
                   style={styles.textarea}
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   required
                 />
               </div>
@@ -1006,7 +999,7 @@ export default function AdminDashboard() {
                     step="0.01"
                     style={styles.input}
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     required
                     placeholder="0.00"
                   />
@@ -1019,7 +1012,7 @@ export default function AdminDashboard() {
                     step="0.01"
                     style={styles.input}
                     value={formData.originalPrice}
-                    onChange={(e) => setFormData({...formData, originalPrice: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                     placeholder="0.00"
                   />
                 </div>
@@ -1033,10 +1026,10 @@ export default function AdminDashboard() {
                     (JPG, PNG, GIF, WEBP • Max 5MB)
                   </span>
                 </label>
-                
+
                 {/* Upload Button */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <label 
+                  <label
                     htmlFor="imageUploadInput"
                     style={{
                       ...styles.uploadButton,
@@ -1056,7 +1049,7 @@ export default function AdminDashboard() {
                     />
                     📤 {uploading ? 'Uploading...' : 'Upload from Device'}
                   </label>
-                  
+
                   {/* Helper Text */}
                   <p id="imageUploadHelp" style={{
                     fontSize: '11px',
@@ -1065,7 +1058,7 @@ export default function AdminDashboard() {
                   }}>
                     Select an image file from your computer
                   </p>
-                  
+
                   {/* Upload Error */}
                   {uploadError && (
                     <div style={{
@@ -1079,7 +1072,7 @@ export default function AdminDashboard() {
                       ⚠️ {uploadError}
                     </div>
                   )}
-                  
+
                   {/* Image Preview */}
                   {(imagePreview || formData.imageUrl) && (
                     <div style={{
@@ -1138,7 +1131,7 @@ export default function AdminDashboard() {
                   <select
                     style={styles.input}
                     value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     required
                   >
                     <option value="">Select category</option>
@@ -1156,14 +1149,14 @@ export default function AdminDashboard() {
                     type="text"
                     style={styles.input}
                     value={formData.brand}
-                    onChange={(e) => setFormData({...formData, brand: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                   />
                 </div>
               </div>
 
               <div style={styles.formGroup}>
                 <label style={styles.label}>
-                  Image Alt Text 
+                  Image Alt Text
                   <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: 'normal', marginLeft: '8px' }}>
                     (For accessibility - auto-generated if empty, max 125 chars)
                   </span>
@@ -1172,7 +1165,7 @@ export default function AdminDashboard() {
                   type="text"
                   style={styles.input}
                   value={formData.imageAltText || ''}
-                  onChange={(e) => setFormData({...formData, imageAltText: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, imageAltText: e.target.value })}
                   placeholder="Auto-generated: Product name, price, brand, stock..."
                   maxLength="125"
                 />
@@ -1188,7 +1181,7 @@ export default function AdminDashboard() {
                     type="number"
                     style={styles.input}
                     value={formData.stock}
-                    onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                     required
                     min="0"
                   />
@@ -1201,9 +1194,9 @@ export default function AdminDashboard() {
                   type="checkbox"
                   id="featured"
                   checked={formData.featured}
-                  onChange={(e) => setFormData({...formData, featured: e.target.checked})}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                 />
-                <label htmlFor="featured" style={{...styles.label, margin: 0}}>Featured Product</label>
+                <label htmlFor="featured" style={{ ...styles.label, margin: 0 }}>Featured Product</label>
               </div>
 
               <div style={styles.modalButtons}>

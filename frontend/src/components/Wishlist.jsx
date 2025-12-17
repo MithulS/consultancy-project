@@ -1,6 +1,7 @@
 // Wishlist Component - Save products for later
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { getImageUrl } from '../utils/imageHandling';
 
 export default function Wishlist({ onNavigate }) {
   const [wishlist, setWishlist] = useState([]);
@@ -17,7 +18,7 @@ export default function Wishlist({ onNavigate }) {
       const res = await fetch(`${API}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -28,7 +29,7 @@ export default function Wishlist({ onNavigate }) {
         setLoading(false);
         return;
       }
-      
+
       const data = await res.json();
 
       if (data.success) {
@@ -61,7 +62,7 @@ export default function Wishlist({ onNavigate }) {
     }
   }
 
-  async function addToCart(product) {
+  async function addToCart(product, buyNow = false) {
     // Add to localStorage cart
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existingItem = cart.find(item => item.productId === product._id);
@@ -70,16 +71,24 @@ export default function Wishlist({ onNavigate }) {
       existingItem.quantity += 1;
     } else {
       cart.push({
+        _id: product._id, // Ensure consistent ID usage (Dashboard uses _id)
         productId: product._id,
         name: product.name,
         price: product.price,
         imageUrl: product.imageUrl,
         quantity: 1,
-        stock: product.stock
+        stock: product.stock,
+        category: product.category // Added for consistency
       });
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    if (buyNow) {
+      window.location.hash = '#checkout';
+      return;
+    }
+
     setMessage('✅ Added to cart');
     setTimeout(() => setMessage(''), 3000);
   }
@@ -126,16 +135,16 @@ export default function Wishlist({ onNavigate }) {
 
           return (
             <div key={product._id} style={styles.card}>
-              <img 
-                src={product.imageUrl} 
+              <img
+                src={getImageUrl(product.imageUrl)}
                 alt={`${product.name}${product.brand ? ' by ' + product.brand : ''}, ₹${product.price}${product.stock > 0 ? ', In stock' : ', Out of stock'}`}
                 title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price}`}
-                style={styles.image} 
+                style={styles.image}
               />
-              
+
               <div style={styles.cardContent}>
                 <h3 style={styles.productName}>{product.name}</h3>
-                
+
                 <div style={styles.priceRow}>
                   <span style={styles.price}>${product.price}</span>
                   <span style={product.stock > 0 ? styles.inStock : styles.outOfStock}>
@@ -151,6 +160,17 @@ export default function Wishlist({ onNavigate }) {
                 </div>
 
                 <div style={styles.actions}>
+                  <button
+                    onClick={() => addToCart(product, true)}
+                    disabled={product.stock === 0}
+                    style={{
+                      ...styles.buyNowBtn,
+                      opacity: product.stock === 0 ? 0.5 : 1,
+                      cursor: product.stock === 0 ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    ⚡
+                  </button>
                   <button
                     onClick={() => addToCart(product)}
                     disabled={product.stock === 0}
@@ -349,5 +369,16 @@ const styles = {
     fontSize: '18px',
     cursor: 'pointer',
     minWidth: '50px'
+  },
+  buyNowBtn: {
+    flex: 1,
+    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+    color: 'white',
+    border: 'none',
+    padding: '12px 20px',
+    borderRadius: '12px',
+    fontSize: '15px',
+    fontWeight: '700',
+    cursor: 'pointer'
   }
 };

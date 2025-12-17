@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/77</span>
+                <span class='fraction'>0/79</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/47</span>
+                <span class='fraction'>0/43</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/75</span>
+                <span class='fraction'>0/77</span>
             </div>
         
             
@@ -279,7 +279,8 @@
 <a name='L214'></a><a href='#L214'>214</a>
 <a name='L215'></a><a href='#L215'>215</a>
 <a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -378,8 +379,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -411,25 +410,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -592,8 +594,6 @@ const { verifyToken, verifyAdmin } = <span class="cstat-no" title="statement not
       brand,
       stock,
       featured,
-      rating,
-      numReviews,
       specifications,
       tags
     } = <span class="cstat-no" title="statement not covered" >req.body;</span>
@@ -620,8 +620,9 @@ const { verifyToken, verifyAdmin } = <span class="cstat-no" title="statement not
       stock: stockQuantity,
       inStock: stockQuantity &gt; 0, // Explicitly set inStock based on stock
       featured: featured || false,
-      rating: rating || 0,
-      numReviews: numReviews || 0,
+      // rating and numReviews are calculated from customer reviews, not set by admin
+      rating: 0,
+      numReviews: 0,
       specifications: specifications || {},
       tags: tags || [],
       createdBy: req.userId
@@ -650,6 +651,8 @@ const { verifyToken, verifyAdmin } = <span class="cstat-no" title="statement not
 <span class="cstat-no" title="statement not covered" >    delete updates.createdBy;</span>
 <span class="cstat-no" title="statement not covered" >    delete updates.createdAt;</span>
 <span class="cstat-no" title="statement not covered" >    delete updates.updatedAt;</span>
+<span class="cstat-no" title="statement not covered" >    delete updates.rating; </span>// Rating is calculated from customer reviews, not set by admin
+<span class="cstat-no" title="statement not covered" >    delete updates.numReviews; </span>// Review count is calculated, not set by admin
 &nbsp;
     // Find the product first
     const product = <span class="cstat-no" title="statement not covered" >await Product.findById(req.params.id);</span>
@@ -718,7 +721,7 @@ const { verifyToken, verifyAdmin } = <span class="cstat-no" title="statement not
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-04T04:31:04.858Z
+                at 2025-12-14T07:27:02.040Z
             </div>
         <script src="../prettify.js"></script>
         <script>

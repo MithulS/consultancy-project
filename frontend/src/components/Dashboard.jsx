@@ -4,6 +4,7 @@ import AuthModal from './AuthModal';
 import analytics from '../utils/analytics';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateProductAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { getImageUrl } from '../utils/imageHandling';
 
 // Inject CSS animations for modern UI
 const styleSheet = document.createElement('style');
@@ -46,15 +47,6 @@ if (!document.querySelector('[data-dashboard-styles]')) {
   document.head.appendChild(styleSheet);
 }
 
-// Helper function to get full image URL
-const getImageUrl = (imageUrl) => {
-  if (!imageUrl) return 'https://placehold.co/300x300?text=No+Image';
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
-  }
-  return `${API}${imageUrl}`;
-};
-
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
@@ -67,6 +59,7 @@ export default function Dashboard() {
   const [notificationMsg, setNotificationMsg] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingProduct, setPendingProduct] = useState(null);
+  const [pendingBuyNow, setPendingBuyNow] = useState(false);
   const [firstTimeUser, setFirstTimeUser] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -78,7 +71,7 @@ export default function Dashboard() {
     // Check if user is already logged in
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
+
     if (token && userData) {
       setUser(JSON.parse(userData));
       analytics.setUser(JSON.parse(userData)._id || JSON.parse(userData).id, 'customer');
@@ -88,11 +81,11 @@ export default function Dashboard() {
       setFirstTimeUser(true);
       analytics.pageView('dashboard-guest');
     }
-    
+
     fetchProfile();
     fetchProducts();
     loadCart();
-    
+
     // Check if there's a pending product from Google OAuth
     const pendingCartProduct = sessionStorage.getItem('pendingCartProduct');
     if (pendingCartProduct && token) {
@@ -100,18 +93,18 @@ export default function Dashboard() {
       addToCartAuthenticated(product);
       sessionStorage.removeItem('pendingCartProduct');
     }
-    
+
     // Check if user just logged in
     const justLoggedIn = sessionStorage.getItem('justLoggedIn');
     if (justLoggedIn === 'true' && user) {
       setShowWelcome(true);
       sessionStorage.removeItem('justLoggedIn');
-      
+
       setTimeout(() => {
         setShowWelcome(false);
       }, 4000);
     }
-    
+
     // Track page load for analytics
     if (token) {
       analytics.track('dashboard_loaded_authenticated');
@@ -143,27 +136,27 @@ export default function Dashboard() {
     try {
       setLoading(true);
       setError('');
-      
+
       const query = new URLSearchParams();
       if (selectedCategory !== 'All') query.append('category', selectedCategory);
       if (searchTerm) query.append('search', searchTerm);
-      
+
       // Add timeout for better UX
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-      
+
       const res = await fetch(`${API}/api/products?${query}`, {
         signal: controller.signal
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (!res.ok) {
         throw new Error(`Server error: ${res.status}`);
       }
-      
+
       const data = await res.json();
-      
+
       if (data.success) {
         setProducts(data.products);
         setError(''); // Clear any previous errors
@@ -173,7 +166,7 @@ export default function Dashboard() {
       setLoading(false);
     } catch (err) {
       console.error('Fetch products error:', err);
-      
+
       // Provide helpful error messages based on error type
       if (err.name === 'AbortError') {
         setError('⏱️ Connection timeout. Retrying...');
@@ -197,39 +190,41 @@ export default function Dashboard() {
   }
 
   // Cart interceptor - prompts for login/register on first add to cart
-  function addToCart(product) {
+  function addToCart(product, buyNow = false) {
     const token = localStorage.getItem('token');
-    
+
     // Check if user is logged in
     if (!token) {
       // Track cart abandonment attempt
       analytics.track('cart_abandoned_auth_required', {
         product: product.name,
         price: product.price,
-        category: product.category
+        category: product.category,
+        intent: buyNow ? 'buy_now' : 'add_to_cart'
       });
-      
+
       // Store pending product and show auth modal
       setPendingProduct(product);
+      setPendingBuyNow(buyNow);
       setShowAuthModal(true);
-      
+
       // Show notification
       setNotificationMsg('⚠️ Please login or sign up to add items to cart');
       setShowNotification(true);
       setTimeout(() => setShowNotification(false), 4000);
-      
+
       return;
     }
-    
+
     // User is logged in, proceed with adding to cart
-    addToCartAuthenticated(product);
+    addToCartAuthenticated(product, buyNow);
   }
-  
+
   // Actually add product to cart (used when user is authenticated)
-  function addToCartAuthenticated(product) {
+  function addToCartAuthenticated(product, buyNow = false) {
     const existingItem = cart.find(item => item._id === product._id);
     let updatedCart;
-    
+
     if (existingItem) {
       updatedCart = cart.map(item =>
         item._id === product._id
@@ -239,24 +234,29 @@ export default function Dashboard() {
     } else {
       updatedCart = [...cart, { ...product, quantity: 1 }];
     }
-    
+
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-    
+
     // Track cart addition
-    analytics.track('product_added_to_cart', {
+    analytics.track(buyNow ? 'product_bought_now' : 'product_added_to_cart', {
       product: product.name,
       price: product.price,
       category: product.category,
       cartSize: updatedCart.length
     });
-    
+
+    if (buyNow) {
+      window.location.hash = '#checkout';
+      return;
+    }
+
     // Show notification
     setNotificationMsg(`✅ ${product.name} added to cart!`);
     setShowNotification(true);
     setTimeout(() => setShowNotification(false), 3000);
   }
-  
+
   // Handle successful authentication from modal
   function handleAuthSuccess(userData) {
     setUser(userData);
@@ -266,11 +266,12 @@ export default function Dashboard() {
       method: 'email',
       firstTimeUser: firstTimeUser
     });
-    
+
     // Add the pending product to cart
     if (pendingProduct) {
-      addToCartAuthenticated(pendingProduct);
+      addToCartAuthenticated(pendingProduct, pendingBuyNow);
       setPendingProduct(null);
+      setPendingBuyNow(false);
     }
   }
 
@@ -278,16 +279,16 @@ export default function Dashboard() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('cart');
-    
+
     // Dispatch logout event
     window.dispatchEvent(new CustomEvent('userLoggedOut'));
-    
+
     // Track logout
     analytics.track('user_logged_out');
-    
+
     setUser(null);
     setCart([]);
-    
+
     setTimeout(() => {
       window.location.hash = '#login';
     }, 100);
@@ -462,7 +463,10 @@ export default function Dashboard() {
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
       border: '1px solid rgba(255, 255, 255, 0.5)',
-      animation: 'scaleIn 0.5s ease-out backwards'
+      animation: 'scaleIn 0.5s ease-out backwards',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%'
     },
     productImage: {
       width: '100%',
@@ -471,7 +475,10 @@ export default function Dashboard() {
       backgroundColor: '#f9fafb'
     },
     productInfo: {
-      padding: '16px'
+      padding: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1
     },
     productCategory: {
       fontSize: '12px',
@@ -527,6 +534,23 @@ export default function Dashboard() {
       backgroundImage: 'linear-gradient(135deg, #fee2e2, #fecaca)',
       color: '#991b1b',
       boxShadow: '0 2px 8px rgba(239, 68, 68, 0.2)'
+    },
+    buyNowBtn: {
+      width: '100%',
+      padding: '14px',
+      backgroundImage: 'linear-gradient(135deg, #f59e0b, #d97706)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '12px',
+      fontSize: '15px',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 4px 15px rgba(217, 119, 6, 0.3)',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      marginBottom: '12px',
+      marginTop: 'auto'
     },
     addToCartBtn: {
       width: '100%',
@@ -588,7 +612,7 @@ export default function Dashboard() {
         <h1 style={styles.logo}>🔨 HomeHardware</h1>
         <div style={styles.userSection}>
           {user && <span style={styles.userName}>👤 {user.name}</span>}
-          <button 
+          <button
             style={styles.ordersBtn}
             onClick={() => window.location.hash = '#profile'}
             onMouseOver={(e) => {
@@ -602,7 +626,7 @@ export default function Dashboard() {
           >
             👤 Profile
           </button>
-          <button 
+          <button
             style={styles.ordersBtn}
             onClick={() => window.location.hash = '#my-orders'}
             onMouseOver={(e) => {
@@ -616,7 +640,7 @@ export default function Dashboard() {
           >
             📦 My Orders
           </button>
-          <button 
+          <button
             style={styles.cartBtn}
             onClick={() => window.location.hash = '#cart'}
             onMouseOver={(e) => {
@@ -633,8 +657,8 @@ export default function Dashboard() {
               <span style={styles.cartBadge}>{getCartItemCount()}</span>
             )}
           </button>
-          <button 
-            style={{...styles.button, ...styles.logoutBtn}}
+          <button
+            style={{ ...styles.button, ...styles.logoutBtn }}
             onClick={logout}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
@@ -729,7 +753,7 @@ export default function Dashboard() {
       ) : (
         <div style={styles.productsGrid}>
           {products.map(product => (
-            <div 
+            <div
               key={product._id}
               style={{
                 ...styles.productCard,
@@ -747,8 +771,8 @@ export default function Dashboard() {
               }}
             >
               <div style={{ overflow: 'hidden', height: '280px' }}>
-                <img 
-                  src={getImageUrl(product.imageUrl)} 
+                <img
+                  src={getImageUrl(product.imageUrl)}
                   alt={generateProductAltText(product)}
                   title={`${product.name}${product.brand ? ' by ' + product.brand : ''} - ₹${product.price}`}
                   style={{
@@ -776,7 +800,33 @@ export default function Dashboard() {
                     {product.inStock ? `✓ ${product.stock} in stock` : '✗ Out of stock'}
                   </span>
                 </div>
-                <button 
+                <button
+                  style={{
+                    ...styles.buyNowBtn,
+                    backgroundImage: product.inStock ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #9ca3af, #6b7280)',
+                    cursor: product.inStock ? 'pointer' : 'not-allowed',
+                    opacity: product.inStock ? 1 : 0.6
+                  }}
+                  disabled={!product.inStock}
+                  onClick={() => product.inStock && addToCart(product, true)}
+                  onMouseOver={(e) => {
+                    if (product.inStock) {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 119, 6, 0.4)';
+                      e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #d97706, #f59e0b)';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (product.inStock) {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(217, 119, 6, 0.3)';
+                      e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #f59e0b, #d97706)';
+                    }
+                  }}
+                >
+                  ⚡ Buy Now
+                </button>
+                <button
                   style={{
                     ...styles.addToCartBtn,
                     backgroundImage: product.inStock ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'linear-gradient(135deg, #9ca3af, #6b7280)',
@@ -807,9 +857,9 @@ export default function Dashboard() {
           ))}
         </div>
       )}
-      
+
       {/* Auth Modal - Shows when user tries to add to cart without login */}
-      <AuthModal 
+      <AuthModal
         isOpen={showAuthModal}
         onClose={() => {
           setShowAuthModal(false);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './styles/design-system.css';
+import './styles/unifiedDesignSystem.css'; // Unified design system - single source of truth
 import './styles/responsive.css';
 
 // Global error handlers for debugging

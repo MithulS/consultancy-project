@@ -7,9 +7,12 @@ import React, { useState, useEffect } from 'react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+import { getImageUrl } from '../utils/imageHandling';
+
 export default function EcommerceHomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -304,8 +307,8 @@ export default function EcommerceHomePage() {
           <h2 style={styles.sectionTitle}>Shop by Category</h2>
           <div style={styles.categoryGrid}>
             {categoryCards.map((cat, idx) => (
-              <a 
-                key={idx} 
+              <a
+                key={idx}
                 href={cat.link}
                 style={{
                   ...styles.categoryCard,
@@ -329,13 +332,13 @@ export default function EcommerceHomePage() {
       </section>
 
       {/* Featured Products */}
-      <section style={{...styles.section, backgroundColor: '#F5F7FA'}}>
+      <section style={{ ...styles.section, backgroundColor: '#F5F7FA' }}>
         <div style={styles.container}>
           <h2 style={styles.sectionTitle}>Featured Products</h2>
           <div style={styles.productGrid}>
             {featuredProducts.slice(0, 8).map((product) => (
-              <a 
-                key={product._id} 
+              <a
+                key={product._id}
                 href={`#product/${product._id}`}
                 style={styles.productCard}
                 onMouseEnter={(e) => {
@@ -347,8 +350,8 @@ export default function EcommerceHomePage() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <img 
-                  src={product.imageUrl} 
+                <img
+                  src={getImageUrl(product.imageUrl)}
                   alt={product.name}
                   style={styles.productImage}
                   loading="lazy"
@@ -356,7 +359,7 @@ export default function EcommerceHomePage() {
                 <div style={styles.productBody}>
                   <h3 style={styles.productTitle}>{product.name}</h3>
                   <div style={styles.productPrice}>₹{product.price}</div>
-                  <button 
+                  <button
                     style={styles.addToCartBtn}
                     onClick={(e) => {
                       e.preventDefault();
@@ -405,7 +408,7 @@ export default function EcommerceHomePage() {
       {/* Trust Badges */}
       <section style={styles.trustBadges}>
         <div style={styles.container}>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px'}}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
             {trustBadges.map((badge, idx) => (
               <div key={idx} style={styles.trustBadge}>
                 <div style={styles.trustIcon}>{badge.icon}</div>

@@ -1,6 +1,7 @@
 // Product Comparison Component
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { getImageUrl } from '../utils/imageHandling';
 
 export default function ProductComparison({ productIds, onNavigate }) {
   const [comparison, setComparison] = useState(null);
@@ -98,11 +99,11 @@ export default function ProductComparison({ productIds, onNavigate }) {
               <th style={styles.th}>Feature</th>
               {products.map(product => (
                 <th key={product.id} style={styles.th}>
-                  <img 
-                    src={product.imageUrl} 
+                  <img
+                    src={getImageUrl(product.imageUrl)}
                     alt={`${product.name}, ${product.category}, ₹${product.price}${product.brand ? ' by ' + product.brand : ''}`}
                     title={`${product.name} - ${product.brand || ''} - ₹${product.price}`}
-                    style={styles.productImage} 
+                    style={styles.productImage}
                   />
                   <div style={styles.productName}>{product.name}</div>
                 </th>
@@ -117,7 +118,7 @@ export default function ProductComparison({ productIds, onNavigate }) {
                 <td key={product.id} style={styles.td}>
                   <div style={{
                     ...styles.priceCell,
-                    background: product.highlights.lowestPrice ? 
+                    background: product.highlights.lowestPrice ?
                       'linear-gradient(135deg, #10b981, #059669)' : 'transparent',
                     color: product.highlights.lowestPrice ? 'white' : '#333'
                   }}>
