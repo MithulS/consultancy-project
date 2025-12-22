@@ -74,7 +74,7 @@ export default function ProductReports({ onClose }) {
         params.append('endDate', endDate);
       }
 
-      const url = `${API}/api/admin/reports/products?${params.toString()}`;
+      const url = `${API}/api/reports/products?${params.toString()}`;
       console.log('📡 Request URL:', url);
 
       const res = await fetch(url, {

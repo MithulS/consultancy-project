@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const connectDB = require('./config/db');
 
 const app = express();
@@ -33,6 +34,17 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Enable gzip compression for all responses
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6 // Balance between compression and speed
 }));
 
 app.use(express.json());
@@ -98,16 +110,45 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/admin', require('./routes/adminManagement'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/orders', require('./routes/orders'));
-app.use('/api/reviews', require('./routes/reviews'));
-app.use('/api/inventory', require('./routes/inventory'));
-app.use('/api/analytics', require('./routes/analytics'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/payments', require('./routes/payments'));
-app.use('/api/wishlist', require('./routes/wishlist'));
-app.use('/api/comparison', require('./routes/comparison'));
 app.use('/api/cart', require('./routes/cart'));
-app.use('/api/admin/reports', require('./routes/reports'));
-app.use('/api/email', require('./routes/emailMonitoring')); // Email diagnostics & monitoring
+app.use('/api/wishlist', require('./routes/wishlist'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/payments', require('./routes/payments'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/reports', require('./routes/reports'));
+app.use('/api/inventory', require('./routes/inventory'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/comparison', require('./routes/comparison'));
+app.use('/api/marketing', require('./routes/marketing'));
+app.use('/api/webhooks', require('./routes/webhooks'));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    msg: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
+
+// Initialize Redis (optional - will continue without it if not available)
+const { connectRedis } = require('./config/redis');
+connectRedis().then((redisClient) => {
+  if (redisClient) {
+    console.log('✅ Redis caching enabled');
+  } else {
+    console.log('⚠️  Redis not available - continuing without caching');
+  }
+}).catch(() => {
+  console.log('⚠️  Redis failed to initialize - continuing without caching');
+});
+
+// Initialize backup scheduler in production
+if (process.env.NODE_ENV === 'production') {
+  const { scheduleBackups } = require('./scripts/backup');
+  scheduleBackups();
+}
 
 // 404 handler
 app.use((req, res) => {
@@ -146,6 +187,35 @@ app.use((req, res) => {
       'POST /api/inventory/adjust (admin required)',
       'GET /api/inventory/report (admin required)'
     ]
+  });
+});
+
+// Global error handler - must be after all routes
+app.use((err, req, res, next) => {
+  console.error('❌ Unhandled error:');
+  console.error('   Path:', req.path);
+  console.error('   Method:', req.method);
+  console.error('   Error:', err.message);
+  console.error('   Stack:', err.stack);
+  
+  // Log to audit system if available
+  try {
+    const { logAuditEvent } = require('./utils/auditLogger');
+    logAuditEvent({ 
+      action: 'UNHANDLED_ERROR', 
+      req, 
+      details: `${err.message} at ${req.path}` 
+    }).catch(() => {});
+  } catch (logErr) {
+    // Ignore logging errors
+  }
+  
+  // Send error response
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
   });
 });
 

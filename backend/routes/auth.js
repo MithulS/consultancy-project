@@ -603,9 +603,9 @@ router.post('/admin-login', authLimiter, async (req, res) => {
       return res.status(400).json({ msg: 'All fields are required' });
     }
 
-    // Find user and verify credentials
-    const user = await User.findOne({ email });
-    console.log('👤 User lookup:', user ? { found: true, email: user.email, isVerified: user.isVerified, isAdmin: user.isAdmin } : { found: false });
+    // Find user and verify credentials - explicitly select password
+    const user = await User.findOne({ email }).select('+password');
+    console.log('👤 User lookup:', user ? { found: true, email: user.email, isVerified: user.isVerified, isAdmin: user.isAdmin, hasPassword: !!user.password } : { found: false });
     
     if (!user) {
       console.log('❌ User not found');
@@ -620,6 +620,20 @@ router.post('/admin-login', authLimiter, async (req, res) => {
     }
 
     console.log('🔑 Comparing password...');
+    console.log('🔍 Debug - password:', password, 'type:', typeof password, 'length:', password?.length);
+    console.log('🔍 Debug - user.password exists:', !!user.password, 'type:', typeof user.password, 'length:', user.password?.length);
+    
+    // Validate inputs before bcrypt
+    if (!password || typeof password !== 'string' || password.length === 0) {
+      console.log('❌ Invalid password input');
+      return res.status(400).json({ msg: 'Invalid password format' });
+    }
+    
+    if (!user.password || typeof user.password !== 'string') {
+      console.log('❌ User password not set in database');
+      return res.status(500).json({ msg: 'Account configuration error. Please contact support.' });
+    }
+    
     const isMatch = await bcrypt.compare(password, user.password);
     console.log('🔑 Password match result:', isMatch);
     
@@ -666,15 +680,24 @@ router.post('/admin-login', authLimiter, async (req, res) => {
 
 // --------------------- Google OAuth Routes ---------------------
 
+// Async error handler wrapper
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
 // Initiate Google OAuth flow
-router.get('/google', (req, res) => {
-  // Store the original URL for redirect after auth
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback';
+router.get('/google', asyncHandler(async (req, res) => {
+  // Validate environment variables
   const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback';
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   
-  if (!clientId) {
-    console.error('❌ GOOGLE_CLIENT_ID not configured in environment variables');
-    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5174'}/#/login?error=Google login not configured`);
+  if (!clientId || !clientSecret) {
+    console.error('❌ Google OAuth not configured properly');
+    console.error('   Missing:', !clientId ? 'GOOGLE_CLIENT_ID' : '', !clientSecret ? 'GOOGLE_CLIENT_SECRET' : '');
+    await logAuditEvent({ action: 'GOOGLE_LOGIN_CONFIG_ERROR', req, details: 'Missing OAuth credentials' });
+    return res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent('Google login is not configured on this server')}`);
   }
   
   const scope = [
@@ -688,30 +711,40 @@ router.get('/google', (req, res) => {
     `response_type=code&` +
     `scope=${encodeURIComponent(scope)}&` +
     `access_type=offline&` +
-    `prompt=consent`;
+    `prompt=select_account`; // Changed from 'consent' to 'select_account' for better UX
   
-  console.log('🔄 Redirecting to Google OAuth...');
+  console.log('🔄 Initiating Google OAuth flow...');
+  console.log('   Redirect URI:', redirectUri);
+  console.log('   Client ID:', clientId.substring(0, 20) + '...');
+  
+  await logAuditEvent({ action: 'GOOGLE_LOGIN_INITIATED', req });
   res.redirect(googleAuthUrl);
-});
+}));
 
 // Google OAuth callback
-router.get('/google/callback', async (req, res) => {
+router.get('/google/callback', asyncHandler(async (req, res) => {
   const { code, error } = req.query;
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  
+  console.log('📥 Google OAuth callback received');
+  console.log('   Has code:', !!code);
+  console.log('   Has error:', !!error);
   
   if (error) {
-    console.error('❌ Google OAuth error:', error);
+    console.error('❌ Google OAuth error from provider:', error);
     await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: `OAuth error: ${error}` });
-    return res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(error)}`);
+    return res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent('Google login was cancelled or failed')}`);
   }
   
   if (!code) {
     console.error('❌ No authorization code received from Google');
     await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: 'No authorization code' });
-    return res.redirect(`${frontendUrl}/#login?error=No authorization code received`);
+    return res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent('No authorization code received')}`);
   }
   
   try {
+    console.log('🔄 Exchanging authorization code for access token...');
+    
     // Exchange authorization code for access token
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -728,8 +761,13 @@ router.get('/google/callback', async (req, res) => {
     const tokenData = await tokenResponse.json();
     
     if (!tokenResponse.ok) {
-      throw new Error(tokenData.error_description || 'Failed to get access token');
+      console.error('❌ Token exchange failed:', tokenData);
+      throw new Error(tokenData.error_description || tokenData.error || 'Failed to get access token from Google');
     }
+    
+    console.log('✅ Access token received from Google');
+    
+    console.log('🔄 Fetching user info from Google...');
     
     // Fetch user info from Google
     const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -739,10 +777,26 @@ router.get('/google/callback', async (req, res) => {
     const googleUser = await userInfoResponse.json();
     
     if (!userInfoResponse.ok) {
-      throw new Error('Failed to fetch user info from Google');
+      console.error('❌ Failed to fetch user info:', googleUser);
+      throw new Error(googleUser.error_description || 'Failed to fetch user info from Google');
+    }
+    
+    if (!googleUser.email) {
+      console.error('❌ No email in Google user info:', googleUser);
+      throw new Error('No email address received from Google');
     }
     
     console.log('✅ Google user info received:', googleUser.email);
+    
+    // Helper function to extract clean name from email
+    const extractNameFromEmail = (email) => {
+      // Get the part before @
+      const emailPrefix = email.split('@')[0];
+      // Remove all numbers and special characters, keep only letters
+      const cleanName = emailPrefix.replace(/[^a-zA-Z]/g, '');
+      // Capitalize first letter
+      return cleanName.charAt(0).toUpperCase() + cleanName.slice(1).toLowerCase();
+    };
     
     // Check if user exists in database
     let user = await User.findOne({ email: googleUser.email });
@@ -750,10 +804,14 @@ router.get('/google/callback', async (req, res) => {
     if (!user) {
       // Create new user from Google profile
       const username = googleUser.email.split('@')[0] + '_' + Math.random().toString(36).substr(2, 6);
+      // Use name from email if Google name is not available or is generic
+      const displayName = googleUser.name && googleUser.name !== 'User' 
+        ? googleUser.name 
+        : extractNameFromEmail(googleUser.email);
       
       user = new User({
         username,
-        name: googleUser.name,
+        name: displayName,
         email: googleUser.email,
         password: await bcrypt.hash(Math.random().toString(36), 10), // Random password
         isVerified: true, // Google accounts are pre-verified
@@ -765,6 +823,10 @@ router.get('/google/callback', async (req, res) => {
       await logAuditEvent({ userId: user._id, email: user.email, action: 'GOOGLE_REGISTER_SUCCESS', req, details: 'New user via Google OAuth' });
       console.log(`✅ New user created via Google: ${user.email}`);
     } else {
+      // Update existing user with cleaned name from email
+      const cleanedName = extractNameFromEmail(googleUser.email);
+      user.name = cleanedName;
+      
       // Update existing user with Google info if not already set
       if (!user.googleId) {
         user.googleId = googleUser.id;
@@ -780,48 +842,60 @@ router.get('/google/callback', async (req, res) => {
       console.log(`✅ Existing user logged in via Google: ${user.email}`);
     }
     
-    // Generate JWT token
-    const payload = { userId: user._id };
+    // Generate JWT token with user info
+    const payload = { 
+      userId: user._id,
+      email: user.email,
+      isAdmin: user.isAdmin || false,
+      isVerified: user.isVerified
+    };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
+    console.log('✅ JWT token generated for user:', user.email);
+    console.log('🔄 Redirecting to frontend with token...');
     
     // Redirect to frontend with token
     res.redirect(`${frontendUrl}/#login?token=${token}`);
   } catch (err) {
-    console.error('❌ Google OAuth callback error:', err);
-    await logAuditEvent({ action: 'GOOGLE_LOGIN_FAILED', req, details: err.message });
-    res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(err.message)}`);
+    console.error('❌ Google OAuth callback error:');
+    console.error('   Error message:', err.message);
+    console.error('   Error stack:', err.stack);
+    
+    await logAuditEvent({ 
+      action: 'GOOGLE_LOGIN_FAILED', 
+      req, 
+      details: `${err.message} - Stack: ${err.stack.substring(0, 200)}` 
+    });
+    
+    const errorMessage = err.message || 'Google login failed';
+    res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(errorMessage)}`);
   }
-});
+}));
 
 // Get current user info (for OAuth callback)
-router.get('/me', async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ msg: 'No token provided' });
-    }
-    
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    const user = await User.findById(decoded.userId).select('-password -otp');
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
-    
-    res.json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-      profilePicture: user.profilePicture,
-      isVerified: user.isVerified
-    });
-  } catch (err) {
-    console.error('Get user info error:', err);
-    res.status(401).json({ msg: 'Invalid token' });
+router.get('/me', asyncHandler(async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ msg: 'No token provided' });
   }
-});
+    
+  const token = authHeader.split(' ')[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
+  const user = await User.findById(decoded.userId).select('-password -otp');
+  if (!user) {
+    return res.status(404).json({ msg: 'User not found' });
+  }
+  
+  res.json({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    profilePicture: user.profilePicture,
+    isVerified: user.isVerified
+  });
+}));
 
 // ============================================================
 // ADMIN PASSWORD RESET ROUTES

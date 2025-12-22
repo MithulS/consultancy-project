@@ -1,30 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import RegisterModern from './components/RegisterModern';
 import VerifyOTPEnhanced from './components/VerifyOTPEnhanced';
 import LoginModern from './components/LoginModern';
 import Dashboard from './components/Dashboard';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
-import AdminLogin from './components/AdminLogin';
-import AdminForgotPassword from './components/AdminForgotPassword';
-import AdminResetPassword from './components/AdminResetPassword';
-import AdminDashboard from './components/AdminDashboard';
-import AdminSettings from './components/AdminSettings';
-import AdminOrderTracking from './components/AdminOrderTracking';
-import SalesAnalytics from './components/SalesAnalytics';
-import Cart from './components/Cart';
-import Checkout from './components/Checkout';
-import GuestCheckout from './components/GuestCheckout';
-import MyOrders from './components/MyOrders';
-import Profile from './components/Profile';
-import PublicTracking from './components/PublicTracking';
 import NotFound from './components/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
 import ToastNotification from './components/ToastNotification';
 import AccessibilityWrapper from './components/AccessibilityWrapper';
 import LoadingOverlay from './components/LoadingOverlay';
+import ExitIntentPopup from './components/ExitIntentPopup';
 import analytics from './utils/analytics';
 import { initializeAuth } from './utils/navigation';
+
+// Lazy load heavy components
+const AdminLogin = lazy(() => import('./components/AdminLogin'));
+const AdminForgotPassword = lazy(() => import('./components/AdminForgotPassword'));
+const AdminResetPassword = lazy(() => import('./components/AdminResetPassword'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const AdminSettings = lazy(() => import('./components/AdminSettings'));
+const AdminOrderTracking = lazy(() => import('./components/AdminOrderTracking'));
+const SalesAnalytics = lazy(() => import('./components/SalesAnalytics'));
+const Cart = lazy(() => import('./components/Cart'));
+const Checkout = lazy(() => import('./components/Checkout'));
+const GuestCheckout = lazy(() => import('./components/GuestCheckout'));
+const MyOrders = lazy(() => import('./components/MyOrders'));
+const Profile = lazy(() => import('./components/Profile'));
+const PublicTracking = lazy(() => import('./components/PublicTracking'));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -75,6 +78,13 @@ export default function App() {
     const handleHashChange = () => {
       try {
         let hash = window.location.hash.substring(1) || 'dashboard';
+        
+        // Ignore accessibility anchor links (skip links, in-page navigation)
+        // These are for screen readers and keyboard navigation, not routing
+        const anchorLinks = ['main-content', 'content', 'navigation', 'footer', 'header'];
+        if (anchorLinks.includes(hash)) {
+          return; // Don't change route for anchor links
+        }
         
         // Remove leading slash if present (from OAuth redirects)
         if (hash.startsWith('/')) {
@@ -139,57 +149,75 @@ export default function App() {
       return <NotFound />;
     }
 
-    switch(currentPage) {
-      case 'register':
-        return <RegisterModern />;
-      case 'verify-otp':
-        return <VerifyOTPEnhanced />;
-      case 'forgot-password':
-        return <ForgotPassword />;
-      case 'reset-password':
-        return <ResetPassword />;
-      case 'dashboard':
-        return <Dashboard key={authKey} />;
-      case 'cart':
-        return <Cart />;
-      case 'checkout':
-        return <Checkout />;
-      case 'guest-checkout':
-        const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
-        return <GuestCheckout 
-          cart={guestCart} 
-          onComplete={() => {
-            localStorage.removeItem('guestCart');
-            window.location.hash = '#dashboard';
-          }}
-          onCancel={() => window.location.hash = '#dashboard'}
-        />;
-      case 'my-orders':
-        return <MyOrders />;
-      case 'profile':
-        return <Profile />;
-      case 'admin':
-      case 'secret-admin-login':
-        return <AdminLogin />;
-      case 'admin-forgot-password':
-        return <AdminForgotPassword />;
-      case 'admin-reset-password':
-        return <AdminResetPassword />;
-      case 'admin-dashboard':
-        return <AdminDashboard />;
-      case 'admin-settings':
-        return <AdminSettings />;
-      case 'admin-order-tracking':
-        return <AdminOrderTracking />;
-      case 'sales-analytics':
-        return <SalesAnalytics />;
-      case 'track-order':
-        return <PublicTracking />;
-      case 'login':
-        return <LoginModern />;
-      default:
-        return <Dashboard key={authKey} />;
+    const content = (() => {
+      switch(currentPage) {
+        case 'register':
+          return <RegisterModern />;
+        case 'verify-otp':
+          return <VerifyOTPEnhanced />;
+        case 'forgot-password':
+          return <ForgotPassword />;
+        case 'reset-password':
+          return <ResetPassword />;
+        case 'dashboard':
+          return <Dashboard key={authKey} />;
+        case 'cart':
+          return <Cart />;
+        case 'checkout':
+          return <Checkout />;
+        case 'guest-checkout':
+          const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+          return <GuestCheckout 
+            cart={guestCart} 
+            onComplete={() => {
+              localStorage.removeItem('guestCart');
+              window.location.hash = '#dashboard';
+            }}
+            onCancel={() => window.location.hash = '#dashboard'}
+          />;
+        case 'my-orders':
+          return <MyOrders />;
+        case 'profile':
+          return <Profile />;
+        case 'admin':
+        case 'secret-admin-login':
+          return <AdminLogin />;
+        case 'admin-forgot-password':
+          return <AdminForgotPassword />;
+        case 'admin-reset-password':
+          return <AdminResetPassword />;
+        case 'admin-dashboard':
+          return <AdminDashboard />;
+        case 'admin-settings':
+          return <AdminSettings />;
+        case 'admin-order-tracking':
+          return <AdminOrderTracking />;
+        case 'sales-analytics':
+          return <SalesAnalytics />;
+        case 'track-order':
+          return <PublicTracking />;
+        case 'login':
+          return <LoginModern />;
+        default:
+          return <Dashboard key={authKey} />;
+      }
+    })();
+
+    // Wrap lazy-loaded components in Suspense
+    const lazyPages = ['cart', 'checkout', 'guest-checkout', 'my-orders', 'profile',
+      'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
+      'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
+      'track-order'];
+    
+    if (lazyPages.includes(currentPage)) {
+      return (
+        <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}>
+          {content}
+        </Suspense>
+      );
     }
+
+    return content;
   };
 
   return (
@@ -199,6 +227,7 @@ export default function App() {
           {renderContent()}
           <ToastNotification />
           <LoadingOverlay show={isLoading} message={loadingMessage} />
+          <ExitIntentPopup />
         </div>
       </AccessibilityWrapper>
     </ErrorBoundary>

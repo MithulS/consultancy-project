@@ -11,9 +11,13 @@ const { checkStockAvailability, reserveStock } = require('../utils/inventoryMana
 
 let stripe;
 try {
-  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  if (process.env.STRIPE_SECRET_KEY) {
+    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  } else {
+    console.warn('⚠️  Stripe: STRIPE_SECRET_KEY not found in .env file');
+  }
 } catch (error) {
-  console.warn('⚠️  Stripe not configured. Install: npm install stripe');
+  console.error('❌ Stripe initialization error:', error.message);
 }
 
 /**

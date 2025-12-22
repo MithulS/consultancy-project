@@ -37,7 +37,6 @@ cartSchema.pre('save', function(next) {
   next();
 });
 
-// Index for faster queries
-cartSchema.index({ user: 1 });
+// Note: Index on user field is automatically created by unique: true above
 
 module.exports = mongoose.model('Cart', cartSchema);

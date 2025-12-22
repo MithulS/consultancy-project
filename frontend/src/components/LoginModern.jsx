@@ -227,18 +227,33 @@ export default function Login() {
     const token = urlParams.get('token');
     const error = urlParams.get('error');
     
-    if (token) {
-      // Store token and redirect to dashboard
+    // Prevent processing the same callback multiple times
+    const processedCallback = sessionStorage.getItem('oauth_callback_processed');
+    
+    if (token && !processedCallback) {
+      console.log('✅ Google OAuth token received, processing...');
+      
+      // Mark callback as processed to prevent loops
+      sessionStorage.setItem('oauth_callback_processed', 'true');
+      
+      // Store token
       localStorage.setItem('token', token);
+      setMsg('✅ Google login successful! Loading your profile...');
       
       // Fetch user info
       fetch(`${API}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch user info: ${res.status}`);
+          }
+          return res.json();
+        })
         .then(data => {
+          console.log('✅ User profile loaded:', data.email);
           localStorage.setItem('user', JSON.stringify(data));
-          setMsg('✅ Google login successful!');
+          setMsg('✅ Welcome back! Redirecting to dashboard...');
           trackLoginEvent('google', true);
           
           // Set flag for welcome message
@@ -253,22 +268,48 @@ export default function Login() {
           const redirectTo = sessionStorage.getItem('redirectAfterLogin');
           
           setTimeout(() => {
+            // Clear the callback processed flag after redirect
+            sessionStorage.removeItem('oauth_callback_processed');
+            
             if (redirectTo) {
               sessionStorage.removeItem('redirectAfterLogin');
               window.location.hash = redirectTo;
             } else {
               window.location.hash = '#dashboard';
             }
-          }, 800);
+          }, 1000);
         })
         .catch(err => {
-          console.error('Failed to fetch user:', err);
-          setMsg('⚠️ Login successful but failed to load profile.');
+          console.error('❌ Failed to fetch user:', err);
+          setMsg('⚠️ Login successful but failed to load profile. Please try again.');
+          setGoogleLoading(false);
+          
+          // Clear the problematic token
+          localStorage.removeItem('token');
+          sessionStorage.removeItem('oauth_callback_processed');
+          
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname + '#login');
         });
-    } else if (error) {
-      setMsg(`❌ Google login failed: ${decodeURIComponent(error)}`);
+    } else if (error && !processedCallback) {
+      console.error('❌ Google OAuth error:', error);
+      
+      // Mark as processed
+      sessionStorage.setItem('oauth_callback_processed', 'true');
+      
+      const decodedError = decodeURIComponent(error);
+      setMsg(`❌ Google login failed: ${decodedError}`);
       trackLoginEvent('google', false);
       setGoogleLoading(false);
+      
+      // Clean URL after showing error
+      setTimeout(() => {
+        sessionStorage.removeItem('oauth_callback_processed');
+        window.history.replaceState({}, document.title, window.location.pathname + '#login');
+      }, 100);
+    } else if (!token && !error && processedCallback) {
+      // Clean up if we're back on login page without params
+      sessionStorage.removeItem('oauth_callback_processed');
     }
   }, []);
 

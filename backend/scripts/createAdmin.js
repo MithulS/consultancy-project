@@ -10,7 +10,7 @@ async function createAdmin() {
     console.log('✅ Connected to MongoDB');
 
     const adminEmail = 'mithuld321@gmail.com';
-    const adminPassword = 'Admin@321';
+    const adminPassword = 'Admin@123';
     const adminName = 'Admin';
 
     console.log('\n🔍 Checking if admin user already exists...');

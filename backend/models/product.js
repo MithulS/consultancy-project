@@ -91,6 +91,15 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Indexes for better query performance
+productSchema.index({ name: 'text', description: 'text' }); // Full-text search
+productSchema.index({ category: 1, price: 1 }); // Category browsing with price sorting
+productSchema.index({ featured: 1, createdAt: -1 }); // Featured products
+productSchema.index({ stock: 1 }); // Low-stock queries
+productSchema.index({ isActive: 1, createdAt: -1 }); // Active products listing
+productSchema.index({ brand: 1 }); // Brand filtering
+productSchema.index({ tags: 1 }); // Tag-based search
+
 // Update inStock based on stock quantity before saving
 productSchema.pre('save', function() {
   this.inStock = this.stock > 0;
@@ -103,10 +112,5 @@ productSchema.pre('findOneAndUpdate', function() {
     update.inStock = update.stock > 0;
   }
 });
-
-// Index for searching and filtering
-productSchema.index({ name: 'text', description: 'text', brand: 'text' });
-productSchema.index({ category: 1, price: 1 });
-productSchema.index({ featured: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Product', productSchema);

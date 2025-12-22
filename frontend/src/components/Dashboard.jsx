@@ -169,8 +169,7 @@ export default function Dashboard() {
 
       // Provide helpful error messages based on error type
       if (err.name === 'AbortError') {
-        setError('⏱️ Connection timeout. Retrying...');
-        setTimeout(() => fetchProducts(), 2000); // Auto-retry after 2 seconds
+        setError('⏱️ Connection timeout. The server is taking too long to respond.');
       } else if (err.message.includes('Failed to fetch')) {
         setError('🔌 Cannot connect to server. Please ensure backend is running on port 5000.');
       } else {

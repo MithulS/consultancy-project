@@ -21,7 +21,18 @@ const auditLogSchema = new mongoose.Schema({
       'RESET_PASSWORD_SUCCESS',
       'RESET_PASSWORD_FAILED',
       'ACCOUNT_LOCKED',
-      'ACCOUNT_UNLOCKED'
+      'ACCOUNT_UNLOCKED',
+      'PROFILE_UPDATED',
+      'PASSWORD_CHANGED',
+      'PASSWORD_CHANGE_FAILED',
+      'ADMIN_LOGIN_SUCCESS',
+      'ADMIN_LOGIN_FAILED',
+      'GOOGLE_LOGIN_INITIATED',
+      'GOOGLE_LOGIN_SUCCESS',
+      'GOOGLE_LOGIN_FAILED',
+      'GOOGLE_REGISTER_SUCCESS',
+      'GOOGLE_LOGIN_CONFIG_ERROR',
+      'UNHANDLED_ERROR'
     ]
   },
   ipAddress: { type: String },
