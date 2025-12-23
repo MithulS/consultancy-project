@@ -146,3 +146,80 @@ export const initializeAuth = async () => {
   
   return isValid;
 };
+
+// Redirect to login with return URL
+export const redirectToLogin = (returnUrl = null) => {
+  const currentHash = returnUrl || window.location.hash || '#dashboard';
+  
+  // Don't store login/register pages as return URLs
+  const excludedRoutes = ['#login', '#register', '#verify-otp', '#forgot-password', '#reset-password'];
+  if (!excludedRoutes.includes(currentHash)) {
+    sessionStorage.setItem('redirectAfterLogin', currentHash);
+  }
+  
+  window.location.hash = '#login';
+};
+
+// Handle authentication errors (401) consistently
+export const handleAuthError = (message = 'Please login to continue') => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  
+  // Store current page for return after login
+  const currentHash = window.location.hash || '#dashboard';
+  const excludedRoutes = ['#login', '#register', '#verify-otp', '#forgot-password', '#reset-password'];
+  
+  if (!excludedRoutes.includes(currentHash)) {
+    sessionStorage.setItem('redirectAfterLogin', currentHash);
+  }
+  
+  // Show notification if available
+  if (window.showToast) {
+    window.showToast(message, 'error');
+  }
+  
+  // Redirect to login
+  setTimeout(() => {
+    window.location.hash = '#login';
+  }, 1500);
+};
+
+// Get and clear redirect URL after login
+export const getAndClearRedirectUrl = () => {
+  const redirectTo = sessionStorage.getItem('redirectAfterLogin');
+  if (redirectTo) {
+    sessionStorage.removeItem('redirectAfterLogin');
+    return redirectTo;
+  }
+  return '#dashboard'; // Default redirect
+};
+
+// Check if route requires authentication
+export const isProtectedRoute = (route) => {
+  const protectedRoutes = [
+    'profile',
+    'my-orders',
+    'wishlist',
+    'checkout',
+    'admin-dashboard',
+    'admin-settings',
+    'inventory-management',
+    'sales-analytics'
+  ];
+  
+  return protectedRoutes.includes(route.replace('#', ''));
+};
+
+// Navigate with authentication check
+export const navigateWithAuth = (route) => {
+  const routeWithoutHash = route.replace('#', '');
+  
+  if (isProtectedRoute(routeWithoutHash) && !isAuthenticated()) {
+    // Protected route but not authenticated - redirect to login
+    sessionStorage.setItem('redirectAfterLogin', `#${routeWithoutHash}`);
+    window.location.hash = '#login';
+  } else {
+    // Either public route or authenticated - navigate normally
+    window.location.hash = `#${routeWithoutHash}`;
+  }
+};

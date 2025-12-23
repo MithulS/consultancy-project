@@ -15,6 +15,16 @@ export default function Wishlist({ onNavigate }) {
   async function fetchWishlist() {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        sessionStorage.setItem('redirectAfterLogin', '#wishlist');
+        setMessage('Please login to view wishlist');
+        setTimeout(() => {
+          window.location.hash = '#login';
+        }, 2000);
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch(`${API}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -22,6 +32,7 @@ export default function Wishlist({ onNavigate }) {
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        sessionStorage.setItem('redirectAfterLogin', '#wishlist');
         setMessage('Please login to view wishlist');
         setTimeout(() => {
           window.location.hash = '#login';

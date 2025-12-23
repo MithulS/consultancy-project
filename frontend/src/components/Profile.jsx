@@ -38,6 +38,7 @@ export default function Profile() {
   async function fetchProfile() {
     const token = localStorage.getItem('token');
     if (!token) {
+      sessionStorage.setItem('redirectAfterLogin', '#profile');
       window.location.hash = '#login';
       return;
     }
@@ -50,6 +51,7 @@ export default function Profile() {
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        sessionStorage.setItem('redirectAfterLogin', '#profile');
         showToast('Please login to view profile', 'error');
         setTimeout(() => {
           window.location.hash = '#login';

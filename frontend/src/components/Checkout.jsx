@@ -60,8 +60,12 @@ export default function Checkout() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
+        sessionStorage.setItem('redirectAfterLogin', '#checkout');
         setError('Please login to place an order');
         setLoading(false);
+        setTimeout(() => {
+          window.location.hash = '#login';
+        }, 1500);
         return;
       }
 
