@@ -11,6 +11,7 @@ import ToastNotification from './components/ToastNotification';
 import AccessibilityWrapper from './components/AccessibilityWrapper';
 import LoadingOverlay from './components/LoadingOverlay';
 import ExitIntentPopup from './components/ExitIntentPopup';
+import ChatWidget from './components/ChatWidget';
 import analytics from './utils/analytics';
 import { initializeAuth } from './utils/navigation';
 
@@ -228,6 +229,7 @@ export default function App() {
           <ToastNotification />
           <LoadingOverlay show={isLoading} message={loadingMessage} />
           <ExitIntentPopup />
+          <ChatWidget />
         </div>
       </AccessibilityWrapper>
     </ErrorBoundary>

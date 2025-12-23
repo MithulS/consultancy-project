@@ -7,7 +7,9 @@
     "dev": "nodemon index.js",
     "test": "jest --coverage --verbose",
     "test:watch": "jest --watch",
-    "test:email": "node scripts/testEmail.js"
+    "test:email": "node scripts/testEmail.js",
+    "chatbot:setup": "node scripts/setupChatbot.js",
+    "chatbot:seed": "node scripts/seedChatbotConfig.js"
   },
   "keywords": [],
   "author": "",
