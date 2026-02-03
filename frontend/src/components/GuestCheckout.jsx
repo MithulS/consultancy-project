@@ -40,7 +40,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
       if (data.success) {
         setMessage('✅ Order placed successfully! Check your email for confirmation.');
         localStorage.setItem('guestOrderId', data.orderId);
-        
+
         setTimeout(() => {
           onComplete(data);
         }, 2000);
@@ -154,7 +154,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
               onChange={handleChange}
               placeholder="Street address, apartment, suite, etc."
               required
-              style={{...styles.input, minHeight: '80px', resize: 'vertical'}}
+              style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }}
               disabled={loading}
             />
           </div>
@@ -200,7 +200,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
           </div>
 
           <div style={styles.buttonGroup}>
-            <button 
+            <button
               type="button"
               onClick={onCancel}
               style={styles.cancelBtn}
@@ -208,8 +208,8 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               style={styles.submitBtn}
               disabled={loading}
             >
@@ -224,7 +224,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
             <p style={styles.createAccountText}>
               ✅ Order placed! Want to track it easily?
             </p>
-            <button 
+            <button
               style={styles.createAccountBtn}
               onClick={() => {
                 // Store guest email for easy registration
@@ -248,19 +248,20 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
 const styles = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    backgroundColor: 'transparent',
     padding: '30px 20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   },
   card: {
-    backgroundColor: 'white',
-    borderRadius: '20px',
-    padding: '32px',
+    backgroundColor: '#ffffff',
+    border: '1px solid var(--border-color)',
+    borderRadius: 'var(--border-radius-xl)',
+    padding: '40px',
     maxWidth: '600px',
     width: '100%',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+    boxShadow: 'var(--shadow-xl)'
   },
   header: {
     textAlign: 'center',
@@ -269,24 +270,25 @@ const styles = {
   title: {
     fontSize: '28px',
     fontWeight: '700',
-    color: '#1f2937',
+    color: 'var(--text-primary)',
     marginBottom: '8px'
   },
   subtitle: {
     fontSize: '15px',
-    color: '#6b7280',
+    color: 'var(--text-secondary)',
     margin: 0
   },
   orderSummary: {
-    backgroundColor: '#f9fafb',
-    borderRadius: '12px',
+    backgroundColor: 'var(--background-secondary)',
+    borderRadius: 'var(--border-radius-md)',
     padding: '16px',
-    marginBottom: '20px'
+    marginBottom: '24px',
+    border: '1px solid var(--border-subtle)'
   },
   summaryTitle: {
     fontSize: '16px',
     fontWeight: '600',
-    color: '#1f2937',
+    color: 'var(--text-primary)',
     marginTop: 0,
     marginBottom: '12px'
   },
@@ -296,35 +298,35 @@ const styles = {
     gap: '8px',
     marginBottom: '12px',
     paddingBottom: '12px',
-    borderBottom: '1px solid #e5e7eb'
+    borderBottom: '1px solid var(--glass-border)'
   },
   item: {
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '14px',
-    color: '#4b5563'
+    color: 'var(--text-primary)'
   },
   itemPrice: {
     fontWeight: '600',
-    color: '#7c3aed'
+    color: 'var(--accent-blue-primary)'
   },
   total: {
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '18px',
-    color: '#1f2937'
+    color: 'var(--text-primary)'
   },
   totalAmount: {
-    color: '#7c3aed'
+    color: 'var(--accent-blue-primary)'
   },
   accountSuggestion: {
     display: 'flex',
     gap: '12px',
-    backgroundColor: '#eff6ff',
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
     borderRadius: '12px',
     padding: '16px',
     marginBottom: '20px',
-    border: '1px solid #dbeafe'
+    border: '1px solid var(--glass-border)'
   },
   suggestionIcon: {
     fontSize: '24px'
@@ -335,7 +337,8 @@ const styles = {
   suggestionText: {
     margin: '4px 0 0 0',
     fontSize: '13px',
-    color: '#1e40af'
+    color: 'var(--text-primary)',
+    lineHeight: '1.5'
   },
   message: {
     padding: '12px 16px',
@@ -358,13 +361,15 @@ const styles = {
   label: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#374151'
+    color: 'var(--text-secondary)'
   },
   input: {
     padding: '12px 16px',
     fontSize: '15px',
-    border: '2px solid #e5e7eb',
-    borderRadius: '10px',
+    border: '1px solid var(--border-color)',
+    backgroundColor: '#ffffff',
+    color: 'var(--text-primary)',
+    borderRadius: 'var(--border-radius-md)',
     outline: 'none',
     transition: 'all 0.2s ease',
     fontFamily: 'inherit'
@@ -379,15 +384,16 @@ const styles = {
     gap: '16px'
   },
   benefits: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
     borderRadius: '12px',
     padding: '16px',
-    marginTop: '8px'
+    marginTop: '8px',
+    border: '1px solid var(--glass-border)'
   },
   benefitsTitle: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#065f46',
+    color: 'var(--text-primary)',
     marginTop: 0,
     marginBottom: '8px'
   },
@@ -395,7 +401,7 @@ const styles = {
     margin: 0,
     paddingLeft: '20px',
     fontSize: '13px',
-    color: '#047857',
+    color: 'var(--text-secondary)',
     lineHeight: '1.8'
   },
   buttonGroup: {
@@ -406,53 +412,55 @@ const styles = {
   cancelBtn: {
     flex: 1,
     padding: '14px 16px',
-    backgroundColor: '#f3f4f6',
-    border: '2px solid #e5e7eb',
+    backgroundColor: 'transparent',
+    border: '1px solid var(--glass-border)',
     borderRadius: '12px',
     fontSize: '15px',
     fontWeight: '600',
-    color: '#4b5563',
+    color: 'var(--text-secondary)',
     cursor: 'pointer',
     transition: 'all 0.2s ease'
   },
   submitBtn: {
     flex: 2,
     padding: '14px 16px',
-    background: 'linear-gradient(135deg, #10b981, #059669)',
+    background: 'var(--gradient-cta)',
     color: 'white',
     border: 'none',
-    borderRadius: '12px',
+    borderRadius: 'var(--border-radius-md)',
     fontSize: '16px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: 'var(--shadow-md)'
   },
   createAccountSection: {
     marginTop: '24px',
     padding: '16px',
-    backgroundColor: '#f0fdf4',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
     borderRadius: '12px',
-    textAlign: 'center'
+    textAlign: 'center',
+    border: '1px solid var(--glass-border)'
   },
   createAccountText: {
     fontSize: '14px',
-    color: '#065f46',
+    color: 'var(--text-primary)',
     marginBottom: '12px'
   },
   createAccountBtn: {
     padding: '10px 20px',
-    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
     color: 'white',
     border: 'none',
     borderRadius: '10px',
     fontSize: '14px',
     fontWeight: '600',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    boxShadow: '0 4px 12px var(--accent-blue-glow)'
   },
   privacyText: {
     fontSize: '12px',
-    color: '#9ca3af',
+    color: 'var(--text-secondary)',
     textAlign: 'center',
     marginTop: '20px',
     lineHeight: '1.5'

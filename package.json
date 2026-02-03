@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "dev": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop all",
+    "restart": "pm2 restart all",
+    "logs": "pm2 logs",
+    "monit": "pm2 monit",
+    "status": "pm2 status",
+    "test:all": "cd backend && npm test && cd ../frontend && npm test",
+    "lint:all": "cd backend && npm run lint && cd ../frontend && npm run lint",
+    "health-check": "curl http://localhost:5000/health && curl http://localhost:5174",
+    "backup:db": "mongodump --uri=$MONGO_URI --out=./backups/$(date +%Y%m%d)",
+    "deploy:staging": "echo 'Deploying to staging...' && npm run test:all && echo 'Tests passed'",
+    "deploy:prod": "echo 'Deploying to production...' && npm run test:all && echo 'Tests passed'"
+  }
+}

@@ -223,7 +223,7 @@ const ExitIntentPopup = () => {
 
         .exit-intent-input:focus {
           outline: none;
-          border-color: #3b82f6;
+          border-color: #4285F4;
         }
 
         .exit-intent-button {

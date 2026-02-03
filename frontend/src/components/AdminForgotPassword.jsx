@@ -14,7 +14,12 @@ export default function AdminForgotPassword() {
   const [captchaValue, setCaptchaValue] = useState('');
   const [captchaQuestion, setCaptchaQuestion] = useState({ num1: 0, num2: 0 });
   const [otpTimer, setOtpTimer] = useState(0);
-  const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '' });
+  const [passwordStrength, setPasswordStrength] = useState({ 
+    score: 0, 
+    text: '', 
+    missing: [],
+    feedback: '' 
+  });
 
   useEffect(() => {
     // Generate CAPTCHA on mount
@@ -50,22 +55,22 @@ export default function AdminForgotPassword() {
 
   function calculatePasswordStrength(password) {
     let score = 0;
-    let feedback = [];
+    let missing = [];
 
     if (password.length >= 8) score += 1;
-    else feedback.push('At least 8 characters');
+    else missing.push('At least 8 characters');
 
     if (/[a-z]/.test(password)) score += 1;
-    else feedback.push('Lowercase letter');
+    else missing.push('Lowercase letter');
 
     if (/[A-Z]/.test(password)) score += 1;
-    else feedback.push('Uppercase letter');
+    else missing.push('Uppercase letter');
 
     if (/[0-9]/.test(password)) score += 1;
-    else feedback.push('Number');
+    else missing.push('Number');
 
     if (/[^a-zA-Z0-9]/.test(password)) score += 1;
-    else feedback.push('Special character');
+    else missing.push('Special character');
 
     const strengthText = score === 0 ? '' :
                         score === 1 ? 'Very Weak' :
@@ -73,7 +78,12 @@ export default function AdminForgotPassword() {
                         score === 3 ? 'Medium' :
                         score === 4 ? 'Strong' : 'Very Strong';
 
-    return { score, text: strengthText, feedback: feedback.join(', ') };
+    return { 
+      score, 
+      text: strengthText, 
+      missing: missing,
+      feedback: missing.join(', ') 
+    };
   }
 
   function handlePasswordChange(value) {
@@ -890,7 +900,7 @@ export default function AdminForgotPassword() {
                 )}
               </div>
 
-              {passwordStrength.missing.length > 0 && (
+              {passwordStrength?.missing && passwordStrength.missing.length > 0 && (
                 <div style={styles.securityNote}>
                   <div style={styles.securityTitle}>
                     <span>📋</span>

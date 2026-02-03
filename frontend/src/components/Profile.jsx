@@ -11,12 +11,12 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [passwordMode, setPasswordMode] = useState(false);
   const [toast, setToast] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: ''
   });
-  
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -47,7 +47,7 @@ export default function Profile() {
       const res = await fetch(`${API}/api/auth/profile`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -58,9 +58,9 @@ export default function Profile() {
         }, 1500);
         return;
       }
-      
+
       const data = await res.json();
-      
+
       if (res.ok && data.user) {
         setUser(data.user);
         setFormData({
@@ -98,7 +98,7 @@ export default function Profile() {
         const orders = ordersData.orders || [];
         const completed = orders.filter(o => o.status === 'delivered');
         const totalSpent = completed.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-        
+
         setStats({
           totalOrders: orders.length,
           completedOrders: completed.length,
@@ -140,7 +140,7 @@ export default function Profile() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok) {
         setUser(data.user);
         setEditMode(false);
@@ -155,7 +155,7 @@ export default function Profile() {
 
   async function handlePasswordUpdate(e) {
     e.preventDefault();
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       showToast('Passwords do not match', 'error');
       return;
@@ -182,7 +182,7 @@ export default function Profile() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok) {
         setPasswordMode(false);
         setPasswordData({
@@ -206,7 +206,7 @@ export default function Profile() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+      backgroundColor: 'transparent',
       padding: '40px 20px'
     },
     content: {
@@ -215,7 +215,7 @@ export default function Profile() {
     },
     header: {
       textAlign: 'center',
-      color: 'white',
+      color: 'var(--text-primary)',
       marginBottom: '40px'
     },
     title: {
@@ -225,6 +225,7 @@ export default function Profile() {
     },
     subtitle: {
       fontSize: '16px',
+      color: 'var(--text-secondary)',
       opacity: 0.9
     },
     grid: {
@@ -234,30 +235,32 @@ export default function Profile() {
       marginBottom: '30px'
     },
     statCard: {
-      background: 'rgba(255, 255, 255, 0.95)',
-      borderRadius: '16px',
+      background: '#ffffff',
+      border: '1px solid var(--border-color)',
+      borderRadius: 'var(--border-radius-lg)',
       padding: '24px',
       textAlign: 'center',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)'
+      boxShadow: 'var(--shadow-sm)',
+      transition: 'transform 0.3s ease',
+      cursor: 'default'
     },
     statValue: {
       fontSize: '32px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
+      color: 'var(--primary-brand)',
       margin: '0 0 8px 0'
     },
     statLabel: {
       fontSize: '14px',
-      color: '#64748b',
+      color: 'var(--text-secondary)',
       fontWeight: '600'
     },
     card: {
-      background: 'rgba(255, 255, 255, 0.95)',
-      borderRadius: '20px',
+      background: '#ffffff',
+      border: '1px solid var(--border-color)',
+      borderRadius: 'var(--border-radius-lg)',
       padding: '32px',
-      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+      boxShadow: 'var(--shadow-sm)',
       marginBottom: '24px'
     },
     cardHeader: {
@@ -266,13 +269,13 @@ export default function Profile() {
       alignItems: 'center',
       marginBottom: '24px',
       paddingBottom: '16px',
-      borderBottom: '2px solid #f1f5f9'
+      borderBottom: '1px solid var(--border-subtle)'
     },
     cardTitle: {
       fontSize: '24px',
       fontWeight: '700',
       margin: 0,
-      color: '#1e293b'
+      color: 'var(--text-primary)'
     },
     infoGroup: {
       marginBottom: '20px'
@@ -281,19 +284,21 @@ export default function Profile() {
       display: 'block',
       fontSize: '14px',
       fontWeight: '600',
-      color: '#64748b',
+      color: 'var(--text-secondary)',
       marginBottom: '8px'
     },
     value: {
       fontSize: '16px',
-      color: '#1e293b',
+      color: 'var(--text-primary)',
       fontWeight: '500'
     },
     input: {
       width: '100%',
       padding: '12px 16px',
-      border: '2px solid #e2e8f0',
-      borderRadius: '10px',
+      border: '1px solid var(--border-color)',
+      backgroundColor: '#ffffff',
+      color: 'var(--text-primary)',
+      borderRadius: 'var(--border-radius-md)',
       fontSize: '16px',
       transition: 'all 0.3s ease',
       outline: 'none',
@@ -301,22 +306,22 @@ export default function Profile() {
     },
     btnPrimary: {
       padding: '12px 24px',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      background: 'var(--gradient-blue)',
       color: 'white',
       border: 'none',
-      borderRadius: '10px',
+      borderRadius: 'var(--border-radius-md)',
       fontSize: '16px',
       fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: 'var(--shadow-md)'
     },
     btnSecondary: {
       padding: '12px 24px',
-      background: 'white',
-      color: '#667eea',
-      border: '2px solid #667eea',
-      borderRadius: '10px',
+      background: 'transparent',
+      color: 'var(--text-secondary)',
+      border: '1px solid var(--border-color)',
+      borderRadius: 'var(--border-radius-md)',
       fontSize: '16px',
       fontWeight: '600',
       cursor: 'pointer',
@@ -324,7 +329,8 @@ export default function Profile() {
       marginLeft: '12px'
     },
     btnDanger: {
-      background: 'linear-gradient(135deg, #ef4444, #dc2626)'
+      background: 'var(--gradient-cta)',
+      boxShadow: 'var(--shadow-md)'
     },
     badge: {
       display: 'inline-block',
@@ -355,7 +361,7 @@ export default function Profile() {
   return (
     <div style={styles.container}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      
+
       <div style={styles.content}>
         <div style={styles.header}>
           <h1 style={styles.title}>My Profile</h1>
@@ -387,12 +393,12 @@ export default function Profile() {
           <div style={styles.cardHeader}>
             <h2 style={styles.cardTitle}>
               Profile Information
-              <span style={{...styles.badge, ...(user?.role === 'admin' ? styles.adminBadge : styles.userBadge)}}>
+              <span style={{ ...styles.badge, ...(user?.role === 'admin' ? styles.adminBadge : styles.userBadge) }}>
                 {user?.role === 'admin' ? 'Admin' : 'User'}
               </span>
             </h2>
             {!editMode && (
-              <button 
+              <button
                 style={styles.btnPrimary}
                 onClick={() => setEditMode(true)}
               >
@@ -427,8 +433,8 @@ export default function Profile() {
               </div>
               <div>
                 <button type="submit" style={styles.btnPrimary}>Save Changes</button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   style={styles.btnSecondary}
                   onClick={() => {
                     setEditMode(false);
@@ -468,8 +474,8 @@ export default function Profile() {
           <div style={styles.cardHeader}>
             <h2 style={styles.cardTitle}>Security</h2>
             {!passwordMode && !user?.googleId && (
-              <button 
-                style={{...styles.btnPrimary, ...styles.btnDanger}}
+              <button
+                style={{ ...styles.btnPrimary, ...styles.btnDanger }}
                 onClick={() => setPasswordMode(true)}
               >
                 Change Password
@@ -480,27 +486,27 @@ export default function Profile() {
           {user?.googleId ? (
             <div style={{
               padding: '24px',
-              backgroundColor: '#f0f9ff',
-              border: '2px solid #bfdbfe',
-              borderRadius: '12px',
+              backgroundColor: 'var(--background-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--border-radius-md)',
               textAlign: 'center'
             }}>
-              <div style={{fontSize: '48px', marginBottom: '16px'}}>🔐</div>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔐</div>
               <h3 style={{
                 fontSize: '18px',
                 fontWeight: '600',
-                color: '#1e40af',
+                color: 'var(--text-primary)',
                 marginBottom: '8px'
               }}>
                 Google Account
               </h3>
               <p style={{
-                color: '#64748b',
+                color: 'var(--text-secondary)',
                 fontSize: '14px',
                 lineHeight: '1.6',
                 margin: '0'
               }}>
-                You're signed in with Google. Your password is managed by Google.<br/>
+                You're signed in with Google. Your password is managed by Google.<br />
                 To change your password, please visit your Google Account settings.
               </p>
               <a
@@ -511,13 +517,14 @@ export default function Profile() {
                   display: 'inline-block',
                   marginTop: '16px',
                   padding: '10px 20px',
-                  backgroundColor: '#2563eb',
+                  backgroundColor: 'var(--color-brand-primary)',
                   color: 'white',
                   textDecoration: 'none',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '600',
-                  transition: 'background-color 0.3s ease'
+                  transition: 'background-color 0.3s ease',
+                  boxShadow: '0 4px 12px var(--accent-blue-glow)'
                 }}
                 onMouseOver={(e) => e.target.style.backgroundColor = '#1d4ed8'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#2563eb'}
@@ -564,11 +571,11 @@ export default function Profile() {
                 />
               </div>
               <div>
-                <button type="submit" style={{...styles.btnPrimary, ...styles.btnDanger}}>
+                <button type="submit" style={{ ...styles.btnPrimary, ...styles.btnDanger }}>
                   Update Password
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   style={styles.btnSecondary}
                   onClick={() => {
                     setPasswordMode(false);

@@ -31,8 +31,24 @@ router.get('/', async (req, res) => {
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
     
+    // Handle search with intelligent query selection
+    let useRegexSearch = false;
     if (search) {
-      query.$text = { $search: search };
+      // Force regex for short queries (MongoDB text index requires 3+ chars)
+      if (search.length < 3) {
+        console.log(`🔍 Short query "${search}" (${search.length} chars) - using regex`);
+        useRegexSearch = true;
+        query.$or = [
+          { name: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { brand: { $regex: search, $options: 'i' } },
+          { tags: { $regex: search, $options: 'i' } }
+        ];
+      } else {
+        // Try text search first (uses text index for better performance)
+        query.$text = { $search: search };
+        console.log(`🔍 Product search query: "${search}"`);
+      }
     }
 
     if (featured === 'true') {
@@ -41,13 +57,40 @@ router.get('/', async (req, res) => {
 
     // Execute query with pagination
     const skip = (Number(page) - 1) * Number(limit);
-    const products = await Product.find(query)
+    let products = await Product.find(query)
       .sort(sort)
       .skip(skip)
       .limit(Number(limit))
       .select('-__v');
 
-    const total = await Product.countDocuments(query);
+    let total = await Product.countDocuments(query);
+    
+    // If text search returns no results, try case-insensitive regex search
+    if (search && products.length === 0 && !useRegexSearch) {
+      console.log(`⚠️ Text search returned 0 results, trying regex fallback...`);
+      
+      // Remove text search and use regex instead
+      delete query.$text;
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { brand: { $regex: search, $options: 'i' } },
+        { tags: { $regex: search, $options: 'i' } }
+      ];
+      
+      products = await Product.find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(Number(limit))
+        .select('-__v');
+      
+      total = await Product.countDocuments(query);
+      
+      console.log(`🔍 Regex search found ${products.length} products`);
+    } else if (search) {
+      const searchType = useRegexSearch ? 'Regex' : 'Text';
+      console.log(`✅ ${searchType} search found ${products.length} products`);
+    }
 
     res.json({
       success: true,

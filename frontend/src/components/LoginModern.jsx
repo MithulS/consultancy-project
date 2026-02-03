@@ -7,10 +7,10 @@ const GoogleLogo = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <title>Google Logo</title>
     <g fill="none" fillRule="evenodd">
-      <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
-      <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853" />
+      <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" />
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" />
     </g>
   </svg>
 );
@@ -26,7 +26,7 @@ const trackLoginEvent = (method, success = true) => {
         timestamp: new Date().toISOString()
       });
     }
-    
+
     // Custom analytics endpoint (if you have one)
     fetch(`${API}/api/analytics/track`, {
       method: 'POST',
@@ -37,7 +37,7 @@ const trackLoginEvent = (method, success = true) => {
         success: success,
         timestamp: new Date().toISOString()
       })
-    }).catch(() => {}); // Silent fail for analytics
+    }).catch(() => { }); // Silent fail for analytics
   } catch (error) {
     console.log('Analytics tracking failed:', error);
   }
@@ -89,14 +89,14 @@ export default function Login() {
   useEffect(() => {
     const loginMessage = sessionStorage.getItem('loginMessage');
     const messageType = sessionStorage.getItem('loginMessageType');
-    
+
     if (loginMessage) {
       setMsg(loginMessage);
-      
+
       // Clear message from storage
       sessionStorage.removeItem('loginMessage');
       sessionStorage.removeItem('loginMessageType');
-      
+
       // Auto-clear message after 5 seconds
       setTimeout(() => {
         setMsg('');
@@ -111,21 +111,21 @@ export default function Login() {
 
   async function submit(e) {
     e.preventDefault();
-    
+
     const newErrors = {};
     if (!validateEmail(form.email)) newErrors.email = 'Invalid email format';
     if (!form.password) newErrors.password = 'Password is required';
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setMsg('');
       return;
     }
-    
+
     setErrors({});
     setMsg('Logging in...');
     setLoading(true);
-    
+
     try {
       const res = await fetch(`${API}/api/auth/login`, {
         method: 'POST',
@@ -133,33 +133,33 @@ export default function Login() {
         body: JSON.stringify(form)
       });
       const data = await res.json();
-      
+
       if (!res.ok) throw new Error(data.msg || 'Login failed');
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');
       }
-      
+
       // Track successful login
       trackLoginEvent('email', true);
-      
+
       setMsg(`✅ Welcome back, ${data.user.name || data.user.email}!`);
       setForm({ email: '', password: '' });
-      
+
       // Set flag for welcome message
       sessionStorage.setItem('justLoggedIn', 'true');
-      
+
       // Trigger event to notify app of login
-      window.dispatchEvent(new CustomEvent('userLoggedIn', { 
-        detail: { user: data.user, token: data.token } 
+      window.dispatchEvent(new CustomEvent('userLoggedIn', {
+        detail: { user: data.user, token: data.token }
       }));
-      
+
       // Check if there's a redirect destination stored
       const redirectTo = sessionStorage.getItem('redirectAfterLogin');
-      
+
       setTimeout(() => {
         if (redirectTo) {
           sessionStorage.removeItem('redirectAfterLogin');
@@ -170,13 +170,13 @@ export default function Login() {
       }, 800);
     } catch (err) {
       console.error('Login error', err);
-      
+
       // Track failed login
       trackLoginEvent('email', false);
-      
+
       if (err.message === 'Email not verified') {
         setMsg('❌ Email not verified. Redirecting to verification page...');
-        
+
         // Store email for OTP page
         try {
           localStorage.setItem('pendingVerificationEmail', form.email);
@@ -184,7 +184,7 @@ export default function Login() {
         } catch (storageError) {
           console.error('Storage error:', storageError);
         }
-        
+
         // Redirect to OTP verification page
         setTimeout(() => {
           const encodedEmail = encodeURIComponent(form.email);
@@ -203,11 +203,11 @@ export default function Login() {
     setGoogleLoading(true);
     setMsg('🔄 Redirecting to Google...');
     setErrors({});
-    
+
     try {
       // Track Google login attempt
       trackLoginEvent('google', true);
-      
+
       // Redirect to backend Google OAuth endpoint
       window.location.href = `${API}/api/auth/google`;
     } catch (err) {
@@ -226,20 +226,40 @@ export default function Login() {
     const urlParams = new URLSearchParams(queryString);
     const token = urlParams.get('token');
     const error = urlParams.get('error');
-    
-    // Prevent processing the same callback multiple times
+
+    // Check if already logged in (token exists in localStorage)
+    const existingToken = localStorage.getItem('token');
+    if (existingToken && !token && !error) {
+      // Already logged in, redirect to dashboard
+      console.log('✅ Already authenticated, redirecting to dashboard...');
+      window.location.hash = '#dashboard';
+      return;
+    }
+
+    // Prevent processing the same callback multiple times (but allow retry after 5 seconds)
     const processedCallback = sessionStorage.getItem('oauth_callback_processed');
+    const processedTime = sessionStorage.getItem('oauth_callback_time');
+    const now = Date.now();
     
-    if (token && !processedCallback) {
+    // Clear old processed flag if more than 5 seconds old
+    if (processedCallback && processedTime && (now - parseInt(processedTime) > 5000)) {
+      console.log('🔄 Clearing old OAuth processing flag...');
+      sessionStorage.removeItem('oauth_callback_processed');
+      sessionStorage.removeItem('oauth_callback_time');
+    }
+
+    if (token && !sessionStorage.getItem('oauth_callback_processed')) {
       console.log('✅ Google OAuth token received, processing...');
-      
-      // Mark callback as processed to prevent loops
+
+      // Mark callback as processed to prevent loops (with timestamp)
       sessionStorage.setItem('oauth_callback_processed', 'true');
-      
+      sessionStorage.setItem('oauth_callback_time', Date.now().toString());
+
       // Store token
       localStorage.setItem('token', token);
       setMsg('✅ Google login successful! Loading your profile...');
-      
+      setLoading(true);
+
       // Fetch user info
       fetch(`${API}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -255,53 +275,58 @@ export default function Login() {
           localStorage.setItem('user', JSON.stringify(data));
           setMsg('✅ Welcome back! Redirecting to dashboard...');
           trackLoginEvent('google', true);
-          
+
           // Set flag for welcome message
           sessionStorage.setItem('justLoggedIn', 'true');
-          
+
           // Trigger event to notify app of login
-          window.dispatchEvent(new CustomEvent('userLoggedIn', { 
-            detail: { user: data, token: token } 
+          window.dispatchEvent(new CustomEvent('userLoggedIn', {
+            detail: { user: data, token: token }
           }));
-          
+
           // Check if there's a redirect destination stored
           const redirectTo = sessionStorage.getItem('redirectAfterLogin');
+
+          // Clear the callback processed flag after successful login
+          sessionStorage.removeItem('oauth_callback_processed');
+          sessionStorage.removeItem('oauth_callback_time');
+          setLoading(false);
+
+          if (redirectTo) {
+            sessionStorage.removeItem('redirectAfterLogin');
+            window.location.hash = redirectTo;
+          } else {
+            window.location.hash = '#dashboard';
+          }
           
-          setTimeout(() => {
-            // Clear the callback processed flag after redirect
-            sessionStorage.removeItem('oauth_callback_processed');
-            
-            if (redirectTo) {
-              sessionStorage.removeItem('redirectAfterLogin');
-              window.location.hash = redirectTo;
-            } else {
-              window.location.hash = '#dashboard';
-            }
-          }, 1000);
+          // ✅ NO RELOAD - Let React handle state updates
+          // The userLoggedIn event will trigger component re-renders
         })
         .catch(err => {
           console.error('❌ Failed to fetch user:', err);
           setMsg('⚠️ Login successful but failed to load profile. Please try again.');
           setGoogleLoading(false);
-          
-          // Clear the problematic token
+          setLoading(false);
+
+          // Clear the problematic token and flags
           localStorage.removeItem('token');
           sessionStorage.removeItem('oauth_callback_processed');
-          
+          sessionStorage.removeItem('oauth_callback_time');
+
           // Clean URL
           window.history.replaceState({}, document.title, window.location.pathname + '#login');
         });
     } else if (error && !processedCallback) {
       console.error('❌ Google OAuth error:', error);
-      
+
       // Mark as processed
       sessionStorage.setItem('oauth_callback_processed', 'true');
-      
+
       const decodedError = decodeURIComponent(error);
       setMsg(`❌ Google login failed: ${decodedError}`);
       trackLoginEvent('google', false);
       setGoogleLoading(false);
-      
+
       // Clean URL after showing error
       setTimeout(() => {
         sessionStorage.removeItem('oauth_callback_processed');
@@ -315,9 +340,6 @@ export default function Login() {
 
   const styles = {
     container: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
-      backgroundSize: '200% 200%',
-      animation: 'gradientFlow 15s ease infinite',
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
@@ -325,13 +347,14 @@ export default function Login() {
       padding: '20px',
       fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      color: 'var(--text-primary)'
     },
     card: {
-      backgroundColor: 'rgba(255, 255, 255, 0.98)',
-      backdropFilter: 'blur(20px)',
-      borderRadius: '28px',
-      boxShadow: '0 25px 70px rgba(102, 126, 234, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.6)',
+      backgroundColor: '#ffffff',
+      borderRadius: 'var(--border-radius-xl)',
+      boxShadow: 'var(--shadow-xl)',
+      border: '1px solid var(--border-color)',
       maxWidth: '480px',
       width: '100%',
       padding: '56px 48px',
@@ -343,28 +366,28 @@ export default function Login() {
       marginBottom: '40px'
     },
     lockIcon: {
-      width: '72px',
-      height: '72px',
-      margin: '0 auto 24px',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 32px',
+      background: 'var(--background-secondary)',
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: '36px',
-      boxShadow: '0 8px 24px rgba(102, 126, 234, 0.3)',
-      animation: 'float 3s ease-in-out infinite'
+      boxShadow: 'var(--shadow-inner)',
+      border: '1px solid var(--border-color)'
     },
     title: {
-      fontSize: '36px',
+      fontSize: '32px',
       fontWeight: '800',
-      color: '#1a202c',
-      marginBottom: '10px',
+      color: 'var(--text-primary)',
+      marginBottom: '12px',
       letterSpacing: '-0.02em'
     },
     subtitle: {
       fontSize: '17px',
-      color: '#64748b',
+      color: 'var(--text-secondary)',
       fontWeight: '400'
     },
     inputGroup: {
@@ -375,7 +398,7 @@ export default function Login() {
       display: 'block',
       fontSize: '15px',
       fontWeight: '600',
-      color: '#1e293b',
+      color: 'var(--text-primary)',
       marginBottom: '10px',
       letterSpacing: '0'
     },
@@ -386,22 +409,22 @@ export default function Login() {
       width: '100%',
       padding: '15px 18px',
       fontSize: '16px',
-      border: '2px solid #e2e8f0',
+      border: '1px solid var(--border-secondary)',
       borderRadius: '14px',
       outline: 'none',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#f8fafc',
+      backgroundColor: '#ffffff',
       boxSizing: 'border-box',
-      color: '#1e293b'
+      color: 'var(--text-primary)'
     },
     inputFocus: {
-      border: '2px solid #667eea',
-      backgroundColor: 'white',
-      boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.12)'
+      border: '1px solid var(--accent-blue-primary)',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 0 0 4px var(--accent-blue-subtle)'
     },
     inputError: {
-      border: '2px solid #ef4444',
-      backgroundColor: '#fef2f2'
+      border: '1px solid var(--accent-red-primary)',
+      backgroundColor: 'rgba(255, 71, 87, 0.1)'
     },
     passwordToggle: {
       position: 'absolute',
@@ -411,13 +434,13 @@ export default function Login() {
       background: 'none',
       border: 'none',
       cursor: 'pointer',
-      color: '#718096',
+      color: 'var(--text-secondary)',
       fontSize: '20px',
       padding: '0',
       lineHeight: '1'
     },
     errorText: {
-      color: '#e53e3e',
+      color: 'var(--accent-red-primary)',
       fontSize: '13px',
       marginTop: '6px',
       display: 'flex',
@@ -436,21 +459,21 @@ export default function Login() {
       gap: '10px',
       cursor: 'pointer',
       fontSize: '15px',
-      color: '#475569',
+      color: 'var(--text-secondary)',
       userSelect: 'none'
     },
     checkboxInput: {
       width: '20px',
       height: '20px',
       cursor: 'pointer',
-      accentColor: '#667eea'
+      accentColor: 'var(--accent-blue-primary)'
     },
     forgotLink: {
       fontSize: '15px',
-      color: '#667eea',
+      color: 'var(--accent-blue-primary)',
       textDecoration: 'none',
       fontWeight: '600',
-      transition: 'all 0.2s ease'
+      transition: 'color 0.2s ease'
     },
     button: {
       width: '100%',
@@ -458,12 +481,12 @@ export default function Login() {
       fontSize: '17px',
       fontWeight: '700',
       color: 'white',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'var(--gradient-cta)',
       border: 'none',
-      borderRadius: '14px',
+      borderRadius: 'var(--border-radius-md)',
       cursor: 'pointer',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)',
+      boxShadow: 'var(--shadow-md)',
       letterSpacing: '0.3px',
       textTransform: 'none'
     },
@@ -519,25 +542,23 @@ export default function Login() {
       position: 'absolute',
       top: '-100px',
       right: '-100px',
-      width: '300px',
-      height: '300px',
-      background: 'rgba(255, 255, 255, 0.15)',
+      width: '400px',
+      height: '400px',
+      background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(255,255,255,0) 70%)',
       borderRadius: '50%',
-      filter: 'blur(60px)',
-      animation: 'float 8s ease-in-out infinite',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      zIndex: -1
     },
     decorativeBlob2: {
       position: 'absolute',
       bottom: '-120px',
       left: '-120px',
-      width: '350px',
-      height: '350px',
-      background: 'rgba(255, 255, 255, 0.1)',
+      width: '400px',
+      height: '400px',
+      background: 'radial-gradient(circle, rgba(249,115,22,0.1) 0%, rgba(255,255,255,0) 70%)',
       borderRadius: '50%',
-      filter: 'blur(70px)',
-      animation: 'float 10s ease-in-out infinite reverse',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      zIndex: -1
     },
     googleButton: {
       width: '100%',
@@ -635,9 +656,10 @@ export default function Login() {
 
       <style>{`
         input:focus {
-          border: 2px solid #667eea !important;
-          background-color: white !important;
-          box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12) !important;
+          border: 1px solid var(--accent-blue-primary) !important;
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          box-shadow: 0 0 0 4px var(--accent-blue-subtle) !important;
+          color: var(--text-primary) !important;
         }
         button:not(:disabled):hover {
           transform: translateY(-3px) scale(1.01);
@@ -676,7 +698,7 @@ export default function Login() {
           to { transform: rotate(360deg); }
         }
       `}</style>
-      
+
       <div style={styles.card}>
         <div style={styles.header}>
           {/* Lock Icon */}
@@ -715,7 +737,7 @@ export default function Login() {
               </>
             )}
           </button>
-          
+
           {/* Tooltip */}
           <div style={styles.tooltip} className="tooltip" role="tooltip">
             Quick and secure access with your Google account
@@ -724,13 +746,13 @@ export default function Login() {
         </div>
 
         {/* OR Divider */}
-        <div style={{...styles.divider, margin: '24px 0'}}>
+        <div style={{ ...styles.divider, margin: '24px 0' }}>
           <span style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            backgroundColor: 'var(--glass-background)',
             padding: '0 16px',
             position: 'relative',
             zIndex: 1,
-            color: '#94a3b8',
+            color: 'var(--text-secondary)',
             fontSize: '14px',
             fontWeight: '500'
           }}>
@@ -742,7 +764,7 @@ export default function Login() {
             left: 0,
             right: 0,
             height: '1px',
-            backgroundColor: '#e2e8f0',
+            backgroundColor: 'var(--border-secondary)',
             zIndex: 0
           }}></div>
         </div>
@@ -750,17 +772,17 @@ export default function Login() {
         <form onSubmit={submit}>
           <div style={styles.inputGroup}>
             <label style={styles.label} htmlFor="email-input">Email Address</label>
-            <input 
+            <input
               id="email-input"
               type="email"
               placeholder="you@example.com"
-              value={form.email} 
-              onChange={e => setForm({ ...form, email: e.target.value })} 
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
               style={{
                 ...styles.input,
                 ...(errors.email && styles.inputError)
               }}
-              required 
+              required
               autoComplete="email"
               aria-required="true"
               aria-invalid={errors.email ? 'true' : 'false'}
@@ -772,28 +794,28 @@ export default function Login() {
               </div>
             )}
           </div>
-          
+
           <div style={styles.inputGroup}>
             <label style={styles.label} htmlFor="password-input">Password</label>
             <div style={styles.inputWrapper}>
-              <input 
+              <input
                 id="password-input"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                value={form.password} 
-                onChange={e => setForm({ ...form, password: e.target.value })} 
+                value={form.password}
+                onChange={e => setForm({ ...form, password: e.target.value })}
                 style={{
                   ...styles.input,
                   ...(errors.password && styles.inputError),
                   paddingRight: '48px'
                 }}
-                required 
+                required
                 autoComplete="current-password"
                 aria-required="true"
                 aria-invalid={errors.password ? 'true' : 'false'}
                 aria-describedby={errors.password ? 'password-error' : undefined}
               />
-              <button 
+              <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 style={styles.passwordToggle}
@@ -812,7 +834,7 @@ export default function Login() {
 
           <div style={styles.rememberRow}>
             <label style={styles.checkbox} className="checkbox-label">
-              <input 
+              <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
@@ -820,8 +842,8 @@ export default function Login() {
               />
               <span>Remember me</span>
             </label>
-            <a 
-              href="#forgot-password" 
+            <a
+              href="#forgot-password"
               style={styles.forgotLink}
               onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
               onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
@@ -829,9 +851,9 @@ export default function Login() {
               Forgot Password?
             </a>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             disabled={loading || googleLoading}
             style={{
               ...styles.button,
@@ -849,9 +871,9 @@ export default function Login() {
             )}
           </button>
         </form>
-        
+
         {msg && (
-          <div 
+          <div
             style={{
               ...styles.message,
               ...(msg.includes('✅') ? styles.messageSuccess : styles.messageError)
@@ -865,10 +887,10 @@ export default function Login() {
 
         {/* Security & Privacy Notice */}
         <div style={styles.securityNote}>
-          🔒 <strong>Secure Login:</strong> Your data is protected with industry-standard encryption. 
+          🔒 <strong>Secure Login:</strong> Your data is protected with industry-standard encryption.
           By logging in with Google, you agree to our{' '}
-          <a 
-            href="#privacy-policy" 
+          <a
+            href="#privacy-policy"
             style={styles.privacyLink}
             className="privacy-link"
             aria-label="Read our privacy policy"
@@ -876,8 +898,8 @@ export default function Login() {
             Privacy Policy
           </a>
           {' '}and{' '}
-          <a 
-            href="#terms" 
+          <a
+            href="#terms"
             style={styles.privacyLink}
             className="privacy-link"
             aria-label="Read our terms of service"
@@ -885,17 +907,17 @@ export default function Login() {
             Terms of Service
           </a>.
         </div>
-        
+
         <div style={styles.registerLink}>
           Don't have an account?
           <a href="#register" style={styles.link}>
             Create one now
           </a>
         </div>
-        
-        <div style={{textAlign: 'center', marginTop: '16px'}}>
-          <a 
-            href="#dashboard" 
+
+        <div style={{ textAlign: 'center', marginTop: '16px' }}>
+          <a
+            href="#dashboard"
             style={{
               color: 'rgba(255, 255, 255, 0.8)',
               textDecoration: 'none',

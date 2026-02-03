@@ -471,7 +471,7 @@ const styles = {
   progressBarContainer: {
     width: '100%',
     height: '8px',
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'var(--color-border-default)',
     borderRadius: '9999px',
     overflow: 'hidden'
   },
@@ -488,9 +488,9 @@ const styles = {
   },
   infoCard: {
     padding: '16px',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'var(--color-gray-50)',
     borderRadius: '12px',
-    border: '2px solid #e5e7eb'
+    border: '2px solid var(--color-border-default)'
   },
   timelineSection: {
     marginBottom: '24px'
@@ -502,10 +502,10 @@ const styles = {
     marginBottom: '16px'
   },
   timeline: {
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'var(--color-gray-50)',
     borderRadius: '12px',
     padding: '16px',
-    border: '2px solid #e5e7eb'
+    border: '2px solid var(--color-border-default)'
   },
   timelineItem: {
     display: 'flex',
@@ -533,23 +533,23 @@ const styles = {
   timelineStatus: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#1f2937',
+    color: 'var(--color-text-primary)',
     marginBottom: '4px'
   },
   timelineDescription: {
     fontSize: '13px',
-    color: '#6b7280',
+    color: 'var(--color-text-secondary)',
     marginBottom: '4px'
   },
   timelineLocation: {
     fontSize: '12px',
-    color: '#8b5cf6',
+    color: 'var(--color-accent-purple)',
     fontWeight: '600',
     marginBottom: '4px'
   },
   timelineTimestamp: {
     fontSize: '11px',
-    color: '#9ca3af'
+    color: 'var(--color-gray-400)'
   },
   itemsSection: {
     marginBottom: '24px'
@@ -559,10 +559,10 @@ const styles = {
     gap: '16px',
     alignItems: 'center',
     padding: '12px',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'var(--color-gray-50)',
     borderRadius: '8px',
     marginBottom: '8px',
-    border: '1px solid #e5e7eb'
+    border: '1px solid var(--color-border-default)'
   },
   itemImage: {
     width: '60px',
@@ -572,9 +572,9 @@ const styles = {
   },
   addressCard: {
     padding: '16px',
-    backgroundColor: '#eff6ff',
+    backgroundColor: 'var(--color-primary-50)',
     borderRadius: '12px',
-    border: '2px solid #bfdbfe',
+    border: '2px solid var(--color-primary-200)',
     marginBottom: '16px'
   }
 };

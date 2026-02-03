@@ -717,7 +717,10 @@ router.get('/google', asyncHandler(async (req, res) => {
   console.log('   Redirect URI:', redirectUri);
   console.log('   Client ID:', clientId.substring(0, 20) + '...');
   
-  await logAuditEvent({ action: 'GOOGLE_LOGIN_INITIATED', req });
+  // Log without awaiting to avoid blocking
+  logAuditEvent({ action: 'GOOGLE_LOGIN_INITIATED', email: 'anonymous', req }).catch(err => 
+    console.error('Audit log error:', err.message)
+  );
   res.redirect(googleAuthUrl);
 }));
 
@@ -874,27 +877,35 @@ router.get('/google/callback', asyncHandler(async (req, res) => {
 
 // Get current user info (for OAuth callback)
 router.get('/me', asyncHandler(async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ msg: 'No token provided' });
-  }
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ msg: 'No token provided' });
+    }
+      
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-  const token = authHeader.split(' ')[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  
-  const user = await User.findById(decoded.userId).select('-password -otp');
-  if (!user) {
-    return res.status(404).json({ msg: 'User not found' });
+    const user = await User.findById(decoded.userId).select('-password -otp');
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      isVerified: user.isVerified
+    });
+  } catch (error) {
+    // Token verification failed or other error
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return res.status(401).json({ msg: 'Invalid or expired token' });
+    }
+    throw error; // Let asyncHandler handle other errors
   }
-  
-  res.json({
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    username: user.username,
-    profilePicture: user.profilePicture,
-    isVerified: user.isVerified
-  });
 }));
 
 // ============================================================

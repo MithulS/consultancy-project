@@ -109,7 +109,8 @@ const conversationSchema = new mongoose.Schema({
         'technical_issue',
         'vip_customer',
         'policy_exception',
-        'timeout'
+        'timeout',
+        'low_confidence'
       ]
     },
     escalatedAt: Date,

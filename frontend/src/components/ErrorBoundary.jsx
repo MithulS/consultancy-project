@@ -16,7 +16,11 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('❌ Error caught by boundary:', error, errorInfo);
+    // Enhanced error logging
+    console.error('%c❌ Error caught by boundary:', 'color: red; font-size: 14px; font-weight: bold;', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
+    
     this.setState({
       error,
       errorInfo
@@ -26,20 +30,60 @@ class ErrorBoundary extends React.Component {
     if (window.analytics) {
       window.analytics.track('error', {
         error: error.toString(),
+        message: error.message,
         stack: error.stack,
-        componentStack: errorInfo.componentStack
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href
       });
+    }
+    
+    // Log to backend error tracking service
+    try {
+      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/log-error`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          error: error.toString(),
+          message: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          url: window.location.href
+        })
+      }).catch(() => {
+        // Silently fail - don't throw error in error handler
+        console.warn('Failed to log error to backend');
+      });
+    } catch (e) {
+      console.warn('Error logging failed:', e);
     }
   }
 
   handleReset = () => {
     this.setState({ hasError: false, error: null, errorInfo: null });
+    // Use replaceState to avoid adding to history
     window.location.reload();
   };
 
   handleGoHome = () => {
     this.setState({ hasError: false, error: null, errorInfo: null });
+    // Clear any stored state that might cause repeated errors
+    try {
+      sessionStorage.removeItem('errorState');
+      localStorage.removeItem('tempFormData');
+    } catch (e) {
+      console.warn('Failed to clear storage:', e);
+    }
     window.location.hash = '#dashboard';
+    window.location.reload();
+  };
+
+  handleTryAgain = () => {
+    // Attempt soft recovery without full reload
+    this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
   render() {
@@ -141,6 +185,20 @@ class ErrorBoundary extends React.Component {
             <div style={styles.buttonGroup}>
               <button 
                 style={{...styles.button, ...styles.primaryButton}}
+                onClick={this.handleTryAgain}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                }}
+              >
+                🔄 Try Again
+              </button>
+              <button 
+                style={{...styles.button, ...styles.primaryButton}}
                 onClick={this.handleReset}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -151,7 +209,7 @@ class ErrorBoundary extends React.Component {
                   e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
                 }}
               >
-                🔄 Reload Page
+                ♻️ Reload Page
               </button>
               <button 
                 style={{...styles.button, ...styles.secondaryButton}}

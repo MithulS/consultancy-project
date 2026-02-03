@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SmartButton from './SmartButton';
 
 const ProductRecommendations = ({ 
   currentProduct = null,
@@ -199,13 +200,18 @@ const ProductRecommendations = ({
                 </div>
               )}
               
-              <button 
-                className="add-to-cart-btn"
-                onClick={(e) => addToCart(product, e)}
+              <SmartButton
+                onClick={async (e) => {
+                  addToCart(product, e);
+                  return true;
+                }}
                 disabled={product.stock === 0}
+                variant="primary"
+                size="small"
+                style={{ width: '100%' }}
               >
                 {product.stock === 0 ? 'Out of Stock' : '🛒 Add to Cart'}
-              </button>
+              </SmartButton>
             </div>
           </div>
         ))}

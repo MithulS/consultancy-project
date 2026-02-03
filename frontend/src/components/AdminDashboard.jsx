@@ -4,6 +4,7 @@ import ProductReports from './ProductReports';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { getImageUrl } from '../utils/imageHandling';
+import Skeleton from './Skeleton';
 
 // Inject CSS animations
 const styleSheet = document.createElement('style');
@@ -313,18 +314,16 @@ export default function AdminDashboard() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%)',
-      backgroundSize: '400% 400%',
-      animation: 'gradientFlow 15s ease infinite',
+      minHeight: '100vh',
+      backgroundColor: 'transparent',
       position: 'relative'
     },
     header: {
-      background: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(20px)',
-      color: '#1e1b4b',
+      background: 'var(--primary-brand)',
+      color: 'var(--text-inverse)',
       padding: '24px 40px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: 'var(--shadow-md)',
+      borderBottom: 'none',
       borderRadius: '0',
       display: 'flex',
       justifyContent: 'space-between',
@@ -335,10 +334,10 @@ export default function AdminDashboard() {
       fontSize: '32px',
       fontWeight: '800',
       margin: 0,
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
+      fontSize: '32px',
+      fontWeight: '800',
+      margin: 0,
+      color: 'var(--text-inverse)',
       letterSpacing: '-0.5px',
       display: 'flex',
       alignItems: 'center',
@@ -351,9 +350,10 @@ export default function AdminDashboard() {
     },
     adminName: {
       fontSize: '15px',
-      color: '#6b7280',
+      color: 'var(--text-inverse)',
       fontWeight: '600',
-      letterSpacing: '0.3px'
+      letterSpacing: '0.3px',
+      opacity: 0.9
     },
     button: {
       padding: '12px 24px',
@@ -400,12 +400,11 @@ export default function AdminDashboard() {
       margin: '0 auto'
     },
     statCard: {
-      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%)',
-      backdropFilter: 'blur(20px)',
+      background: '#ffffff',
       padding: '28px 24px',
-      borderRadius: '20px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-      border: '1px solid rgba(255, 255, 255, 0.4)',
+      borderRadius: 'var(--border-radius-lg)',
+      boxShadow: 'var(--shadow-sm)',
+      border: '1px solid var(--border-color)',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       animation: 'scaleIn 0.6s ease-out',
       position: 'relative',
@@ -413,7 +412,7 @@ export default function AdminDashboard() {
     },
     statLabel: {
       fontSize: '13px',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       marginBottom: '12px',
       fontWeight: '600',
       textTransform: 'uppercase',
@@ -422,10 +421,9 @@ export default function AdminDashboard() {
     statValue: {
       fontSize: '36px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
+      fontSize: '36px',
+      fontWeight: '800',
+      color: 'var(--text-primary)',
       letterSpacing: '-1px'
     },
     content: {
@@ -447,7 +445,7 @@ export default function AdminDashboard() {
     },
     table: {
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: 'transparent',
       borderRadius: '12px',
       overflow: 'hidden',
       boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -456,30 +454,29 @@ export default function AdminDashboard() {
     },
     tableWrapper: {
       overflowX: 'auto',
-      background: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(20px)',
-      borderRadius: '20px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      background: '#ffffff',
+      borderRadius: 'var(--border-radius-lg)',
+      boxShadow: 'var(--shadow-md)',
+      border: '1px solid var(--border-color)',
       animation: 'fadeInUp 0.6s ease-out 0.3s backwards'
     },
     tableHeader: {
-      background: 'linear-gradient(to bottom, rgba(102, 126, 234, 0.08), rgba(102, 126, 234, 0.02))',
+      background: 'var(--background-secondary)',
       padding: '18px 16px',
       fontSize: '13px',
       fontWeight: '700',
-      color: '#667eea',
+      color: 'var(--text-primary)',
       textAlign: 'left',
-      borderBottom: '2px solid rgba(102, 126, 234, 0.2)',
+      borderBottom: '1px solid var(--border-subtle)',
       whiteSpace: 'nowrap',
       textTransform: 'uppercase',
       letterSpacing: '0.5px'
     },
     tableCell: {
       padding: '18px 16px',
-      borderBottom: '1px solid rgba(102, 126, 234, 0.08)',
+      borderBottom: '1px solid var(--border-subtle)',
       fontSize: '15px',
-      color: '#374151',
+      color: 'var(--text-primary)',
       fontWeight: '500',
       transition: 'background 0.2s ease'
     },
@@ -537,25 +534,23 @@ export default function AdminDashboard() {
       animation: 'fadeInUp 0.3s ease-out'
     },
     modal: {
-      background: 'rgba(255, 255, 255, 0.98)',
-      backdropFilter: 'blur(20px)',
-      borderRadius: '24px',
+      background: '#ffffff',
+      borderRadius: 'var(--border-radius-xl)',
       padding: '40px',
       maxWidth: '600px',
       width: '90%',
       maxHeight: '90vh',
       overflowY: 'auto',
-      boxShadow: '0 24px 80px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-      border: '1px solid rgba(255, 255, 255, 0.5)',
+      boxShadow: 'var(--shadow-xl)',
+      border: '1px solid var(--border-color)',
       animation: 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
     },
     modalTitle: {
       fontSize: '28px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
+      fontSize: '28px',
+      fontWeight: '800',
+      color: 'var(--text-primary)',
       marginBottom: '28px',
       letterSpacing: '-0.5px'
     },
@@ -572,34 +567,36 @@ export default function AdminDashboard() {
     label: {
       fontSize: '13px',
       fontWeight: '700',
-      color: '#667eea',
+      color: 'var(--text-secondary)',
       textTransform: 'uppercase',
       letterSpacing: '0.5px'
     },
     input: {
       padding: '12px 16px',
-      borderRadius: '12px',
-      border: '2px solid #e5e7eb',
+      borderRadius: 'var(--border-radius-md)',
+      border: '1px solid var(--border-color)',
       fontSize: '15px',
       outline: 'none',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      backgroundColor: '#ffffff',
+      color: 'var(--text-primary)',
       fontWeight: '500',
-      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.04)'
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
     },
     textarea: {
       padding: '12px 16px',
-      borderRadius: '12px',
-      border: '2px solid #e5e7eb',
+      borderRadius: 'var(--border-radius-md)',
+      border: '1px solid var(--border-color)',
       fontSize: '15px',
       outline: 'none',
       minHeight: '100px',
       fontFamily: 'inherit',
       resize: 'vertical',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      backgroundColor: '#ffffff',
+      color: 'var(--text-primary)',
       fontWeight: '500',
-      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.04)'
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
     },
     checkbox: {
       display: 'flex',
@@ -658,26 +655,34 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          padding: '60px 80px',
-          borderRadius: '24px',
-          boxShadow: '0 24px 80px rgba(102, 126, 234, 0.3)',
-          textAlign: 'center',
-          animation: 'pulse 2s ease-in-out infinite'
-        }}>
-          <div style={{ fontSize: '64px', marginBottom: '24px' }}>⏳</div>
-          <h2 style={{
-            fontSize: '24px',
-            fontWeight: '700',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            margin: 0
-          }}>Loading admin panel...</h2>
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>🛡️ Admin Dashboard</h1>
+        </div>
+        <div style={{ ...styles.statsContainer, paddingBottom: 0 }}>
+          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
+          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
+          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
+          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
+        </div>
+        <div style={styles.content}>
+          <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between' }}>
+            <Skeleton type="text" width="200px" height="40px" />
+            <Skeleton type="text" width="150px" height="40px" style={{ borderRadius: '8px' }} />
+          </div>
+          <div style={styles.tableWrapper}>
+            <div style={{ padding: '24px' }}>
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'center' }}>
+                  <Skeleton type="image" width="60px" height="60px" style={{ marginBottom: 0, borderRadius: '8px' }} />
+                  <Skeleton type="text" width="30%" height="20px" />
+                  <Skeleton type="text" width="20%" height="20px" />
+                  <Skeleton type="text" width="20%" height="20px" />
+                  <Skeleton type="text" width="10%" height="20px" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );

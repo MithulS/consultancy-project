@@ -1,0 +1,388 @@
+/**
+ * ============================================
+ * CLASSIC TECH THEME - PROFESSIONAL LIGHT
+ * ============================================
+ * 
+ * A clean, professional light theme for modern tech e-commerce.
+ * Focus: Trust, Clarity, Reliability.
+ * 
+ * PALETTE:
+ * - Primary: Regal Blue (#0f172a) - Trust, Headers, Footer
+ * - Secondary: White (#ffffff) / Light Gray (#f3f4f6) - Backgrounds, Cleanliness
+ * - Accent: Bright Blue (#3b82f6) & Orange (#f97316) - CTAs, Actions
+ * 
+ * Usage: Add class "classic-tech-theme" to body.
+ */
+
+.classic-tech-theme {
+    /* === BACKGROUNDS === */
+    --background-primary: #ffffff;
+    /* Pure White */
+    --background-secondary: #f8fafc;
+    /* Very Light Gray/Blueish */
+    --background-tertiary: #f1f5f9;
+    /* Light Gray */
+    --background-dark: #0f172a;
+    /* Regal Blue (for headers/footers) */
+
+    /* === TEXT COLORS === */
+    --text-primary: #1e293b;
+    /* Slate 800 - High Contrast Dark */
+    --text-secondary: #475569;
+    /* Slate 600 - Medium Contrast */
+    --text-tertiary: #94a3b8;
+    /* Slate 400 - Low Contrast */
+    --text-inverse: #ffffff;
+    /* White (for dark backgrounds) */
+    --text-accent: #3b82f6;
+    /* Bright Blue */
+
+    /* === BRAND COLORS === */
+    --primary-brand: #0f172a;
+    /* Regal Blue */
+    --primary-brand-light: #1e293b;
+    /* Lighter Navy */
+
+    /* === ACCENT / CTA COLORS === */
+    --accent-cta: #f97316;
+    /* Orange - Primary CTA (Buy Now) */
+    --accent-cta-hover: #ea580c;
+    /* Darker Orange */
+    --accent-cta-glow: rgba(249, 115, 22, 0.4);
+
+    --accent-blue-primary: #3b82f6;
+    /* Bright Blue - Secondary CTA */
+    --accent-blue-hover: #2563eb;
+    --accent-blue-glow: rgba(59, 130, 246, 0.4);
+
+    --accent-red-primary: #ef4444;
+    /* Red - Danger/Sale */
+    --accent-red-hover: #dc2626;
+    --accent-red-glow: rgba(239, 68, 68, 0.4);
+
+    /* === GRADIENTS === */
+    /* Clean, subtle, professional */
+    --gradient-primary: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    /* Applied to Hero Sections only */
+    --gradient-cta: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+
+    /* === GLASSMORPHISM (ADAPTED FOR LIGHT THEME) === */
+    /* Uses white tint with blur for a clean "frosted" look on light backgrounds */
+    --glass-background: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(226, 232, 240, 0.8);
+    /* Slate 200 */
+    --glass-blur: blur(12px);
+    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+    /* === SHADOWS (Refined for Depth) === */
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+    /* === BORDERS & RADIUS === */
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    --border-color: #e2e8f0;
+
+    /* === TYPOGRAPHY === */
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Outfit', var(--font-sans);
+}
+
+/* === GLOBAL OVERRIDES === */
+/* === GLOBAL OVERRIDES === */
+body.classic-tech-theme {
+    background-color: var(--background-secondary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+}
+
+/* === COMPONENT SPECIFIC OVERRIDES === */
+
+/* Cards - Clean White on Light Gray */
+.classic-tech-theme .card,
+.classic-tech-theme .product-card,
+.classic-tech-theme .stat-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.classic-tech-theme .card:hover,
+.classic-tech-theme .product-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: var(--accent-blue-primary);
+}
+
+/* Inputs - Cleanest possible */
+.classic-tech-theme input,
+.classic-tech-theme select,
+.classic-tech-theme textarea {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.classic-tech-theme input:focus {
+    border-color: var(--accent-blue-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Buttons - High Visibility */
+.classic-tech-theme .btn-primary {
+    background: var(--gradient-cta);
+    color: white;
+    box-shadow: 0 4px 6px rgba(249, 115, 22, 0.25);
+}
+
+.classic-tech-theme .btn-secondary {
+    background: var(--gradient-blue);
+    color: white;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+}
+
+.classic-tech-theme .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-brand);
+    color: var(--primary-brand);
+}
+
+/* Navigation - Regal Blue */
+.classic-tech-theme .navbar,
+.classic-tech-theme header {
+    background: var(--primary-brand) !important;
+    /* Force override for header */
+    color: white !important;
+    border-bottom: none;
+}
+
+.classic-tech-theme .navbar a,
+.classic-tech-theme header a:not(.btn) {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.classic-tech-theme .navbar a:hover,
+.classic-tech-theme header a:hover:not(.btn) {
+    color: white !important;
+}
+
+/* Footer - Regal Blue */
+.classic-tech-theme footer {
+    background: var(--primary-brand);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   ANIMATIONS & MICROINTERACTIONS
+   ============================================ */
+
+/* Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+    }
+}
+
+@keyframes shimmmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Utility Classes */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-delay-100 {
+    animation-delay: 100ms;
+}
+
+.animate-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animate-delay-300 {
+    animation-delay: 300ms;
+}
+
+/* Microinteractions */
+.hover-lift {
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-glow {
+    transition: all 0.2s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 15px var(--accent-blue-glow);
+}
+
+/* Scroll Trigger Class (Used by JS) */
+.scroll-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Skeleton Loader Animations */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton {
+    background: var(--background-secondary);
+    background-image: linear-gradient(90deg,
+            var(--background-secondary) 0px,
+            #f8fafc 40px,
+            var(--background-secondary) 80px);
+    background-size: 200px 100%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    line-height: 1;
+    width: 100%;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 8px;
+    animation: shimmer 1.5s infinite linear;
+}
+
+/* Skeleton Utilities */
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    height: 24px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    width: 70%;
+}
+
+.skeleton-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 16px;
+}
+
+.skeleton-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.skeleton-card {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+}

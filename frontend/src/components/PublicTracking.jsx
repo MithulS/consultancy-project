@@ -58,7 +58,7 @@ export default function PublicTracking() {
     const colors = {
       pending: '#f59e0b',
       confirmed: '#10b981',
-      processing: '#3b82f6',
+      processing: '#4285F4',
       packed: '#8b5cf6',
       shipped: '#06b6d4',
       out_for_delivery: '#ec4899',

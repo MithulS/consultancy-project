@@ -228,7 +228,10 @@ router.post('/escalate', [
   try {
     const { sessionId, reason } = req.body;
 
-    const conversation = await Conversation.findOne({ sessionId, status: 'active' });
+    const conversation = await Conversation.findOne({ 
+      sessionId, 
+      status: { $in: ['active', 'escalated'] } 
+    });
 
     if (!conversation) {
       return res.status(404).json({
@@ -237,8 +240,11 @@ router.post('/escalate', [
       });
     }
 
-    conversation.escalate(reason || 'user_request');
-    await conversation.save();
+    // Only escalate if not already escalated
+    if (!conversation.escalation.isEscalated) {
+      conversation.escalate(reason || 'user_request');
+      await conversation.save();
+    }
 
     res.json({
       success: true,

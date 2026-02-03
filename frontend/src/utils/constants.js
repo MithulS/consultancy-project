@@ -1,5 +1,5 @@
-// Shared constants for the HomeHardware e-commerce platform
-// This ensures consistency across admin panel and user-facing pages
+// Shared constants for Sri Amman Traders e-commerce platform
+// Trusted hardware, electrical, plumbing, and paint materials store
 
 /**
  * Product Categories
@@ -13,28 +13,74 @@ export const PRODUCT_CATEGORIES = [
   'Electrical',
   'Plumbing',
   'Hardware',
-  'Tools',
-  'Lighting',
-  'Paints',
-  'Heating',
-  'Safety',
-  'Accessories'
+  'Paints & Coatings',
+  'Pipes & Fittings',
+  'Wiring & Cables',
+  'Switches & Sockets',
+  'Water Tanks',
+  'Tools & Equipment',
+  'Safety & Protection'
 ];
 
 /**
  * Category display names with icons for UI
+ * Sri Amman Traders - Genuine branded products
  */
 export const CATEGORY_CONFIG = {
-  'Electrical': { icon: '⚡', description: 'Wiring, switches, outlets, and electrical components' },
-  'Plumbing': { icon: '🚿', description: 'Pipes, fittings, fixtures, and plumbing supplies' },
-  'Hardware': { icon: '🔩', description: 'Screws, bolts, nails, and fasteners' },
-  'Tools': { icon: '🔨', description: 'Hand tools, power tools, and equipment' },
-  'Lighting': { icon: '💡', description: 'Light fixtures, bulbs, and lighting accessories' },
-  'Paints': { icon: '🎨', description: 'Paint, brushes, rollers, and painting supplies' },
-  'Heating': { icon: '🔥', description: 'Heaters, HVAC, and temperature control' },
-  'Safety': { icon: '🦺', description: 'Safety gear, protective equipment, and supplies' },
-  'Accessories': { icon: '🛠️', description: 'Miscellaneous hardware and accessories' }
+  'Electrical': { icon: '⚡', description: 'Electrical components, MCBs, distribution boards from Havells, Anchor', placeholder: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=400&fit=crop' },
+  'Plumbing': { icon: '🚿', description: 'Quality plumbing fixtures, faucets, and sanitary ware', placeholder: 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400&h=400&fit=crop' },
+  'Hardware': { icon: '🔩', description: 'Screws, bolts, fasteners, and general hardware items', placeholder: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&h=400&fit=crop' },
+  'Paints & Coatings': { icon: '🎨', description: 'Asian Paints, emulsions, enamels, primers, and painting accessories', placeholder: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&h=400&fit=crop' },
+  'Pipes & Fittings': { icon: '🔄', description: 'Finolex pipes, PVC fittings, couplers, and connectors', placeholder: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&h=400&fit=crop' },
+  'Wiring & Cables': { icon: '🔌', description: 'Finolex wires and cables for residential and commercial use', placeholder: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop' },
+  'Switches & Sockets': { icon: '💡', description: 'Anchor, Havells switches, sockets, and modular accessories', placeholder: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop' },
+  'Water Tanks': { icon: '💧', description: 'Sintex water tanks, storage solutions, and overhead tanks', placeholder: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop' },
+  'Tools & Equipment': { icon: '🔨', description: 'Quality hand tools and power tools for professionals', placeholder: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop' },
+  'Safety & Protection': { icon: '🦺', description: 'Safety gear, MCBs from Crompton, surge protectors', placeholder: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=400&fit=crop' }
 };
+
+/**
+ * Featured Brands at Sri Amman Traders
+ * Genuine products from trusted manufacturers
+ */
+export const FEATURED_BRANDS = [
+  {
+    name: 'Finolex',
+    category: 'Wiring & Pipes',
+    logo: '🔌',
+    description: 'Premium wires, cables, and PVC pipes'
+  },
+  {
+    name: 'Crompton',
+    category: 'Electrical',
+    logo: '⚡',
+    description: 'Quality fans, lighting, and electrical solutions'
+  },
+  {
+    name: 'Asian Paints',
+    category: 'Paints',
+    logo: '🎨',
+    description: 'India\'s leading paint manufacturer'
+  },
+  {
+    name: 'Havells',
+    category: 'Switches & Electricals',
+    logo: '💡',
+    description: 'Modular switches and electrical products'
+  },
+  {
+    name: 'Anchor',
+    category: 'Switches & Sockets',
+    logo: '🔆',
+    description: 'Trusted switches, sockets, and accessories'
+  },
+  {
+    name: 'Sintex',
+    category: 'Water Storage',
+    logo: '💧',
+    description: 'Durable water tanks and storage solutions'
+  }
+];
 
 /**
  * Order statuses for order tracking system

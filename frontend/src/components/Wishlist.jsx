@@ -212,7 +212,7 @@ export default function Wishlist({ onNavigate }) {
 const styles = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    backgroundColor: 'transparent',
     padding: '30px 20px'
   },
   header: {
@@ -220,25 +220,27 @@ const styles = {
     marginBottom: '30px'
   },
   backBtn: {
-    background: 'rgba(255, 255, 255, 0.2)',
-    border: 'none',
-    color: 'white',
+    background: 'var(--glass-background)',
+    border: '1px solid var(--glass-border)',
+    color: 'var(--text-secondary)',
     padding: '12px 24px',
     borderRadius: '25px',
     cursor: 'pointer',
     fontSize: '15px',
     fontWeight: '600',
     marginBottom: '20px',
-    backdropFilter: 'blur(10px)'
+    backdropFilter: 'var(--glass-blur)',
+    transition: 'all 0.3s ease'
   },
   title: {
-    color: 'white',
+    color: 'var(--text-primary)',
     fontSize: '42px',
     margin: '10px 0',
-    fontWeight: '800'
+    fontWeight: '800',
+    textShadow: '0 0 20px rgba(46, 134, 222, 0.5)'
   },
   subtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: 'var(--text-secondary)',
     fontSize: '18px'
   },
   message: {
@@ -259,12 +261,15 @@ const styles = {
     padding: '50px'
   },
   empty: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '20px',
     padding: '60px 40px',
     textAlign: 'center',
     maxWidth: '500px',
-    margin: '50px auto'
+    margin: '50px auto',
+    boxShadow: 'var(--shadow-lg)'
   },
   emptyIcon: {
     fontSize: '80px',
@@ -272,23 +277,24 @@ const styles = {
   },
   emptyTitle: {
     fontSize: '28px',
-    color: '#333',
+    color: 'var(--text-primary)',
     marginBottom: '10px'
   },
   emptyText: {
     fontSize: '16px',
-    color: '#666',
+    color: 'var(--text-secondary)',
     marginBottom: '30px'
   },
   shopBtn: {
-    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
     color: 'white',
     border: 'none',
     padding: '15px 40px',
     borderRadius: '25px',
     fontSize: '16px',
     fontWeight: '700',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    boxShadow: '0 4px 12px var(--accent-blue-glow)'
   },
   grid: {
     display: 'grid',
@@ -298,10 +304,13 @@ const styles = {
     margin: '0 auto'
   },
   card: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '20px',
     overflow: 'hidden',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    boxShadow: 'var(--shadow-md)'
   },
   image: {
     width: '100%',
@@ -314,7 +323,7 @@ const styles = {
   productName: {
     fontSize: '18px',
     fontWeight: '700',
-    color: '#333',
+    color: 'var(--text-primary)',
     marginBottom: '15px',
     display: '-webkit-box',
     WebkitLineClamp: 2,
@@ -330,9 +339,10 @@ const styles = {
   price: {
     fontSize: '28px',
     fontWeight: '800',
-    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    background: 'linear-gradient(160deg, #00d2ff 0%, #3a7bd5 100%)',
     WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent'
+    WebkitTextFillColor: 'transparent',
+    textShadow: '0 0 20px rgba(58, 123, 213, 0.3)'
   },
   inStock: {
     color: '#10b981',
@@ -352,7 +362,7 @@ const styles = {
     fontSize: '14px'
   },
   ratingText: {
-    color: '#666',
+    color: 'var(--text-secondary)',
     fontSize: '13px'
   },
   actions: {
@@ -361,7 +371,6 @@ const styles = {
     marginTop: '15px'
   },
   addToCartBtn: {
-    flex: 1,
     background: 'linear-gradient(135deg, #10b981, #059669)',
     color: 'white',
     border: 'none',
@@ -369,7 +378,8 @@ const styles = {
     borderRadius: '12px',
     fontSize: '15px',
     fontWeight: '700',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
   },
   removeBtn: {
     background: 'linear-gradient(135deg, #ef4444, #dc2626)',
@@ -379,7 +389,8 @@ const styles = {
     borderRadius: '12px',
     fontSize: '18px',
     cursor: 'pointer',
-    minWidth: '50px'
+    minWidth: '50px',
+    boxShadow: '0 4px 12px var(--accent-red-glow)'
   },
   buyNowBtn: {
     flex: 1,

@@ -1,96 +1,107 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- SEO Meta Tags -->
-    <title>HomeHardware - Quality Hardware & Home Improvement Supplies</title>
-    <meta name="description" content="Shop hardware, electrical supplies, plumbing, tools, paints, and home improvement products at HomeHardware. Quality products, competitive prices, and expert advice." />
-    <meta name="keywords" content="hardware, electrical supplies, plumbing, tools, paints, home improvement, fans, switchboards, water heater, hammer" />
-    <meta name="author" content="HomeHardware" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://electrostore.com" />
-    
-    <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="HomeHardware - Quality Hardware & Supplies" />
-    <meta property="og:description" content="Shop quality hardware, electrical supplies, plumbing, tools, and home improvement products." />
-    <meta property="og:image" content="https://homehardware.com/og-image.jpg" />
-    <meta property="og:url" content="https://homehardware.com" />
-    <meta property="og:site_name" content="HomeHardware" />
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HomeHardware - Quality Hardware & Supplies" />
-    <meta name="twitter:description" content="Shop quality hardware, electrical supplies, plumbing, tools, and home improvement products." />
-    <meta name="twitter:image" content="https://homehardware.com/twitter-card.jpg" />
-    <meta name="twitter:site" content="@HomeHardware" />
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#667eea" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/icon-192.svg" />
-    
-    <!-- iOS Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="HomeHardware" />
-    
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
-        send_page_view: false // Handle manually for SPA
-      });
-    </script>
 
-    <!-- Facebook Pixel - Disabled (configure VITE_FB_PIXEL_ID to enable) -->
-    <script>
-      // Provide a no-op fbq function to prevent errors in analytics.js
-      window.fbq = window.fbq || function() { 
-        console.debug('Facebook Pixel not configured'); 
-      };
-      window.fbq.loaded = false;
-    </script>
-    <!-- To enable Facebook Pixel: Add VITE_FB_PIXEL_ID to your .env file -->
-  </head>
-  <body>
-    <!-- Skip to main content link for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    
-    <!-- PWA Service Worker - Unregister existing workers -->
-    <script>
-      // Unregister any existing service workers to prevent caching issues
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-          registrations.forEach((registration) => {
-            registration.unregister().then(() => {
-              console.log('✅ Service Worker unregistered');
-            });
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Performance Optimization: DNS Prefetch & Preconnect -->
+  <link rel="dns-prefetch" href="//localhost:5000" />
+  <link rel="preconnect" href="http://localhost:5000" crossorigin />
+
+  <!-- SEO Meta Tags -->
+  <title>Sri Amman Traders - Trusted Hardware, Electrical, Plumbing & Paint Materials</title>
+  <meta name="description"
+    content="Sri Amman Traders - Your trusted source for genuine hardware, electrical, plumbing, and paint materials. Serving retail and wholesale customers with brands like Finolex, Crompton, Asian Paints, Havells, Anchor, and Sintex." />
+  <meta name="keywords"
+    content="Sri Amman Traders, hardware store, electrical supplies, plumbing materials, paint materials, Finolex, Crompton, Asian Paints, Havells, Anchor, Sintex, wholesale hardware, retail hardware" />
+  <meta name="author" content="Sri Amman Traders" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://electrostore.com" />
+
+  <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sri Amman Traders - Trusted Hardware, Electrical & Plumbing Supplies" />
+  <meta property="og:description"
+    content="Genuine products from leading brands - Finolex, Crompton, Asian Paints, Havells, Anchor, Sintex. Serving retail and wholesale customers." />
+  <meta property="og:image" content="https://sriammantraders.com/og-image.jpg" />
+  <meta property="og:url" content="https://sriammantraders.com" />
+  <meta property="og:site_name" content="Sri Amman Traders" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sri Amman Traders - Trusted Hardware & Supplies" />
+  <meta name="twitter:description"
+    content="Genuine products from leading brands - Finolex, Crompton, Asian Paints, Havells, Anchor, Sintex. Quality, fair pricing, reliable service." />
+  <meta name="twitter:image" content="https://sriammantraders.com/twitter-card.jpg" />
+  <meta name="twitter:site" content="@SriAmmanTraders" />
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#667eea" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-192.svg" />
+
+  <!-- iOS Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sri Amman Traders" />
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      send_page_view: false // Handle manually for SPA
+    });
+  </script>
+
+  <!-- Facebook Pixel - Disabled (configure VITE_FB_PIXEL_ID to enable) -->
+  <script>
+    // Provide a no-op fbq function to prevent errors in analytics.js
+    window.fbq = window.fbq || function () {
+      console.debug('Facebook Pixel not configured');
+    };
+    window.fbq.loaded = false;
+  </script>
+  <!-- To enable Facebook Pixel: Add VITE_FB_PIXEL_ID to your .env file -->
+</head>
+
+<body class="classic-tech-theme">
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- PWA Service Worker - Unregister existing workers -->
+  <script>
+    // Unregister any existing service workers to prevent caching issues
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister().then(() => {
+            console.log('✅ Service Worker unregistered');
           });
         });
-      }
-      
-      // Service Worker registration disabled for development
-      // To enable in production, uncomment below and ensure sw.js exists
-      /*
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => console.log('✅ SW registered:', registration.scope))
-            .catch((error) => console.warn('⚠️ SW registration failed:', error));
-        });
-      }
-      */
-    </script>
-  </body>
+      });
+    }
+
+    // Service Worker registration disabled for development
+    // To enable in production, uncomment below and ensure sw.js exists
+    /*
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => console.log('✅ SW registered:', registration.scope))
+          .catch((error) => console.warn('⚠️ SW registration failed:', error));
+      });
+    }
+    */
+  </script>
+</body>
+
 </html>

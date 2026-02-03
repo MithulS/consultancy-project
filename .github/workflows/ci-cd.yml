@@ -1,0 +1,145 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Backend Tests
+  backend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install Backend Dependencies
+      run: cd backend && npm ci
+    
+    - name: Lint Backend Code
+      run: cd backend && npm run lint
+    
+    - name: Run Backend Tests
+      run: cd backend && npm test
+      env:
+        NODE_ENV: test
+        JWT_SECRET: test-secret
+        MONGO_URI: mongodb://localhost:27017/test
+    
+    - name: Upload Backend Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./backend/coverage/lcov.info
+        flags: backend
+
+  # Frontend Tests
+  frontend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install Frontend Dependencies
+      run: cd frontend && npm ci
+    
+    - name: Lint Frontend Code
+      run: cd frontend && npm run lint
+    
+    - name: Run Frontend Tests
+      run: cd frontend && npm test
+    
+    - name: Build Frontend
+      run: cd frontend && npm run build
+    
+    - name: Upload Frontend Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./frontend/coverage/lcov.info
+        flags: frontend
+
+  # Security Audit
+  security-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run npm audit (Backend)
+      run: cd backend && npm audit --audit-level=high
+      continue-on-error: true
+    
+    - name: Run npm audit (Frontend)
+      run: cd frontend && npm audit --audit-level=high
+      continue-on-error: true
+    
+    - name: OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'ecommerce-platform'
+        path: '.'
+        format: 'HTML'
+
+  # Deploy to Staging
+  deploy-staging:
+    needs: [backend-test, frontend-test, security-audit]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment commands here
+    
+    - name: Smoke Test Staging
+      run: |
+        curl --fail https://staging.yourdomain.com/health || exit 1
+    
+    - name: Notify Team
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 'Staging deployment completed'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # Deploy to Production
+  deploy-production:
+    needs: [backend-test, frontend-test, security-audit]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
+    
+    - name: Health Check
+      run: |
+        curl --fail https://yourdomain.com/health || exit 1
+    
+    - name: Notify Team
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 'Production deployment completed'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

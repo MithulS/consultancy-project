@@ -48,7 +48,7 @@ class Analytics {
   async sendToBackend(event) {
     try {
       const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      await fetch(`${API}/api/analytics/track`, {
+      const response = await fetch(`${API}/api/analytics/track`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,8 +56,15 @@ class Analytics {
         },
         body: JSON.stringify(event)
       });
+      
+      if (!response.ok && import.meta.env.DEV) {
+        console.warn('Analytics tracking failed with status:', response.status);
+      }
     } catch (error) {
-      console.warn('Analytics tracking failed:', error);
+      // Silently fail in production, log in development
+      if (import.meta.env.DEV) {
+        console.warn('⚠️ Analytics tracking failed (backend may not be running):', error.message);
+      }
     }
   }
 

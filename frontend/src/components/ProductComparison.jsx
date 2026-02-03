@@ -248,7 +248,7 @@ export default function ProductComparison({ productIds, onNavigate }) {
 const styles = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    backgroundColor: 'transparent',
     padding: '30px 20px'
   },
   header: {
@@ -256,25 +256,25 @@ const styles = {
     marginBottom: '30px'
   },
   backBtn: {
-    background: 'rgba(255, 255, 255, 0.2)',
-    border: 'none',
-    color: 'white',
+    background: 'var(--glass-background)',
+    border: '1px solid var(--glass-border)',
+    color: 'var(--text-secondary)',
     padding: '12px 24px',
     borderRadius: '25px',
     cursor: 'pointer',
     fontSize: '15px',
     fontWeight: '600',
     marginBottom: '20px',
-    backdropFilter: 'blur(10px)'
+    backdropFilter: 'var(--glass-blur)',
   },
   title: {
-    color: 'white',
+    color: 'var(--text-primary)',
     fontSize: '42px',
     margin: '10px 0',
     fontWeight: '800'
   },
   subtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: 'var(--text-secondary)',
     fontSize: '18px'
   },
   loading: {
@@ -284,7 +284,7 @@ const styles = {
     padding: '50px'
   },
   error: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'var(--glass-background)',
     borderRadius: '20px',
     padding: '40px',
     textAlign: 'center',
@@ -300,7 +300,9 @@ const styles = {
     margin: '0 auto 30px'
   },
   insightCard: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '15px',
     padding: '25px',
     textAlign: 'center'
@@ -311,19 +313,19 @@ const styles = {
   },
   insightLabel: {
     fontSize: '14px',
-    color: '#666',
+    color: 'var(--text-secondary)',
     marginBottom: '8px',
     fontWeight: '600'
   },
   insightValue: {
     fontSize: '24px',
     fontWeight: '800',
-    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent'
+    color: 'var(--text-primary)',
   },
   tableContainer: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '20px',
     padding: '20px',
     overflowX: 'auto',
@@ -337,17 +339,17 @@ const styles = {
   th: {
     padding: '20px 15px',
     textAlign: 'center',
-    borderBottom: '2px solid #e5e7eb',
+    borderBottom: '2px solid var(--glass-border)',
     fontWeight: '700',
     fontSize: '14px',
-    color: '#333'
+    color: 'var(--text-secondary)'
   },
   td: {
     padding: '15px',
     textAlign: 'center',
-    borderBottom: '1px solid #f3f4f6',
+    borderBottom: '1px solid var(--glass-border)',
     fontSize: '14px',
-    color: '#555'
+    color: 'var(--text-primary)'
   },
   productImage: {
     width: '120px',
@@ -359,7 +361,7 @@ const styles = {
   productName: {
     fontSize: '15px',
     fontWeight: '700',
-    color: '#333',
+    color: 'var(--text-primary)',
     maxWidth: '200px',
     margin: '0 auto'
   },

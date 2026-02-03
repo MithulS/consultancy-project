@@ -1,3 +1,23 @@
+/* ============================================================
+   COLOR SYSTEM - IMPORT FIRST FOR THEMING
+   ============================================================ */
+@import './styles/colorSystem.css';
+@import './styles/colorUtilities.css';
+
+/* ============================================================
+   DARK NAVY THEME - PREMIUM E-COMMERCE THEME
+   ============================================================ */
+@import './styles/darkNavyTheme.css';
+
+/* ============================================================
+   UI IMPROVEMENTS - NEW ENHANCEMENTS
+   ============================================================ */
+@import './styles/uiEnhancements.css';
+@import './styles/responsiveGrids.css';
+@import './styles/microInteractions.css';
+@import './styles/animations.css';
+@import './styles/modernUIComponents.css';
+
 /* Base styles now managed by unifiedDesignSystem.css */
 /* This file only contains accessibility-specific utilities */
 

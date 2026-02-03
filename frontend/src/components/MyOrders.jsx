@@ -1,6 +1,7 @@
 // My Orders Component - Enhanced with Design System
 import React, { useState, useEffect } from 'react';
 import OrderTracking from './OrderTracking';
+import Skeleton from './Skeleton';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const getImageUrl = (imageUrl) => {
@@ -121,48 +122,109 @@ export default function MyOrders() {
     setSelectedOrderId(null);
   }
 
-  const filteredOrders = statusFilter === 'all' 
-    ? orders 
+  const filteredOrders = statusFilter === 'all'
+    ? orders
     : orders.filter(order => order.status === statusFilter);
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: 'var(--neutral-50)' }}>
-        <nav className="navbar">
-          <h1 className="text-gradient" style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0 }}>
+      <div style={{ minHeight: '100vh', backgroundColor: 'transparent' }}>
+        <nav style={{
+          padding: '16px 32px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backgroundColor: 'var(--primary-brand)',
+          color: 'var(--text-inverse)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+          <h1 className="text-gradient" style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-inverse)' }}>
             🛒 ElectroStore
           </h1>
         </nav>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'var(--space-8)' }}>
-          <div className="card" style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
-            <div className="skeleton" style={{ width: '80px', height: '80px', margin: '0 auto var(--space-4)', borderRadius: 'var(--radius-full)' }}></div>
-            <h2>Loading orders...</h2>
-          </div>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px' }}>
+          <Skeleton type="text" width="60%" height="40px" style={{ marginBottom: '20px' }} />
+          {[1, 2, 3].map(i => (
+            <div key={i} className="card" style={{
+              padding: '32px',
+              backgroundColor: '#ffffff',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--border-radius-lg)',
+              boxShadow: 'var(--shadow-sm)',
+              marginBottom: '24px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <Skeleton type="text" width="200px" height="24px" />
+                <Skeleton type="text" width="100px" height="24px" />
+              </div>
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+                <Skeleton type="image" width="80px" height="80px" style={{ borderRadius: '8px', marginBottom: 0 }} />
+                <div style={{ flex: 1 }}>
+                  <Skeleton type="text" width="60%" height="24px" />
+                  <Skeleton type="text" width="40%" height="20px" />
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                <Skeleton type="text" width="150px" height="30px" />
+                <Skeleton type="text" width="120px" height="40px" style={{ borderRadius: '8px' }} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--neutral-50)' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'transparent' }}>
       {/* Navigation */}
-      <nav className="navbar">
-        <h1 
-          className="text-gradient" 
+      <nav style={{
+        padding: '16px 32px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: 'var(--primary-brand)',
+        color: 'var(--text-inverse)',
+        boxShadow: 'var(--shadow-md)',
+        marginBottom: '32px'
+      }}>
+        <h1
+          className="text-gradient"
           onClick={() => window.location.hash = '#dashboard'}
-          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0 }}
+          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-inverse)', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
         >
           🛒 ElectroStore
         </h1>
         <div className="flex items-center gap-4">
-          <button 
-            className="btn btn-secondary"
+          <button
+            style={{
+              padding: '10px 20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
             onClick={() => window.location.hash = '#cart'}
           >
             🛒 Cart
           </button>
-          <button 
-            className="btn btn-ghost"
+          <button
+            style={{
+              padding: '10px 20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginLeft: '12px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
             onClick={() => window.location.hash = '#dashboard'}
           >
             🏠 Home
@@ -171,8 +233,8 @@ export default function MyOrders() {
       </nav>
 
       {/* Main Content */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'var(--space-8)' }}>
-        <h1 style={{ fontSize: 'var(--font-size-4xl)', fontWeight: '700', marginBottom: 'var(--space-6)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 32px 32px 32px' }}>
+        <h1 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-primary)' }}>
           My Orders
         </h1>
 
@@ -182,7 +244,18 @@ export default function MyOrders() {
             <button
               key={status}
               className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-ghost'}`}
-              style={{ borderRadius: '9999px' }}
+              style={{
+                borderRadius: '9999px',
+                padding: '10px 20px',
+                backgroundColor: statusFilter === status ? 'var(--gradient-blue)' : 'white',
+                color: statusFilter === status ? 'white' : 'var(--text-secondary)',
+                border: statusFilter === status ? 'none' : '1px solid var(--border-color)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: statusFilter === status ? 'var(--shadow-md)' : 'none',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
               onClick={() => setStatusFilter(status)}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -199,19 +272,37 @@ export default function MyOrders() {
 
         {/* Empty State */}
         {filteredOrders.length === 0 ? (
-          <div className="card animate-fadeIn" style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
-            <div style={{ fontSize: '64px', marginBottom: 'var(--space-4)' }}>📦</div>
-            <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--space-3)' }}>
+          <div className="card animate-fadeIn" style={{
+            textAlign: 'center',
+            padding: '64px',
+            backgroundColor: '#ffffff',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--border-radius-lg)',
+            boxShadow: 'var(--shadow-sm)'
+          }}>
+            <div style={{ fontSize: '64px', marginBottom: '16px' }}>📦</div>
+            <h2 style={{ fontSize: '24px', marginBottom: '12px', color: 'var(--text-primary)' }}>
               No orders found
             </h2>
-            <p style={{ color: 'var(--neutral-600)', marginBottom: 'var(--space-6)' }}>
-              {statusFilter === 'all' 
-                ? 'You haven\'t placed any orders yet' 
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
+              {statusFilter === 'all'
+                ? 'You haven\'t placed any orders yet'
                 : `No ${statusFilter} orders`}
             </p>
-            <button 
+            <button
               className="btn btn-primary btn-lg"
               onClick={() => window.location.hash = '#dashboard'}
+              style={{
+                padding: '12px 32px',
+                background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px var(--accent-blue-glow)'
+              }}
             >
               🛍️ Start Shopping
             </button>
@@ -223,34 +314,38 @@ export default function MyOrders() {
             const canCancel = ['pending', 'processing'].includes(order.status);
 
             return (
-              <div 
-                key={order._id} 
+              <div
+                key={order._id}
                 className="card animate-fadeIn shadow-md hover-lift transition-all"
-                style={{ 
-                  marginBottom: 'var(--space-6)',
-                  animationDelay: `${index * 0.1}s`
+                style={{
+                  marginBottom: '24px',
+                  animationDelay: `${index * 0.1}s`,
+                  backgroundColor: '#ffffff',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--border-radius-lg)',
+                  padding: '32px',
+                  boxShadow: 'var(--shadow-sm)'
                 }}
               >
-                {/* Order Header */}
-                <div className="flex justify-between items-center" style={{ 
-                  paddingBottom: 'var(--space-4)', 
-                  borderBottom: '2px solid var(--neutral-200)',
-                  marginBottom: 'var(--space-5)'
+                <div className="flex justify-between items-center" style={{
+                  paddingBottom: '16px',
+                  borderBottom: '1px solid var(--glass-border)',
+                  marginBottom: '20px'
                 }}>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--neutral-600)' }}>
-                    <div style={{ fontWeight: '600', color: 'var(--neutral-900)', marginBottom: 'var(--space-1)' }}>
+                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                    <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>
                       Order #{order._id.slice(-8).toUpperCase()}
                     </div>
-                    <div>📅 Placed: {new Date(order.createdAt).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
+                    <div>📅 Placed: {new Date(order.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
                     })}</div>
                     {order.deliveredAt && (
-                      <div>✅ Delivered: {new Date(order.deliveredAt).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
+                      <div>✅ Delivered: {new Date(order.deliveredAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
                       })}</div>
                     )}
                   </div>
@@ -260,44 +355,46 @@ export default function MyOrders() {
                 </div>
 
                 {/* Order Items */}
-                <div style={{ marginBottom: 'var(--space-5)' }}>
+                <div style={{ marginBottom: '20px' }}>
                   {order.items.map((item, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className="flex gap-4 transition-all"
-                      style={{ 
-                        marginBottom: 'var(--space-3)',
-                        padding: 'var(--space-3)',
-                        borderRadius: 'var(--radius-lg)',
-                        backgroundColor: 'var(--neutral-50)'
+                      style={{
+                        marginBottom: '16px',
+                        padding: '16px',
+                        borderRadius: 'var(--border-radius-md)',
+                        backgroundColor: 'var(--background-secondary)',
+                        border: '1px solid var(--border-subtle)'
                       }}
                     >
-                      <img 
-                        src={getImageUrl(item.imageUrl)} 
+                      <img
+                        src={getImageUrl(item.imageUrl)}
                         alt={`${item.name}, ₹${item.price}, Qty: ${item.quantity}`}
                         title={`${item.name} - ₹${item.price} x ${item.quantity}`}
                         className="rounded-lg shadow-sm"
-                        style={{ 
-                          width: '80px', 
-                          height: '80px', 
-                          objectFit: 'cover'
+                        style={{
+                          width: '80px',
+                          height: '80px',
+                          objectFit: 'cover',
+                          backgroundColor: 'rgba(255,255,255,0.05)'
                         }}
                       />
                       <div style={{ flex: 1 }}>
-                        <div style={{ 
-                          fontSize: 'var(--font-size-base)', 
-                          fontWeight: '600', 
-                          marginBottom: 'var(--space-1)',
-                          color: 'var(--neutral-900)'
+                        <div style={{
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          marginBottom: '4px',
+                          color: 'var(--text-primary)'
                         }}>
                           {item.name}
                         </div>
-                        <div style={{ 
-                          fontSize: 'var(--font-size-sm)', 
-                          color: 'var(--neutral-600)',
-                          fontFamily: 'var(--font-mono)'
+                        <div style={{
+                          fontSize: '14px',
+                          color: 'var(--text-secondary)',
+                          fontFamily: 'monospace'
                         }}>
-                          Qty: {item.quantity} × ₹{item.price.toFixed(2)} = <span className="text-gradient" style={{ fontWeight: '700' }}>₹{(item.quantity * item.price).toFixed(2)}</span>
+                          Qty: {item.quantity} × ₹{item.price.toFixed(2)} = <span className="text-gradient" style={{ fontWeight: '700', color: 'var(--accent-blue-primary)' }}>₹{(item.quantity * item.price).toFixed(2)}</span>
                         </div>
                       </div>
                     </div>
@@ -305,45 +402,66 @@ export default function MyOrders() {
                 </div>
 
                 {/* Shipping Address */}
-                <div style={{ 
-                  padding: 'var(--space-4)', 
-                  backgroundColor: 'var(--neutral-100)', 
-                  borderRadius: 'var(--radius-lg)',
-                  marginBottom: 'var(--space-5)',
-                  fontSize: 'var(--font-size-sm)',
-                  borderLeft: '4px solid var(--primary-500)'
+                <div style={{
+                  padding: '20px',
+                  backgroundColor: 'var(--background-secondary)',
+                  borderRadius: 'var(--border-radius-md)',
+                  marginBottom: '24px',
+                  fontSize: '14px',
+                  border: '1px solid var(--border-subtle)'
                 }}>
-                  <strong style={{ color: 'var(--neutral-900)', display: 'block', marginBottom: 'var(--space-2)' }}>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: '8px' }}>
                     📍 Shipping Address:
                   </strong>
-                  <div style={{ color: 'var(--neutral-700)' }}>
+                  <div style={{ color: 'var(--text-secondary)' }}>
                     {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}, {order.shippingAddress.country}
                   </div>
                 </div>
 
                 {/* Order Footer */}
-                <div className="flex justify-between items-center" style={{ 
-                  paddingTop: 'var(--space-4)', 
-                  borderTop: '2px solid var(--neutral-200)' 
+                <div className="flex justify-between items-center" style={{
+                  paddingTop: '16px',
+                  borderTop: '1px solid var(--glass-border)'
                 }}>
-                  <div className="text-gradient" style={{ 
-                    fontSize: 'var(--font-size-2xl)', 
+                  <div className="text-gradient" style={{
+                    fontSize: '24px',
                     fontWeight: '700',
-                    fontFamily: 'var(--font-mono)'
+                    fontFamily: 'monospace',
+                    color: 'var(--accent-blue-primary)'
                   }}>
                     Total: ₹{order.totalAmount.toFixed(2)}
                   </div>
                   <div style={{ display: 'flex', gap: '12px' }}>
-                    <button 
+                    <button
                       className="btn btn-primary transition-all"
                       onClick={() => openTracking(order._id)}
+                      style={{
+                        padding: '12px 24px',
+                        background: 'var(--gradient-blue)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 'var(--border-radius-md)',
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-md)',
+                        fontWeight: '600'
+                      }}
                     >
                       📦 Track Order
                     </button>
                     {canCancel && (
-                      <button 
+                      <button
                         className="btn btn-error transition-all"
                         onClick={() => cancelOrder(order._id)}
+                        style={{
+                          padding: '12px 24px',
+                          background: 'var(--gradient-cta)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-md)',
+                          cursor: 'pointer',
+                          boxShadow: 'var(--shadow-md)',
+                          fontWeight: '600'
+                        }}
                       >
                         ❌ Cancel Order
                       </button>
@@ -358,7 +476,7 @@ export default function MyOrders() {
 
       {/* Order Tracking Modal */}
       {showTracking && selectedOrderId && (
-        <OrderTracking 
+        <OrderTracking
           orderId={selectedOrderId}
           onClose={closeTracking}
         />

@@ -1,0 +1,430 @@
+/**
+ * COMMERCIAL HARDWARE TEMPLATE - RESPONSIVE STYLES
+ * Mobile-first responsive design
+ * Optimized for performance and accessibility
+ */
+
+/* ============================================
+   MOBILE-FIRST RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 768px) {
+  /* Header adjustments */
+  .commercial-header .header-container {
+    flex-direction: column;
+    gap: 16px !important;
+    padding: 12px 16px !important;
+  }
+
+  .commercial-header .logo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .commercial-header .search-container {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .commercial-header .actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px !important;
+  }
+
+  .commercial-header .action-button {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .commercial-header .primary-button,
+  .commercial-header .track-button {
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+  }
+
+  /* Navigation bar */
+  .nav-bar .nav-container {
+    overflow-x: auto;
+    padding: 0 16px !important;
+    gap: 16px !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .nav-bar .nav-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-bar .nav-link {
+    font-size: 13px !important;
+    padding: 12px 0 !important;
+  }
+
+  /* Hero banner */
+  .hero-section {
+    height: auto !important;
+    padding: 40px 0 !important;
+  }
+
+  .hero-container {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+
+  .hero-title {
+    font-size: 32px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 28px !important;
+  }
+
+  .hero-description {
+    font-size: 16px !important;
+  }
+
+  .benefits-panel {
+    width: 100% !important;
+    padding: 24px !important;
+  }
+
+  .cta-container {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .cta-button {
+    width: 100% !important;
+    justify-content: center;
+  }
+
+  /* Trust badges */
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .trust-badge,
+  .gsa-badge,
+  .usa-badge,
+  .google-badge {
+    padding: 16px !important;
+  }
+
+  /* Categories grid */
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .category-card {
+    padding: 20px 16px !important;
+  }
+
+  .category-icon {
+    font-size: 36px !important;
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Brands grid */
+  .brands-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 24px !important;
+  }
+
+  /* CTA section */
+  .cta-title {
+    font-size: 28px !important;
+  }
+
+  .cta-subtitle {
+    font-size: 16px !important;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-container {
+    gap: 32px !important;
+  }
+
+  .benefits-panel {
+    width: 350px !important;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .brands-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .trust-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .categories-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .brands-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Image lazy loading placeholder */
+img[loading="lazy"] {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize animations for performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* GPU acceleration for transforms */
+.category-card,
+.product-card,
+.brand-card,
+.trust-badge {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Focus indicators */
+*:focus-visible {
+  outline: 3px solid #0B74FF !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .commercial-header,
+  .nav-bar,
+  .hero-section,
+  .trust-section,
+  .categories-section,
+  .products-section {
+    border: 2px solid currentColor;
+  }
+
+  .primary-button,
+  .track-button,
+  .cta-button {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .commercial-header {
+    background-color: #1F2937 !important;
+    border-bottom-color: #374151 !important;
+  }
+
+  .nav-bar {
+    background-color: #111827 !important;
+    border-bottom-color: #374151 !important;
+  }
+
+  .categories-section,
+  .trust-section {
+    background-color: #1F2937 !important;
+  }
+
+  .category-card,
+  .product-card,
+  .brand-card {
+    background-color: #374151 !important;
+    border-color: #4B5563 !important;
+  }
+
+  .section-title,
+  .product-name,
+  .category-name {
+    color: #F9FAFB !important;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .commercial-header,
+  .nav-bar,
+  .cta-section,
+  .footer,
+  .chat-widget,
+  .exit-intent-popup {
+    display: none !important;
+  }
+
+  .hero-section {
+    page-break-after: always;
+  }
+
+  .product-card,
+  .category-card {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-center {
+  text-align: center;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.p-16 {
+  padding: 16px;
+}
+
+.p-24 {
+  padding: 24px;
+}
+
+/* Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Skeleton loading animation */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.skeleton-image {
+  height: 280px;
+  width: 100%;
+}

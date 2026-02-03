@@ -122,6 +122,7 @@ app.use('/api/comparison', require('./routes/comparison'));
 app.use('/api/marketing', require('./routes/marketing'));
 app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/chatbot', require('./routes/chatbot'));
+app.use('/api/contact', require('./routes/contact'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

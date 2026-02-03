@@ -3,6 +3,8 @@ import RegisterModern from './components/RegisterModern';
 import VerifyOTPEnhanced from './components/VerifyOTPEnhanced';
 import LoginModern from './components/LoginModern';
 import Dashboard from './components/Dashboard';
+import CommercialHomePage from './components/CommercialHomePage';
+import ContactPage from './components/ContactPage';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import NotFound from './components/NotFound';
@@ -14,6 +16,7 @@ import ExitIntentPopup from './components/ExitIntentPopup';
 import ChatWidget from './components/ChatWidget';
 import analytics from './utils/analytics';
 import { initializeAuth } from './utils/navigation';
+import { initializePerformanceOptimizations } from './utils/performanceOptimizations';
 
 // Lazy load heavy components
 const AdminLogin = lazy(() => import('./components/AdminLogin'));
@@ -29,9 +32,10 @@ const GuestCheckout = lazy(() => import('./components/GuestCheckout'));
 const MyOrders = lazy(() => import('./components/MyOrders'));
 const Profile = lazy(() => import('./components/Profile'));
 const PublicTracking = lazy(() => import('./components/PublicTracking'));
+const Wishlist = lazy(() => import('./components/Wishlist'));
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [currentPage, setCurrentPage] = useState('home');
   const [authKey, setAuthKey] = useState(Date.now()); // Force remount on auth change
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Loading...');
@@ -74,11 +78,31 @@ export default function App() {
     };
   }, []);
 
+  // Initialize performance optimizations
+  useEffect(() => {
+    initializePerformanceOptimizations({
+      enableMonitoring: true,
+      logNetwork: import.meta.env.DEV,
+      analyticsCallback: (metric, data) => {
+        if (import.meta.env.DEV) {
+          console.log(`📊 ${metric}:`, data);
+        }
+        if (import.meta.env.PROD) {
+          analytics.event('web_vitals', {
+            metric_name: metric,
+            metric_value: data.value,
+            metric_rating: data.rating
+          });
+        }
+      }
+    });
+  }, []);
+
   useEffect(() => {
     // Handle hash-based routing
     const handleHashChange = () => {
       try {
-        let hash = window.location.hash.substring(1) || 'dashboard';
+        let hash = window.location.hash.substring(1) || 'home';
         
         // Ignore accessibility anchor links (skip links, in-page navigation)
         // These are for screen readers and keyboard navigation, not routing
@@ -138,11 +162,11 @@ export default function App() {
 
   const renderContent = () => {
     const validPages = [
-      'register', 'verify-otp', 'forgot-password', 'reset-password',
-      'dashboard', 'cart', 'checkout', 'guest-checkout', 'my-orders', 'profile',
+      'home', 'register', 'verify-otp', 'forgot-password', 'reset-password',
+      'dashboard', 'cart', 'checkout', 'guest-checkout', 'my-orders', 'profile', 'orders',
       'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
       'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
-      'track-order', 'login'
+      'track-order', 'tracking', 'login', 'contact', 'about', 'catalog', 'wishlist'
     ];
 
     // Show 404 for invalid pages (except login which is default)
@@ -152,6 +176,8 @@ export default function App() {
 
     const content = (() => {
       switch(currentPage) {
+        case 'home':
+          return <CommercialHomePage key={authKey} />;
         case 'register':
           return <RegisterModern />;
         case 'verify-otp':
@@ -172,14 +198,17 @@ export default function App() {
             cart={guestCart} 
             onComplete={() => {
               localStorage.removeItem('guestCart');
-              window.location.hash = '#dashboard';
+              window.location.hash = '#home';
             }}
-            onCancel={() => window.location.hash = '#dashboard'}
+            onCancel={() => window.location.hash = '#home'}
           />;
         case 'my-orders':
+        case 'orders':
           return <MyOrders />;
         case 'profile':
           return <Profile />;
+        case 'wishlist':
+          return <Wishlist onNavigate={(page) => window.location.hash = `#${page}`} />;
         case 'admin':
         case 'secret-admin-login':
           return <AdminLogin />;
@@ -196,16 +225,22 @@ export default function App() {
         case 'sales-analytics':
           return <SalesAnalytics />;
         case 'track-order':
+        case 'tracking':
           return <PublicTracking />;
         case 'login':
           return <LoginModern />;
+        case 'contact':
+          return <ContactPage key={authKey} />;
+        case 'about':
+        case 'catalog':
+          return <CommercialHomePage key={authKey} />;
         default:
-          return <Dashboard key={authKey} />;
+          return <CommercialHomePage key={authKey} />;
       }
     })();
 
     // Wrap lazy-loaded components in Suspense
-    const lazyPages = ['cart', 'checkout', 'guest-checkout', 'my-orders', 'profile',
+    const lazyPages = ['cart', 'checkout', 'guest-checkout', 'my-orders', 'profile', 'wishlist',
       'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
       'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
       'track-order'];
@@ -224,7 +259,28 @@ export default function App() {
   return (
     <ErrorBoundary>
       <AccessibilityWrapper>
-        <div id="main-content">
+        {/* Skip Navigation Link for Accessibility */}
+        <a 
+          href="#main-content" 
+          style={{
+            position: 'absolute',
+            top: '-100px',
+            left: '0',
+            background: '#000',
+            color: '#fff',
+            padding: '8px 16px',
+            zIndex: 10000,
+            textDecoration: 'none',
+            fontWeight: 600,
+            borderRadius: '0 0 4px 0'
+          }}
+          onFocus={(e) => e.currentTarget.style.top = '0'}
+          onBlur={(e) => e.currentTarget.style.top = '-100px'}
+        >
+          Skip to main content
+        </a>
+        
+        <div id="main-content" tabIndex="-1">
           {renderContent()}
           <ToastNotification />
           <LoadingOverlay show={isLoading} message={loadingMessage} />
