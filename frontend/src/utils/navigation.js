@@ -139,9 +139,17 @@ export const validateToken = async () => {
 export const initializeAuth = async () => {
   const isValid = await validateToken();
   
-  if (!isValid && window.location.hash.includes('dashboard')) {
-    console.log('⚠️ Invalid token on protected route, redirecting to home');
-    window.location.hash = '#dashboard'; // Guest mode dashboard
+  if (!isValid) {
+    // Clear any stale token/user data
+    clearAuth();
+    // Only redirect away from strictly protected routes (not dashboard — guests can browse)
+    const hash = window.location.hash;
+    const strictlyProtected = ['#profile', '#my-orders', '#checkout', '#admin-dashboard'];
+    if (strictlyProtected.some(r => hash.startsWith(r))) {
+      console.log('⚠️ Invalid token on protected route, redirecting to login');
+      sessionStorage.setItem('redirectAfterLogin', hash);
+      window.location.hash = '#login';
+    }
   }
   
   return isValid;

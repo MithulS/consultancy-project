@@ -864,13 +864,23 @@ router.get('/google/callback', asyncHandler(async (req, res) => {
     console.error('   Error message:', err.message);
     console.error('   Error stack:', err.stack);
     
-    await logAuditEvent({ 
+    // Don't expose internal DB/buffer errors to the user
+    const isDbError = err.message && (
+      err.message.includes('buffering timed out') ||
+      err.message.includes('MongooseError') ||
+      err.message.includes('ECONNREFUSED') ||
+      err.name === 'MongooseError'
+    );
+
+    logAuditEvent({ 
       action: 'GOOGLE_LOGIN_FAILED', 
       req, 
-      details: `${err.message} - Stack: ${err.stack.substring(0, 200)}` 
-    });
+      details: `${err.message} - Stack: ${err.stack ? err.stack.substring(0, 200) : 'N/A'}` 
+    }).catch(() => {});
     
-    const errorMessage = err.message || 'Google login failed';
+    const errorMessage = isDbError
+      ? 'Service temporarily unavailable. Please try again in a few seconds.'
+      : (err.message || 'Google login failed');
     res.redirect(`${frontendUrl}/#login?error=${encodeURIComponent(errorMessage)}`);
   }
 }));

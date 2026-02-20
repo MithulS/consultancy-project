@@ -78,6 +78,25 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+// DB readiness middleware — returns 503 for API routes when MongoDB is not yet connected
+app.use('/api', (req, res, next) => {
+  const mongoose = require('mongoose');
+  // readyState: 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+  if (mongoose.connection.readyState !== 1) {
+    // Allow auth/google (OAuth redirect) and health routes through regardless
+    const bypassPaths = ['/api/auth/google', '/api/auth/google/callback', '/api/health'];
+    if (bypassPaths.some(p => req.path.startsWith(p.replace('/api', '')))) {
+      return next();
+    }
+    return res.status(503).json({
+      success: false,
+      msg: 'Database is not available. Please try again in a few seconds.',
+      retryAfter: 5
+    });
+  }
+  next();
+});
+
 // Health check endpoints
 app.get('/health', (req, res) => {
   const mongoose = require('mongoose');
@@ -199,6 +218,15 @@ app.use((err, req, res, next) => {
   console.error('   Method:', req.method);
   console.error('   Error:', err.message);
   console.error('   Stack:', err.stack);
+
+  // Handle Mongoose buffering timeout specifically
+  if (err.name === 'MongooseError' || (err.message && err.message.includes('buffering timed out'))) {
+    return res.status(503).json({
+      success: false,
+      msg: 'Database connection unavailable. Please try again shortly.',
+      retryAfter: 5
+    });
+  }
   
   // Log to audit system if available
   try {

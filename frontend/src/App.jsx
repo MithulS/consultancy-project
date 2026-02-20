@@ -121,17 +121,15 @@ export default function App() {
           console.log('🔀 Route:', hash);
         }
         
-        // Show loading for protected routes
+        // Show loading for protected routes (check AFTER stripping query params)
+        if (hash.includes('?')) {
+          hash = hash.split('?')[0];
+        }
+
         const protectedRoutes = ['profile', 'my-orders', 'checkout', 'admin-dashboard'];
         if (protectedRoutes.includes(hash)) {
           setIsLoading(true);
           setLoadingMessage('Loading...');
-        }
-        
-        // Extract just the path part before any query parameters
-        // E.g., "verify-otp?email=..." becomes "verify-otp"
-        if (hash.includes('?')) {
-          hash = hash.split('?')[0];
         }
         
         // Check if it's reset password page with query params
@@ -149,7 +147,7 @@ export default function App() {
       } catch (error) {
         console.error('❌ Route handling error:', error);
         analytics.error('Route handling failed', error.stack, { hash: window.location.hash });
-        setCurrentPage('dashboard'); // Fallback to dashboard on error
+        setCurrentPage('home'); // Fallback to home on error
         setIsLoading(false);
       }
     };
@@ -166,7 +164,7 @@ export default function App() {
       'dashboard', 'cart', 'checkout', 'guest-checkout', 'my-orders', 'profile', 'orders',
       'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
       'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
-      'track-order', 'tracking', 'login', 'contact', 'about', 'catalog', 'wishlist'
+      'track-order', 'tracking', 'login', 'contact', 'about', 'catalog', 'wishlist', 'products'
     ];
 
     // Show 404 for invalid pages (except login which is default)
@@ -187,7 +185,7 @@ export default function App() {
         case 'reset-password':
           return <ResetPassword />;
         case 'dashboard':
-          return <Dashboard key={authKey} />;
+          return <Dashboard />;
         case 'cart':
           return <Cart />;
         case 'checkout':
@@ -231,6 +229,7 @@ export default function App() {
           return <LoginModern />;
         case 'contact':
           return <ContactPage key={authKey} />;
+        case 'products':  // alias — EcommerceHeader search links use #products?search=...
         case 'about':
         case 'catalog':
           return <CommercialHomePage key={authKey} />;

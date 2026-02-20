@@ -115,6 +115,25 @@ export default function Dashboard() {
   // Use shared categories from constants
   const categories = ['All', ...PRODUCT_CATEGORIES];
 
+  // Re-read URL params (category / search) whenever the hash changes while
+  // Dashboard is already mounted — e.g. browser back/forward or direct hash links
+  useEffect(() => {
+    const readUrlParams = () => {
+      const hash = window.location.hash;
+      if (!hash.startsWith('#dashboard')) return;
+      if (!hash.includes('?')) return;
+      const params = new URLSearchParams(hash.split('?')[1]);
+      const searchParam = params.get('search');
+      const categoryParam = params.get('category');
+      if (searchParam) setSearchTerm(searchParam);
+      if (categoryParam && categories.includes(categoryParam)) setSelectedCategory(categoryParam);
+    };
+
+    readUrlParams(); // Run on mount too (covers initial load)
+    window.addEventListener('hashchange', readUrlParams);
+    return () => window.removeEventListener('hashchange', readUrlParams);
+  }, []);
+
   // Extract search query from URL on component mount
   useEffect(() => {
     const hash = window.location.hash;
@@ -161,17 +180,6 @@ export default function Dashboard() {
       const product = JSON.parse(pendingCartProduct);
       addToCartAuthenticated(product);
       sessionStorage.removeItem('pendingCartProduct');
-    }
-
-    // Check if user just logged in
-    const justLoggedIn = sessionStorage.getItem('justLoggedIn');
-    if (justLoggedIn === 'true' && user) {
-      setShowWelcome(true);
-      sessionStorage.removeItem('justLoggedIn');
-
-      setTimeout(() => {
-        setShowWelcome(false);
-      }, 4000);
     }
 
     // Track page load for analytics
@@ -261,7 +269,20 @@ export default function Dashboard() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
-      if (res.ok) setUser(data.user);
+      if (res.ok && data.user) {
+        setUser(data.user);
+        // Show welcome banner here — after user is confirmed loaded
+        const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+        if (justLoggedIn === 'true') {
+          setShowWelcome(true);
+          sessionStorage.removeItem('justLoggedIn');
+          setTimeout(() => setShowWelcome(false), 4000);
+        }
+      } else if (res.status === 401) {
+        // Token expired — clear and treat as guest
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
     } catch (err) {
       console.error('Profile error:', err);
     }
@@ -386,8 +407,7 @@ export default function Dashboard() {
 
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-    // Track successful add to cart
+    window.dispatchEvent(new Event('cartUpdated')); // Sync header badge
     analytics.track('add_to_cart', {
       product: product.name,
       price: product.price,
@@ -396,7 +416,7 @@ export default function Dashboard() {
     });
 
     if (buyNow) {
-      window.location.href = '/checkout';
+      window.location.hash = '#checkout';
     } else {
       setNotificationMsg(`✅ ${product.name} added to cart!`);
       setShowNotification(true);
@@ -901,70 +921,62 @@ export default function Dashboard() {
       <div style={styles.header}>
         <h1 style={styles.logo}>🔨 HomeHardware</h1>
         <div style={styles.userSection}>
-          {user && <span style={styles.userName}>👤 {user.name}</span>}
-          {/* Secondary Actions - Ghost/Outline Buttons */}
-          <button
-            style={styles.ghostBtn}
-            onClick={() => window.location.hash = '#my-orders'}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
-              e.currentTarget.style.borderColor = '#3b82f6';
-              e.currentTarget.style.color = '#2563eb';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.borderColor = '#d1d5db';
-              e.currentTarget.style.color = '#6b7280';
-            }}
-          >
-            📦 My Orders
-          </button>
-          {/* Primary Action - Cart Button */}
-          <button
-            style={styles.cartBtn}
-            onClick={() => setShowCartDrawer(true)}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.3)';
-            }}
-          >
-            🛒 Cart
-            {getCartItemCount() > 0 && (
-              <span style={styles.cartBadge}>{getCartItemCount()}</span>
-            )}
-          </button>
-          {/* Profile with Dropdown for Logout */}
-          <div style={{ position: 'relative' }}>
-            <button
-              style={styles.profileBtn}
-              onClick={() => window.location.hash = '#profile'}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
-                e.currentTarget.style.borderColor = '#3b82f6';
-                e.currentTarget.style.color = '#2563eb';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.borderColor = '#d1d5db';
-                e.currentTarget.style.color = '#6b7280';
-              }}
-              title="View Profile (Click for more options)"
-            >
-              👤 Profile
-            </button>
-            {/* Subtle logout link - can be moved to profile page */}
-            <button
-              style={styles.logoutLink}
-              onClick={logout}
-              title="Logout"
-            >
-              ⎋
-            </button>
-          </div>
+          {user ? (
+            // ── Authenticated header ──
+            <>
+              <span style={styles.userName}>👤 {user.name}</span>
+              <button
+                style={styles.ghostBtn}
+                onClick={() => window.location.hash = '#my-orders'}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
+              >📦 My Orders</button>
+              <button
+                style={styles.cartBtn}
+                onClick={() => setShowCartDrawer(true)}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(16,185,129,0.5)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(16,185,129,0.3)'; }}
+              >
+                🛒 Cart
+                {getCartItemCount() > 0 && <span style={styles.cartBadge}>{getCartItemCount()}</span>}
+              </button>
+              <div style={{ position: 'relative' }}>
+                <button
+                  style={styles.profileBtn}
+                  onClick={() => window.location.hash = '#profile'}
+                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
+                  title="View Profile"
+                >👤 Profile</button>
+                <button style={styles.logoutLink} onClick={logout} title="Logout">⎋</button>
+              </div>
+            </>
+          ) : (
+            // ── Guest header ──
+            <>
+              <button
+                style={styles.cartBtn}
+                onClick={() => setShowCartDrawer(true)}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(16,185,129,0.5)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(16,185,129,0.3)'; }}
+              >
+                🛒 Cart
+                {getCartItemCount() > 0 && <span style={styles.cartBadge}>{getCartItemCount()}</span>}
+              </button>
+              <button
+                style={styles.ghostBtn}
+                onClick={() => window.location.hash = '#register'}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
+              >📝 Register</button>
+              <button
+                style={{ ...styles.ghostBtn, borderColor: '#3b82f6', color: '#2563eb' }}
+                onClick={() => window.location.hash = '#login'}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+              >🔐 Login</button>
+            </>
+          )}
         </div>
       </div>
 

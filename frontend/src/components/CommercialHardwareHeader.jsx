@@ -23,14 +23,33 @@ export default function CommercialHardwareHeader({ onNavigate }) {
 
   useEffect(() => {
     // Load user data
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    const loadUser = () => {
+      const userData = localStorage.getItem('user');
+      setUser(userData ? JSON.parse(userData) : null);
+    };
+    loadUser();
 
     // Load cart count
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
+    const loadCart = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
+    };
+    loadCart();
+
+    // React to login / logout events from other components
+    const handleLogin = () => loadUser();
+    const handleLogoutEvent = () => {
+      setUser(null);
+      setCartCount(0);
+    };
+    // React to cart updates dispatched anywhere in the app
+    const handleCartUpdate = () => loadCart();
+
+    window.addEventListener('userLoggedIn', handleLogin);
+    window.addEventListener('userLoggedOut', handleLogoutEvent);
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    // Also sync when localStorage changes in other tabs
+    window.addEventListener('storage', loadCart);
 
     // Scroll effect
     const handleScroll = () => {
@@ -47,6 +66,10 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
+      window.removeEventListener('userLoggedIn', handleLogin);
+      window.removeEventListener('userLoggedOut', handleLogoutEvent);
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener('storage', loadCart);
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -419,9 +442,12 @@ export default function CommercialHardwareHeader({ onNavigate }) {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('cart');
+    setUser(null);
+    setCartCount(0);
+    setShowAccountMenu(false);
     window.dispatchEvent(new Event('userLoggedOut'));
-    window.location.hash = '#dashboard';
-    window.location.reload();
+    window.location.hash = '#home';
   };
 
   return (

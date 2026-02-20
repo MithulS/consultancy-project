@@ -917,18 +917,19 @@ export default function Login() {
 
         <div style={{ textAlign: 'center', marginTop: '16px' }}>
           <a
-            href="#dashboard"
+            href="#home"
             style={{
-              color: 'rgba(255, 255, 255, 0.8)',
+              color: '#667eea',
               textDecoration: 'none',
               fontSize: '14px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              transition: 'color 0.3s ease'
+              transition: 'color 0.3s ease',
+              fontWeight: '500'
             }}
-            onMouseOver={(e) => e.target.style.color = '#fff'}
-            onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.8)'}
+            onMouseOver={(e) => e.target.style.color = '#4f46e5'}
+            onMouseOut={(e) => e.target.style.color = '#667eea'}
           >
             ← Back to Home
           </a>
