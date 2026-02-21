@@ -17,6 +17,7 @@ import { getImageUrl } from '../utils/imageHandling';
 import Loader from './Loader';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { FEATURED_BRANDS } from '../utils/constants';
+import { showToast } from './ToastNotification';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -185,15 +186,16 @@ export default function CommercialHomePage() {
     },
 
     productCard: {
-      background: '#ffffff',
-      border: '1px solid #e5e7eb',
-      borderRadius: '12px',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--glass-border)',
+      borderRadius: '16px',
       overflow: 'hidden',
-      transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+      transition: 'all var(--transition-normal)',
       cursor: 'pointer',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+      boxShadow: 'var(--shadow-md)'
     },
     // Hover state handled by class .hover-lift in global css, or inline:
     // We can add simple inline hover logic if needed, but CSS class is better.
@@ -202,7 +204,7 @@ export default function CommercialHomePage() {
       width: '100%',
       height: '240px',
       objectFit: 'cover',
-      backgroundColor: '#f9fafb'
+      background: 'var(--gradient-navy-subtle)'
     },
     productInfo: {
       padding: '20px',
@@ -214,18 +216,19 @@ export default function CommercialHomePage() {
     productCategory: {
       fontSize: '11px',
       fontWeight: 600,
-      color: '#6b7280',
+      color: 'var(--text-tertiary)',
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
       padding: '4px 8px',
-      backgroundColor: '#f3f4f6',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
       borderRadius: '4px',
-      width: 'fit-content'
+      width: 'fit-content',
+      border: '1px solid var(--border-subtle)'
     },
     productName: {
       fontSize: '16px',
       fontWeight: 600,
-      color: '#111827',
+      color: 'var(--text-primary)',
       lineHeight: 1.5,
       display: '-webkit-box',
       WebkitLineClamp: 2,
@@ -234,11 +237,12 @@ export default function CommercialHomePage() {
       minHeight: '48px'
     },
     productPrice: {
-      fontSize: '20px',
+      fontSize: '22px',
       fontWeight: 700,
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginTop: 'auto',
-      paddingTop: '12px'
+      paddingTop: '12px',
+      letterSpacing: '0.5px'
     },
     addToCartButton: {
       width: '100%',
@@ -368,7 +372,7 @@ export default function CommercialHomePage() {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     window.dispatchEvent(new Event('cartUpdated'));
-    alert('Product added to cart!');
+    showToast('Product added to cart!', 'success');
   };
 
   return (
@@ -383,7 +387,7 @@ export default function CommercialHomePage() {
             Why Choose Sri Amman Traders?
           </h2>
           <div style={styles.aboutContent}>
-            <div 
+            <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px)';
@@ -400,7 +404,7 @@ export default function CommercialHomePage() {
                 100% authentic products from authorized dealers of leading brands like Finolex, Crompton, Asian Paints, Havells, Anchor, and Sintex.
               </p>
             </div>
-            <div 
+            <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px)';
@@ -417,7 +421,7 @@ export default function CommercialHomePage() {
                 Competitive prices for both retail and wholesale customers. Special bulk discounts available for contractors and businesses.
               </p>
             </div>
-            <div 
+            <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px)';
@@ -489,12 +493,14 @@ export default function CommercialHomePage() {
                   key={product._id}
                   style={styles.productCard}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12)';
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    e.currentTarget.style.borderColor = 'var(--border-primary)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    e.currentTarget.style.borderColor = 'var(--glass-border)';
                   }}
                 >
                   <div style={{ position: 'relative', overflow: 'hidden' }}>
@@ -516,17 +522,22 @@ export default function CommercialHomePage() {
                   <div style={styles.productInfo}>
                     <div style={styles.productCategory}>{product.category}</div>
                     <div style={styles.productName}>{product.name}</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: 'auto', paddingTop: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto', paddingTop: '16px' }}>
                       <div style={styles.productPrice}>
-                        ${product.price?.toFixed(2) || '0.00'}
+                        ₹{product.price?.toFixed(2) || '0.00'}
                       </div>
                       <div style={{
                         fontSize: '12px',
-                        color: '#059669',
+                        color: '#10b981',
                         fontWeight: 600,
-                        display: 'flex',
+                        display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '4px'
+                        gap: '6px',
+                        padding: '4px 10px',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(16, 185, 129, 0.2)',
+                        width: 'fit-content'
                       }}>
                         <span>📦</span> Wholesale rates available
                       </div>

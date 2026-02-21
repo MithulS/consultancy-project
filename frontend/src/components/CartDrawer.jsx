@@ -70,8 +70,8 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      backdropFilter: 'blur(4px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backdropFilter: 'var(--glass-blur)',
       zIndex: 9998,
       animation: isClosing ? 'fadeOut 0.3s ease-out' : 'fadeIn 0.3s ease-out',
       cursor: 'pointer'
@@ -83,8 +83,8 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       bottom: 0,
       width: '100%',
       maxWidth: '450px',
-      backgroundColor: '#ffffff',
-      boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.15)',
+      backgroundColor: 'var(--navy-darkest)',
+      boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.3)',
       zIndex: 9999,
       display: 'flex',
       flexDirection: 'column',
@@ -93,22 +93,22 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     },
     header: {
       padding: '24px',
-      borderBottom: '1px solid #e5e7eb',
+      borderBottom: '1px solid var(--border-subtle)',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: '#ffffff'
+      backgroundColor: 'transparent'
     },
     title: {
       fontSize: '20px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--text-primary)',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
     },
     badge: {
-      backgroundColor: '#4285F4',
+      backgroundColor: 'var(--accent-blue-primary)',
       color: '#ffffff',
       fontSize: '12px',
       fontWeight: '600',
@@ -121,8 +121,8 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       width: '36px',
       height: '36px',
       border: 'none',
-      backgroundColor: '#f3f4f6',
-      color: '#374151',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--text-secondary)',
       borderRadius: '8px',
       cursor: 'pointer',
       fontSize: '20px',
@@ -136,12 +136,12 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       flex: 1,
       overflowY: 'auto',
       padding: '16px',
-      backgroundColor: '#f9fafb'
+      backgroundColor: 'transparent'
     },
     emptyState: {
       textAlign: 'center',
       padding: '60px 20px',
-      color: '#6b7280'
+      color: 'var(--text-secondary)'
     },
     emptyIcon: {
       fontSize: '64px',
@@ -152,16 +152,16 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     emptyText: {
       fontSize: '18px',
       fontWeight: '600',
-      color: '#374151',
+      color: 'var(--text-primary)',
       marginBottom: '8px'
     },
     emptySubtext: {
       fontSize: '14px',
-      color: '#6b7280'
+      color: 'var(--text-secondary)'
     },
     cartItem: {
-      backgroundColor: '#ffffff',
-      border: '1px solid #e5e7eb',
+      backgroundColor: 'var(--glass-background-light)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: '12px',
       padding: '16px',
       marginBottom: '12px',
@@ -175,7 +175,7 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       height: '80px',
       objectFit: 'cover',
       borderRadius: '8px',
-      backgroundColor: '#f3f4f6',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
       flexShrink: 0
     },
     itemDetails: {
@@ -185,7 +185,7 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     itemName: {
       fontSize: '14px',
       fontWeight: '600',
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '4px',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -194,7 +194,7 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     itemPrice: {
       fontSize: '16px',
       fontWeight: '700',
-      color: '#4285F4',
+      color: 'var(--accent-blue-primary)',
       marginBottom: '8px'
     },
     quantityRow: {
@@ -210,9 +210,9 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     quantityBtn: {
       width: '28px',
       height: '28px',
-      border: '1px solid #e5e7eb',
-      backgroundColor: '#f9fafb',
-      color: '#374151',
+      border: '1px solid var(--border-secondary)',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--text-primary)',
       borderRadius: '6px',
       cursor: 'pointer',
       fontSize: '16px',
@@ -225,14 +225,14 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     quantity: {
       fontSize: '14px',
       fontWeight: '600',
-      color: '#111827',
+      color: 'var(--text-primary)',
       minWidth: '20px',
       textAlign: 'center'
     },
     removeBtn: {
       backgroundColor: 'transparent',
       border: 'none',
-      color: '#ef4444',
+      color: 'var(--accent-red-primary)',
       cursor: 'pointer',
       fontSize: '18px',
       padding: '4px',
@@ -240,15 +240,15 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
     },
     footer: {
       padding: '24px',
-      borderTop: '1px solid #e5e7eb',
-      backgroundColor: '#ffffff'
+      borderTop: '1px solid var(--border-subtle)',
+      backgroundColor: 'var(--navy-darkest)'
     },
     subtotal: {
       display: 'flex',
       justifyContent: 'space-between',
       marginBottom: '16px',
       fontSize: '16px',
-      color: '#6b7280'
+      color: 'var(--text-secondary)'
     },
     total: {
       display: 'flex',
@@ -256,14 +256,14 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       marginBottom: '20px',
       fontSize: '20px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--text-primary)',
       paddingTop: '16px',
-      borderTop: '1px solid #e5e7eb'
+      borderTop: '1px solid var(--border-subtle)'
     },
     checkoutBtn: {
       width: '100%',
       padding: '16px',
-      backgroundColor: '#4285F4',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
       color: '#ffffff',
       border: 'none',
       borderRadius: '12px',
@@ -271,14 +271,14 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
       fontWeight: '600',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+      boxShadow: '0 4px 12px var(--accent-blue-glow)'
     },
     continueBtn: {
       width: '100%',
       padding: '12px',
       backgroundColor: 'transparent',
-      color: '#6b7280',
-      border: '1px solid #e5e7eb',
+      color: 'var(--text-secondary)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: '10px',
       fontSize: '14px',
       fontWeight: '600',
@@ -324,11 +324,11 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
           100% { transform: scale(1); opacity: 1; }
         }
         .cart-drawer-close-btn:hover {
-          background-color: #e5e7eb !important;
+          background-color: rgba(255, 255, 255, 0.1) !important;
         }
         .cart-drawer-quantity-btn:hover {
-          background-color: #e5e7eb !important;
-          border-color: #4285F4 !important;
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-color: var(--accent-blue-primary) !important;
         }
         .cart-drawer-quantity-btn:active {
           transform: scale(0.95);
@@ -337,19 +337,21 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
           transform: scale(1.1);
         }
         .cart-drawer-checkout-btn:hover {
-          background-color: #2563eb !important;
+          background: linear-gradient(135deg, var(--accent-blue-hover) 0%, var(--accent-blue-primary) 100%) !important;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
+          box-shadow: 0 8px 20px var(--accent-blue-glow) !important;
         }
         .cart-drawer-checkout-btn:active {
           transform: translateY(0);
         }
         .cart-drawer-continue-btn:hover {
-          background-color: #f9fafb !important;
-          border-color: #9ca3af !important;
+          background-color: rgba(255, 255, 255, 0.05) !important;
+          border-color: var(--text-primary) !important;
+          color: var(--text-primary) !important;
         }
         .cart-item:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+          border-color: var(--border-primary) !important;
         }
         @media (max-width: 640px) {
           .cart-drawer {
@@ -365,8 +367,8 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
             Shopping Cart
             {cart.length > 0 && <span style={styles.badge}>{getTotalItems()}</span>}
           </div>
-          <button 
-            style={styles.closeBtn} 
+          <button
+            style={styles.closeBtn}
             className="cart-drawer-close-btn"
             onClick={handleClose}
           >
@@ -384,10 +386,11 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
           ) : (
             cart.map(item => (
               <div key={item._id} style={styles.cartItem} className="cart-item">
-                <img 
-                  src={getImageUrl(item.image)} 
+                <img
+                  src={getImageUrl(item.image)}
                   alt={item.name}
                   style={styles.itemImage}
+                  loading="lazy"
                 />
                 <div style={styles.itemDetails}>
                   <div style={styles.itemName}>{item.name}</div>
@@ -436,14 +439,14 @@ export default function CartDrawer({ isOpen, onClose, cart, onUpdateQuantity, on
               <span>Total</span>
               <span>${getTotalAmount().toFixed(2)}</span>
             </div>
-            <button 
+            <button
               style={styles.checkoutBtn}
               className="cart-drawer-checkout-btn"
               onClick={handleCheckout}
             >
               Proceed to Checkout
             </button>
-            <button 
+            <button
               style={styles.continueBtn}
               className="cart-drawer-continue-btn"
               onClick={handleClose}

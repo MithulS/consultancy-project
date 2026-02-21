@@ -5,8 +5,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function SearchSuggestions({ 
-  searchTerm, 
+export default function SearchSuggestions({
+  searchTerm,
   onSelectSuggestion,
   products = [],
   categories = [],
@@ -22,11 +22,11 @@ export default function SearchSuggestions({
     }
 
     const term = searchTerm.toLowerCase();
-    
+
     // Filter products matching search term
     const productSuggestions = products
-      .filter(p => 
-        p.name.toLowerCase().includes(term) || 
+      .filter(p =>
+        p.name.toLowerCase().includes(term) ||
         p.category.toLowerCase().includes(term)
       )
       .slice(0, 5)
@@ -60,7 +60,7 @@ export default function SearchSuggestions({
         <span style={styles.headerText}>Suggestions</span>
         <span style={styles.count}>{suggestions.length}</span>
       </div>
-      
+
       <div style={styles.list}>
         {suggestions.map((suggestion, index) => (
           <div
@@ -84,10 +84,11 @@ export default function SearchSuggestions({
               </div>
             ) : (
               <div style={styles.productItem}>
-                <img 
-                  src={suggestion.image || 'https://placehold.co/40x40'} 
+                <img
+                  src={suggestion.image || 'https://placehold.co/40x40'}
                   alt={suggestion.value}
                   style={styles.productImage}
+                  loading="lazy"
                 />
                 <div style={styles.productInfo}>
                   <div style={styles.suggestionText}>{suggestion.value}</div>

@@ -57,7 +57,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
-    <div style={styles.container}>
+    <div className="checkout-container" style={styles.container}>
       <div style={styles.card}>
         <div style={styles.header}>
           <h2 style={styles.title}>Guest Checkout</h2>
@@ -159,7 +159,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
             />
           </div>
 
-          <div style={styles.row}>
+          <div className="guest-checkout-row" style={styles.row}>
             <div style={styles.inputGroup}>
               <label style={styles.label}>City *</label>
               <input
@@ -199,17 +199,19 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
             </ul>
           </div>
 
-          <div style={styles.buttonGroup}>
+          <div className="mobile-fixed-btn-container" style={styles.buttonGroup}>
             <button
               type="button"
               onClick={onCancel}
               style={styles.cancelBtn}
+              className="mobile-fixed-btn-secondary"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
+              className="mobile-fixed-btn"
               style={styles.submitBtn}
               disabled={loading}
             >
@@ -248,14 +250,16 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
 const styles = {
   container: {
     minHeight: '100vh',
-    backgroundColor: 'transparent',
+    background: 'var(--gradient-navy-primary)',
+    color: 'var(--text-primary)',
     padding: '30px 20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   },
   card: {
-    backgroundColor: '#ffffff',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     border: '1px solid var(--border-color)',
     borderRadius: 'var(--border-radius-xl)',
     padding: '40px',
@@ -367,7 +371,8 @@ const styles = {
     padding: '12px 16px',
     fontSize: '15px',
     border: '1px solid var(--border-color)',
-    backgroundColor: '#ffffff',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     color: 'var(--text-primary)',
     borderRadius: 'var(--border-radius-md)',
     outline: 'none',
@@ -376,7 +381,7 @@ const styles = {
   },
   hint: {
     fontSize: '12px',
-    color: '#9ca3af'
+    color: 'var(--text-tertiary)'
   },
   row: {
     display: 'grid',

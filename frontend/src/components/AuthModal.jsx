@@ -60,7 +60,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setMessage('✅ Login successful! Adding item to cart...');
-        
+
         setTimeout(() => {
           onAuthSuccess(data.user);
         }, 800);
@@ -116,11 +116,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
     <div style={styles.overlay} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         {/* Close Button - Accessible */}
-        <button 
-          style={styles.closeBtn} 
-          onClick={onClose} 
+        <button
+          style={styles.closeBtn}
+          onClick={onClose}
           aria-label="Close authentication modal"
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-background-tertiary)'}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -147,8 +147,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
                 <p style={styles.incentiveText}>Get <strong>10% OFF</strong> + Free Shipping on your first purchase</p>
               </div>
             </div>
-            <button 
-              style={styles.dismissBtn} 
+            <button
+              style={styles.dismissBtn}
               onClick={() => setShowIncentive(false)}
               aria-label="Dismiss welcome offer"
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.35)'}
@@ -165,7 +165,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
         {/* Header Section */}
         <div style={styles.header}>
           <div style={styles.iconWrapper}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{color: 'var(--color-accent-purple)'}}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--accent-blue-primary)' }}>
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
@@ -174,8 +174,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
             {mode === 'login' ? 'Welcome Back' : 'Create Your Account'}
           </h2>
           <p style={styles.subtitle}>
-            {mode === 'login' 
-              ? 'Sign in to continue your shopping experience' 
+            {mode === 'login'
+              ? 'Sign in to continue your shopping experience'
               : 'Join us and enjoy exclusive benefits'}
           </p>
         </div>
@@ -185,9 +185,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
           <div style={styles.productCard} role="region" aria-label="Product to add">
             <div style={styles.productBadge}>Ready to add</div>
             <div style={styles.productContent}>
-              <img 
-                src={pendingProduct.imageUrl} 
-                alt={pendingProduct.name} 
+              <img
+                src={pendingProduct.imageUrl}
+                alt={pendingProduct.name}
                 style={styles.productImage}
               />
               <div style={styles.productDetails}>
@@ -244,7 +244,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
         </div>
 
         {/* Google Login - Premium Style */}
-        <button 
+        <button
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
@@ -258,10 +258,10 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
           onMouseLeave={(e) => !loading && (e.currentTarget.style.borderColor = '#e5e7eb')}
         >
           <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
           </svg>
           <span style={styles.googleBtnText}>Continue with Google</span>
         </button>
@@ -279,9 +279,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
             ...styles.message,
             backgroundColor: message.includes('✅') ? 'var(--color-success-50)' : 'var(--color-error-50)',
             borderLeft: `4px solid ${message.includes('✅') ? 'var(--color-success)' : 'var(--color-error)'}`,
-            color: message.includes('✅') ? 'var(--color-success-700)' : 'var(--color-error-700)'
+            color: message.includes('✅') ? 'var(--accent-green)' : 'var(--color-error-700)'
           }}
-          role="alert"
+            role="alert"
           >
             <div style={styles.messageIcon}>
               {message.includes('✅') ? (
@@ -310,7 +310,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'email' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'email' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -341,7 +341,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'password' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'password' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -384,8 +384,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               style={{
                 ...styles.submitBtn,
                 opacity: loading ? 0.7 : 1,
@@ -449,7 +449,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'name' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'name' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -480,7 +480,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'username' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'username' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -512,7 +512,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'register-email' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'register-email' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -543,7 +543,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </label>
               <div style={{
                 ...styles.inputWrapper,
-                borderColor: focusedField === 'register-password' ? 'var(--color-accent-purple)' : 'var(--color-border-default)'
+                borderColor: focusedField === 'register-password' ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.inputIcon}>
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -591,8 +591,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
               </p>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               style={{
                 ...styles.submitBtn,
                 opacity: loading ? 0.7 : 1,
@@ -649,26 +649,26 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
         {/* Guest Checkout - Subtle & Accessible */}
         <div style={styles.guestSection}>
           <div style={styles.guestDivider}></div>
-          <button 
+          <button
             style={styles.guestBtn}
             onClick={() => {
               if (pendingProduct) {
                 const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
                 const existingItem = guestCart.find(item => item._id === pendingProduct._id);
-                
+
                 if (existingItem) {
                   existingItem.quantity += 1;
                 } else {
                   guestCart.push({ ...pendingProduct, quantity: 1 });
                 }
-                
+
                 localStorage.setItem('guestCart', JSON.stringify(guestCart));
               }
-              
+
               onClose();
               window.location.hash = '#guest-checkout';
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -688,7 +688,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
             Secure checkout · Protected by encryption
           </p>
         </div>
-        
+
         <p style={styles.termsText}>
           By continuing, you agree to our{' '}
           <a href="#terms" style={styles.termsLink}>Terms of Service</a>
@@ -718,23 +718,25 @@ const styles = {
     animation: 'fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
     padding: '20px'
   },
-  
+
   // Modern modal container
   modal: {
-    backgroundColor: '#ffffff',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '20px',
     padding: '40px 36px',
     maxWidth: '480px',
     width: '100%',
     maxHeight: '95vh',
     overflowY: 'auto',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+    boxShadow: 'var(--shadow-xl)',
     position: 'relative',
     animation: 'slideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
     scrollbarWidth: 'thin',
     scrollbarColor: '#cbd5e1 transparent'
   },
-  
+
   // Close button with hover states
   closeBtn: {
     position: 'absolute',
@@ -753,7 +755,7 @@ const styles = {
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 10
   },
-  
+
   // Premium incentive banner
   incentiveBanner: {
     background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
@@ -766,31 +768,31 @@ const styles = {
     position: 'relative',
     boxShadow: '0 8px 16px rgba(251, 191, 36, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)'
   },
-  
+
   incentiveContent: {
     flex: 1,
     color: '#ffffff'
   },
-  
+
   incentiveIcon: {
     color: '#ffffff',
     flexShrink: 0
   },
-  
+
   incentiveTitle: {
     fontSize: '15px',
     fontWeight: '700',
     marginBottom: '4px',
     color: '#ffffff'
   },
-  
+
   incentiveText: {
     margin: 0,
     fontSize: '13px',
     lineHeight: '1.5',
     color: 'rgba(255, 255, 255, 0.95)'
   },
-  
+
   dismissBtn: {
     background: 'rgba(255, 255, 255, 0.25)',
     border: 'none',
@@ -805,13 +807,13 @@ const styles = {
     transition: 'all 0.2s ease',
     flexShrink: 0
   },
-  
+
   // Header section
   header: {
     textAlign: 'center',
     marginBottom: '28px'
   },
-  
+
   iconWrapper: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -819,41 +821,42 @@ const styles = {
     width: '64px',
     height: '64px',
     borderRadius: '16px',
-    background: 'linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%)',
+    background: 'rgba(255, 255, 255, 0.05)',
     marginBottom: '16px'
   },
-  
+
   title: {
     fontSize: '26px',
     fontWeight: '700',
-    color: '#111827',
+    color: 'var(--text-primary)',
     marginBottom: '8px',
     letterSpacing: '-0.02em'
   },
-  
+
   subtitle: {
     fontSize: '15px',
-    color: '#6b7280',
+    color: 'var(--text-secondary)',
     margin: 0,
     lineHeight: '1.5'
   },
-  
+
   // Enhanced product card
   productCard: {
     position: 'relative',
-    background: 'linear-gradient(135deg, #f9fafb 0%, #ffffff 100%)',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     borderRadius: '14px',
     padding: '16px',
     marginBottom: '24px',
-    border: '2px solid #e5e7eb',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+    border: '1px solid var(--glass-border)',
+    boxShadow: 'var(--shadow-sm)'
   },
-  
+
   productBadge: {
     position: 'absolute',
     top: '-10px',
     right: '16px',
-    backgroundColor: 'var(--color-accent-purple)',
+    backgroundColor: 'var(--accent-blue-primary)',
     color: 'white',
     fontSize: '11px',
     fontWeight: '600',
@@ -861,15 +864,15 @@ const styles = {
     borderRadius: '20px',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    boxShadow: '0 4px 6px rgba(124, 58, 237, 0.3)'
+    boxShadow: '0 4px 6px var(--accent-blue-glow)'
   },
-  
+
   productContent: {
     display: 'flex',
     alignItems: 'center',
     gap: '16px'
   },
-  
+
   productImage: {
     width: '80px',
     height: '80px',
@@ -878,17 +881,17 @@ const styles = {
     border: '1px solid #e5e7eb',
     flexShrink: 0
   },
-  
+
   productDetails: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     gap: '8px'
   },
-  
+
   productName: {
     fontSize: '15px',
-    color: '#111827',
+    color: 'var(--text-primary)',
     fontWeight: '600',
     lineHeight: '1.4',
     display: '-webkit-box',
@@ -896,33 +899,33 @@ const styles = {
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden'
   },
-  
+
   priceRow: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px'
   },
-  
+
   productPrice: {
     fontSize: '20px',
-    color: 'var(--color-accent-purple)',
+    color: 'var(--accent-blue-primary)',
     fontWeight: '700'
   },
-  
+
   stockBadge: {
     fontSize: '11px',
     fontWeight: '600',
-    color: 'var(--color-success-700)',
-    backgroundColor: 'var(--color-success-100)',
+    color: 'var(--accent-green)',
+    backgroundColor: 'var(--accent-green-glow)',
     padding: '3px 8px',
     borderRadius: '6px'
   },
-  
+
   // Modern benefits section
   benefitsSection: {
     marginBottom: '28px'
   },
-  
+
   benefitsTitle: {
     fontSize: '14px',
     fontWeight: '600',
@@ -930,55 +933,57 @@ const styles = {
     marginBottom: '14px',
     marginTop: 0
   },
-  
+
   benefitsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '10px'
   },
-  
+
   benefitCard: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '8px',
     padding: '14px 10px',
-    backgroundColor: '#f9fafb',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     borderRadius: '12px',
-    border: '1px solid #e5e7eb',
+    border: '1px solid var(--glass-border)',
     transition: 'all 0.2s ease'
   },
-  
+
   benefitIconCircle: {
     width: '40px',
     height: '40px',
     borderRadius: '10px',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'var(--color-accent-purple)',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
+    color: 'var(--accent-blue-primary)',
+    boxShadow: 'none'
   },
-  
+
   benefitLabel: {
     fontSize: '12px',
     fontWeight: '600',
-    color: '#4b5563',
+    color: 'var(--text-secondary)',
     textAlign: 'center',
     lineHeight: '1.3'
   },
-  
+
   // Premium Google button
   googleBtn: {
     width: '100%',
     padding: '15px 20px',
-    backgroundColor: '#ffffff',
-    border: '2px solid #e5e7eb',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '12px',
     fontSize: '15px',
     fontWeight: '600',
-    color: '#374151',
+    color: 'var(--text-primary)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -986,13 +991,13 @@ const styles = {
     gap: '12px',
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
     marginBottom: '24px',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+    boxShadow: 'none'
   },
-  
+
   googleBtnText: {
-    color: '#374151'
+    color: 'var(--text-primary)'
   },
-  
+
   // Elegant divider
   divider: {
     display: 'flex',
@@ -1000,13 +1005,13 @@ const styles = {
     margin: '24px 0',
     gap: '16px'
   },
-  
+
   dividerLine: {
     flex: 1,
     height: '1px',
     backgroundColor: '#e5e7eb'
   },
-  
+
   dividerText: {
     color: '#9ca3af',
     fontSize: '13px',
@@ -1015,7 +1020,7 @@ const styles = {
     letterSpacing: '0.5px',
     whiteSpace: 'nowrap'
   },
-  
+
   // Enhanced message styling
   message: {
     padding: '14px 16px',
@@ -1028,57 +1033,58 @@ const styles = {
     gap: '10px',
     lineHeight: '1.5'
   },
-  
+
   messageIcon: {
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center'
   },
-  
+
   // Form styling
   form: {
     display: 'flex',
     flexDirection: 'column',
     gap: '20px'
   },
-  
+
   inputGroup: {
     display: 'flex',
     flexDirection: 'column',
     gap: '8px'
   },
-  
+
   label: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#374151',
+    color: 'var(--text-primary)',
     display: 'flex',
     alignItems: 'center',
     gap: '4px'
   },
-  
+
   required: {
     color: '#ef4444',
     fontSize: '14px'
   },
-  
+
   inputWrapper: {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    border: '2px solid',
+    border: '1px solid',
     borderRadius: '12px',
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-    backgroundColor: '#ffffff'
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
   },
-  
+
   inputIcon: {
     position: 'absolute',
     left: '14px',
-    color: '#9ca3af',
+    color: 'var(--text-tertiary)',
     pointerEvents: 'none'
   },
-  
+
   input: {
     flex: 1,
     padding: '13px 16px 13px 44px',
@@ -1088,9 +1094,9 @@ const styles = {
     outline: 'none',
     fontFamily: 'inherit',
     backgroundColor: 'transparent',
-    color: '#111827'
+    color: 'var(--text-primary)'
   },
-  
+
   passwordToggle: {
     position: 'absolute',
     right: '12px',
@@ -1104,18 +1110,18 @@ const styles = {
     justifyContent: 'center',
     transition: 'color 0.2s ease'
   },
-  
+
   helperText: {
     fontSize: '12px',
     color: '#6b7280',
     margin: '0',
     paddingLeft: '4px'
   },
-  
+
   // Premium submit button
   submitBtn: {
     padding: '15px 24px',
-    background: 'var(--gradient-accent-purple)',
+    background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
     color: '#ffffff',
     border: 'none',
     borderRadius: '12px',
@@ -1124,17 +1130,17 @@ const styles = {
     cursor: 'pointer',
     marginTop: '8px',
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-    boxShadow: '0 4px 14px rgba(124, 58, 237, 0.35)',
+    boxShadow: '0 4px 14px var(--accent-blue-glow)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '10px'
   },
-  
+
   spinner: {
     animation: 'spin 0.8s linear infinite'
   },
-  
+
   switchText: {
     textAlign: 'center',
     fontSize: '14px',
@@ -1142,18 +1148,18 @@ const styles = {
     margin: '4px 0 0 0',
     lineHeight: '1.5'
   },
-  
+
   switchBtn: {
     background: 'none',
     border: 'none',
-    color: 'var(--color-accent-purple)',
+    color: 'var(--accent-blue-primary)',
     fontWeight: '600',
     cursor: 'pointer',
     padding: 0,
     fontSize: 'inherit',
     transition: 'color 0.2s ease'
   },
-  
+
   // Guest section styling
   guestSection: {
     marginTop: '28px',
@@ -1162,22 +1168,23 @@ const styles = {
     flexDirection: 'column',
     gap: '16px'
   },
-  
+
   guestDivider: {
     height: '1px',
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'var(--glass-border)',
     marginBottom: '4px'
   },
-  
+
   guestBtn: {
     width: '100%',
     padding: '13px 20px',
-    backgroundColor: 'transparent',
-    border: '2px dashed #d1d5db',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px dashed var(--glass-border)',
     borderRadius: '12px',
     fontSize: '14px',
     fontWeight: '600',
-    color: '#6b7280',
+    color: 'var(--text-secondary)',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
     display: 'flex',
@@ -1185,7 +1192,7 @@ const styles = {
     justifyContent: 'center',
     gap: '10px'
   },
-  
+
   // Security badge
   securityBadge: {
     display: 'flex',
@@ -1196,14 +1203,14 @@ const styles = {
     paddingTop: '20px',
     borderTop: '1px solid #f3f4f6'
   },
-  
+
   privacyText: {
     fontSize: '12px',
     color: '#9ca3af',
     margin: 0,
     fontWeight: '500'
   },
-  
+
   termsText: {
     fontSize: '11px',
     color: '#9ca3af',
@@ -1212,9 +1219,9 @@ const styles = {
     lineHeight: '1.6',
     marginBottom: 0
   },
-  
+
   termsLink: {
-    color: 'var(--color-accent-purple)',
+    color: 'var(--accent-blue-primary)',
     textDecoration: 'none',
     fontWeight: '600',
     transition: 'color 0.2s ease'
@@ -1287,7 +1294,7 @@ if (typeof document !== 'undefined') {
     button:focus-visible,
     input:focus-visible,
     a:focus-visible {
-      outline: 2px solid #7c3aed;
+      outline: 2px solid var(--accent-blue-primary);
       outline-offset: 2px;
     }
     
@@ -1320,7 +1327,7 @@ if (typeof document !== 'undefined') {
       }
     }
   `;
-  
+
   if (!document.getElementById('auth-modal-animations')) {
     document.head.appendChild(styleElement);
   }

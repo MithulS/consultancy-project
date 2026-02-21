@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { getImageUrl } from '../utils/imageHandling';
+import { showToast } from './ToastNotification';
 
 export default function EcommerceHomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -399,14 +400,14 @@ export default function EcommerceHomePage() {
           }}>
             ⭐ Rated 4.8/5 by 10,000+ Happy Customers
           </div>
-          
+
           <h1 style={styles.heroTitle}>
             India's Most Trusted Hardware Store
           </h1>
           <p style={styles.heroSubtitle}>
             Premium Building Materials at Wholesale Prices • Free Shipping Above ₹999 • Same Day Delivery Available
           </p>
-          
+
           {/* Dual CTA Buttons */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="#products" style={styles.heroCTA}>
@@ -421,7 +422,7 @@ export default function EcommerceHomePage() {
               ⚡ Today's Deals
             </a>
           </div>
-          
+
           {/* Social Proof Indicators */}
           <div style={{
             display: 'flex',
@@ -508,7 +509,7 @@ export default function EcommerceHomePage() {
                     style={styles.addToCartBtn}
                     onClick={(e) => {
                       e.preventDefault();
-                      alert('Added to cart!');
+                      showToast('Added to cart!', 'success');
                     }}
                   >
                     Add to Cart
@@ -577,7 +578,7 @@ export default function EcommerceHomePage() {
                 <div style={styles.brandIconWrapper}>
                   <div style={styles.brandIcon}>{brand.icon}</div>
                 </div>
-                
+
                 <h3 style={styles.brandName}>{brand.name}</h3>
                 <span style={styles.brandCategory}>{brand.category}</span>
                 <p style={styles.brandDescription}>{brand.description}</p>
@@ -599,7 +600,7 @@ export default function EcommerceHomePage() {
               </div>
             ))}
           </div>
-          
+
           {/* Customer Testimonials & Social Proof */}
           <div style={{
             backgroundColor: 'white',
@@ -617,7 +618,7 @@ export default function EcommerceHomePage() {
             }}>
               Loved by Professionals & DIY Enthusiasts
             </h3>
-            
+
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -645,7 +646,7 @@ export default function EcommerceHomePage() {
                   - Rajesh Kumar, Contractor
                 </div>
               </div>
-              
+
               {/* Testimonial 2 */}
               <div style={{
                 padding: '24px',
@@ -668,7 +669,7 @@ export default function EcommerceHomePage() {
                   - Priya Sharma, Homeowner
                 </div>
               </div>
-              
+
               {/* Testimonial 3 */}
               <div style={{
                 padding: '24px',
@@ -692,7 +693,7 @@ export default function EcommerceHomePage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Certifications & Badges */}
             <div style={{
               display: 'flex',

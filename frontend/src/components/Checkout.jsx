@@ -139,11 +139,12 @@ export default function Checkout() {
   const styles = {
     container: {
       minHeight: '100vh',
-      backgroundColor: 'transparent'
+      background: 'var(--gradient-navy-primary)',
+      color: 'var(--text-primary)'
     },
     header: {
-      backgroundColor: 'var(--primary-brand)',
-      color: 'var(--text-inverse)',
+      backgroundColor: 'var(--glass-background)',
+      color: 'var(--text-primary)',
       borderBottom: 'none',
       boxShadow: 'var(--shadow-md)',
       padding: '16px 32px',
@@ -187,8 +188,9 @@ export default function Checkout() {
       gap: '24px'
     },
     formSection: {
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '32px',
       boxShadow: 'var(--shadow-sm)'
@@ -212,8 +214,9 @@ export default function Checkout() {
     input: {
       width: '100%',
       padding: '12px 16px',
-      border: '1px solid var(--border-color)',
-      backgroundColor: '#ffffff',
+      border: '1px solid var(--border-secondary)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       color: 'var(--text-primary)',
       borderRadius: 'var(--border-radius-md)',
       fontSize: '16px',
@@ -225,7 +228,7 @@ export default function Checkout() {
       width: '100%',
       padding: '12px',
       border: '1px solid var(--glass-border)',
-      backgroundColor: 'rgba(0,0,0,0.2)', // Darker for select visibility
+      backgroundColor: 'rgba(255,255,255,0.05)', // Darker for select visibility
       color: 'var(--text-primary)',
       borderRadius: '8px',
       fontSize: '16px',
@@ -233,8 +236,9 @@ export default function Checkout() {
       outline: 'none'
     },
     orderSummary: {
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '32px',
       boxShadow: 'var(--shadow-lg)',
@@ -289,7 +293,7 @@ export default function Checkout() {
     placeOrderBtn: {
       width: '100%',
       padding: '16px',
-      background: 'var(--gradient-cta)',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
       color: 'white',
       border: 'none',
       borderRadius: 'var(--border-radius-md)',
@@ -319,8 +323,9 @@ export default function Checkout() {
     },
     successCard: {
       textAlign: 'center',
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: 'var(--border-radius-xl)',
       padding: '60px 40px',
       boxShadow: 'var(--shadow-xl)'
@@ -338,7 +343,7 @@ export default function Checkout() {
         <div style={styles.content}>
           <div style={styles.successCard}>
             <div style={{ fontSize: '64px', marginBottom: '24px' }}>✅</div>
-            <h1 style={{ fontSize: '32px', fontWeight: '700', color: 'var(--color-success)', marginBottom: '16px' }}>
+            <h1 style={{ fontSize: '32px', fontWeight: '700', color: 'var(--accent-green)', marginBottom: '16px' }}>
               Order Placed Successfully!
             </h1>
             <p style={{ fontSize: '18px', color: 'var(--text-secondary)', marginBottom: '32px' }}>
@@ -351,8 +356,8 @@ export default function Checkout() {
               <button
                 style={{ ...styles.placeOrderBtn, width: 'auto', padding: '12px 32px' }}
                 onClick={() => window.location.hash = '#my-orders'}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#6d28d9'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#5b21b6'}
+                onMouseOver={(e) => e.target.style.backgroundColor = 'var(--accent-blue-hover)'}
+                onMouseOut={(e) => e.target.style.backgroundColor = 'var(--accent-blue-primary)'}
               >
                 View My Orders
               </button>
@@ -370,7 +375,7 @@ export default function Checkout() {
   }
 
   return (
-    <div style={styles.container}>
+    <div className="checkout-container" style={styles.container}>
       <div style={styles.header}>
         <h1 style={styles.logo} onClick={() => window.location.hash = '#dashboard'}>
           🛒 ElectroStore
@@ -389,7 +394,7 @@ export default function Checkout() {
           </div>
         )}
 
-        <div style={styles.grid}>
+        <div className="checkout-grid" style={styles.grid}>
           {/* Shipping Form */}
           <div>
             <form onSubmit={handleSubmit}>
@@ -459,8 +464,8 @@ export default function Checkout() {
                     onChange={handleChange}
                     style={styles.select}
                   >
-                    <option value="cod" style={{ color: 'black' }}>Cash on Delivery</option>
-                    <option value="gpay" style={{ color: 'black' }}>Google Pay</option>
+                    <option value="cod" style={{ background: 'var(--navy-dark)', color: 'var(--text-primary)' }}>Cash on Delivery</option>
+                    <option value="gpay" style={{ background: 'var(--navy-dark)', color: 'var(--text-primary)' }}>Google Pay</option>
                   </select>
                 </div>
               </div>
@@ -478,6 +483,7 @@ export default function Checkout() {
                   alt={`${item.name}, ₹${item.price}, Qty: ${item.quantity}`}
                   title={`${item.name} - ₹${item.price} x ${item.quantity}`}
                   style={styles.itemImage}
+                  loading="lazy"
                 />
                 <div style={styles.itemDetails}>
                   <div style={styles.itemName}>{item.name}</div>
@@ -498,30 +504,34 @@ export default function Checkout() {
 
             <div style={styles.summaryRow}>
               <span>Shipping</span>
-              <span style={{ color: '#10b981', fontWeight: '600' }}>FREE</span>
+              <span style={{ color: 'var(--accent-green)', fontWeight: '600' }}>FREE</span>
             </div>
 
-            <div style={styles.summaryTotal}>
+            <div className="summaryTotal" style={styles.summaryTotal}>
               <span>Total</span>
               <span style={{ color: 'var(--accent-blue-primary)' }}>₹{getTotalAmount().toFixed(2)}</span>
             </div>
 
-            <button
-              style={{
-                ...styles.placeOrderBtn,
-                backgroundColor: loading ? '#9ca3af' : '#5b21b6',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
-              onClick={handleSubmit}
-              disabled={loading}
-              onMouseOver={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
-              onMouseOut={(e) => !loading && (e.target.style.transform = 'translateY(0)')}
-            >
-              {loading ? 'Placing Order...' : `Place Order (₹${getTotalAmount().toFixed(2)})`}
-            </button>
+            <div className="mobile-fixed-btn-container">
+              <button
+                className="mobile-fixed-btn"
+                style={{
+                  ...styles.placeOrderBtn,
+                  backgroundColor: loading ? '#9ca3af' : 'var(--accent-blue-primary)',
+                  cursor: loading ? 'not-allowed' : 'pointer'
+                }}
+                onClick={handleSubmit}
+                disabled={loading}
+                onMouseOver={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
+                onMouseOut={(e) => !loading && (e.target.style.transform = 'translateY(0)')}
+              >
+                {loading ? 'Placing Order...' : `Place Order (₹${getTotalAmount().toFixed(2)})`}
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SmartButton from './SmartButton';
+import { showToast } from './ToastNotification';
 
-const ProductRecommendations = ({ 
+const ProductRecommendations = ({
   currentProduct = null,
   userId = null,
   category = null,
@@ -19,11 +20,11 @@ const ProductRecommendations = ({
   const fetchRecommendations = async () => {
     try {
       setLoading(true);
-      
+
       // Build query based on available data
       let endpoint = '/api/products?';
       const params = new URLSearchParams();
-      
+
       if (currentProduct) {
         // Get products from same category
         params.append('category', currentProduct.category);
@@ -46,7 +47,7 @@ const ProductRecommendations = ({
         if (currentProduct) {
           products = products.filter(p => p._id !== currentProduct._id);
         }
-        
+
         // Shuffle and limit
         const shuffled = products.sort(() => 0.5 - Math.random());
         setRecommendations(shuffled.slice(0, limit));
@@ -75,10 +76,10 @@ const ProductRecommendations = ({
 
   const addToCart = async (product, e) => {
     e.stopPropagation();
-    
+
     try {
       const token = localStorage.getItem('token');
-      
+
       if (token) {
         const response = await fetch(`${API}/api/cart/add`, {
           method: 'POST',
@@ -93,14 +94,14 @@ const ProductRecommendations = ({
         });
 
         if (response.ok) {
-          alert('✅ Added to cart!');
+          showToast('✅ Added to cart!', 'success');
           window.dispatchEvent(new Event('cartUpdated'));
         }
       } else {
         // Guest cart
         const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
         const existingItem = guestCart.find(item => item.productId === product._id);
-        
+
         if (existingItem) {
           existingItem.quantity += 1;
         } else {
@@ -112,9 +113,9 @@ const ProductRecommendations = ({
             quantity: 1
           });
         }
-        
+
         localStorage.setItem('guestCart', JSON.stringify(guestCart));
-        alert('✅ Added to cart!');
+        showToast('✅ Added to cart!', 'success');
         window.dispatchEvent(new Event('cartUpdated'));
       }
 
@@ -133,7 +134,7 @@ const ProductRecommendations = ({
       }
     } catch (error) {
       console.error('Add to cart error:', error);
-      alert('❌ Failed to add to cart');
+      showToast('❌ Failed to add to cart', 'error');
     }
   };
 
@@ -156,17 +157,17 @@ const ProductRecommendations = ({
   return (
     <div className="product-recommendations">
       <h2 className="recommendations-title">{title}</h2>
-      
+
       <div className="recommendations-grid">
         {recommendations.map(product => (
-          <div 
-            key={product._id} 
+          <div
+            key={product._id}
             className="recommendation-card"
             onClick={() => handleProductClick(product)}
           >
             <div className="recommendation-image">
-              <img 
-                src={product.imageUrl} 
+              <img
+                src={product.imageUrl}
                 alt={product.name}
                 loading="lazy"
               />
@@ -177,10 +178,10 @@ const ProductRecommendations = ({
                 <div className="out-of-stock-overlay">Out of Stock</div>
               )}
             </div>
-            
+
             <div className="recommendation-content">
               <h3 className="recommendation-name">{product.name}</h3>
-              
+
               <div className="recommendation-price">
                 {product.originalPrice && (
                   <span className="original-price">${product.originalPrice}</span>
@@ -199,7 +200,7 @@ const ProductRecommendations = ({
                   <span className="rating-count">({product.numReviews})</span>
                 </div>
               )}
-              
+
               <SmartButton
                 onClick={async (e) => {
                   addToCart(product, e);

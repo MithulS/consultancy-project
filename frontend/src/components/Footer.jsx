@@ -16,7 +16,7 @@ export default function Footer({ theme = 'dark' }) {
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -30,7 +30,7 @@ export default function Footer({ theme = 'dark' }) {
     try {
       // Simulate API call - replace with actual newsletter API
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setSubscribeStatus('success');
       setEmail('');
       setTimeout(() => setSubscribeStatus('idle'), 3000);
@@ -43,13 +43,13 @@ export default function Footer({ theme = 'dark' }) {
   // Theme configurations
   const themes = {
     dark: {
-      background: 'linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%)',
-      text: '#e0e0e0',
-      textSecondary: '#a0a0a0',
-      border: 'rgba(255, 255, 255, 0.1)',
+      background: 'var(--navy-darkest)',
+      text: 'var(--text-primary)',
+      textSecondary: 'var(--text-secondary)',
+      border: 'var(--border-subtle)',
       inputBg: 'rgba(255, 255, 255, 0.05)',
-      inputBorder: 'rgba(255, 255, 255, 0.15)',
-      linkHover: '#4285F4',
+      inputBorder: 'rgba(255, 255, 255, 0.1)',
+      linkHover: 'var(--accent-blue-primary)',
     },
     light: {
       background: 'linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%)',
@@ -338,7 +338,7 @@ export default function Footer({ theme = 'dark' }) {
         {/* Bottom Section - Copyright & Legal */}
         <div style={styles.bottomSection}>
           <p style={styles.copyright}>
-            © {new Date().getFullYear()} HomeHardware. All rights reserved. 
+            © {new Date().getFullYear()} HomeHardware. All rights reserved.
             Built with ❤️ for exceptional shopping experiences.
           </p>
           <div style={styles.bottomLinks}>

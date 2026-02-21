@@ -1,5 +1,6 @@
 // Product Comparison Component
 import React, { useState, useEffect } from 'react';
+import { showToast } from './ToastNotification';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { getImageUrl } from '../utils/imageHandling';
 
@@ -228,7 +229,7 @@ export default function ProductComparison({ productIds, onNavigate }) {
                 stock: product.stock
               });
               localStorage.setItem('cart', JSON.stringify(cart));
-              alert(`✅ ${product.name} added to cart`);
+              showToast(`✅ ${product.name} added to cart`, 'success');
             }}
             disabled={product.stock === 0}
             style={{

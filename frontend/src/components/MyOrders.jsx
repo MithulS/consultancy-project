@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import OrderTracking from './OrderTracking';
 import Skeleton from './Skeleton';
+import { showToast } from './ToastNotification';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const getImageUrl = (imageUrl) => {
@@ -90,14 +91,14 @@ export default function MyOrders() {
       const data = await res.json();
 
       if (data.success) {
-        alert('✅ Order cancelled successfully');
+        showToast('✅ Order cancelled successfully', 'success');
         fetchOrders();
       } else {
-        alert('❌ ' + data.msg);
+        showToast('❌ ' + data.msg, 'error');
       }
     } catch (err) {
       console.error('Cancel order error:', err);
-      alert('❌ Failed to cancel order');
+      showToast('❌ Failed to cancel order', 'error');
     }
   }
 
@@ -134,11 +135,11 @@ export default function MyOrders() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          backgroundColor: 'var(--primary-brand)',
-          color: 'var(--text-inverse)',
+          backgroundColor: 'var(--glass-background)',
+          color: 'var(--text-primary)',
           boxShadow: 'var(--shadow-md)'
         }}>
-          <h1 className="text-gradient" style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-inverse)' }}>
+          <h1 className="text-gradient" style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>
             🛒 ElectroStore
           </h1>
         </nav>
@@ -147,8 +148,9 @@ export default function MyOrders() {
           {[1, 2, 3].map(i => (
             <div key={i} className="card" style={{
               padding: '32px',
-              backgroundColor: '#ffffff',
-              border: '1px solid var(--border-color)',
+              background: 'var(--glass-background)',
+              backdropFilter: 'var(--glass-blur)',
+              border: '1px solid var(--border-secondary)',
               borderRadius: 'var(--border-radius-lg)',
               boxShadow: 'var(--shadow-sm)',
               marginBottom: '24px'
@@ -183,15 +185,15 @@ export default function MyOrders() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: 'var(--primary-brand)',
-        color: 'var(--text-inverse)',
+        backgroundColor: 'var(--glass-background)',
+        color: 'var(--text-primary)',
         boxShadow: 'var(--shadow-md)',
         marginBottom: '32px'
       }}>
         <h1
           className="text-gradient"
           onClick={() => window.location.hash = '#dashboard'}
-          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-inverse)', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
         >
           🛒 ElectroStore
         </h1>
@@ -247,9 +249,10 @@ export default function MyOrders() {
               style={{
                 borderRadius: '9999px',
                 padding: '10px 20px',
-                backgroundColor: statusFilter === status ? 'var(--gradient-blue)' : 'white',
+                background: statusFilter === status ? 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)' : 'var(--glass-background)',
+                backdropFilter: statusFilter === status ? 'none' : 'var(--glass-blur)',
                 color: statusFilter === status ? 'white' : 'var(--text-secondary)',
-                border: statusFilter === status ? 'none' : '1px solid var(--border-color)',
+                border: statusFilter === status ? 'none' : '1px solid var(--border-secondary)',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 boxShadow: statusFilter === status ? 'var(--shadow-md)' : 'none',
@@ -275,8 +278,9 @@ export default function MyOrders() {
           <div className="card animate-fadeIn" style={{
             textAlign: 'center',
             padding: '64px',
-            backgroundColor: '#ffffff',
-            border: '1px solid var(--border-color)',
+            background: 'var(--glass-background)',
+            backdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--border-secondary)',
             borderRadius: 'var(--border-radius-lg)',
             boxShadow: 'var(--shadow-sm)'
           }}>
@@ -320,8 +324,9 @@ export default function MyOrders() {
                 style={{
                   marginBottom: '24px',
                   animationDelay: `${index * 0.1}s`,
-                  backgroundColor: '#ffffff',
-                  border: '1px solid var(--border-color)',
+                  background: 'var(--glass-background)',
+                  backdropFilter: 'var(--glass-blur)',
+                  border: '1px solid var(--border-secondary)',
                   borderRadius: 'var(--border-radius-lg)',
                   padding: '32px',
                   boxShadow: 'var(--shadow-sm)'
@@ -364,7 +369,7 @@ export default function MyOrders() {
                         marginBottom: '16px',
                         padding: '16px',
                         borderRadius: 'var(--border-radius-md)',
-                        backgroundColor: 'var(--background-secondary)',
+                        backgroundColor: 'var(--glass-background-light)',
                         border: '1px solid var(--border-subtle)'
                       }}
                     >
@@ -379,6 +384,7 @@ export default function MyOrders() {
                           objectFit: 'cover',
                           backgroundColor: 'rgba(255,255,255,0.05)'
                         }}
+                        loading="lazy"
                       />
                       <div style={{ flex: 1 }}>
                         <div style={{
@@ -404,7 +410,7 @@ export default function MyOrders() {
                 {/* Shipping Address */}
                 <div style={{
                   padding: '20px',
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--glass-background-light)',
                   borderRadius: 'var(--border-radius-md)',
                   marginBottom: '24px',
                   fontSize: '14px',
@@ -437,7 +443,7 @@ export default function MyOrders() {
                       onClick={() => openTracking(order._id)}
                       style={{
                         padding: '12px 24px',
-                        background: 'var(--gradient-blue)',
+                        background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
                         color: 'white',
                         border: 'none',
                         borderRadius: 'var(--border-radius-md)',
@@ -454,7 +460,7 @@ export default function MyOrders() {
                         onClick={() => cancelOrder(order._id)}
                         style={{
                           padding: '12px 24px',
-                          background: 'var(--gradient-cta)',
+                          background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
                           color: 'white',
                           border: 'none',
                           borderRadius: 'var(--border-radius-md)',
@@ -484,3 +490,4 @@ export default function MyOrders() {
     </div>
   );
 }
+

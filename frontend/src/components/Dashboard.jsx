@@ -22,18 +22,19 @@ import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateProductAltText } from '../
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { getImageUrl } from '../utils/imageHandling';
 import { useTheme } from '../hooks/useTheme';
-import { 
-  Container, 
-  Header, 
-  Logo, 
-  Button, 
-  SearchInput, 
-  Grid, 
-  ProductCard, 
-  Price, 
-  StockBadge, 
+import CommercialHardwareHeader from './CommercialHardwareHeader';
+import {
+  Container,
+  Header,
+  Logo,
+  Button,
+  SearchInput,
+  Grid,
+  ProductCard,
+  Price,
+  StockBadge,
   Notification,
-  LoadingContainer 
+  LoadingContainer
 } from './StyledComponents';
 
 // Inject CSS animations for modern UI
@@ -106,7 +107,7 @@ export default function Dashboard() {
   const [useEnhancedCards, setUseEnhancedCards] = useState(true); // Toggle for enhanced UI
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [showQuickView, setShowQuickView] = useState(false);
-  
+
   // Refs for debouncing and preventing race conditions
   const searchDebounceRef = useRef(null);
   const analyticsDebounceRef = useRef(null);
@@ -142,12 +143,12 @@ export default function Dashboard() {
       const params = new URLSearchParams(queryString);
       const searchParam = params.get('search');
       const categoryParam = params.get('category');
-      
+
       if (searchParam) {
         setSearchTerm(searchParam);
         console.log('🔍 Search parameter from URL:', searchParam);
       }
-      
+
       if (categoryParam && categories.includes(categoryParam)) {
         setSelectedCategory(categoryParam);
         console.log('📋 Category parameter from URL:', categoryParam);
@@ -334,7 +335,7 @@ export default function Dashboard() {
     } catch (err) {
       // Don't show error for intentional request cancellation
       if (err.name === 'AbortError') {
-        console.log('🚫 Request cancelled (user typing or navigating)');
+        // Suppress cancel logging in console to avoid clutter
         return;
       }
 
@@ -467,9 +468,26 @@ export default function Dashboard() {
     }
   }
 
-  // Filter and sort handlers
   function handleFilterChange(newFilters) {
-    setFilters(newFilters);
+    // Check if the filters came from ProductFilters.jsx or EnhancedSearchBar.jsx
+    if ('priceMin' in newFilters) {
+      // It came from EnhancedSearchBar.jsx
+      setFilters(prev => ({
+        ...prev,
+        priceRange: [
+          newFilters.priceMin ? Number(newFilters.priceMin) : 0,
+          newFilters.priceMax ? Number(newFilters.priceMax) : 10000
+        ],
+        rating: newFilters.rating || 0,
+        inStockOnly: newFilters.inStock || false
+      }));
+      if (newFilters.sortBy && newFilters.sortBy !== 'relevance') {
+        handleSortChange(newFilters.sortBy);
+      }
+    } else {
+      // It came from ProductFilters.jsx
+      setFilters(newFilters);
+    }
   }
 
   function handleSortChange(newSort) {
@@ -481,7 +499,7 @@ export default function Dashboard() {
     let result = [...products];
 
     // Apply price filter
-    result = result.filter(p => 
+    result = result.filter(p =>
       p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
     );
 
@@ -496,7 +514,7 @@ export default function Dashboard() {
     }
 
     // Apply sorting
-    switch(sortBy) {
+    switch (sortBy) {
       case 'price-low':
         result.sort((a, b) => a.price - b.price);
         break;
@@ -578,7 +596,11 @@ export default function Dashboard() {
   const theme = useTheme();
 
   const styles = {
-    container: theme.commonStyles.container.lightGradient,
+    container: {
+      minHeight: '100vh',
+      background: 'var(--gradient-navy-primary)',
+      color: 'var(--text-primary)'
+    },
     content: {
       maxWidth: '1400px',
       margin: '0 auto',
@@ -693,27 +715,28 @@ export default function Dashboard() {
       color: 'white',
       boxShadow: '0 4px 15px rgba(30, 58, 138, 0.3)'
     },
-
     filtersSection: {
-      backgroundColor: '#ffffff',
+      backgroundColor: 'rgba(16, 30, 53, 0.6)',
+      backdropFilter: 'var(--glass-blur)',
       padding: '24px 32px',
       margin: '24px auto',
-      borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+      borderRadius: '16px',
+      boxShadow: 'var(--shadow-lg)',
       maxWidth: '1400px',
-      border: '1px solid #e5e7eb'
+      border: '1px solid rgba(255, 255, 255, 0.08)'
     },
     searchBar: {
       width: '100%',
       padding: '14px 20px 14px 48px',
       fontSize: '16px',
-      border: '2px solid rgba(59, 130, 246, 0.2)',
+      border: '1px solid var(--border-subtle)',
+      color: 'var(--text-primary)',
       borderRadius: '12px',
       marginBottom: '20px',
       outline: 'none',
       transition: 'all 0.3s ease',
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%233b82f6\' stroke-width=\'2\'%3E%3Ccircle cx=\'11\' cy=\'11\' r=\'8\'/%3E%3Cpath d=\'m21 21-4.35-4.35\'/%3E%3C/svg%3E")',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ffffff\' stroke-width=\'2\'%3E%3Ccircle cx=\'11\' cy=\'11\' r=\'8\'/%3E%3Cpath d=\'m21 21-4.35-4.35\'/%3E%3C/svg%3E")',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: '16px center',
       backgroundSize: '20px'
@@ -726,22 +749,23 @@ export default function Dashboard() {
     categoryBtn: {
       padding: '10px 24px',
       borderRadius: '24px',
-      borderWidth: '2px',
+      borderWidth: '1px',
       borderStyle: 'solid',
-      borderColor: 'rgba(59, 130, 246, 0.3)',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      color: 'var(--text-secondary)',
+      borderColor: 'var(--border-subtle)',
+      backgroundColor: 'rgba(255, 255, 255, 0.03)',
       cursor: 'pointer',
       fontSize: '14px',
       fontWeight: '600',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       backdropFilter: 'blur(10px)',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+      boxShadow: 'var(--shadow-sm)'
     },
     categoryBtnActive: {
-      backgroundImage: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-      color: 'white',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
+      color: '#ffffff',
       borderColor: 'transparent',
-      boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+      boxShadow: '0 6px 15px var(--accent-blue-glow)',
       transform: 'translateY(-2px)'
     },
     productsGrid: {
@@ -753,13 +777,14 @@ export default function Dashboard() {
       margin: '0 auto'
     },
     productCard: {
-      backgroundColor: '#ffffff',
+      backgroundColor: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '12px',
       overflow: 'hidden',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+      boxShadow: 'var(--shadow-md)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--glass-border)',
       animation: 'scaleIn 0.5s ease-out backwards',
       display: 'flex',
       flexDirection: 'column',
@@ -769,7 +794,7 @@ export default function Dashboard() {
       width: '100%',
       height: '240px',
       objectFit: 'cover',
-      backgroundColor: '#f9fafb'
+      backgroundColor: 'var(--navy-darker)'
     },
     productInfo: {
       padding: '20px',
@@ -780,20 +805,21 @@ export default function Dashboard() {
     },
     productCategory: {
       fontSize: '11px',
-      color: '#6b7280',
+      color: 'var(--text-tertiary)',
       textTransform: 'uppercase',
       fontWeight: '600',
       letterSpacing: '0.5px',
       display: 'inline-block',
       padding: '4px 8px',
-      backgroundColor: '#f3f4f6',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
       borderRadius: '4px',
+      border: '1px solid var(--border-subtle)',
       width: 'fit-content'
     },
     productName: {
       fontSize: '16px',
       fontWeight: '600',
-      color: '#111827',
+      color: 'var(--text-primary)',
       lineHeight: '1.5',
       marginTop: '4px',
       display: '-webkit-box',
@@ -804,7 +830,7 @@ export default function Dashboard() {
     },
     productDescription: {
       fontSize: '13px',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       lineHeight: '1.5',
       display: '-webkit-box',
       WebkitLineClamp: 2,
@@ -821,7 +847,8 @@ export default function Dashboard() {
     price: {
       fontSize: '20px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--accent-blue-primary)',
+      textShadow: '0 2px 10px var(--accent-blue-glow)',
       letterSpacing: '-0.01em'
     },
     stockBadge: {
@@ -894,10 +921,9 @@ export default function Dashboard() {
       <div style={styles.container}>
         {/* Loading Progress Bar */}
         <LoadingBar isLoading={true} color="gradient" />
-        
-        <div style={styles.header}>
-          <h1 style={styles.logo}>🔨 HomeHardware</h1>
-        </div>
+
+        <CommercialHardwareHeader onNavigate={(page) => window.location.hash = '#' + page} />
+
         <div style={{ ...styles.content, maxWidth: '1400px', margin: '0 auto', padding: '32px' }}>
           {isTransitioning && (
             <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -916,69 +942,9 @@ export default function Dashboard() {
     <div style={styles.container}>
       {/* Loading Progress Bar - Shows during transitions */}
       <LoadingBar isLoading={isTransitioning} color="gradient" />
-      
+
       {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.logo}>🔨 HomeHardware</h1>
-        <div style={styles.userSection}>
-          {user ? (
-            // ── Authenticated header ──
-            <>
-              <span style={styles.userName}>👤 {user.name}</span>
-              <button
-                style={styles.ghostBtn}
-                onClick={() => window.location.hash = '#my-orders'}
-                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
-                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
-              >📦 My Orders</button>
-              <button
-                style={styles.cartBtn}
-                onClick={() => setShowCartDrawer(true)}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(16,185,129,0.5)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(16,185,129,0.3)'; }}
-              >
-                🛒 Cart
-                {getCartItemCount() > 0 && <span style={styles.cartBadge}>{getCartItemCount()}</span>}
-              </button>
-              <div style={{ position: 'relative' }}>
-                <button
-                  style={styles.profileBtn}
-                  onClick={() => window.location.hash = '#profile'}
-                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
-                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
-                  title="View Profile"
-                >👤 Profile</button>
-                <button style={styles.logoutLink} onClick={logout} title="Logout">⎋</button>
-              </div>
-            </>
-          ) : (
-            // ── Guest header ──
-            <>
-              <button
-                style={styles.cartBtn}
-                onClick={() => setShowCartDrawer(true)}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(16,185,129,0.5)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(16,185,129,0.3)'; }}
-              >
-                🛒 Cart
-                {getCartItemCount() > 0 && <span style={styles.cartBadge}>{getCartItemCount()}</span>}
-              </button>
-              <button
-                style={styles.ghostBtn}
-                onClick={() => window.location.hash = '#register'}
-                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#2563eb'; }}
-                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; }}
-              >📝 Register</button>
-              <button
-                style={{ ...styles.ghostBtn, borderColor: '#3b82f6', color: '#2563eb' }}
-                onClick={() => window.location.hash = '#login'}
-                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(59,130,246,0.1)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-              >🔐 Login</button>
-            </>
-          )}
-        </div>
-      </div>
+      <CommercialHardwareHeader onNavigate={(page) => window.location.hash = '#' + page} />
 
       {/* Welcome Message */}
       {showWelcome && user && (
@@ -1002,15 +968,14 @@ export default function Dashboard() {
 
       {/* Filters Section */}
       <div style={styles.filtersSection}>
-        <div style={{ position: 'relative', width: '100%', maxWidth: '600px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '800px', marginBottom: '24px' }}>
           <EnhancedSearchBar
-            searchTerm={searchTerm}
-            onSearchChange={(value) => setSearchTerm(value)}
-            onCategorySelect={(category) => {
-              setSelectedCategory(category);
-              setSearchTerm('');
+            onSearch={(query, queryFilters) => {
+              setSearchTerm(query);
+              if (queryFilters) handleFilterChange(queryFilters);
             }}
-            placeholder="🔍 Search products..."
+            onFilterChange={handleFilterChange}
+            placeholder="Search products..."
           />
         </div>
         <div style={styles.categoryContainer} role="group" aria-label="Product categories">
@@ -1026,15 +991,17 @@ export default function Dashboard() {
               aria-label={`Filter by ${cat} category`}
               onMouseOver={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = '#667eea';
-                  e.currentTarget.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+                  e.currentTarget.style.borderColor = 'var(--border-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }
               }}
               onMouseOut={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
@@ -1058,7 +1025,7 @@ export default function Dashboard() {
 
       {/* Products Grid */}
       {filteredAndSortedProducts.length === 0 ? (
-        <EmptyState 
+        <EmptyState
           type={searchTerm || selectedCategory !== 'All' ? 'search' : 'noProducts'}
           title={searchTerm ? 'No results found' : 'No products available'}
           description={searchTerm ? `No products match "${searchTerm}"` : 'Check back soon for new items'}
@@ -1086,105 +1053,105 @@ export default function Dashboard() {
           ) : (
             // Original Product Cards
             filteredAndSortedProducts.map((product, index) => (
-            <div
-              key={product._id}
-              style={{
-                ...styles.productCard,
-                animationDelay: `${filteredAndSortedProducts.indexOf(product) * 0.05}s`,
-                position: 'relative'
-              }}
-              onClick={() => addToRecentlyViewed(product)}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12)';
-                e.currentTarget.style.borderColor = '#d1d5db';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-                e.currentTarget.style.borderColor = '#e5e7eb';
-              }}
-            >
-              {/* Wishlist Button */}
-              <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
-                <WishlistButton 
-                  productId={product._id}
-                  size="medium"
-                  onAuthRequired={() => setShowAuthModal(true)}
-                />
-              </div>
-
-              <div style={{ overflow: 'hidden', height: '240px', backgroundColor: '#f9fafb' }}>
-                <OptimizedImage
-                  src={getImageUrl(product.imageUrl)}
-                  alt={generateProductAltText(product)}
-                  title={`${product.name}${product.brand ? ' by ' + product.brand : ''} - ₹${product.price}`}
-                  width={300}
-                  height={300}
-                  priority={index < 4}
-                  style={{
-                    transition: 'transform 0.4s ease'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1.1)'}
-                  onMouseOut={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1)'}
-                />
-              </div>
-              <div style={styles.productInfo}>
-                <div style={styles.productCategory}>{product.category}</div>
-                <h3 style={styles.productName}>{product.name}</h3>
-                
-                {/* Product Rating */}
-                {product.rating && product.rating > 0 && (
-                  <div style={{ marginBottom: '8px' }}>
-                    <ProductRating 
-                      rating={product.rating} 
-                      reviewCount={product.reviewCount || 0}
-                      size="small"
-                    />
-                  </div>
-                )}
-
-                {/* Price with Discount */}
-                <div style={{ ...styles.priceContainer, marginTop: 'auto', paddingTop: '12px' }}>
-                  <PriceDisplay 
-                    price={product.price}
-                    originalPrice={product.originalPrice}
-                    discount={product.discount}
+              <div
+                key={product._id}
+                style={{
+                  ...styles.productCard,
+                  animationDelay: `${filteredAndSortedProducts.indexOf(product) * 0.05}s`,
+                  position: 'relative'
+                }}
+                onClick={() => addToRecentlyViewed(product)}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12)';
+                  e.currentTarget.style.borderColor = '#d1d5db';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
+                  e.currentTarget.style.borderColor = '#e5e7eb';
+                }}
+              >
+                {/* Wishlist Button */}
+                <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+                  <WishlistButton
+                    productId={product._id}
                     size="medium"
+                    onAuthRequired={() => setShowAuthModal(true)}
                   />
-                  <span style={{
-                    ...styles.stockBadge,
-                    ...(product.inStock ? styles.inStock : styles.outOfStock)
-                  }}>
-                    {product.inStock ? 'In Stock' : 'Out of Stock'}
-                  </span>
                 </div>
-                <button
-                  style={{
-                    ...styles.addToCartBtn,
-                    backgroundColor: product.inStock ? '#4285F4' : '#9ca3af',
-                    cursor: product.inStock ? 'pointer' : 'not-allowed'
-                  }}
-                  disabled={!product.inStock}
-                  onClick={() => product.inStock && addToCart(product)}
-                  aria-label={`Add ${product.name} to cart - ₹${product.price}`}
-                  aria-disabled={!product.inStock}
-                  onMouseOver={(e) => {
-                    if (product.inStock) {
-                      e.currentTarget.style.backgroundColor = '#2563eb';
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (product.inStock) {
-                      e.currentTarget.style.backgroundColor = '#4285F4';
-                    }
-                  }}
-                >
-                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                </button>
+
+                <div style={{ overflow: 'hidden', height: '240px', backgroundColor: '#f9fafb' }}>
+                  <OptimizedImage
+                    src={getImageUrl(product.imageUrl)}
+                    alt={generateProductAltText(product)}
+                    title={`${product.name}${product.brand ? ' by ' + product.brand : ''} - ₹${product.price}`}
+                    width={300}
+                    height={300}
+                    priority={index < 4}
+                    style={{
+                      transition: 'transform 0.4s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1.1)'}
+                    onMouseOut={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1)'}
+                  />
+                </div>
+                <div style={styles.productInfo}>
+                  <div style={styles.productCategory}>{product.category}</div>
+                  <h3 style={styles.productName}>{product.name}</h3>
+
+                  {/* Product Rating */}
+                  {product.rating && product.rating > 0 && (
+                    <div style={{ marginBottom: '8px' }}>
+                      <ProductRating
+                        rating={product.rating}
+                        reviewCount={product.reviewCount || 0}
+                        size="small"
+                      />
+                    </div>
+                  )}
+
+                  {/* Price with Discount */}
+                  <div style={{ ...styles.priceContainer, marginTop: 'auto', paddingTop: '12px' }}>
+                    <PriceDisplay
+                      price={product.price}
+                      originalPrice={product.originalPrice}
+                      discount={product.discount}
+                      size="medium"
+                    />
+                    <span style={{
+                      ...styles.stockBadge,
+                      ...(product.inStock ? styles.inStock : styles.outOfStock)
+                    }}>
+                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                  </div>
+                  <button
+                    style={{
+                      ...styles.addToCartBtn,
+                      backgroundColor: product.inStock ? '#4285F4' : '#9ca3af',
+                      cursor: product.inStock ? 'pointer' : 'not-allowed'
+                    }}
+                    disabled={!product.inStock}
+                    onClick={() => product.inStock && addToCart(product)}
+                    aria-label={`Add ${product.name} to cart - ₹${product.price}`}
+                    aria-disabled={!product.inStock}
+                    onMouseOver={(e) => {
+                      if (product.inStock) {
+                        e.currentTarget.style.backgroundColor = '#2563eb';
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      if (product.inStock) {
+                        e.currentTarget.style.backgroundColor = '#4285F4';
+                      }
+                    }}
+                  >
+                    {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            ))
           )}
         </div>
       )}

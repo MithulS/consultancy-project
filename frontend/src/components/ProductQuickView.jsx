@@ -31,7 +31,8 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       animation: 'fadeIn 0.3s ease'
     },
     modal: {
-      backgroundColor: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '16px',
       maxWidth: '900px',
       width: '100%',
@@ -48,8 +49,9 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       width: '40px',
       height: '40px',
       borderRadius: '50%',
-      background: 'white',
-      border: 'none',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--glass-border)',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -73,7 +75,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       height: '400px',
       objectFit: 'cover',
       borderRadius: '12px',
-      backgroundColor: '#f9fafb'
+      background: 'rgba(255, 255, 255, 0.05)'
     },
     detailsSection: {
       display: 'flex',
@@ -90,7 +92,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     title: {
       fontSize: '28px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--text-primary)',
       lineHeight: '1.3'
     },
     description: {
@@ -107,7 +109,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     currentPrice: {
       fontSize: '32px',
       fontWeight: '800',
-      color: '#111827'
+      color: 'var(--text-primary)'
     },
     originalPrice: {
       fontSize: '20px',
@@ -131,16 +133,16 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       marginTop: '8px'
     },
     inStock: {
-      background: '#d1fae5',
-      color: '#065f46'
+      background: 'rgba(16, 185, 129, 0.1)',
+      color: 'var(--color-success)'
     },
     lowStock: {
-      background: '#fef3c7',
-      color: '#92400e'
+      background: 'rgba(245, 158, 11, 0.1)',
+      color: 'var(--color-warning)'
     },
     outOfStock: {
-      background: '#fee2e2',
-      color: '#991b1b'
+      background: 'rgba(239, 68, 68, 0.1)',
+      color: 'var(--accent-red-primary)'
     },
     features: {
       marginTop: '16px'
@@ -148,7 +150,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     featureTitle: {
       fontSize: '16px',
       fontWeight: '600',
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '12px'
     },
     featureList: {
@@ -158,9 +160,9 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     },
     featureItem: {
       fontSize: '14px',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       padding: '8px 0',
-      borderBottom: '1px solid #f3f4f6',
+      borderBottom: '1px solid var(--border-color)',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
@@ -186,9 +188,9 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
     },
     addToCartButton: {
-      background: 'white',
-      color: '#2563eb',
-      border: '2px solid #2563eb'
+      background: 'transparent',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border-color)'
     }
   };
 
@@ -213,7 +215,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
   return (
     <div style={styles.overlay} onClick={handleOverlayClick}>
       <div style={styles.modal}>
-        <button 
+        <button
           style={styles.closeButton}
           onClick={onClose}
           aria-label="Close quick view"
@@ -243,7 +245,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
           <div style={styles.detailsSection}>
             <div style={styles.category}>{product.category}</div>
             <h2 style={styles.title}>{product.name}</h2>
-            
+
             {product.rating > 0 && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ProductRating rating={product.rating} />
@@ -325,11 +327,11 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
                 disabled={product.stock === 0}
                 onMouseOver={(e) => {
                   if (product.stock > 0) {
-                    e.currentTarget.style.background = '#eff6ff';
+                    e.currentTarget.style.background = 'var(--hover-bg)';
                   }
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.background = 'transparent';
                 }}
               >
                 Add to Cart

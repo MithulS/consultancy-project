@@ -41,7 +41,7 @@ export default function SalesAnalytics() {
   const [summary, setSummary] = useState(null);
   const [trends, setTrends] = useState([]);
   const [categorySales, setCategorySales] = useState([]);
-  
+
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -75,7 +75,7 @@ export default function SalesAnalytics() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const summaryData = await summaryRes.json();
-      
+
       if (!summaryRes.ok) throw new Error(summaryData.msg || 'Failed to fetch summary');
       setSummary(summaryData.data);
 
@@ -86,7 +86,7 @@ export default function SalesAnalytics() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const trendsData = await trendsRes.json();
-      
+
       if (!trendsRes.ok) throw new Error(trendsData.msg || 'Failed to fetch trends');
       setTrends(trendsData.data.trends);
 
@@ -95,7 +95,7 @@ export default function SalesAnalytics() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const categoryData = await categoryRes.json();
-      
+
       if (!categoryRes.ok) throw new Error(categoryData.msg || 'Failed to fetch category sales');
       setCategorySales(categoryData.data);
 
@@ -412,20 +412,20 @@ export default function SalesAnalytics() {
           maxWidth: '400px',
           boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)'
         }}>
-          <div style={{ 
-            fontSize: '64px', 
+          <div style={{
+            fontSize: '64px',
             marginBottom: '24px',
             animation: 'pulse 1.5s ease-in-out infinite'
           }}>📊</div>
-          <div style={{ 
-            fontSize: '18px', 
-            fontWeight: '600', 
+          <div style={{
+            fontSize: '18px',
+            fontWeight: '600',
             color: '#667eea',
             letterSpacing: '0.5px'
           }}>Loading analytics data...</div>
-          <div style={{ 
-            width: '80px', 
-            height: '4px', 
+          <div style={{
+            width: '80px',
+            height: '4px',
             background: 'linear-gradient(90deg, #667eea, #764ba2)',
             borderRadius: '2px',
             margin: '24px auto 0',
@@ -532,9 +532,9 @@ export default function SalesAnalytics() {
       </div>
 
       {summary && (
-        <>
+        <div aria-live="polite" aria-atomic="true">
           <div style={styles.statsGrid}>
-            <div 
+            <div
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
@@ -551,7 +551,7 @@ export default function SalesAnalytics() {
               <div style={styles.statSubtext}>All completed orders</div>
             </div>
 
-            <div 
+            <div
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
@@ -568,7 +568,7 @@ export default function SalesAnalytics() {
               <div style={styles.statSubtext}>{summary.totalProducts} unique products</div>
             </div>
 
-            <div 
+            <div
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
@@ -585,7 +585,7 @@ export default function SalesAnalytics() {
               <div style={styles.statSubtext}>Per order</div>
             </div>
 
-            <div 
+            <div
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
@@ -611,25 +611,25 @@ export default function SalesAnalytics() {
 
           <div style={styles.tabs}>
             <button
-              style={{...styles.tab, ...(activeTab === 'overview' ? styles.tabActive : {})}}
+              style={{ ...styles.tab, ...(activeTab === 'overview' ? styles.tabActive : {}) }}
               onClick={() => setActiveTab('overview')}
             >
               Overview
             </button>
             <button
-              style={{...styles.tab, ...(activeTab === 'trends' ? styles.tabActive : {})}}
+              style={{ ...styles.tab, ...(activeTab === 'trends' ? styles.tabActive : {}) }}
               onClick={() => setActiveTab('trends')}
             >
               Sales Trends
             </button>
             <button
-              style={{...styles.tab, ...(activeTab === 'products' ? styles.tabActive : {})}}
+              style={{ ...styles.tab, ...(activeTab === 'products' ? styles.tabActive : {}) }}
               onClick={() => setActiveTab('products')}
             >
               Top Products
             </button>
             <button
-              style={{...styles.tab, ...(activeTab === 'categories' ? styles.tabActive : {})}}
+              style={{ ...styles.tab, ...(activeTab === 'categories' ? styles.tabActive : {}) }}
               onClick={() => setActiveTab('categories')}
             >
               Categories
@@ -642,8 +642,8 @@ export default function SalesAnalytics() {
               <p style={{ color: '#6b7280', marginBottom: '32px', fontSize: '15px', fontWeight: '500' }}>
                 Total revenue breakdown across all orders
               </p>
-              <div style={{ 
-                textAlign: 'center', 
+              <div style={{
+                textAlign: 'center',
                 padding: '60px 40px',
                 background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(244, 114, 182, 0.05) 100%)',
                 borderRadius: '16px',
@@ -651,14 +651,14 @@ export default function SalesAnalytics() {
                 overflow: 'hidden'
               }}>
                 <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '120px', opacity: '0.03' }}>💰</div>
-                <div style={{ 
-                  fontSize: '80px', 
+                <div style={{
+                  fontSize: '80px',
                   marginBottom: '24px',
                   animation: 'pulse 2s ease-in-out infinite'
                 }}>💰</div>
-                <div style={{ 
-                  fontSize: '56px', 
-                  fontWeight: '800', 
+                <div style={{
+                  fontSize: '56px',
+                  fontWeight: '800',
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -668,9 +668,9 @@ export default function SalesAnalytics() {
                 }}>
                   {formatCurrency(summary.totalRevenue)}
                 </div>
-                <div style={{ 
-                  fontSize: '16px', 
-                  color: '#6b7280', 
+                <div style={{
+                  fontSize: '16px',
+                  color: '#6b7280',
                   fontWeight: '600',
                   letterSpacing: '0.5px'
                 }}>
@@ -687,15 +687,15 @@ export default function SalesAnalytics() {
                 {trends.map((trend, index) => {
                   const maxRevenue = Math.max(...trends.map(t => t.revenue));
                   const height = (trend.revenue / maxRevenue) * 100;
-                  
+
                   return (
                     <div
                       key={index}
                       style={{
                         ...styles.bar,
                         height: `${height}%`,
-                        background: index % 2 === 0 
-                          ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)' 
+                        background: index % 2 === 0
+                          ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
                           : 'linear-gradient(180deg, #f093fb 0%, #f5576c 100%)',
                         animationDelay: `${index * 0.05}s`
                       }}
@@ -737,7 +737,7 @@ export default function SalesAnalytics() {
                   </thead>
                   <tbody>
                     {summary.topProducts.slice(0, 10).map((product, index) => (
-                      <tr 
+                      <tr
                         key={product.productId}
                         onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
                         onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
@@ -746,8 +746,8 @@ export default function SalesAnalytics() {
                         <td style={styles.td}>
                           <span style={{
                             ...styles.badge,
-                            background: index < 3 
-                              ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' 
+                            background: index < 3
+                              ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
                               : 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%)',
                             color: index < 3 ? '#78350f' : '#4b5563'
                           }}>
@@ -795,7 +795,7 @@ export default function SalesAnalytics() {
                     {categorySales.map((category) => {
                       const percentage = ((category.revenue / summary.totalRevenue) * 100).toFixed(1);
                       return (
-                        <tr 
+                        <tr
                           key={category.category}
                           onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
                           onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
@@ -846,7 +846,7 @@ export default function SalesAnalytics() {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

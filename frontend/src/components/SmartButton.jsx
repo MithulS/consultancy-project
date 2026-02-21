@@ -41,7 +41,7 @@ export default function SmartButton({
     try {
       // Call the onClick handler and wait for it
       const result = onClick ? await onClick(e) : null;
-      
+
       // If onClick returns false, don't show success
       if (result === false) {
         setState('idle');
@@ -80,14 +80,14 @@ export default function SmartButton({
   // Variant configurations
   const variants = {
     primary: {
-      background: 'linear-gradient(135deg, #4285F4 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
       color: '#ffffff',
-      hoverBackground: 'linear-gradient(135deg, #764ba2 0%, #4285F4 100%)',
+      hoverBackground: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
     },
     secondary: {
-      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      color: '#ffffff',
-      hoverBackground: 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
+      background: 'rgba(255, 255, 255, 0.1)',
+      color: 'var(--text-primary)',
+      hoverBackground: 'rgba(255, 255, 255, 0.2)',
     },
     success: {
       background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
@@ -119,8 +119,8 @@ export default function SmartButton({
     alignItems: 'center',
     justifyContent: 'center',
     opacity: disabled ? 0.6 : 1,
-    boxShadow: state === 'success' 
-      ? '0 8px 30px rgba(46, 213, 115, 0.4)' 
+    boxShadow: state === 'success'
+      ? '0 8px 30px rgba(46, 213, 115, 0.4)'
       : '0 4px 15px rgba(0, 0, 0, 0.2)',
     ...sizeConfig,
     ...style,

@@ -12,8 +12,8 @@ export default function CommercialHeroBanner() {
   const styles = {
     heroSection: {
       position: 'relative',
-      height: '500px',
-      background: 'linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%)',
+      height: '600px',
+      background: 'var(--gradient-navy-hero)',
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center'
@@ -49,14 +49,16 @@ export default function CommercialHeroBanner() {
       display: 'inline-flex',
       alignItems: 'center',
       gap: '8px',
-      backgroundColor: 'rgba(59, 130, 246, 0.2)',
-      border: '1px solid rgba(59, 130, 246, 0.3)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--glass-border)',
       padding: '8px 16px',
       borderRadius: '24px',
       fontSize: '13px',
       fontWeight: 600,
       marginBottom: '24px',
-      color: '#93C5FD'
+      color: 'var(--accent-blue-primary)',
+      boxShadow: 'var(--shadow-sm)'
     },
     heroTitle: {
       fontSize: '56px',
@@ -103,14 +105,17 @@ export default function CommercialHeroBanner() {
       gap: '8px'
     },
     primaryCTA: {
-      backgroundColor: '#EF4444',
+      background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
       color: '#FFFFFF',
-      boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'
+      boxShadow: '0 4px 15px var(--accent-red-glow)',
+      border: 'none'
     },
     secondaryCTA: {
-      backgroundColor: 'transparent',
-      color: '#FFFFFF',
-      border: '2px solid #FFFFFF'
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border-primary)',
+      boxShadow: 'var(--shadow-md)'
     },
     contactInfo: {
       display: 'flex',
@@ -128,10 +133,12 @@ export default function CommercialHeroBanner() {
     // Decorative boxes
     decorativeBox: {
       position: 'absolute',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      border: '2px solid rgba(59, 130, 246, 0.3)',
-      borderRadius: '8px',
-      zIndex: 2
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-highlight)',
+      borderRadius: '16px',
+      zIndex: 2,
+      boxShadow: 'var(--shadow-lg)'
     }
   };
 
@@ -149,7 +156,7 @@ export default function CommercialHeroBanner() {
         enableParallax={true}
         enableMouseRepel={true}
       />
-      
+
       <div style={styles.heroBackground}></div>
 
       {/* Floating Animated Icons */}
@@ -218,14 +225,12 @@ export default function CommercialHeroBanner() {
             <button
               style={{ ...styles.ctaButton, ...styles.primaryCTA }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#DC2626';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.5)';
+                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 8px 25px var(--accent-red-glow)';
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#EF4444';
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.4)';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 15px var(--accent-red-glow)';
               }}
               onClick={() => window.location.hash = '#dashboard'}
             >
@@ -235,12 +240,14 @@ export default function CommercialHeroBanner() {
             <button
               style={{ ...styles.ctaButton, ...styles.secondaryCTA }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';
-                e.target.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.borderColor = 'var(--text-primary)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = 'var(--glass-background)';
+                e.currentTarget.style.borderColor = 'var(--border-primary)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
               onClick={() => {
                 const wholesaleSection = document.getElementById('wholesale');

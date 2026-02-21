@@ -1,5 +1,6 @@
 // Product Reports Component - Download reports with various filters
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -12,6 +13,9 @@ export default function ProductReports({ onClose }) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [message, setMessage] = useState('');
+
+  const modalRef = useRef(null);
+  useFocusTrap(modalRef, true, onClose);
 
   useEffect(() => {
     fetchProducts();
@@ -62,7 +66,7 @@ export default function ProductReports({ onClose }) {
     try {
       const token = localStorage.getItem('adminToken');
       console.log('Token exists:', !!token);
-      
+
       // Build query parameters
       const params = new URLSearchParams();
       if (reportType === 'individual') {
@@ -93,23 +97,23 @@ export default function ProductReports({ onClose }) {
 
       const blob = await res.blob();
       console.log('📦 Blob received, size:', blob.size, 'type:', blob.type);
-      
+
       // Create download link
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = downloadUrl;
-      
+
       // Generate filename
-      const productName = reportType === 'individual' 
+      const productName = reportType === 'individual'
         ? products.find(p => p._id === selectedProduct)?.name.replace(/[^a-z0-9]/gi, '_')
         : 'All_Products';
-      const dateStr = dateRange === 'custom' 
+      const dateStr = dateRange === 'custom'
         ? `${startDate}_to_${endDate}`
         : dateRange;
       a.download = `Product_Report_${productName}_${dateStr}_${Date.now()}.csv`;
-      
+
       console.log('💾 Downloading file:', a.download);
-      
+
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -142,7 +146,8 @@ export default function ProductReports({ onClose }) {
       animation: 'fadeIn 0.3s ease-out'
     },
     modal: {
-      backgroundColor: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '20px',
       padding: '32px',
       width: '90%',
@@ -159,14 +164,12 @@ export default function ProductReports({ onClose }) {
       alignItems: 'center',
       marginBottom: '24px',
       paddingBottom: '16px',
-      borderBottom: '2px solid #e5e7eb'
+      borderBottom: '2px solid var(--border-color)'
     },
     title: {
       fontSize: '28px',
       fontWeight: '800',
-      backgroundImage: 'linear-gradient(135deg, #667eea, #764ba2)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
+      color: 'var(--text-primary)',
       margin: 0
     },
     closeBtn: {
@@ -174,7 +177,7 @@ export default function ProductReports({ onClose }) {
       border: 'none',
       fontSize: '28px',
       cursor: 'pointer',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       padding: '0',
       width: '36px',
       height: '36px',
@@ -191,7 +194,7 @@ export default function ProductReports({ onClose }) {
       display: 'block',
       fontSize: '14px',
       fontWeight: '600',
-      color: '#374151',
+      color: 'var(--text-primary)',
       marginBottom: '8px',
       textTransform: 'uppercase',
       letterSpacing: '0.05em'
@@ -207,16 +210,16 @@ export default function ProductReports({ onClose }) {
       gap: '8px',
       padding: '12px 20px',
       borderRadius: '12px',
-      border: '2px solid #e5e7eb',
+      border: '2px solid var(--border-color)',
       cursor: 'pointer',
       transition: 'all 0.3s',
       flex: 1,
-      backgroundColor: 'white'
+      background: 'transparent'
     },
     radioOptionActive: {
-      borderColor: '#667eea',
-      backgroundColor: 'rgba(102, 126, 234, 0.05)',
-      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)'
+      borderColor: 'var(--accent-blue-primary)',
+      background: 'rgba(59, 130, 246, 0.1)',
+      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)'
     },
     radio: {
       width: '20px',
@@ -226,18 +229,20 @@ export default function ProductReports({ onClose }) {
     radioLabel: {
       fontSize: '14px',
       fontWeight: '600',
-      color: '#374151',
+      color: 'var(--text-primary)',
       cursor: 'pointer'
     },
     select: {
       width: '100%',
       padding: '12px 16px',
       fontSize: '15px',
-      border: '2px solid #e5e7eb',
+      border: '2px solid var(--border-color)',
       borderRadius: '12px',
       outline: 'none',
       transition: 'all 0.3s',
-      backgroundColor: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      color: 'var(--text-primary)',
       cursor: 'pointer'
     },
     dateGroup: {
@@ -248,11 +253,13 @@ export default function ProductReports({ onClose }) {
     dateInput: {
       padding: '12px 16px',
       fontSize: '15px',
-      border: '2px solid #e5e7eb',
+      border: '2px solid var(--border-color)',
       borderRadius: '12px',
       outline: 'none',
       transition: 'all 0.3s',
-      backgroundColor: 'white'
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      color: 'var(--text-primary)'
     },
     buttonGroup: {
       display: 'flex',
@@ -315,10 +322,10 @@ export default function ProductReports({ onClose }) {
 
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()} ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div style={styles.header}>
-          <h2 style={styles.title}>📊 Download Product Reports</h2>
-          <button 
+          <h2 id="modal-title" style={styles.title}>📊 Download Product Reports</h2>
+          <button
             style={styles.closeBtn}
             onClick={onClose}
             onMouseOver={(e) => {
@@ -348,7 +355,7 @@ export default function ProductReports({ onClose }) {
         <div style={styles.section}>
           <label style={styles.label}>📋 Report Type</label>
           <div style={styles.radioGroup}>
-            <div 
+            <div
               style={{
                 ...styles.radioOption,
                 ...(reportType === 'all' ? styles.radioOptionActive : {})
@@ -365,7 +372,7 @@ export default function ProductReports({ onClose }) {
               />
               <label style={styles.radioLabel}>All Products</label>
             </div>
-            <div 
+            <div
               style={{
                 ...styles.radioOption,
                 ...(reportType === 'individual' ? styles.radioOptionActive : {})
@@ -410,7 +417,7 @@ export default function ProductReports({ onClose }) {
         <div style={styles.section}>
           <label style={styles.label}>📅 Date Range</label>
           <div style={styles.radioGroup}>
-            <div 
+            <div
               style={{
                 ...styles.radioOption,
                 ...(dateRange === 'monthly' ? styles.radioOptionActive : {})
@@ -427,7 +434,7 @@ export default function ProductReports({ onClose }) {
               />
               <label style={styles.radioLabel}>This Month</label>
             </div>
-            <div 
+            <div
               style={{
                 ...styles.radioOption,
                 ...(dateRange === 'yearly' ? styles.radioOptionActive : {})
@@ -445,7 +452,7 @@ export default function ProductReports({ onClose }) {
               <label style={styles.radioLabel}>This Year</label>
             </div>
           </div>
-          <div 
+          <div
             style={{
               ...styles.radioOption,
               ...(dateRange === 'custom' ? styles.radioOptionActive : {}),
@@ -470,7 +477,7 @@ export default function ProductReports({ onClose }) {
           <div style={styles.section}>
             <div style={styles.dateGroup}>
               <div>
-                <label style={{...styles.label, fontSize: '12px'}}>Start Date</label>
+                <label style={{ ...styles.label, fontSize: '12px' }}>Start Date</label>
                 <input
                   type="date"
                   value={startDate}
@@ -481,7 +488,7 @@ export default function ProductReports({ onClose }) {
                 />
               </div>
               <div>
-                <label style={{...styles.label, fontSize: '12px'}}>End Date</label>
+                <label style={{ ...styles.label, fontSize: '12px' }}>End Date</label>
                 <input
                   type="date"
                   value={endDate}
@@ -521,7 +528,7 @@ export default function ProductReports({ onClose }) {
         {/* Action Buttons */}
         <div style={styles.buttonGroup}>
           <button
-            style={{...styles.button, ...styles.cancelBtn}}
+            style={{ ...styles.button, ...styles.cancelBtn }}
             onClick={onClose}
             onMouseOver={(e) => {
               e.target.style.backgroundColor = '#e5e7eb';
@@ -535,7 +542,7 @@ export default function ProductReports({ onClose }) {
             Cancel
           </button>
           <button
-            style={{...styles.button, ...styles.downloadBtn}}
+            style={{ ...styles.button, ...styles.downloadBtn }}
             onClick={downloadReport}
             disabled={loading}
             onMouseOver={(e) => {

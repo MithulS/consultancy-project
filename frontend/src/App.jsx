@@ -1,13 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
-import RegisterModern from './components/RegisterModern';
-import VerifyOTPEnhanced from './components/VerifyOTPEnhanced';
-import LoginModern from './components/LoginModern';
-import Dashboard from './components/Dashboard';
-import CommercialHomePage from './components/CommercialHomePage';
-import ContactPage from './components/ContactPage';
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
-import NotFound from './components/NotFound';
+import React, { useState, useEffect } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import ToastNotification from './components/ToastNotification';
 import AccessibilityWrapper from './components/AccessibilityWrapper';
@@ -17,22 +8,8 @@ import ChatWidget from './components/ChatWidget';
 import analytics from './utils/analytics';
 import { initializeAuth } from './utils/navigation';
 import { initializePerformanceOptimizations } from './utils/performanceOptimizations';
-
-// Lazy load heavy components
-const AdminLogin = lazy(() => import('./components/AdminLogin'));
-const AdminForgotPassword = lazy(() => import('./components/AdminForgotPassword'));
-const AdminResetPassword = lazy(() => import('./components/AdminResetPassword'));
-const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
-const AdminSettings = lazy(() => import('./components/AdminSettings'));
-const AdminOrderTracking = lazy(() => import('./components/AdminOrderTracking'));
-const SalesAnalytics = lazy(() => import('./components/SalesAnalytics'));
-const Cart = lazy(() => import('./components/Cart'));
-const Checkout = lazy(() => import('./components/Checkout'));
-const GuestCheckout = lazy(() => import('./components/GuestCheckout'));
-const MyOrders = lazy(() => import('./components/MyOrders'));
-const Profile = lazy(() => import('./components/Profile'));
-const PublicTracking = lazy(() => import('./components/PublicTracking'));
-const Wishlist = lazy(() => import('./components/Wishlist'));
+import UserRouter from './components/UserRouter';
+import AdminRouter from './components/AdminRouter';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -55,23 +32,23 @@ export default function App() {
       }
       setLoadingMessage('Welcome back! Loading your dashboard...');
       setIsLoading(true);
-      
+
       setTimeout(() => {
         setAuthKey(Date.now()); // Change key to force remount
         setIsLoading(false);
       }, 500);
     };
-    
+
     const handleUserLogout = () => {
       if (import.meta.env.DEV) {
         console.log('🔓 Logout');
       }
       setAuthKey(Date.now());
     };
-    
+
     window.addEventListener('userLoggedIn', handleUserLogin);
     window.addEventListener('userLoggedOut', handleUserLogout);
-    
+
     return () => {
       window.removeEventListener('userLoggedIn', handleUserLogin);
       window.removeEventListener('userLoggedOut', handleUserLogout);
@@ -103,24 +80,24 @@ export default function App() {
     const handleHashChange = () => {
       try {
         let hash = window.location.hash.substring(1) || 'home';
-        
+
         // Ignore accessibility anchor links (skip links, in-page navigation)
         // These are for screen readers and keyboard navigation, not routing
         const anchorLinks = ['main-content', 'content', 'navigation', 'footer', 'header'];
         if (anchorLinks.includes(hash)) {
           return; // Don't change route for anchor links
         }
-        
+
         // Remove leading slash if present (from OAuth redirects)
         if (hash.startsWith('/')) {
           hash = hash.substring(1);
         }
-        
+
         // Only log route changes in development
         if (import.meta.env.DEV) {
           console.log('🔀 Route:', hash);
         }
-        
+
         // Show loading for protected routes (check AFTER stripping query params)
         if (hash.includes('?')) {
           hash = hash.split('?')[0];
@@ -131,7 +108,7 @@ export default function App() {
           setIsLoading(true);
           setLoadingMessage('Loading...');
         }
-        
+
         // Check if it's reset password page with query params
         if (window.location.search.includes('token') && window.location.search.includes('email')) {
           setCurrentPage('reset-password');
@@ -141,7 +118,7 @@ export default function App() {
 
         // Track page view in analytics
         analytics.pageView(hash);
-        
+
         // Hide loading after route change
         setTimeout(() => setIsLoading(false), 300);
       } catch (error) {
@@ -154,113 +131,29 @@ export default function App() {
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
-    
+
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const renderContent = () => {
-    const validPages = [
-      'home', 'register', 'verify-otp', 'forgot-password', 'reset-password',
-      'dashboard', 'cart', 'checkout', 'guest-checkout', 'my-orders', 'profile', 'orders',
+    const adminPages = [
       'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
-      'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
-      'track-order', 'tracking', 'login', 'contact', 'about', 'catalog', 'wishlist', 'products'
+      'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics'
     ];
 
-    // Show 404 for invalid pages (except login which is default)
-    if (currentPage !== 'login' && !validPages.includes(currentPage)) {
-      return <NotFound />;
+    if (adminPages.includes(currentPage)) {
+      return <AdminRouter currentPage={currentPage} />;
     }
 
-    const content = (() => {
-      switch(currentPage) {
-        case 'home':
-          return <CommercialHomePage key={authKey} />;
-        case 'register':
-          return <RegisterModern />;
-        case 'verify-otp':
-          return <VerifyOTPEnhanced />;
-        case 'forgot-password':
-          return <ForgotPassword />;
-        case 'reset-password':
-          return <ResetPassword />;
-        case 'dashboard':
-          return <Dashboard />;
-        case 'cart':
-          return <Cart />;
-        case 'checkout':
-          return <Checkout />;
-        case 'guest-checkout':
-          const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
-          return <GuestCheckout 
-            cart={guestCart} 
-            onComplete={() => {
-              localStorage.removeItem('guestCart');
-              window.location.hash = '#home';
-            }}
-            onCancel={() => window.location.hash = '#home'}
-          />;
-        case 'my-orders':
-        case 'orders':
-          return <MyOrders />;
-        case 'profile':
-          return <Profile />;
-        case 'wishlist':
-          return <Wishlist onNavigate={(page) => window.location.hash = `#${page}`} />;
-        case 'admin':
-        case 'secret-admin-login':
-          return <AdminLogin />;
-        case 'admin-forgot-password':
-          return <AdminForgotPassword />;
-        case 'admin-reset-password':
-          return <AdminResetPassword />;
-        case 'admin-dashboard':
-          return <AdminDashboard />;
-        case 'admin-settings':
-          return <AdminSettings />;
-        case 'admin-order-tracking':
-          return <AdminOrderTracking />;
-        case 'sales-analytics':
-          return <SalesAnalytics />;
-        case 'track-order':
-        case 'tracking':
-          return <PublicTracking />;
-        case 'login':
-          return <LoginModern />;
-        case 'contact':
-          return <ContactPage key={authKey} />;
-        case 'products':  // alias — EcommerceHeader search links use #products?search=...
-        case 'about':
-        case 'catalog':
-          return <CommercialHomePage key={authKey} />;
-        default:
-          return <CommercialHomePage key={authKey} />;
-      }
-    })();
-
-    // Wrap lazy-loaded components in Suspense
-    const lazyPages = ['cart', 'checkout', 'guest-checkout', 'my-orders', 'profile', 'wishlist',
-      'admin', 'secret-admin-login', 'admin-forgot-password', 'admin-reset-password',
-      'admin-dashboard', 'admin-settings', 'admin-order-tracking', 'sales-analytics',
-      'track-order'];
-    
-    if (lazyPages.includes(currentPage)) {
-      return (
-        <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}>
-          {content}
-        </Suspense>
-      );
-    }
-
-    return content;
+    return <UserRouter currentPage={currentPage} authKey={authKey} />;
   };
 
   return (
     <ErrorBoundary>
       <AccessibilityWrapper>
         {/* Skip Navigation Link for Accessibility */}
-        <a 
-          href="#main-content" 
+        <a
+          href="#main-content"
           style={{
             position: 'absolute',
             top: '-100px',
@@ -278,7 +171,7 @@ export default function App() {
         >
           Skip to main content
         </a>
-        
+
         <div id="main-content" tabIndex="-1">
           {renderContent()}
           <ToastNotification />

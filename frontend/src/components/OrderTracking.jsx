@@ -178,7 +178,7 @@ export default function OrderTracking({ orderId, onClose }) {
             <h2 style={{ margin: 0, fontSize: '24px', fontWeight: '700' }}>
               📦 Order Tracking
             </h2>
-            <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
+            <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '14px' }}>
               Order #{tracking.orderNumber}
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function OrderTracking({ orderId, onClose }) {
                   {getStatusLabel(tracking.currentStatus)}
                 </h3>
                 {tracking.trackingNumber && (
-                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: 'var(--text-secondary)' }}>
                     Tracking: <strong>{tracking.trackingNumber}</strong>
                   </p>
                 )}
@@ -233,7 +233,7 @@ export default function OrderTracking({ orderId, onClose }) {
             <div style={{
               textAlign: 'right',
               fontSize: '12px',
-              color: '#6b7280',
+              color: 'var(--text-secondary)',
               marginTop: '4px'
             }}>
               {currentProgress}% Complete
@@ -245,7 +245,7 @@ export default function OrderTracking({ orderId, onClose }) {
             {tracking.estimatedDelivery && (
               <div style={styles.infoCard}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>📅</div>
-                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                   Estimated Delivery
                 </div>
                 <div style={{ fontSize: '14px', fontWeight: '600' }}>
@@ -257,7 +257,7 @@ export default function OrderTracking({ orderId, onClose }) {
             {tracking.actualDelivery && (
               <div style={styles.infoCard}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>✅</div>
-                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                   Delivered On
                 </div>
                 <div style={{ fontSize: '14px', fontWeight: '600' }}>
@@ -269,14 +269,14 @@ export default function OrderTracking({ orderId, onClose }) {
             {tracking.courierPartner?.name && (
               <div style={styles.infoCard}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>🚚</div>
-                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                   Courier Partner
                 </div>
                 <div style={{ fontSize: '14px', fontWeight: '600' }}>
                   {tracking.courierPartner.name}
                 </div>
                 {tracking.courierPartner.contactNumber && (
-                  <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                     📞 {tracking.courierPartner.contactNumber}
                   </div>
                 )}
@@ -336,7 +336,7 @@ export default function OrderTracking({ orderId, onClose }) {
                   </div>
                 ))
               ) : (
-                <div style={{ textAlign: 'center', padding: '20px', color: '#6b7280' }}>
+                <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-secondary)' }}>
                   No tracking history available yet
                 </div>
               )}
@@ -359,7 +359,7 @@ export default function OrderTracking({ orderId, onClose }) {
                   <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>
                     {item.name}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                     Qty: {item.quantity} × ₹{item.price.toFixed(2)}
                   </div>
                 </div>
@@ -375,7 +375,7 @@ export default function OrderTracking({ orderId, onClose }) {
             <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700' }}>
               📍 Shipping Address
             </h3>
-            <div style={{ fontSize: '14px', color: '#374151', lineHeight: '1.6' }}>
+            <div style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
               {tracking.shippingAddress.address}<br />
               {tracking.shippingAddress.city}, {tracking.shippingAddress.postalCode}<br />
               {tracking.shippingAddress.country}
@@ -425,19 +425,21 @@ const styles = {
     backdropFilter: 'blur(4px)'
   },
   modal: {
-    backgroundColor: 'white',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '16px',
     maxWidth: '800px',
     width: '100%',
     maxHeight: '90vh',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    boxShadow: 'var(--shadow-xl)',
     animation: 'slideUp 0.3s ease-out'
   },
   header: {
     padding: '24px',
-    borderBottom: '2px solid #e5e7eb',
+    borderBottom: '1px solid var(--glass-border)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
@@ -447,7 +449,7 @@ const styles = {
     border: 'none',
     fontSize: '24px',
     cursor: 'pointer',
-    color: '#6b7280',
+    color: 'var(--text-secondary)',
     padding: '4px 8px',
     borderRadius: '8px',
     transition: 'all 0.2s'
@@ -471,7 +473,8 @@ const styles = {
   progressBarContainer: {
     width: '100%',
     height: '8px',
-    backgroundColor: 'var(--color-border-default)',
+    background: 'var(--glass-background)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '9999px',
     overflow: 'hidden'
   },
@@ -488,9 +491,10 @@ const styles = {
   },
   infoCard: {
     padding: '16px',
-    backgroundColor: 'var(--color-gray-50)',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '12px',
-    border: '2px solid var(--color-border-default)'
+    border: '1px solid var(--glass-border)',
+    color: 'var(--text-primary)'
   },
   timelineSection: {
     marginBottom: '24px'
@@ -502,10 +506,10 @@ const styles = {
     marginBottom: '16px'
   },
   timeline: {
-    backgroundColor: 'var(--color-gray-50)',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '12px',
     padding: '16px',
-    border: '2px solid var(--color-border-default)'
+    border: '1px solid var(--glass-border)'
   },
   timelineItem: {
     display: 'flex',
@@ -528,17 +532,17 @@ const styles = {
   timelineContent: {
     flex: 1,
     paddingBottom: '20px',
-    borderBottom: '1px solid #e5e7eb'
+    borderBottom: '1px solid var(--glass-border)'
   },
   timelineStatus: {
     fontSize: '14px',
     fontWeight: '700',
-    color: 'var(--color-text-primary)',
+    color: 'var(--text-primary)',
     marginBottom: '4px'
   },
   timelineDescription: {
     fontSize: '13px',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--text-secondary)',
     marginBottom: '4px'
   },
   timelineLocation: {
@@ -549,7 +553,7 @@ const styles = {
   },
   timelineTimestamp: {
     fontSize: '11px',
-    color: 'var(--color-gray-400)'
+    color: 'var(--text-tertiary)'
   },
   itemsSection: {
     marginBottom: '24px'
@@ -559,10 +563,11 @@ const styles = {
     gap: '16px',
     alignItems: 'center',
     padding: '12px',
-    backgroundColor: 'var(--color-gray-50)',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '8px',
     marginBottom: '8px',
-    border: '1px solid var(--color-border-default)'
+    border: '1px solid var(--glass-border)',
+    color: 'var(--text-primary)'
   },
   itemImage: {
     width: '60px',
@@ -572,9 +577,10 @@ const styles = {
   },
   addressCard: {
     padding: '16px',
-    backgroundColor: 'var(--color-primary-50)',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '12px',
-    border: '2px solid var(--color-primary-200)',
-    marginBottom: '16px'
+    border: '1px solid var(--glass-border)',
+    marginBottom: '16px',
+    color: 'var(--text-primary)'
   }
 };

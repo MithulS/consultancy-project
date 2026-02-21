@@ -25,8 +25,8 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(102, 126, 234, 0.95)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -35,7 +35,7 @@ const styles = {
   },
   content: {
     textAlign: 'center',
-    color: 'white'
+    color: 'var(--text-primary)'
   },
   spinner: {
     display: 'flex',
@@ -47,7 +47,7 @@ const styles = {
     width: '16px',
     height: '16px',
     borderRadius: '50%',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--accent-blue-primary)',
     animation: 'bounce 1.4s infinite ease-in-out both'
   },
   message: {

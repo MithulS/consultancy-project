@@ -17,9 +17,9 @@ export default function ToastNotification() {
     showToastCallback = (toast) => {
       const id = Date.now() + Math.random();
       const newToast = { ...toast, id };
-      
+
       setToasts(prev => [...prev, newToast]);
-      
+
       setTimeout(() => {
         setToasts(prev => prev.filter(t => t.id !== id));
       }, toast.duration);
@@ -44,32 +44,34 @@ export default function ToastNotification() {
     toast: {
       padding: '16px 20px',
       borderRadius: '12px',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+      boxShadow: 'var(--shadow-md)',
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
       fontSize: '14px',
       fontWeight: '500',
-      animation: 'slideInRight 0.3s ease-out, fadeOut 0.3s ease-out 2.7s',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
-      minWidth: '300px'
+      animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1), fadeOut 0.3s ease-out 2.7s',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-secondary)',
+      minWidth: '300px',
+      color: 'var(--text-primary)'
     },
     success: {
-      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))',
-      color: 'white'
+      borderLeft: '4px solid #10b981',
+      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.15)'
     },
     error: {
-      background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95))',
-      color: 'white'
+      borderLeft: '4px solid #ef4444',
+      boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)'
     },
     warning: {
-      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95))',
-      color: 'white'
+      borderLeft: '4px solid #f59e0b',
+      boxShadow: '0 4px 12px rgba(245, 158, 11, 0.15)'
     },
     info: {
-      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95))',
-      color: 'white'
+      borderLeft: '4px solid var(--accent-blue-primary)',
+      boxShadow: '0 4px 12px var(--accent-blue-glow)'
     },
     icon: {
       fontSize: '20px',
@@ -77,17 +79,18 @@ export default function ToastNotification() {
     },
     message: {
       flex: 1,
-      lineHeight: '1.5'
+      lineHeight: '1.5',
+      color: 'var(--text-primary)'
     },
     closeButton: {
       background: 'none',
       border: 'none',
-      color: 'white',
+      color: 'var(--text-secondary)',
       fontSize: '18px',
       cursor: 'pointer',
       padding: '4px',
-      opacity: 0.8,
-      transition: 'opacity 0.2s'
+      transition: 'color 0.2s',
+      marginLeft: 'auto'
     }
   };
 
@@ -109,15 +112,15 @@ export default function ToastNotification() {
     <>
       <div style={styles.container}>
         {toasts.map(toast => (
-          <div 
-            key={toast.id} 
-            style={{...styles.toast, ...getTypeStyle(toast.type)}}
+          <div
+            key={toast.id}
+            style={{ ...styles.toast, ...getTypeStyle(toast.type) }}
             role="alert"
             aria-live="polite"
           >
             <span style={styles.icon}>{getIcon(toast.type)}</span>
             <span style={styles.message}>{toast.message}</span>
-            <button 
+            <button
               style={styles.closeButton}
               onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))}
               aria-label="Close notification"
@@ -129,7 +132,7 @@ export default function ToastNotification() {
           </div>
         ))}
       </div>
-      
+
       <style>{`
         @keyframes slideInRight {
           from {

@@ -1,5 +1,7 @@
 // Admin Order Management Component - Manage and update order tracking
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { showToast } from './ToastNotification';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -9,6 +11,7 @@ export default function AdminOrderTracking() {
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrders, setSelectedOrders] = useState([]);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updateForm, setUpdateForm] = useState({
     status: '',
@@ -20,6 +23,9 @@ export default function AdminOrderTracking() {
     courierTrackingUrl: '',
     trackingNumber: ''
   });
+
+  const modalRef = useRef(null);
+  useFocusTrap(modalRef, showUpdateModal, closeUpdateModal);
 
   useEffect(() => {
     fetchOrders();
@@ -80,12 +86,50 @@ export default function AdminOrderTracking() {
     });
   }
 
+  async function handleBulkUpdate(newStatus) {
+    if (!confirm(`Are you sure you want to mark ${selectedOrders.length} orders as ${newStatus.replace(/_/g, ' ')}?`)) return;
+
+    setLoading(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      const token = localStorage.getItem('token');
+
+      for (const orderId of selectedOrders) {
+        try {
+          const res = await fetch(`${API}/api/orders/${orderId}/tracking/update`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status: newStatus })
+          });
+          const data = await res.json();
+          if (data.success) successCount++;
+          else failCount++;
+        } catch (err) {
+          failCount++;
+        }
+      }
+
+      showToast(`Bulk update: ${successCount} successful, ${failCount} failed`, successCount > 0 ? 'success' : 'error');
+      setSelectedOrders([]);
+      fetchOrders();
+    } catch (err) {
+      console.error('Bulk update error:', err);
+      showToast('❌ Bulk update process failed', 'error');
+      setLoading(false);
+    }
+  }
+
   async function handleUpdateTracking(e) {
     e.preventDefault();
 
     try {
       const token = localStorage.getItem('token');
-      
+
       const payload = {
         status: updateForm.status,
         location: updateForm.location,
@@ -111,15 +155,15 @@ export default function AdminOrderTracking() {
       const data = await res.json();
 
       if (data.success) {
-        alert('✅ Tracking updated successfully');
+        showToast('✅ Tracking updated successfully', 'success');
         closeUpdateModal();
         fetchOrders();
       } else {
-        alert('❌ ' + data.msg);
+        showToast('❌ ' + data.msg, 'error');
       }
     } catch (err) {
       console.error('Update tracking error:', err);
-      alert('❌ Failed to update tracking');
+      showToast('❌ Failed to update tracking', 'error');
     }
   }
 
@@ -138,14 +182,14 @@ export default function AdminOrderTracking() {
       const data = await res.json();
 
       if (data.success) {
-        alert(`✅ Tracking number generated: ${data.trackingNumber}`);
+        showToast(`✅ Tracking number generated: ${data.trackingNumber}`, 'success');
         fetchOrders();
       } else {
-        alert('❌ ' + data.msg);
+        showToast('❌ ' + data.msg, 'error');
       }
     } catch (err) {
       console.error('Generate tracking number error:', err);
-      alert('❌ Failed to generate tracking number');
+      showToast('❌ Failed to generate tracking number', 'error');
     }
   }
 
@@ -164,9 +208,25 @@ export default function AdminOrderTracking() {
     return badges[status] || 'badge-warning';
   }
 
-  const filteredOrders = statusFilter === 'all' 
-    ? orders 
+  const filteredOrders = statusFilter === 'all'
+    ? orders
     : orders.filter(order => order.status === statusFilter);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedOrders(filteredOrders.map(order => order._id));
+    } else {
+      setSelectedOrders([]);
+    }
+  };
+
+  const handleSelectOrder = (orderId) => {
+    if (selectedOrders.includes(orderId)) {
+      setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+    } else {
+      setSelectedOrders([...selectedOrders, orderId]);
+    }
+  };
 
   if (loading) {
     return (
@@ -188,18 +248,56 @@ export default function AdminOrderTracking() {
         </p>
       </div>
 
-      {/* Status Filters */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
-        {['all', 'pending', 'confirmed', 'processing', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'].map(status => (
-          <button
-            key={status}
-            className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-ghost'}`}
-            style={{ borderRadius: '9999px', textTransform: 'capitalize' }}
-            onClick={() => setStatusFilter(status)}
-          >
-            {status.replace(/_/g, ' ')}
-          </button>
-        ))}
+      {/* Status Filters & Bulk Actions */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          {['all', 'pending', 'confirmed', 'processing', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'].map(status => (
+            <button
+              key={status}
+              className={`btn ${statusFilter === status ? 'btn-primary' : 'btn-ghost'}`}
+              style={{ borderRadius: '9999px', textTransform: 'capitalize' }}
+              onClick={() => {
+                setStatusFilter(status);
+                setSelectedOrders([]); // Clear selection on filter change
+              }}
+            >
+              {status.replace(/_/g, ' ')}
+            </button>
+          ))}
+        </div>
+
+        {/* Bulk Actions UI */}
+        {selectedOrders.length > 0 && (
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            alignItems: 'center',
+            background: '#f3f4f6',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+              {selectedOrders.length} selected
+            </span>
+            <select
+              className="form-control"
+              style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px', backgroundColor: 'white', cursor: 'pointer' }}
+              onChange={(e) => {
+                if (e.target.value) handleBulkUpdate(e.target.value);
+                e.target.value = ''; // Reset select after action
+              }}
+            >
+              <option value="">Bulk Update Status...</option>
+              <option value="confirmed">Mark as Confirmed</option>
+              <option value="processing">Mark as Processing</option>
+              <option value="packed">Mark as Packed</option>
+              <option value="shipped">Mark as Shipped</option>
+              <option value="delivered">Mark as Delivered</option>
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Error Message */}
@@ -210,9 +308,9 @@ export default function AdminOrderTracking() {
       )}
 
       {/* Orders Table */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '12px', 
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '12px',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         overflow: 'hidden'
       }}>
@@ -220,6 +318,14 @@ export default function AdminOrderTracking() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ ...styles.th, width: '40px', textAlign: 'center' }}>
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={filteredOrders.length > 0 && selectedOrders.length === filteredOrders.length}
+                    style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                  />
+                </th>
                 <th style={styles.th}>Order ID</th>
                 <th style={styles.th}>Customer</th>
                 <th style={styles.th}>Items</th>
@@ -239,7 +345,15 @@ export default function AdminOrderTracking() {
                 </tr>
               ) : (
                 filteredOrders.map((order) => (
-                  <tr key={order._id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <tr key={order._id} style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: selectedOrders.includes(order._id) ? '#f0f9ff' : 'transparent' }}>
+                    <td style={{ ...styles.td, textAlign: 'center' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedOrders.includes(order._id)}
+                        onChange={() => handleSelectOrder(order._id)}
+                        style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                      />
+                    </td>
                     <td style={styles.td}>
                       <div style={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: '600' }}>
                         #{order._id.slice(-8).toUpperCase()}
@@ -264,9 +378,9 @@ export default function AdminOrderTracking() {
                     </td>
                     <td style={styles.td}>
                       {order.trackingNumber ? (
-                        <div style={{ 
-                          fontFamily: 'monospace', 
-                          fontSize: '11px', 
+                        <div style={{
+                          fontFamily: 'monospace',
+                          fontSize: '11px',
                           backgroundColor: '#f3f4f6',
                           padding: '4px 8px',
                           borderRadius: '4px',
@@ -275,7 +389,7 @@ export default function AdminOrderTracking() {
                           {order.trackingNumber}
                         </div>
                       ) : (
-                        <button 
+                        <button
                           className="btn btn-sm btn-secondary"
                           onClick={() => generateTrackingNumber(order._id)}
                           style={{ fontSize: '11px', padding: '4px 8px' }}
@@ -286,15 +400,15 @@ export default function AdminOrderTracking() {
                     </td>
                     <td style={styles.td}>
                       <div style={{ fontSize: '12px' }}>
-                        {new Date(order.createdAt).toLocaleDateString('en-US', { 
-                          month: 'short', 
+                        {new Date(order.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
                           day: 'numeric',
                           year: 'numeric'
                         })}
                       </div>
                     </td>
                     <td style={styles.td}>
-                      <button 
+                      <button
                         className="btn btn-sm btn-primary"
                         onClick={() => openUpdateModal(order)}
                         style={{ fontSize: '12px' }}
@@ -313,9 +427,9 @@ export default function AdminOrderTracking() {
       {/* Update Modal */}
       {showUpdateModal && selectedOrder && (
         <div style={styles.overlay} onClick={closeUpdateModal}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()} ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div style={styles.modalHeader}>
-              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>
+              <h2 id="modal-title" style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>
                 Update Order Tracking
               </h2>
               <button onClick={closeUpdateModal} style={styles.closeButton}>✕</button>
@@ -430,9 +544,9 @@ export default function AdminOrderTracking() {
                 <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
                   ✅ Update Tracking
                 </button>
-                <button 
-                  type="button" 
-                  className="btn btn-ghost" 
+                <button
+                  type="button"
+                  className="btn btn-ghost"
                   onClick={closeUpdateModal}
                   style={{ flex: 1 }}
                 >

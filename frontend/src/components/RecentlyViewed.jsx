@@ -17,10 +17,10 @@ export const addToRecentlyViewed = (product) => {
   try {
     const MAX_RECENT_ITEMS = 12;
     let recentProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-    
+
     // Remove if already exists
     recentProducts = recentProducts.filter(p => p._id !== product._id);
-    
+
     // Add to beginning
     recentProducts.unshift({
       _id: product._id,
@@ -32,12 +32,12 @@ export const addToRecentlyViewed = (product) => {
       reviewCount: product.reviewCount || 0,
       viewedAt: new Date().toISOString()
     });
-    
+
     // Keep only MAX items
     if (recentProducts.length > MAX_RECENT_ITEMS) {
       recentProducts = recentProducts.slice(0, MAX_RECENT_ITEMS);
     }
-    
+
     localStorage.setItem('recentlyViewed', JSON.stringify(recentProducts));
   } catch (error) {
     console.error('Error saving to recently viewed:', error);
@@ -53,14 +53,14 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
 
   useEffect(() => {
     loadRecentProducts();
-    
+
     // Listen for storage changes from other tabs/windows
     const handleStorageChange = (e) => {
       if (e.key === 'recentlyViewed') {
         loadRecentProducts();
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
@@ -69,7 +69,7 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
     try {
       const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
       // Filter out current product if viewing product detail
-      const filtered = currentProductId 
+      const filtered = currentProductId
         ? recent.filter(p => p._id !== currentProductId)
         : recent;
       setRecentProducts(filtered);
@@ -89,8 +89,8 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
   const styles = {
     container: {
       padding: '48px 32px',
-      backgroundColor: '#f9fafb',
-      borderTop: '1px solid #e5e7eb',
+      background: 'transparent',
+      borderTop: '1px solid var(--border-color)',
       animation: 'fadeInUp 0.6s ease-out'
     },
     header: {
@@ -104,13 +104,13 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
     title: {
       fontSize: '24px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--text-primary)',
       display: 'flex',
       alignItems: 'center',
       gap: '12px'
     },
     badge: {
-      backgroundColor: '#4285F4',
+      backgroundColor: 'var(--accent-blue-primary)',
       color: '#ffffff',
       fontSize: '14px',
       fontWeight: '600',
@@ -120,9 +120,9 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
     clearBtn: {
       padding: '8px 16px',
       backgroundColor: 'transparent',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       fontSize: '14px',
       fontWeight: '500',
       cursor: 'pointer',
@@ -141,8 +141,9 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
       minWidth: 'fit-content'
     },
     productCard: {
-      backgroundColor: '#ffffff',
-      border: '1px solid #e5e7eb',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-color)',
       borderRadius: '12px',
       padding: '16px',
       cursor: 'pointer',
@@ -156,7 +157,7 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
       marginBottom: '12px',
       borderRadius: '8px',
       overflow: 'hidden',
-      backgroundColor: '#f3f4f6'
+      background: 'rgba(255, 255, 255, 0.05)'
     },
     productImage: {
       width: '100%',
@@ -312,6 +313,7 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
                     src={getImageUrl(product.image)}
                     alt={product.name}
                     style={styles.productImage}
+                    loading="lazy"
                   />
                   <div style={styles.recentBadge}>
                     {getTimeAgo(product.viewedAt)}
@@ -329,8 +331,8 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
                   )}
                 </div>
                 {product.rating > 0 && (
-                  <ProductRating 
-                    rating={product.rating} 
+                  <ProductRating
+                    rating={product.rating}
                     reviewCount={product.reviewCount}
                     size="small"
                   />

@@ -235,7 +235,8 @@ export default function Profile() {
       marginBottom: '30px'
     },
     statCard: {
-      background: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       border: '1px solid var(--border-color)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '24px',
@@ -247,7 +248,7 @@ export default function Profile() {
     statValue: {
       fontSize: '32px',
       fontWeight: '800',
-      color: 'var(--primary-brand)',
+      color: 'var(--accent-blue-primary)',
       margin: '0 0 8px 0'
     },
     statLabel: {
@@ -256,7 +257,8 @@ export default function Profile() {
       fontWeight: '600'
     },
     card: {
-      background: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       border: '1px solid var(--border-color)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '32px',
@@ -296,7 +298,8 @@ export default function Profile() {
       width: '100%',
       padding: '12px 16px',
       border: '1px solid var(--border-color)',
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       color: 'var(--text-primary)',
       borderRadius: 'var(--border-radius-md)',
       fontSize: '16px',
@@ -306,7 +309,7 @@ export default function Profile() {
     },
     btnPrimary: {
       padding: '12px 24px',
-      background: 'var(--gradient-blue)',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
       color: 'white',
       border: 'none',
       borderRadius: 'var(--border-radius-md)',
@@ -329,7 +332,7 @@ export default function Profile() {
       marginLeft: '12px'
     },
     btnDanger: {
-      background: 'var(--gradient-cta)',
+      background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
       boxShadow: 'var(--shadow-md)'
     },
     badge: {
@@ -486,7 +489,7 @@ export default function Profile() {
           {user?.googleId ? (
             <div style={{
               padding: '24px',
-              backgroundColor: 'var(--background-secondary)',
+              backgroundColor: 'var(--glass-background-light)',
               border: '1px solid var(--border-color)',
               borderRadius: 'var(--border-radius-md)',
               textAlign: 'center'
@@ -517,7 +520,7 @@ export default function Profile() {
                   display: 'inline-block',
                   marginTop: '16px',
                   padding: '10px 20px',
-                  backgroundColor: 'var(--color-brand-primary)',
+                  backgroundColor: 'var(--accent-blue-primary)',
                   color: 'white',
                   textDecoration: 'none',
                   borderRadius: '8px',
@@ -526,8 +529,8 @@ export default function Profile() {
                   transition: 'background-color 0.3s ease',
                   boxShadow: '0 4px 12px var(--accent-blue-glow)'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#1d4ed8'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#2563eb'}
+                onMouseOver={(e) => e.target.style.backgroundColor = 'var(--accent-blue-active)'}
+                onMouseOut={(e) => e.target.style.backgroundColor = 'var(--accent-blue-primary)'}
               >
                 Manage Google Account →
               </a>
@@ -601,3 +604,4 @@ export default function Profile() {
     </div>
   );
 }
+

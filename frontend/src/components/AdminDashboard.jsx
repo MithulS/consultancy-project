@@ -5,6 +5,8 @@ import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../ut
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { getImageUrl } from '../utils/imageHandling';
 import Skeleton from './Skeleton';
+import { showToast } from './ToastNotification';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 // Inject CSS animations
 const styleSheet = document.createElement('style');
@@ -57,6 +59,9 @@ export default function AdminDashboard() {
   const [imagePreview, setImagePreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+
+  const modalRef = useRef(null);
+  useFocusTrap(modalRef, showAddModal, closeModal);
 
   useEffect(() => {
     // Check if admin is logged in
@@ -115,13 +120,13 @@ export default function AdminDashboard() {
 
       const data = await res.json();
       if (data.success) {
-        alert('✅ Product deleted successfully');
+        showToast('✅ Product deleted successfully', 'success');
         fetchProducts();
       } else {
-        alert('❌ ' + data.msg);
+        showToast('❌ ' + data.msg, 'error');
       }
     } catch (err) {
-      alert('❌ Error deleting product');
+      showToast('❌ Error deleting product', 'error');
     }
   }
 
@@ -258,7 +263,7 @@ export default function AdminDashboard() {
     if (imageFile) {
       const uploadedUrl = await uploadImage();
       if (!uploadedUrl) {
-        alert('❌ Failed to upload image. Please try again.');
+        showToast('❌ Failed to upload image. Please try again.', 'error');
         return;
       }
       imageUrl = uploadedUrl;
@@ -289,14 +294,14 @@ export default function AdminDashboard() {
 
       const data = await res.json();
       if (data.success) {
-        alert(`✅ Product ${editingProduct ? 'updated' : 'created'} successfully`);
+        showToast(`✅ Product ${editingProduct ? 'updated' : 'created'} successfully`, 'success');
         fetchProducts();
         closeModal();
       } else {
-        alert('❌ ' + data.msg);
+        showToast('❌ ' + data.msg, 'error');
       }
     } catch (err) {
-      alert('❌ Error saving product');
+      showToast('❌ Error saving product', 'error');
     }
   }
 
@@ -314,30 +319,25 @@ export default function AdminDashboard() {
   const styles = {
     container: {
       minHeight: '100vh',
-      minHeight: '100vh',
-      backgroundColor: 'transparent',
-      position: 'relative'
+      backgroundColor: '#f8fafc',
+      position: 'relative',
+      fontFamily: 'Inter, system-ui, sans-serif'
     },
     header: {
-      background: 'var(--primary-brand)',
-      color: 'var(--text-inverse)',
-      padding: '24px 40px',
-      boxShadow: 'var(--shadow-md)',
-      borderBottom: 'none',
-      borderRadius: '0',
+      background: '#ffffff',
+      color: '#0f172a',
+      padding: '20px 40px',
+      borderBottom: '1px solid #e2e8f0',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
       animation: 'fadeInUp 0.6s ease-out'
     },
     title: {
-      fontSize: '32px',
-      fontWeight: '800',
+      fontSize: '24px',
+      fontWeight: '700',
       margin: 0,
-      fontSize: '32px',
-      fontWeight: '800',
-      margin: 0,
-      color: 'var(--text-inverse)',
+      color: '#0f172a',
       letterSpacing: '-0.5px',
       display: 'flex',
       alignItems: 'center',
@@ -349,47 +349,42 @@ export default function AdminDashboard() {
       gap: '20px'
     },
     adminName: {
-      fontSize: '15px',
-      color: 'var(--text-inverse)',
-      fontWeight: '600',
-      letterSpacing: '0.3px',
-      opacity: 0.9
+      fontSize: '14px',
+      color: '#475569',
+      fontWeight: '500',
+      letterSpacing: '0.3px'
     },
     button: {
-      padding: '12px 24px',
-      borderRadius: '12px',
+      padding: '10px 20px',
+      borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
       fontSize: '14px',
-      fontWeight: '700',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-      letterSpacing: '0.3px',
+      fontWeight: '600',
+      transition: 'all 0.2s ease',
       position: 'relative',
-      overflow: 'hidden'
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '8px',
+      color: '#ffffff'
     },
     reportsBtn: {
-      backgroundImage: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-      color: 'white',
-      marginRight: '0',
-      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      backgroundColor: '#0ea5e9',
+      marginRight: '0'
     },
     settingsBtn: {
-      backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white',
-      marginRight: '0',
-      boxShadow: '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      backgroundColor: '#64748b',
+      marginRight: '0'
     },
     trackingBtn: {
-      backgroundImage: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-      color: 'white',
-      marginRight: '0',
-      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      backgroundColor: '#f59e0b',
+      marginRight: '0'
     },
     logoutBtn: {
-      backgroundImage: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      color: 'white',
-      boxShadow: '0 4px 16px rgba(245, 87, 108, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      backgroundColor: 'transparent',
+      color: '#ef4444',
+      border: '1px solid #fecaca',
+      padding: '9px 19px'
     },
     statsContainer: {
       display: 'grid',
@@ -401,22 +396,19 @@ export default function AdminDashboard() {
     },
     statCard: {
       background: '#ffffff',
-      padding: '28px 24px',
-      borderRadius: 'var(--border-radius-lg)',
-      boxShadow: 'var(--shadow-sm)',
-      border: '1px solid var(--border-color)',
-      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      padding: '24px',
+      borderRadius: '12px',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03)',
+      border: '1px solid #e2e8f0',
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       animation: 'scaleIn 0.6s ease-out',
-      position: 'relative',
-      overflow: 'hidden'
+      position: 'relative'
     },
     statLabel: {
-      fontSize: '13px',
-      color: 'var(--text-secondary)',
-      marginBottom: '12px',
-      fontWeight: '600',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      fontSize: '14px',
+      color: '#64748b',
+      marginBottom: '8px',
+      fontWeight: '500'
     },
     statValue: {
       fontSize: '36px',
@@ -439,9 +431,8 @@ export default function AdminDashboard() {
       animation: 'slideInLeft 0.6s ease-out 0.2s backwards'
     },
     addBtn: {
-      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-      color: 'white',
-      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      backgroundColor: '#10b981',
+      color: '#ffffff'
     },
     table: {
       width: '100%',
@@ -455,39 +446,38 @@ export default function AdminDashboard() {
     tableWrapper: {
       overflowX: 'auto',
       background: '#ffffff',
-      borderRadius: 'var(--border-radius-lg)',
-      boxShadow: 'var(--shadow-md)',
-      border: '1px solid var(--border-color)',
+      borderRadius: '12px',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+      border: '1px solid #e2e8f0',
       animation: 'fadeInUp 0.6s ease-out 0.3s backwards'
     },
     tableHeader: {
-      background: 'var(--background-secondary)',
-      padding: '18px 16px',
+      background: '#f8fafc',
+      padding: '16px 20px',
       fontSize: '13px',
-      fontWeight: '700',
-      color: 'var(--text-primary)',
+      fontWeight: '600',
+      color: '#475569',
       textAlign: 'left',
-      borderBottom: '1px solid var(--border-subtle)',
+      borderBottom: '1px solid #e2e8f0',
       whiteSpace: 'nowrap',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      textTransform: 'uppercase'
     },
     tableCell: {
-      padding: '18px 16px',
-      borderBottom: '1px solid var(--border-subtle)',
-      fontSize: '15px',
-      color: 'var(--text-primary)',
+      padding: '16px 20px',
+      borderBottom: '1px solid #e2e8f0',
+      fontSize: '14px',
+      color: '#1e293b',
       fontWeight: '500',
-      transition: 'background 0.2s ease'
+      transition: 'background 0.1s ease',
+      verticalAlign: 'middle'
     },
     productImage: {
-      width: '70px',
-      height: '70px',
+      width: '48px',
+      height: '48px',
       objectFit: 'cover',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-      border: '2px solid rgba(255, 255, 255, 0.8)',
-      transition: 'transform 0.3s ease'
+      borderRadius: '6px',
+      border: '1px solid #e2e8f0',
+      transition: 'transform 0.2s ease'
     },
     actionButtons: {
       display: 'flex',
@@ -496,28 +486,26 @@ export default function AdminDashboard() {
       alignItems: 'center'
     },
     editBtn: {
-      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-      color: 'white',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      border: 'none',
+      backgroundColor: '#f1f5f9',
+      color: '#334155',
+      padding: '6px 12px',
+      borderRadius: '6px',
+      border: '1px solid #cbd5e1',
       cursor: 'pointer',
       fontSize: '13px',
-      fontWeight: '600',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+      fontWeight: '500',
+      transition: 'all 0.1s ease'
     },
     deleteBtn: {
-      background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-      color: 'white',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      border: 'none',
+      backgroundColor: '#fef2f2',
+      color: '#dc2626',
+      padding: '6px 12px',
+      borderRadius: '6px',
+      border: '1px solid #fecaca',
       cursor: 'pointer',
       fontSize: '13px',
-      fontWeight: '600',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+      fontWeight: '500',
+      transition: 'all 0.1s ease'
     },
     modalOverlay: {
       position: 'fixed',
@@ -525,34 +513,34 @@ export default function AdminDashboard() {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(102, 126, 234, 0.4)',
-      backdropFilter: 'blur(8px)',
+      background: 'rgba(15, 23, 42, 0.4)',
+      backdropFilter: 'blur(4px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-      animation: 'fadeInUp 0.3s ease-out'
+      animation: 'fadeInUp 0.2s ease-out'
     },
     modal: {
       background: '#ffffff',
-      borderRadius: 'var(--border-radius-xl)',
-      padding: '40px',
+      borderRadius: '16px',
+      padding: '32px',
       maxWidth: '600px',
       width: '90%',
       maxHeight: '90vh',
       overflowY: 'auto',
-      boxShadow: 'var(--shadow-xl)',
-      border: '1px solid var(--border-color)',
-      animation: 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      border: '1px solid #e2e8f0',
+      animation: 'scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     },
     modalTitle: {
-      fontSize: '28px',
-      fontWeight: '800',
-      fontSize: '28px',
-      fontWeight: '800',
-      color: 'var(--text-primary)',
-      marginBottom: '28px',
-      letterSpacing: '-0.5px'
+      fontSize: '20px',
+      fontWeight: '700',
+      color: '#0f172a',
+      marginBottom: '24px',
+      letterSpacing: '-0.3px',
+      borderBottom: '1px solid #e2e8f0',
+      paddingBottom: '16px'
     },
     form: {
       display: 'flex',
@@ -566,37 +554,32 @@ export default function AdminDashboard() {
     },
     label: {
       fontSize: '13px',
-      fontWeight: '700',
-      color: 'var(--text-secondary)',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      fontWeight: '600',
+      color: '#475569',
+      marginBottom: '4px'
     },
     input: {
-      padding: '12px 16px',
-      borderRadius: 'var(--border-radius-md)',
-      border: '1px solid var(--border-color)',
-      fontSize: '15px',
+      padding: '10px 14px',
+      borderRadius: '8px',
+      border: '1px solid #cbd5e1',
+      fontSize: '14px',
       outline: 'none',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#ffffff',
-      color: 'var(--text-primary)',
-      fontWeight: '500',
-      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+      backgroundColor: '#f8fafc',
+      color: '#0f172a',
     },
     textarea: {
-      padding: '12px 16px',
-      borderRadius: 'var(--border-radius-md)',
-      border: '1px solid var(--border-color)',
-      fontSize: '15px',
+      padding: '10px 14px',
+      borderRadius: '8px',
+      border: '1px solid #cbd5e1',
+      fontSize: '14px',
       outline: 'none',
       minHeight: '100px',
       fontFamily: 'inherit',
       resize: 'vertical',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#ffffff',
-      color: 'var(--text-primary)',
-      fontWeight: '500',
-      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+      backgroundColor: '#f8fafc',
+      color: '#0f172a',
     },
     checkbox: {
       display: 'flex',
@@ -610,46 +593,40 @@ export default function AdminDashboard() {
     },
     uploadButton: {
       display: 'inline-block',
-      padding: '14px 28px',
-      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '14px',
-      fontWeight: '700',
+      padding: '10px 20px',
+      backgroundColor: '#f1f5f9',
+      color: '#334155',
+      border: '1px solid #cbd5e1',
+      borderRadius: '8px',
+      fontSize: '13px',
+      fontWeight: '600',
       textAlign: 'center',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      cursor: 'pointer',
-      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-      letterSpacing: '0.3px'
+      transition: 'all 0.2s',
+      cursor: 'pointer'
     },
     submitBtn: {
       flex: 1,
-      padding: '16px',
-      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      padding: '12px',
+      backgroundColor: '#0ea5e9',
       color: 'white',
       border: 'none',
-      borderRadius: '12px',
-      fontSize: '16px',
-      fontWeight: '700',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-      letterSpacing: '0.5px'
+      transition: 'all 0.2s ease',
     },
     cancelBtn: {
       flex: 1,
-      padding: '16px',
-      background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '16px',
-      fontWeight: '700',
+      padding: '12px',
+      backgroundColor: '#f1f5f9',
+      color: '#475569',
+      border: '1px solid #cbd5e1',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 4px 16px rgba(107, 114, 128, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-      letterSpacing: '0.5px'
+      transition: 'all 0.2s ease',
     }
   };
 
@@ -699,63 +676,15 @@ export default function AdminDashboard() {
             style={{ ...styles.button, ...styles.reportsBtn }}
             onClick={() => setShowReportsModal(true)}
             onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px) scale(1.05)';
-              e.target.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.5)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(14, 165, 233, 0.3)';
             }}
             onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             📊 Reports
-          </button>
-          <button
-            style={{ ...styles.button, ...styles.settingsBtn }}
-            onClick={() => window.location.hash = '#sales-analytics'}
-            onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px) scale(1.05)';
-              e.target.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-            }}
-          >
-            📈 Analytics
-          </button>
-          <button
-            style={{ ...styles.button, ...styles.trackingBtn }}
-            onClick={() => window.location.hash = '#admin-order-tracking'}
-            onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px) scale(1.05)';
-              e.target.style.boxShadow = '0 8px 24px rgba(245, 158, 11, 0.5)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-            }}
-          >
-            📦 Order Tracking
-          </button>
-          <button
-            style={{ ...styles.button, ...styles.settingsBtn }}
-            onClick={goToSettings}
-            onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px) scale(1.05)';
-              e.target.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-            }}
-          >
-            ⚙️ Settings
-          </button>
-          <button
-            style={{ ...styles.button, ...styles.logoutBtn }}
-            onClick={logout}
-          >
-            🚪 Logout
           </button>
         </div>
       </div>
@@ -841,12 +770,12 @@ export default function AdminDashboard() {
             style={{ ...styles.button, ...styles.addBtn }}
             onClick={openAddModal}
             onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-2px) scale(1.05)';
-              e.target.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.5)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(16, 185, 129, 0.3)';
             }}
             onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             ➕ Add New Product
@@ -892,6 +821,7 @@ export default function AdminDashboard() {
                         }}
                         onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
                         onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                        loading="lazy"
                       />
                     </td>
                     <td style={styles.tableCell}>
@@ -932,28 +862,16 @@ export default function AdminDashboard() {
                         <button
                           style={styles.editBtn}
                           onClick={() => openEditModal(product)}
-                          onMouseOver={(e) => {
-                            e.target.style.transform = 'translateY(-2px)';
-                            e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.5)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                            e.target.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
-                          }}
+                          onMouseOver={(e) => e.target.style.backgroundColor = '#e2e8f0'}
+                          onMouseOut={(e) => e.target.style.backgroundColor = '#f1f5f9'}
                         >
                           ✏️ Edit
                         </button>
                         <button
                           style={styles.deleteBtn}
                           onClick={() => deleteProduct(product._id)}
-                          onMouseOver={(e) => {
-                            e.target.style.transform = 'translateY(-2px)';
-                            e.target.style.boxShadow = '0 4px 16px rgba(239, 68, 68, 0.5)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                            e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
-                          }}
+                          onMouseOver={(e) => e.target.style.backgroundColor = '#fca5a5'}
+                          onMouseOut={(e) => e.target.style.backgroundColor = '#fef2f2'}
                         >
                           🗑️ Delete
                         </button>
@@ -970,8 +888,8 @@ export default function AdminDashboard() {
       {/* Add/Edit Product Modal */}
       {showAddModal && (
         <div style={styles.modalOverlay} onClick={closeModal}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h2 style={styles.modalTitle}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()} ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <h2 id="modal-title" style={styles.modalTitle}>
               {editingProduct ? '✏️ Edit Product' : '➕ Add New Product'}
             </h2>
             <form style={styles.form} onSubmit={handleSubmit}>

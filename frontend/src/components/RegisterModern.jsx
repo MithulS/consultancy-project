@@ -323,7 +323,8 @@ export default function Register() {
       color: 'var(--text-primary)'
     },
     card: {
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: 'var(--border-radius-xl)',
       boxShadow: 'var(--shadow-xl)',
       border: '1px solid var(--border-color)',
@@ -371,7 +372,8 @@ export default function Register() {
       borderRadius: 'var(--border-radius-md)',
       outline: 'none',
       transition: 'all 0.3s ease',
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       boxSizing: 'border-box',
       color: 'var(--text-primary)'
     },
@@ -496,9 +498,10 @@ export default function Register() {
       padding: '16px 24px',
       fontSize: '16px',
       fontWeight: '600',
-      color: '#3c4043',
-      backgroundColor: '#ffffff',
-      border: '2px solid #dadce0',
+      color: 'var(--text-primary)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '2px solid var(--border-color)',
       borderRadius: '12px',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
@@ -516,7 +519,7 @@ export default function Register() {
     googleButtonText: {
       fontSize: '16px',
       fontWeight: '600',
-      color: '#3c4043',
+      color: 'var(--text-primary)',
       letterSpacing: '0.25px'
     },
     loadingSpinner: {

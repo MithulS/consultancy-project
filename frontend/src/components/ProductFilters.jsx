@@ -1,12 +1,12 @@
 // Product Filters and Sort Component
 import React, { useState } from 'react';
 
-export default function ProductFilters({ 
-  onFilterChange, 
+export default function ProductFilters({
+  onFilterChange,
   onSortChange,
   categories = [],
   selectedCategory,
-  totalProducts = 0 
+  totalProducts = 0
 }) {
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -67,7 +67,7 @@ export default function ProductFilters({
     },
     resultCount: {
       fontSize: '14px',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       fontWeight: '500'
     },
     controls: {
@@ -78,22 +78,24 @@ export default function ProductFilters({
     },
     sortDropdown: {
       padding: '10px 16px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '10px',
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       fontSize: '14px',
       fontWeight: '500',
-      color: '#374151',
+      color: 'var(--text-primary)',
       cursor: 'pointer',
       minWidth: '180px',
       transition: 'all 0.2s ease'
     },
     filterBtn: {
       padding: '10px 20px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '10px',
-      backgroundColor: isExpanded ? '#1e3a8a' : '#ffffff',
-      color: isExpanded ? '#ffffff' : '#374151',
+      background: isExpanded ? 'var(--accent-blue-primary)' : 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      color: isExpanded ? '#ffffff' : 'var(--text-primary)',
       fontSize: '14px',
       fontWeight: '600',
       cursor: 'pointer',
@@ -103,8 +105,9 @@ export default function ProductFilters({
       transition: 'all 0.2s ease'
     },
     filterPanel: {
-      backgroundColor: '#ffffff',
-      border: '1px solid #e5e7eb',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-color)',
       borderRadius: '12px',
       padding: '24px',
       marginBottom: '24px',
@@ -124,7 +127,7 @@ export default function ProductFilters({
     filterLabel: {
       fontSize: '14px',
       fontWeight: '600',
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '12px',
       display: 'block'
     },
@@ -136,10 +139,11 @@ export default function ProductFilters({
     priceInput: {
       flex: 1,
       padding: '8px 12px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
       fontSize: '14px',
-      backgroundColor: '#f9fafb'
+      background: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--text-primary)'
     },
     ratingOptions: {
       display: 'flex',
@@ -151,22 +155,22 @@ export default function ProductFilters({
       alignItems: 'center',
       gap: '8px',
       padding: '8px 12px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
-      backgroundColor: '#ffffff'
+      background: 'var(--glass-background)'
     },
     checkbox: {
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
       padding: '10px 12px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
-      backgroundColor: inStockOnly ? '#eff6ff' : '#ffffff'
+      background: inStockOnly ? 'var(--accent-blue-subtle)' : 'var(--glass-background)'
     },
     checkboxInput: {
       width: '18px',
@@ -176,7 +180,7 @@ export default function ProductFilters({
     checkboxLabel: {
       fontSize: '14px',
       fontWeight: '500',
-      color: '#374151',
+      color: 'var(--text-primary)',
       cursor: 'pointer'
     },
     filterActions: {
@@ -184,7 +188,7 @@ export default function ProductFilters({
       gap: '12px',
       marginTop: '20px',
       paddingTop: '20px',
-      borderTop: '1px solid #e5e7eb'
+      borderTop: '1px solid var(--border-color)'
     },
     applyBtn: {
       flex: 1,
@@ -201,8 +205,8 @@ export default function ProductFilters({
     resetBtn: {
       padding: '12px 24px',
       backgroundColor: 'transparent',
-      color: '#6b7280',
-      border: '1px solid #e5e7eb',
+      color: 'var(--text-secondary)',
+      border: '1px solid var(--border-color)',
       borderRadius: '10px',
       fontSize: '14px',
       fontWeight: '600',
@@ -235,7 +239,7 @@ export default function ProductFilters({
           to { transform: translateX(0); opacity: 1; }
         }
         .sort-dropdown:hover, .sort-dropdown:focus {
-          border-color: #3b82f6;
+          border-color: var(--accent-blue-primary);
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         .filter-btn:hover {
@@ -243,21 +247,22 @@ export default function ProductFilters({
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .rating-option:hover {
-          background-color: #f9fafb !important;
-          border-color: #3b82f6 !important;
+          background: rgba(255, 255, 255, 0.05) !important;
+          border-color: var(--accent-blue-primary) !important;
         }
         .rating-option.selected {
-          background-color: #eff6ff !important;
-          border-color: #3b82f6 !important;
+          background: var(--accent-blue-subtle) !important;
+          border-color: var(--accent-blue-primary) !important;
         }
         .apply-btn:hover {
-          background-color: #2563eb !important;
+          background-color: var(--accent-blue-primary) !important;
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         .reset-btn:hover {
-          background-color: #f9fafb !important;
-          border-color: #9ca3af !important;
+          background: rgba(255, 255, 255, 0.05) !important;
+          border-color: var(--text-primary) !important;
+          color: var(--text-primary) !important;
         }
         @media (max-width: 768px) {
           .filter-grid {

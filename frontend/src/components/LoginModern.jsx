@@ -240,7 +240,7 @@ export default function Login() {
     const processedCallback = sessionStorage.getItem('oauth_callback_processed');
     const processedTime = sessionStorage.getItem('oauth_callback_time');
     const now = Date.now();
-    
+
     // Clear old processed flag if more than 5 seconds old
     if (processedCallback && processedTime && (now - parseInt(processedTime) > 5000)) {
       console.log('🔄 Clearing old OAuth processing flag...');
@@ -298,7 +298,7 @@ export default function Login() {
           } else {
             window.location.hash = '#dashboard';
           }
-          
+
           // ✅ NO RELOAD - Let React handle state updates
           // The userLoggedIn event will trigger component re-renders
         })
@@ -351,7 +351,8 @@ export default function Login() {
       color: 'var(--text-primary)'
     },
     card: {
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: 'var(--border-radius-xl)',
       boxShadow: 'var(--shadow-xl)',
       border: '1px solid var(--border-color)',
@@ -413,13 +414,15 @@ export default function Login() {
       borderRadius: '14px',
       outline: 'none',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       boxSizing: 'border-box',
       color: 'var(--text-primary)'
     },
     inputFocus: {
       border: '1px solid var(--accent-blue-primary)',
-      backgroundColor: '#ffffff',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       boxShadow: '0 0 0 4px var(--accent-blue-subtle)'
     },
     inputError: {
@@ -565,9 +568,10 @@ export default function Login() {
       padding: '16px 24px',
       fontSize: '16px',
       fontWeight: '600',
-      color: '#3c4043',
-      backgroundColor: '#ffffff',
-      border: '2px solid #dadce0',
+      color: 'var(--text-primary)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '2px solid var(--border-color)',
       borderRadius: '14px',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
@@ -590,7 +594,7 @@ export default function Login() {
     googleButtonText: {
       fontSize: '16px',
       fontWeight: '600',
-      color: '#3c4043',
+      color: 'var(--text-primary)',
       letterSpacing: '0.25px'
     },
     loadingSpinner: {

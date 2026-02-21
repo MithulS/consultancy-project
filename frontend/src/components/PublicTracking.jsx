@@ -12,7 +12,7 @@ export default function PublicTracking() {
 
   async function handleTrack(e) {
     e.preventDefault();
-    
+
     if (!trackingNumber.trim()) {
       setError('Please enter a tracking number');
       return;
@@ -108,13 +108,13 @@ export default function PublicTracking() {
     <div style={styles.container}>
       {/* Header */}
       <nav style={styles.nav}>
-        <h1 
+        <h1
           style={styles.logo}
           onClick={() => window.location.hash = '#dashboard'}
         >
           🛒 ElectroStore
         </h1>
-        <button 
+        <button
           className="btn btn-ghost"
           onClick={() => window.location.hash = '#dashboard'}
         >
@@ -130,7 +130,7 @@ export default function PublicTracking() {
             <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '16px' }}>
               Track Your Order
             </h1>
-            <p style={{ color: '#6b7280', marginBottom: '32px', fontSize: '16px' }}>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '16px' }}>
               Enter your tracking number to see real-time updates
             </p>
 
@@ -145,7 +145,7 @@ export default function PublicTracking() {
                   disabled={loading}
                 />
               </div>
-              <button 
+              <button
                 type="submit"
                 className="btn btn-primary btn-lg"
                 disabled={loading}
@@ -164,7 +164,7 @@ export default function PublicTracking() {
         ) : (
           <div style={styles.trackingCard}>
             {/* Back Button */}
-            <button 
+            <button
               className="btn btn-ghost"
               onClick={() => {
                 setTracking(null);
@@ -177,8 +177,8 @@ export default function PublicTracking() {
             </button>
 
             {/* Status Header */}
-            <div style={{ 
-              ...styles.statusCard, 
+            <div style={{
+              ...styles.statusCard,
               backgroundColor: `${getStatusColor(tracking.currentStatus)}15`,
               borderLeft: `4px solid ${getStatusColor(tracking.currentStatus)}`
             }}>
@@ -187,16 +187,16 @@ export default function PublicTracking() {
                   {getStatusIcon(tracking.currentStatus)}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h2 style={{ 
-                    margin: 0, 
-                    fontSize: '24px', 
+                  <h2 style={{
+                    margin: 0,
+                    fontSize: '24px',
                     color: getStatusColor(tracking.currentStatus),
                     textTransform: 'capitalize',
                     fontWeight: '700'
                   }}>
                     {tracking.currentStatus.replace(/_/g, ' ')}
                   </h2>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: 'var(--text-secondary)' }}>
                     Order #{tracking.orderNumber} • Tracking: <strong>{tracking.trackingNumber}</strong>
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default function PublicTracking() {
 
               {/* Progress Bar */}
               <div style={styles.progressBarContainer}>
-                <div 
+                <div
                   style={{
                     ...styles.progressBar,
                     width: `${getStatusProgress(tracking.currentStatus)}%`,
@@ -212,10 +212,10 @@ export default function PublicTracking() {
                   }}
                 />
               </div>
-              <div style={{ 
-                textAlign: 'right', 
-                fontSize: '12px', 
-                color: '#6b7280',
+              <div style={{
+                textAlign: 'right',
+                fontSize: '12px',
+                color: 'var(--text-secondary)',
                 marginTop: '4px'
               }}>
                 {getStatusProgress(tracking.currentStatus)}% Complete
@@ -238,14 +238,14 @@ export default function PublicTracking() {
             {tracking.courierPartner?.name && (
               <div style={styles.infoCard}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>🚚</div>
-                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                   Courier Partner
                 </div>
                 <div style={{ fontSize: '16px', fontWeight: '600' }}>
                   {tracking.courierPartner.name}
                 </div>
                 {tracking.courierPartner.contactNumber && (
-                  <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                     📞 {tracking.courierPartner.contactNumber}
                   </div>
                 )}
@@ -261,8 +261,8 @@ export default function PublicTracking() {
               <div style={styles.timeline}>
                 {tracking.trackingHistory && tracking.trackingHistory.length > 0 ? (
                   [...tracking.trackingHistory].reverse().map((entry, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       style={styles.timelineItem}
                       className="animate-fadeIn"
                     >
@@ -307,16 +307,16 @@ export default function PublicTracking() {
               </h3>
               {tracking.items.map((item, index) => (
                 <div key={index} style={styles.itemCard}>
-                  <img 
+                  <img
                     src={getImageUrl(item.imageUrl)}
                     alt={item.name}
                     style={styles.itemImage}
                   />
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '4px', color: 'var(--text-primary)' }}>
                       {item.name}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                       Quantity: {item.quantity}
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default function PublicTracking() {
 
             {/* Courier Link */}
             {tracking.courierPartner?.trackingUrl && (
-              <a 
+              <a
                 href={tracking.courierPartner.trackingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -346,12 +346,14 @@ export default function PublicTracking() {
 const styles = {
   container: {
     minHeight: '100vh',
-    backgroundColor: '#f9fafb'
+    backgroundColor: 'transparent'
   },
   nav: {
-    backgroundColor: 'white',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
     padding: '16px 24px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    borderBottom: '1px solid var(--glass-border)',
+    boxShadow: 'none',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
@@ -371,11 +373,13 @@ const styles = {
     padding: '40px 20px'
   },
   searchCard: {
-    backgroundColor: 'white',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '16px',
     padding: '48px 32px',
     textAlign: 'center',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    boxShadow: 'var(--shadow-lg)'
   },
   form: {
     display: 'flex',
@@ -386,16 +390,20 @@ const styles = {
     width: '100%',
     padding: '14px 16px',
     fontSize: '16px',
-    border: '2px solid #e5e7eb',
+    border: '1px solid var(--border-subtle)',
     borderRadius: '12px',
     outline: 'none',
-    transition: 'border-color 0.2s'
+    transition: 'border-color 0.2s',
+    background: 'transparent',
+    color: 'var(--text-primary)'
   },
   trackingCard: {
-    backgroundColor: 'white',
+    background: 'var(--glass-background)',
+    backdropFilter: 'var(--glass-blur)',
+    border: '1px solid var(--glass-border)',
     borderRadius: '16px',
     padding: '32px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    boxShadow: 'var(--shadow-lg)',
     display: 'flex',
     flexDirection: 'column'
   },
@@ -424,19 +432,20 @@ const styles = {
   },
   infoCard: {
     padding: '16px',
-    backgroundColor: '#f9fafb',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '12px',
-    border: '2px solid #e5e7eb',
-    marginBottom: '16px'
+    border: '1px solid var(--border-subtle)',
+    marginBottom: '16px',
+    color: 'var(--text-primary)'
   },
   timelineSection: {
     marginBottom: '24px'
   },
   timeline: {
-    backgroundColor: '#f9fafb',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '12px',
     padding: '16px',
-    border: '2px solid #e5e7eb'
+    border: '1px solid var(--border-subtle)'
   },
   timelineItem: {
     display: 'flex',
@@ -459,17 +468,17 @@ const styles = {
   timelineContent: {
     flex: 1,
     paddingBottom: '20px',
-    borderBottom: '1px solid #e5e7eb'
+    borderBottom: '1px solid var(--border-subtle)'
   },
   timelineStatus: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#1f2937',
+    color: 'var(--text-primary)',
     marginBottom: '4px'
   },
   timelineDescription: {
     fontSize: '13px',
-    color: '#6b7280',
+    color: 'var(--text-secondary)',
     marginBottom: '4px'
   },
   timelineLocation: {
@@ -480,7 +489,7 @@ const styles = {
   },
   timelineTimestamp: {
     fontSize: '11px',
-    color: '#9ca3af'
+    color: 'var(--text-tertiary)'
   },
   itemsSection: {
     marginBottom: '24px'
@@ -490,10 +499,11 @@ const styles = {
     gap: '16px',
     alignItems: 'center',
     padding: '12px',
-    backgroundColor: '#f9fafb',
+    background: 'rgba(255, 255, 255, 0.05)',
     borderRadius: '8px',
     marginBottom: '8px',
-    border: '1px solid #e5e7eb'
+    border: '1px solid var(--border-subtle)',
+    color: 'var(--text-primary)'
   },
   itemImage: {
     width: '60px',

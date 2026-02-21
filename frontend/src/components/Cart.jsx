@@ -56,11 +56,13 @@ export default function Cart() {
   const styles = {
     container: {
       minHeight: '100vh',
-      backgroundColor: 'transparent'
+      background: 'var(--gradient-navy-primary)',
+      color: 'var(--text-primary)'
     },
     header: {
-      backgroundColor: 'var(--primary-brand)',
-      color: 'var(--text-inverse)',
+      background: 'rgba(16, 30, 53, 0.8)',
+      backdropFilter: 'var(--glass-blur)',
+      color: 'var(--text-primary)',
       boxShadow: 'var(--shadow-md)',
       padding: '16px 32px',
       display: 'flex',
@@ -68,7 +70,8 @@ export default function Cart() {
       alignItems: 'center',
       position: 'sticky',
       top: 0,
-      zIndex: 100
+      zIndex: 100,
+      borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
     },
     logo: {
       fontSize: '24px',
@@ -76,7 +79,7 @@ export default function Cart() {
       color: 'var(--text-primary)',
       margin: 0,
       cursor: 'pointer',
-      textShadow: '0 0 20px rgba(46, 134, 222, 0.5)'
+      textShadow: '0 0 20px var(--accent-blue-glow)'
     },
     backBtn: {
       padding: '10px 20px',
@@ -103,10 +106,11 @@ export default function Cart() {
     emptyCart: {
       textAlign: 'center',
       padding: '60px 20px',
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      backgroundColor: 'rgba(16, 30, 53, 0.6)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       borderRadius: 'var(--border-radius-lg)',
-      boxShadow: 'var(--shadow-sm)'
+      boxShadow: 'var(--shadow-md)'
     },
     cartGrid: {
       display: 'grid',
@@ -119,8 +123,9 @@ export default function Cart() {
       gap: '16px'
     },
     cartItem: {
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      backgroundColor: 'rgba(16, 30, 53, 0.6)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '24px',
       display: 'flex',
@@ -159,8 +164,8 @@ export default function Cart() {
     quantityBtn: {
       width: '32px',
       height: '32px',
-      border: '1px solid var(--glass-border)',
-      backgroundColor: 'rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      backgroundColor: 'rgba(255,255,255,0.05)',
       color: 'var(--text-primary)',
       borderRadius: '6px',
       cursor: 'pointer',
@@ -175,8 +180,8 @@ export default function Cart() {
       width: '60px',
       padding: '8px',
       textAlign: 'center',
-      border: '1px solid var(--glass-border)',
-      backgroundColor: 'transparent',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      backgroundColor: 'rgba(255, 255, 255, 0.02)',
       color: 'var(--text-primary)',
       borderRadius: '6px',
       fontSize: '16px',
@@ -195,8 +200,9 @@ export default function Cart() {
       transition: 'all 0.2s'
     },
     summary: {
-      backgroundColor: '#ffffff',
-      border: '1px solid var(--border-color)',
+      backgroundColor: 'rgba(16, 30, 53, 0.6)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       borderRadius: 'var(--border-radius-lg)',
       padding: '32px',
       boxShadow: 'var(--shadow-lg)',
@@ -222,7 +228,7 @@ export default function Cart() {
       justifyContent: 'space-between',
       marginTop: '20px',
       paddingTop: '20px',
-      borderTop: '1px solid var(--glass-border)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
       fontSize: '24px',
       fontWeight: '700',
       color: 'var(--text-primary)'
@@ -295,8 +301,8 @@ export default function Cart() {
           {/* Cart Items */}
           <div style={styles.cartItems}>
             {cart.map(item => (
-              <div 
-                key={item._id} 
+              <div
+                key={item._id}
                 style={styles.cartItem}
                 className="card-hover-lift"
                 onMouseEnter={(e) => {
@@ -314,6 +320,7 @@ export default function Cart() {
                     alt={item.name}
                     style={styles.itemImage}
                     className="image-zoom"
+                    loading="lazy"
                   />
                 </div>
                 <div style={styles.itemDetails}>
@@ -340,7 +347,7 @@ export default function Cart() {
                     >
                       +
                     </button>
-                    <span style={{ marginLeft: '12px', color: 'var(--text-secondary)' }}>
+                    <span style={{ marginLeft: '12px', color: 'var(--text-primary)' }}>
                       Subtotal: ₹{(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
@@ -372,7 +379,7 @@ export default function Cart() {
 
             <div style={styles.summaryTotal}>
               <span>Total</span>
-              <span style={{ color: '#5b21b6' }}>₹{getTotalAmount().toFixed(2)}</span>
+              <span style={{ color: 'var(--accent-blue-primary)' }}>₹{getTotalAmount().toFixed(2)}</span>
             </div>
 
             <button

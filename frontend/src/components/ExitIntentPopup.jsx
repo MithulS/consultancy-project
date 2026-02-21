@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const ExitIntentPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,7 +32,7 @@ const ExitIntentPopup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Track the event
     if (window.gtag) {
       window.gtag('event', 'exit_intent_signup', {
@@ -52,7 +53,7 @@ const ExitIntentPopup = () => {
     }
 
     setSubmitted(true);
-    
+
     // Auto close after 3 seconds
     setTimeout(() => {
       setIsVisible(false);
@@ -63,20 +64,23 @@ const ExitIntentPopup = () => {
     setIsVisible(false);
   };
 
+  const popupRef = useRef(null);
+  useFocusTrap(popupRef, isVisible, handleClose);
+
   if (!isVisible) return null;
 
   return (
     <>
       <div className="exit-intent-overlay" onClick={handleClose} />
-      <div className="exit-intent-popup">
-        <button className="exit-intent-close" onClick={handleClose}>
+      <div className="exit-intent-popup" ref={popupRef} role="dialog" aria-modal="true" aria-labelledby="exit-intent-title">
+        <button className="exit-intent-close" onClick={handleClose} aria-label="Close popup">
           ✕
         </button>
 
         {!submitted ? (
           <div className="exit-intent-content">
-            <div className="exit-intent-icon">🎁</div>
-            <h2>Wait! Don't Leave Empty Handed</h2>
+            <div className="exit-intent-icon" aria-hidden="true">🎁</div>
+            <h2 id="exit-intent-title">Wait! Don't Leave Empty Handed</h2>
             <p className="exit-intent-subtitle">
               Get <strong>10% OFF</strong> your first order
             </p>

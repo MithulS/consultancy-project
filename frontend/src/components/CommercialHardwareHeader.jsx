@@ -17,9 +17,11 @@ export default function CommercialHardwareHeader({ onNavigate }) {
   const [isListening, setIsListening] = useState(false);
   const [voiceError, setVoiceError] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [showMegaMenu, setShowMegaMenu] = useState(false);
   const accountMenuRef = useRef(null);
   const recognitionRef = useRef(null);
   const searchTimeoutRef = useRef(null);
+  const megaMenuRef = useRef(null);
 
   useEffect(() => {
     // Load user data
@@ -39,6 +41,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     // React to login / logout events from other components
     const handleLogin = () => loadUser();
     const handleLogoutEvent = () => {
+      setUser(null);
       setUser(null);
       setCartCount(0);
     };
@@ -212,13 +215,14 @@ export default function CommercialHardwareHeader({ onNavigate }) {
   const styles = {
     // Header
     header: {
-      background: 'var(--primary-brand)', // Regal Blue
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       padding: '16px 24px',
       position: 'sticky',
       top: 0,
       zIndex: 1000,
       boxShadow: 'var(--shadow-md)',
-      borderBottom: 'none'
+      borderBottom: '1px solid var(--glass-border)'
     },
     headerContainer: {
       maxWidth: '1400px',
@@ -240,7 +244,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     logoIcon: {
       width: '48px',
       height: '48px',
-      background: 'linear-gradient(135deg, #4285F4 0%, #3367D6 100%)',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
       borderRadius: '12px',
       display: 'flex',
       alignItems: 'center',
@@ -248,7 +252,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       fontSize: '24px',
       fontWeight: 'bold',
       color: '#FFFFFF',
-      boxShadow: '0 4px 12px rgba(66, 133, 244, 0.3)',
+      boxShadow: '0 4px 12px var(--accent-blue-glow)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer'
     },
@@ -260,12 +264,15 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     logoTitle: {
       fontSize: '20px',
       fontWeight: 700,
-      color: '#111827',
+      background: 'linear-gradient(135deg, #ffffff 0%, var(--accent-blue-primary) 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
       lineHeight: 1
     },
     logoSubtitle: {
       fontSize: '12px',
-      color: '#6B7280',
+      color: 'var(--text-secondary)',
       lineHeight: 1
     },
 
@@ -277,41 +284,46 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     searchForm: {
       display: 'flex',
       gap: '0',
-      border: '2px solid #E5E7EB',
-      borderRadius: '12px',
+      border: '1px solid var(--border-secondary)',
+      borderRadius: '16px',
       overflow: 'hidden',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#FFFFFF',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-      position: 'relative'
+      transition: 'all var(--transition-normal)',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+      position: 'relative',
+      backdropFilter: 'var(--glass-blur)'
     },
     searchInput: {
       flex: 1,
-      padding: '12px 16px',
+      padding: '12px 20px',
       border: 'none',
       fontSize: '15px',
-      outline: 'none'
+      outline: 'none',
+      background: 'transparent',
+      color: 'var(--text-primary)'
     },
     voiceButton: {
       padding: '0 16px',
       backgroundColor: 'transparent',
       border: 'none',
-      borderLeft: '1px solid #E5E7EB',
+      borderLeft: '1px solid var(--border-subtle)',
       cursor: 'pointer',
       fontSize: '20px',
-      transition: 'background-color 0.2s'
+      transition: 'background-color 0.2s',
+      color: 'var(--text-secondary)'
     },
     searchButton: {
-      padding: '0 24px',
-      background: 'linear-gradient(135deg, #4285F4 0%, #3367D6 100%)',
+      padding: '0 28px',
+      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
       border: 'none',
       color: '#FFFFFF',
       cursor: 'pointer',
       fontSize: '20px',
       fontWeight: 600,
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all var(--transition-normal)',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      boxShadow: '0 0 15px var(--accent-blue-glow)'
     },
 
     // Action Buttons
@@ -323,39 +335,39 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     },
     actionButton: {
       position: 'relative',
-      padding: '10px 16px',
-      backgroundColor: 'transparent',
-      border: '2px solid #E5E7EB',
-      borderRadius: '10px',
+      padding: '10px 20px',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      border: '1px solid var(--border-secondary)',
+      borderRadius: '12px',
       cursor: 'pointer',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+      transition: 'all var(--transition-normal)',
+      boxShadow: 'none',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      gap: '12px',
       fontSize: '15px',
       fontWeight: 500,
-      color: '#ffffff', // Explicit white for header text
+      color: 'var(--text-primary)',
       textDecoration: 'none',
-      transition: 'all 0.2s',
-      opacity: 0.9
+      backdropFilter: 'blur(10px)'
     },
     trackButton: {
-      padding: '12px 24px',
-      background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+      padding: '12px 28px',
+      background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
       color: '#FFFFFF',
       border: 'none',
-      borderRadius: '10px',
+      borderRadius: '12px',
       cursor: 'pointer',
       fontWeight: 600,
       fontSize: '14px',
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 4px 12px rgba(239, 68, 68, 0.35)',
+      transition: 'all var(--transition-normal)',
+      boxShadow: '0 4px 15px var(--accent-red-glow)',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      letterSpacing: '0.02em'
     },
     badge: {
       position: 'absolute',
@@ -377,65 +389,121 @@ export default function CommercialHardwareHeader({ onNavigate }) {
     },
     accountMenu: {
       position: 'absolute',
-      top: 'calc(100% + 8px)',
+      top: 'calc(100% + 12px)',
       right: 0,
-      backgroundColor: '#FFFFFF',
-      border: '1px solid #E5E7EB',
-      borderRadius: '8px',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-      minWidth: '200px',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-primary)',
+      borderRadius: '16px',
+      boxShadow: 'var(--shadow-lg)',
+      minWidth: '220px',
       zIndex: 1000,
       overflow: 'hidden'
     },
     menuItem: {
-      padding: '12px 16px',
+      padding: '14px 20px',
       cursor: 'pointer',
-      borderBottom: '1px solid #F3F4F6',
+      borderBottom: '1px solid var(--border-subtle)',
       fontSize: '14px',
-      color: '#374151',
+      color: 'var(--text-primary)',
       transition: 'background-color 0.2s',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px'
+      gap: '12px'
     },
     menuHeader: {
-      padding: '12px 16px',
-      borderBottom: '2px solid #E5E7EB',
-      backgroundColor: '#F9FAFB'
+      padding: '16px 20px',
+      borderBottom: '2px solid var(--border-primary)',
+      background: 'rgba(255, 255, 255, 0.02)'
     },
     userName: {
       fontWeight: 600,
-      color: '#111827',
+      color: 'var(--text-primary)',
       fontSize: '15px'
     },
     userEmail: {
       fontSize: '12px',
-      color: '#6B7280',
-      marginTop: '2px'
+      color: 'var(--text-secondary)',
+      marginTop: '4px'
     },
 
-    // Navigation Bar
     navBar: {
-      backgroundColor: '#F9FAFB',
-      borderBottom: '1px solid #E5E7EB'
+      background: 'rgba(16, 30, 53, 0.4)',
+      backdropFilter: 'var(--glass-blur)',
+      borderBottom: '1px solid var(--border-secondary)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.05)'
     },
     navContainer: {
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '0 24px',
       display: 'flex',
-      gap: '32px',
-      alignItems: 'center'
+      gap: '40px',
+      alignItems: 'center',
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
     },
     navLink: {
-      padding: '14px 0',
+      padding: '16px 0',
       fontSize: '14px',
-      fontWeight: 500,
-      color: '#374151',
+      fontWeight: 600,
+      color: 'var(--text-secondary)',
       cursor: 'pointer',
-      borderBottom: '2px solid transparent',
-      transition: 'all 0.2s',
-      whiteSpace: 'nowrap'
+      position: 'relative',
+      transition: 'color var(--transition-normal)',
+      whiteSpace: 'nowrap',
+      letterSpacing: '0.02em',
+      textTransform: 'uppercase'
+    },
+
+    // Mega Menu additions
+    megaMenuDropdown: {
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      width: '100%',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      borderBottom: '1px solid var(--border-primary)',
+      boxShadow: 'var(--shadow-lg)',
+      zIndex: 999,
+      display: showMegaMenu ? 'block' : 'none',
+      padding: '40px 0',
+      animation: 'slideDown 0.3s ease-out'
+    },
+    megaMenuGrid: {
+      maxWidth: '1400px',
+      margin: '0 auto',
+      padding: '0 24px',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '32px'
+    },
+    megaMenuColumn: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px'
+    },
+    megaMenuHeading: {
+      color: 'var(--text-primary)',
+      fontSize: '16px',
+      fontWeight: '700',
+      marginBottom: '8px',
+      borderBottom: '1px solid var(--border-subtle)',
+      paddingBottom: '8px',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
+    },
+    megaMenuItem: {
+      color: 'var(--text-secondary)',
+      fontSize: '14px',
+      cursor: 'pointer',
+      transition: 'color var(--transition-fast)',
+      textDecoration: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
     }
   };
 
@@ -501,8 +569,8 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       <header style={styles.header}>
         <div style={styles.headerContainer}>
           {/* Logo */}
-          <div 
-            style={styles.logo} 
+          <div
+            style={styles.logo}
             onClick={() => window.location.hash = '#dashboard'}
             onMouseEnter={(e) => {
               e.currentTarget.querySelector('[data-logo-icon]').style.transform = 'scale(1.1) rotate(5deg)';
@@ -722,107 +790,129 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       </header>
 
       {/* Category Navigation Bar */}
-      <nav style={styles.navBar}>
+      <nav style={styles.navBar} ref={megaMenuRef} onMouseLeave={() => setShowMegaMenu(false)}>
         <div style={styles.navContainer}>
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
+              e.currentTarget.style.color = '#4285F4';
+              setShowMegaMenu(true);
             }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
-            }}
-            onClick={() => window.location.hash = '#dashboard?category=Electrical'}
           >
-            ⚡ Electrical
+            ☰ Shop by Category
           </div>
+
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
+              e.currentTarget.style.color = '#4285F4';
             }}
             onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
+              e.currentTarget.style.color = 'var(--text-secondary)';
             }}
-            onClick={() => window.location.hash = '#dashboard?category=Plumbing'}
+            onClick={() => window.location.hash = '#dashboard?featured=true'}
           >
-            🚿 Plumbing
+            ⭐ Featured Brands
           </div>
+
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
+              e.currentTarget.style.color = '#4285F4';
             }}
             onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
+              e.currentTarget.style.color = 'var(--text-secondary)';
             }}
-            onClick={() => window.location.hash = '#dashboard?category=Hardware'}
+            onClick={() => window.location.hash = '#dashboard?bestsellers=true'}
           >
-            🔩 Hardware
+            🔥 Bestsellers
           </div>
+
           <div
-            style={styles.navLink}
+            style={{ ...styles.navLink, marginLeft: 'auto' }}
             onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
+              e.currentTarget.style.color = '#EF4444';
             }}
             onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
-            }}
-            onClick={() => window.location.hash = '#dashboard?category=Paints%20%26%20Coatings'}
-          >
-            🎨 Paints
-          </div>
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
-            }}
-            onClick={() => window.location.hash = '#dashboard?category=Pipes%20%26%20Fittings'}
-          >
-            🔄 Pipes & Fittings
-          </div>
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#4285F4';
-              e.target.style.borderBottomColor = '#4285F4';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#374151';
-              e.target.style.borderBottomColor = 'transparent';
-            }}
-            onClick={() => window.location.hash = '#dashboard?category=Wiring%20%26%20Cables'}
-          >
-            🔌 Wiring & Cables
-          </div>
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#EF4444';
-              e.target.style.borderBottomColor = '#EF4444';
-              e.target.style.fontWeight = 700;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#EF4444';
-              e.target.style.borderBottomColor = 'transparent';
-              e.target.style.fontWeight = 600;
+              e.currentTarget.style.color = 'var(--text-secondary)';
             }}
             onClick={() => window.location.href = 'tel:+917904212501'}
           >
             📦 Wholesale Inquiry
+          </div>
+        </div>
+
+        {/* Mega Menu Dropdown */}
+        <div style={styles.megaMenuDropdown}>
+          <div style={styles.megaMenuGrid}>
+            <div style={styles.megaMenuColumn}>
+              <div style={styles.megaMenuHeading}>Core Building</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Electrical'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >⚡ Electrical Systems</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Wiring%20%26%20Cables'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🔌 Wiring & Cables</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Hardware'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🔩 Fasteners & Hardware</div>
+            </div>
+
+            <div style={styles.megaMenuColumn}>
+              <div style={styles.megaMenuHeading}>Plumbing & Water</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Plumbing'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🚿 Bathroom Fittings</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Pipes%20%26%20Fittings'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🔄 Pipes & Fittings</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Tanks'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >💧 Water Tanks</div>
+            </div>
+
+            <div style={styles.megaMenuColumn}>
+              <div style={styles.megaMenuHeading}>Finishes</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Paints%20%26%20Coatings'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🎨 Interior & Exterior Paints</div>
+              <div
+                style={styles.megaMenuItem}
+                onClick={() => { window.location.hash = '#dashboard?category=Tools'; setShowMegaMenu(false); }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >🛠️ Hand Tools</div>
+            </div>
+
+            <div style={styles.megaMenuColumn}>
+              <div style={styles.megaMenuHeading}>Top Brands</div>
+              <div style={styles.megaMenuItem}>✨ Asian Paints</div>
+              <div style={styles.megaMenuItem}>✨ Finolex Cables</div>
+              <div style={styles.megaMenuItem}>✨ Crompton</div>
+              <div style={styles.megaMenuItem}>✨ Havells</div>
+              <div style={styles.megaMenuItem}>✨ Sintex Plastics</div>
+            </div>
           </div>
         </div>
       </nav>

@@ -37,14 +37,14 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
 
   const styles = {
     nav: {
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(20px)',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      boxShadow: 'var(--shadow-md)',
       padding: '16px 32px',
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      borderBottom: '1px solid rgba(255, 255, 255, 0.3)'
+      borderBottom: '1px solid var(--border-color)'
     },
     container: {
       maxWidth: '1400px',
@@ -70,7 +70,7 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       alignItems: 'center',
       gap: '8px',
       fontSize: '14px',
-      color: '#64748b',
+      color: 'var(--text-secondary)',
       flexWrap: 'wrap'
     },
     breadcrumbLink: {
@@ -81,11 +81,11 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       cursor: 'pointer'
     },
     breadcrumbSeparator: {
-      color: '#cbd5e1',
+      color: 'var(--text-secondary)',
       margin: '0 4px'
     },
     breadcrumbCurrent: {
-      color: '#1e293b',
+      color: 'var(--text-primary)',
       fontWeight: '600'
     },
     menuButton: {
@@ -133,10 +133,10 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
     },
     userName: {
       fontSize: '14px',
-      color: '#1f2937',
+      color: 'var(--text-primary)',
       fontWeight: '500',
       padding: '8px 16px',
-      backgroundColor: 'rgba(102, 126, 234, 0.1)',
+      background: 'rgba(102, 126, 234, 0.1)',
       borderRadius: '8px'
     },
     badge: {
@@ -160,8 +160,10 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       top: '100%',
       left: 0,
       right: 0,
-      backgroundColor: 'white',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      borderBottom: '1px solid var(--border-color)',
+      boxShadow: 'var(--shadow-md)',
       padding: '16px',
       gap: '8px',
       flexDirection: 'column',
@@ -177,14 +179,14 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       <div style={styles.container}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h1 
+            <h1
               style={styles.logo}
               onClick={() => window.location.hash = isAdmin ? '#admin-dashboard' : '#dashboard'}
             >
               {isAdmin ? '🛡️ Admin Panel' : '🛒 ElectroStore'}
             </h1>
-            
-            <button 
+
+            <button
               style={styles.menuButton}
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               aria-label="Toggle menu"
@@ -192,15 +194,15 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
               {showMobileMenu ? '✕' : '☰'}
             </button>
           </div>
-          
+
           {breadcrumbs.length > 0 && (
             <div style={styles.breadcrumbs} role="navigation" aria-label="Breadcrumb">
               {breadcrumbs.map((crumb, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && <span style={styles.breadcrumbSeparator}>›</span>}
                   {index < breadcrumbs.length - 1 ? (
-                    <a 
-                      href={crumb.path} 
+                    <a
+                      href={crumb.path}
                       style={styles.breadcrumbLink}
                       onMouseEnter={(e) => e.target.style.color = '#764ba2'}
                       onMouseLeave={(e) => e.target.style.color = '#667eea'}
@@ -216,12 +218,12 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           )}
         </div>
 
-        <div style={{...styles.navLinks, display: showMobileMenu ? 'none' : 'flex'}}>
+        <div style={{ ...styles.navLinks, display: showMobileMenu ? 'none' : 'flex' }}>
           {userName && <span style={styles.userName}>👤 {userName}</span>}
           {!isAdmin && (
             <>
-              <button 
-                style={{...styles.navButton, ...styles.primaryButton}}
+              <button
+                style={{ ...styles.navButton, ...styles.primaryButton }}
                 onClick={() => window.location.hash = '#my-orders'}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -234,8 +236,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
               >
                 📦 Orders
               </button>
-              <button 
-                style={{...styles.navButton, ...styles.secondaryButton, position: 'relative'}}
+              <button
+                style={{ ...styles.navButton, ...styles.secondaryButton, position: 'relative' }}
                 onClick={() => window.location.hash = '#cart'}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -252,8 +254,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           )}
           {isAdmin && (
             <>
-              <button 
-                style={{...styles.navButton, ...styles.warningButton}}
+              <button
+                style={{ ...styles.navButton, ...styles.warningButton }}
                 onClick={() => window.location.hash = '#sales-analytics'}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -266,8 +268,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
               >
                 📊 Analytics
               </button>
-              <button 
-                style={{...styles.navButton, ...styles.primaryButton}}
+              <button
+                style={{ ...styles.navButton, ...styles.primaryButton }}
                 onClick={() => window.location.hash = '#admin-settings'}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -282,8 +284,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
               </button>
             </>
           )}
-          <button 
-            style={{...styles.navButton, ...styles.dangerButton}}
+          <button
+            style={{ ...styles.navButton, ...styles.dangerButton }}
             onClick={logout}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -300,21 +302,21 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
 
         {/* Mobile Menu */}
         {showMobileMenu && (
-          <div style={{...styles.mobileMenu, ...styles.mobileMenuVisible}}>
+          <div style={{ ...styles.mobileMenu, ...styles.mobileMenuVisible }}>
             {userName && <span style={styles.userName}>👤 {userName}</span>}
             {!isAdmin && (
               <>
-                <button style={{...styles.navButton, ...styles.primaryButton}} onClick={() => { window.location.hash = '#my-orders'; setShowMobileMenu(false); }}>📦 Orders</button>
-                <button style={{...styles.navButton, ...styles.secondaryButton}} onClick={() => { window.location.hash = '#cart'; setShowMobileMenu(false); }}>🛒 Cart</button>
+                <button style={{ ...styles.navButton, ...styles.primaryButton }} onClick={() => { window.location.hash = '#my-orders'; setShowMobileMenu(false); }}>📦 Orders</button>
+                <button style={{ ...styles.navButton, ...styles.secondaryButton }} onClick={() => { window.location.hash = '#cart'; setShowMobileMenu(false); }}>🛒 Cart</button>
               </>
             )}
             {isAdmin && (
               <>
-                <button style={{...styles.navButton, ...styles.warningButton}} onClick={() => { window.location.hash = '#sales-analytics'; setShowMobileMenu(false); }}>📊 Analytics</button>
-                <button style={{...styles.navButton, ...styles.primaryButton}} onClick={() => { window.location.hash = '#admin-settings'; setShowMobileMenu(false); }}>⚙️ Settings</button>
+                <button style={{ ...styles.navButton, ...styles.warningButton }} onClick={() => { window.location.hash = '#sales-analytics'; setShowMobileMenu(false); }}>📊 Analytics</button>
+                <button style={{ ...styles.navButton, ...styles.primaryButton }} onClick={() => { window.location.hash = '#admin-settings'; setShowMobileMenu(false); }}>⚙️ Settings</button>
               </>
             )}
-            <button style={{...styles.navButton, ...styles.dangerButton}} onClick={logout}>🚪 Logout</button>
+            <button style={{ ...styles.navButton, ...styles.dangerButton }} onClick={logout}>🚪 Logout</button>
           </div>
         )}
       </div>

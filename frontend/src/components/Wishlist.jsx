@@ -151,6 +151,7 @@ export default function Wishlist({ onNavigate }) {
                 alt={`${product.name}${product.brand ? ' by ' + product.brand : ''}, ₹${product.price}${product.stock > 0 ? ', In stock' : ', Out of stock'}`}
                 title={`${product.name} - ${product.brand || 'No brand'} - ₹${product.price}`}
                 style={styles.image}
+                loading="lazy"
               />
 
               <div style={styles.cardContent}>

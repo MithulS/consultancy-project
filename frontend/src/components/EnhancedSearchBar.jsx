@@ -13,11 +13,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-export default function EnhancedSearchBar({ 
-  onSearch, 
+export default function EnhancedSearchBar({
+  onSearch,
   onFilterChange,
   placeholder = "Search products, brands, categories...",
-  showFilters = true 
+  showFilters = true
 }) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -107,7 +107,7 @@ export default function EnhancedSearchBar({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev < suggestions.length - 1 ? prev + 1 : prev
         );
         break;
@@ -169,16 +169,17 @@ export default function EnhancedSearchBar({
       flex: 1,
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: '#ffffff',
-      border: '2px solid #e5e7eb',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '2px solid var(--border-color)',
       borderRadius: '12px',
       padding: '0 16px',
       transition: 'all 0.3s ease',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+      boxShadow: 'var(--shadow-sm)'
     },
     searchBoxFocused: {
-      borderColor: '#1e3a8a',
-      boxShadow: '0 4px 16px rgba(30, 58, 138, 0.2)'
+      borderColor: 'var(--accent-blue-primary)',
+      boxShadow: '0 4px 16px rgba(46, 134, 222, 0.2)'
     },
     searchIcon: {
       fontSize: '20px',
@@ -191,14 +192,15 @@ export default function EnhancedSearchBar({
       outline: 'none',
       padding: '14px 0',
       fontSize: '15px',
-      color: '#1f2937',
+      color: 'var(--text-primary)',
       backgroundColor: 'transparent'
     },
     filterButton: {
       padding: '12px 20px',
-      backgroundColor: showFilterPanel ? '#1e3a8a' : '#ffffff',
-      color: showFilterPanel ? '#ffffff' : '#374151',
-      border: '2px solid ' + (showFilterPanel ? '#1e3a8a' : '#e5e7eb'),
+      backgroundColor: showFilterPanel ? 'var(--accent-blue-primary)' : 'var(--glass-background)',
+      backdropFilter: showFilterPanel ? 'none' : 'var(--glass-blur)',
+      color: showFilterPanel ? '#ffffff' : 'var(--text-primary)',
+      border: '2px solid ' + (showFilterPanel ? 'var(--accent-blue-primary)' : 'var(--border-color)'),
       borderRadius: '12px',
       fontSize: '14px',
       fontWeight: '600',
@@ -215,10 +217,11 @@ export default function EnhancedSearchBar({
       left: 0,
       right: 0,
       marginTop: '8px',
-      backgroundColor: '#ffffff',
-      border: '1px solid #e5e7eb',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-color)',
       borderRadius: '12px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: 'var(--shadow-lg)',
       maxHeight: '400px',
       overflowY: 'auto',
       zIndex: 1000
@@ -229,7 +232,7 @@ export default function EnhancedSearchBar({
     sectionTitle: {
       fontSize: '12px',
       fontWeight: '600',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       textTransform: 'uppercase',
       marginBottom: '8px',
       letterSpacing: '0.5px'
@@ -244,10 +247,10 @@ export default function EnhancedSearchBar({
       transition: 'all 0.2s ease'
     },
     suggestionItemHover: {
-      backgroundColor: '#f3f4f6'
+      backgroundColor: 'rgba(255, 255, 255, 0.05)'
     },
     suggestionItemSelected: {
-      backgroundColor: '#dbeafe'
+      backgroundColor: 'var(--accent-blue-subtle)'
     },
     productImage: {
       width: '40px',
@@ -262,17 +265,17 @@ export default function EnhancedSearchBar({
     productName: {
       fontSize: '14px',
       fontWeight: '600',
-      color: '#1f2937',
+      color: 'var(--text-primary)',
       marginBottom: '2px'
     },
     productCategory: {
       fontSize: '12px',
-      color: '#6b7280'
+      color: 'var(--text-secondary)'
     },
     productPrice: {
       fontSize: '14px',
       fontWeight: '700',
-      color: '#1e3a8a'
+      color: 'var(--accent-blue-primary)'
     },
     recentItem: {
       display: 'flex',
@@ -304,10 +307,11 @@ export default function EnhancedSearchBar({
       top: '100%',
       right: 0,
       marginTop: '8px',
-      backgroundColor: '#ffffff',
-      border: '1px solid #e5e7eb',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--border-color)',
       borderRadius: '12px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: 'var(--shadow-lg)',
       padding: '20px',
       minWidth: '300px',
       zIndex: 1000
@@ -319,16 +323,18 @@ export default function EnhancedSearchBar({
       display: 'block',
       fontSize: '13px',
       fontWeight: '600',
-      color: '#374151',
+      color: 'var(--text-primary)',
       marginBottom: '8px'
     },
     filterInput: {
       width: '100%',
       padding: '8px 12px',
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
       fontSize: '14px',
       outline: 'none',
+      background: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--text-primary)',
       transition: 'border 0.2s ease'
     },
     filterRow: {
@@ -351,7 +357,7 @@ export default function EnhancedSearchBar({
     <div style={styles.container} ref={searchRef}>
       <div style={styles.searchWrapper}>
         {/* Search Input */}
-        <div 
+        <div
           style={{
             ...styles.searchBox,
             ...(showSuggestions ? styles.searchBoxFocused : {})
@@ -411,17 +417,17 @@ export default function EnhancedSearchBar({
                     setQuery(search);
                     handleSearch(search);
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '16px' }}>🕐</span>
-                    <span style={{ fontSize: '14px', color: '#374151' }}>{search}</span>
+                    <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{search}</span>
                   </div>
                   <button
                     onClick={(e) => clearRecentSearch(search, e)}
                     style={styles.clearButton}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                   >
                     ✕
@@ -445,7 +451,7 @@ export default function EnhancedSearchBar({
                   onClick={() => selectSuggestion(product)}
                   onMouseEnter={(e) => {
                     if (idx !== selectedIndex) {
-                      e.currentTarget.style.backgroundColor = '#f3f4f6';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
                     }
                     setSelectedIndex(idx);
                   }}
@@ -546,7 +552,7 @@ export default function EnhancedSearchBar({
                 checked={filters.inStock}
                 onChange={(e) => updateFilters('inStock', e.target.checked)}
               />
-              <span style={{ fontSize: '14px', color: '#374151' }}>In Stock Only</span>
+              <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>In Stock Only</span>
             </label>
           </div>
 
@@ -583,12 +589,12 @@ export default function EnhancedSearchBar({
             style={{
               width: '100%',
               padding: '10px',
-              backgroundColor: '#f3f4f6',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
               border: 'none',
               borderRadius: '8px',
               fontSize: '14px',
               fontWeight: '600',
-              color: '#374151',
+              color: 'var(--text-primary)',
               cursor: 'pointer'
             }}
           >

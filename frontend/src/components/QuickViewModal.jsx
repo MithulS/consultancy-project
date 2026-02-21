@@ -52,7 +52,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       animation: 'fadeIn 0.2s ease-in-out',
     },
     modal: {
-      backgroundColor: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '16px',
       maxWidth: '900px',
       width: '100%',
@@ -66,8 +67,9 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       position: 'absolute',
       top: '16px',
       right: '16px',
-      background: 'white',
-      border: 'none',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      border: '1px solid var(--glass-border)',
       borderRadius: '50%',
       width: '40px',
       height: '40px',
@@ -97,14 +99,14 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       aspectRatio: '1',
       borderRadius: '12px',
       overflow: 'hidden',
-      backgroundColor: '#f9fafb',
+      background: 'rgba(255, 255, 255, 0.05)',
       position: 'relative',
     },
     badge: {
       position: 'absolute',
       top: '12px',
       left: '12px',
-      backgroundColor: '#ef4444',
+      backgroundColor: 'var(--accent-red-primary)',
       color: 'white',
       padding: '6px 12px',
       borderRadius: '6px',
@@ -127,7 +129,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     productName: {
       fontSize: '28px',
       fontWeight: '800',
-      color: '#111827',
+      color: 'var(--text-primary)',
       lineHeight: '1.2',
       marginTop: '0',
     },
@@ -151,7 +153,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     currentPrice: {
       fontSize: '32px',
       fontWeight: '800',
-      color: '#111827',
+      color: 'var(--text-primary)',
     },
     originalPrice: {
       fontSize: '20px',
@@ -159,8 +161,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       textDecoration: 'line-through',
     },
     discountBadge: {
-      backgroundColor: '#dcfce7',
-      color: '#166534',
+      background: 'rgba(16, 185, 129, 0.1)',
+      color: 'var(--color-success)',
       padding: '4px 8px',
       borderRadius: '6px',
       fontSize: '14px',
@@ -168,7 +170,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     },
     description: {
       fontSize: '15px',
-      color: '#4b5563',
+      color: 'var(--text-secondary)',
       lineHeight: '1.6',
     },
     stockInfo: {
@@ -176,11 +178,11 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       alignItems: 'center',
       gap: '8px',
       padding: '12px 16px',
-      backgroundColor: '#f0fdf4',
+      background: 'rgba(16, 185, 129, 0.1)',
       borderRadius: '8px',
       fontSize: '14px',
       fontWeight: '600',
-      color: '#166534',
+      color: 'var(--color-success)',
     },
     quantitySection: {
       display: 'flex',
@@ -203,11 +205,11 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       width: '40px',
       height: '40px',
       border: 'none',
-      background: 'white',
+      background: 'transparent',
       cursor: 'pointer',
       fontSize: '18px',
       fontWeight: '600',
-      color: '#1e3a8a',
+      color: 'var(--text-primary)',
       transition: 'background-color 0.2s',
     },
     quantityValue: {
@@ -215,8 +217,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       textAlign: 'center',
       fontSize: '16px',
       fontWeight: '600',
-      color: '#111827',
-      backgroundColor: '#f9fafb',
+      color: 'var(--text-primary)',
+      background: 'rgba(255, 255, 255, 0.05)',
     },
     actions: {
       display: 'flex',
@@ -226,7 +228,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     btnPrimary: {
       flex: 1,
       padding: '14px 24px',
-      background: 'linear-gradient(135deg, #10b981, #059669)',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
       color: 'white',
       border: 'none',
       borderRadius: '10px',
@@ -234,14 +236,14 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.2s',
-      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
     },
     btnSecondary: {
       flex: 1,
       padding: '14px 24px',
-      background: 'white',
-      color: '#1e3a8a',
-      border: '2px solid #1e3a8a',
+      background: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border-secondary)',
       borderRadius: '10px',
       fontSize: '16px',
       fontWeight: '700',
@@ -291,11 +293,11 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
             onClick={onClose}
             aria-label="Close quick view"
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f3f4f6';
+              e.currentTarget.style.background = 'var(--hover-bg)';
               e.currentTarget.style.transform = 'scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'white';
+              e.currentTarget.style.background = 'var(--glass-background)';
               e.currentTarget.style.transform = 'scale(1)';
             }}
           >
@@ -328,7 +330,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
             {/* Details Section */}
             <div style={styles.detailsSection}>
               <span style={styles.category}>{product.category}</span>
-              
+
               <h2 style={styles.productName}>{product.name}</h2>
 
               {product.rating > 0 && (
@@ -378,8 +380,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
                       <button
                         style={styles.quantityButton}
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--hover-bg)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         −
                       </button>
@@ -387,8 +389,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
                       <button
                         style={styles.quantityButton}
                         onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--hover-bg)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         +
                       </button>
@@ -401,11 +403,11 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
                       onClick={handleAddToCart}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(16, 185, 129, 0.4)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
                       }}
                     >
                       🛍️ Add to Cart
@@ -414,12 +416,12 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
                       style={styles.btnSecondary}
                       onClick={handleBuyNow}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1e3a8a';
-                        e.currentTarget.style.color = 'white';
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.borderColor = 'var(--border-primary)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'white';
-                        e.currentTarget.style.color = '#1e3a8a';
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.borderColor = 'var(--border-secondary)';
                       }}
                     >
                       ⚡ Buy Now
@@ -431,8 +433,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
               {product.stock === 0 && (
                 <div style={{
                   ...styles.stockInfo,
-                  backgroundColor: '#fee2e2',
-                  color: '#991b1b',
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  color: 'var(--accent-red-primary)',
                 }}>
                   ✕ Out of Stock
                 </div>

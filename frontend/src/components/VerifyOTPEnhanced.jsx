@@ -9,7 +9,7 @@ export default function VerifyOTPEnhanced() {
   const localEmail = localStorage.getItem('pendingVerificationEmail') || '';
   const sessionEmail = sessionStorage.getItem('pendingVerificationEmail') || '';
   const storedEmail = localEmail || sessionEmail || urlEmail || '';
-  
+
   // OTP digits (6 individual inputs)
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [msg, setMsg] = useState('');
@@ -22,7 +22,7 @@ export default function VerifyOTPEnhanced() {
   const [isLocked, setIsLocked] = useState(false);
   const [showManualEmailInput, setShowManualEmailInput] = useState(false);
   const [manualEmail, setManualEmail] = useState('');
-  
+
   // Refs for input fields
   const inputRefs = [
     useRef(null),
@@ -46,7 +46,7 @@ export default function VerifyOTPEnhanced() {
     console.log('📍 Hash:', window.location.hash);
     console.log('🔍 Referrer:', document.referrer);
     console.groupEnd();
-    
+
     // Check if email exists
     if (!storedEmail) {
       console.error('❌ CRITICAL: No email found in any storage location');
@@ -62,11 +62,11 @@ export default function VerifyOTPEnhanced() {
       const expiryDate = new Date(expiryTime);
       const now = new Date();
       const remaining = Math.floor((expiryDate - now) / 1000);
-      
+
       console.log('⏱️ Expiry time:', expiryTime);
       console.log('⏱️ Current time:', now.toISOString());
       console.log('⏱️ Remaining seconds:', remaining);
-      
+
       if (remaining > 0) {
         setTimeRemaining(remaining);
         console.log('✅ Countdown restored:', remaining, 'seconds');
@@ -91,7 +91,7 @@ export default function VerifyOTPEnhanced() {
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run only once on mount
 
   // Countdown timer effect
@@ -149,7 +149,7 @@ export default function VerifyOTPEnhanced() {
     if (e.key === 'Backspace') {
       e.preventDefault();
       const newDigits = [...otpDigits];
-      
+
       if (otpDigits[index]) {
         // Clear current digit
         newDigits[index] = '';
@@ -161,12 +161,12 @@ export default function VerifyOTPEnhanced() {
         inputRefs[index - 1].current?.focus();
       }
     }
-    
+
     // Handle left arrow
     if (e.key === 'ArrowLeft' && index > 0) {
       inputRefs[index - 1].current?.focus();
     }
-    
+
     // Handle right arrow
     if (e.key === 'ArrowRight' && index < 5) {
       inputRefs[index + 1].current?.focus();
@@ -181,14 +181,14 @@ export default function VerifyOTPEnhanced() {
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
-    
+
     // Only accept 6-digit pastes
     if (/^\d{6}$/.test(pastedData)) {
       const newDigits = pastedData.split('');
       setOtpDigits(newDigits);
       // Focus last input
       inputRefs[5].current?.focus();
-      
+
       setMsg('');
       setMsgType('');
     }
@@ -198,15 +198,15 @@ export default function VerifyOTPEnhanced() {
 
   async function verify(e) {
     e.preventDefault();
-    
+
     const otpString = getOtpString();
-    
+
     if (otpString.length !== 6) {
       setMsg('Please enter all 6 digits');
       setMsgType('error');
       return;
     }
-    
+
     // Check email is present before proceeding
     if (!storedEmail) {
       console.error('❌ No email available for verification');
@@ -215,7 +215,7 @@ export default function VerifyOTPEnhanced() {
       setShowManualEmailInput(true);
       return;
     }
-    
+
     if (isLocked) {
       setMsg('Account is locked due to too many failed attempts. Please wait 15 minutes.');
       setMsgType('error');
@@ -227,73 +227,73 @@ export default function VerifyOTPEnhanced() {
       setMsgType('error');
       return;
     }
-    
+
     setMsg('Verifying your code...');
     setMsgType('info');
     setLoading(true);
-    
+
     try {
       console.log('🔐 Verifying OTP...');
       console.log('📧 Email:', storedEmail);
       console.log('🔢 OTP:', otpString);
-      
+
       // Add timeout to prevent hanging
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
+
       const res = await fetch(`${API}/api/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: storedEmail, otp: otpString }),
         signal: controller.signal
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       // Check if response is JSON
       const contentType = res.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('Server returned invalid response. Please try again.');
       };
-      
+
       const data = await res.json();
       console.log('📡 Response:', res.status, data);
-      
+
       if (!res.ok) {
         // Handle "already verified" case
         if (res.status === 400 && data.msg && data.msg.toLowerCase().includes('already verified')) {
           console.log('✅ User already verified - redirecting to login');
           setMsg('✅ Your email is already verified! Redirecting to login...');
           setMsgType('success');
-          
+
           // Store success message for login page
           sessionStorage.setItem('loginMessage', 'Email already verified. You can now log in.');
           sessionStorage.setItem('loginMessageType', 'success');
-          
+
           // Clear OTP storage
           localStorage.removeItem('pendingVerificationEmail');
           localStorage.removeItem('otpExpiry');
-          
+
           // Redirect after 2 seconds
           setTimeout(() => {
             window.location.hash = '#login';
           }, 2000);
           return;
         }
-        
+
         // Handle "user not found" case
         if (res.status === 400 && data.msg && data.msg.toLowerCase().includes('no user found')) {
           console.error('❌ User not found in database');
           setMsg('❌ Account not found. Please register first.');
           setMsgType('error');
-          
+
           // Redirect to registration after 3 seconds
           setTimeout(() => {
             window.location.hash = '#register';
           }, 3000);
           return;
         }
-        
+
         if (res.status === 429 || res.status === 423) {
           // Account locked
           setIsLocked(true);
@@ -314,15 +314,15 @@ export default function VerifyOTPEnhanced() {
         console.log('✅ Verification successful!');
         setMsg('✅ Email verified successfully! Redirecting to login...');
         setMsgType('success');
-        
+
         // Store success message for login page
         sessionStorage.setItem('loginMessage', '✅ Email verified successfully! You can now log in.');
         sessionStorage.setItem('loginMessageType', 'success');
-        
+
         // Clear stored data
         localStorage.removeItem('pendingVerificationEmail');
         localStorage.removeItem('otpExpiry');
-        
+
         // Redirect to login after 2 seconds
         setTimeout(() => {
           window.location.hash = '#login';
@@ -330,7 +330,7 @@ export default function VerifyOTPEnhanced() {
       }
     } catch (err) {
       console.error('❌ Verification error:', err);
-      
+
       // Specific error messages
       if (err.name === 'AbortError') {
         setMsg('❌ Request timed out. Please check your connection and try again.');
@@ -341,7 +341,7 @@ export default function VerifyOTPEnhanced() {
       } else {
         setMsg('❌ ' + (err.message || 'Verification failed. Please try again.'));
       }
-      
+
       setMsgType('error');
       setOtpDigits(['', '', '', '', '', '']);
       inputRefs[0].current?.focus();
@@ -356,40 +356,40 @@ export default function VerifyOTPEnhanced() {
       setMsgType('error');
       return;
     }
-    
+
     setMsg('Resending verification code...');
     setMsgType('info');
     setResending(true);
-    
+
     try {
       console.log('🔄 Resending OTP to:', storedEmail);
-      
+
       const res = await fetch(`${API}/api/auth/resend-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: storedEmail })
       });
-      
+
       const data = await res.json();
       console.log('📡 Resend response:', res.status, data);
-      
+
       if (!res.ok) {
         throw new Error(data.msg || 'Failed to resend code');
       }
-      
+
       setMsg('✅ New code sent! Please check your email.');
       setMsgType('success');
-      
+
       // Reset countdown
       const expiry = new Date(Date.now() + 10 * 60 * 1000);
       localStorage.setItem('otpExpiry', expiry.toISOString());
       setTimeRemaining(600);
       setCanResend(false);
-      
+
       // Clear OTP inputs
       setOtpDigits(['', '', '', '', '', '']);
       inputRefs[0].current?.focus();
-      
+
     } catch (err) {
       console.error('❌ Resend error:', err);
       setMsg(err.message || 'Failed to resend code. Please try again.');
@@ -424,7 +424,8 @@ export default function VerifyOTPEnhanced() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     },
     card: {
-      backgroundColor: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '20px',
       boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
       maxWidth: '480px',
@@ -509,7 +510,8 @@ export default function VerifyOTPEnhanced() {
       fontFamily: 'monospace'
     },
     otpInputFilled: {
-      backgroundColor: 'white',
+      backgroundColor: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderColor: '#667eea',
       boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)'
     },
@@ -539,7 +541,8 @@ export default function VerifyOTPEnhanced() {
       boxShadow: 'none'
     },
     resendButton: {
-      backgroundColor: 'white',
+      backgroundColor: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       color: '#667eea',
       border: '2px solid #e2e8f0'
     },
@@ -623,7 +626,8 @@ export default function VerifyOTPEnhanced() {
     optionButton: {
       width: '100%',
       padding: '14px',
-      backgroundColor: 'white',
+      backgroundColor: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       color: '#667eea',
       border: '2px solid #e2e8f0',
       borderRadius: '8px',
@@ -677,7 +681,7 @@ export default function VerifyOTPEnhanced() {
               <li>🔒 Private/Incognito mode restrictions</li>
               <li>⏰ Session expired ({'>'} 30 minutes)</li>
             </ul>
-            
+
             <p style={styles.manualEmailText}>
               <strong>Enter your email to continue:</strong>
             </p>
@@ -690,7 +694,7 @@ export default function VerifyOTPEnhanced() {
               onFocus={(e) => e.target.style.borderColor = '#667eea'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
-            
+
             <button
               type="button"
               onClick={() => {
@@ -700,11 +704,11 @@ export default function VerifyOTPEnhanced() {
                   localStorage.setItem('pendingVerificationEmail', manualEmail);
                   sessionStorage.setItem('pendingVerificationEmail', manualEmail);
                   console.log('✅ Email manually entered and stored:', manualEmail);
-                  
+
                   // Update URL
                   const encodedEmail = encodeURIComponent(manualEmail);
                   window.location.hash = `#verify-otp?email=${encodedEmail}`;
-                  
+
                   // Reload page to reinitialize with new email
                   window.location.reload();
                 } else {
@@ -718,7 +722,7 @@ export default function VerifyOTPEnhanced() {
             >
               Continue with this email
             </button>
-            
+
             <div style={{ marginTop: '16px' }}>
               <button
                 type="button"
@@ -729,7 +733,7 @@ export default function VerifyOTPEnhanced() {
               >
                 🔄 Register a new account instead
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => window.location.hash = '#login'}
@@ -749,7 +753,7 @@ export default function VerifyOTPEnhanced() {
             <div style={styles.timerBox}>
               <div style={styles.timerLabel}>Code expires in:</div>
               <div style={styles.timerValue}>
-                {timeRemaining !== null && timeRemaining > 0 
+                {timeRemaining !== null && timeRemaining > 0
                   ? formatTime(timeRemaining)
                   : '0:00'}
               </div>
@@ -767,8 +771,8 @@ export default function VerifyOTPEnhanced() {
             {msg && (
               <div style={{
                 ...styles.message,
-                ...(msgType === 'success' ? styles.messageSuccess : 
-                    msgType === 'error' ? styles.messageError : 
+                ...(msgType === 'success' ? styles.messageSuccess :
+                  msgType === 'error' ? styles.messageError :
                     styles.messageInfo)
               }}>
                 {msg}
@@ -777,106 +781,106 @@ export default function VerifyOTPEnhanced() {
 
             {/* OTP Input */}
             <form onSubmit={verify}>
-          <div style={{ textAlign: 'left' }}>
-            <label style={styles.otpLabel}>Verification Code</label>
-          </div>
-          
-          <div style={styles.otpContainer}>
-            {otpDigits.map((digit, index) => (
-              <input
-                key={index}
-                ref={inputRefs[index]}
-                type="text"
-                inputMode="numeric"
-                maxLength="1"
-                value={digit}
-                onChange={(e) => handleDigitChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={index === 0 ? handlePaste : undefined}
-                disabled={loading}
-                aria-label={`Digit ${index + 1} of 6`}
+              <div style={{ textAlign: 'left' }}>
+                <label style={styles.otpLabel}>Verification Code</label>
+              </div>
+
+              <div style={styles.otpContainer}>
+                {otpDigits.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={inputRefs[index]}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength="1"
+                    value={digit}
+                    onChange={(e) => handleDigitChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    onPaste={index === 0 ? handlePaste : undefined}
+                    disabled={loading}
+                    aria-label={`Digit ${index + 1} of 6`}
+                    style={{
+                      ...styles.otpInput,
+                      ...(digit ? styles.otpInputFilled : {})
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Attempts Warning */}
+              {attemptsRemaining < 5 && attemptsRemaining > 0 && !isLocked && (
+                <div style={styles.attemptsWarning}>
+                  ⚠️ {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining
+                </div>
+              )}
+
+              {/* Locked Warning */}
+              {isLocked && (
+                <div style={{ ...styles.attemptsWarning, backgroundColor: '#fed7d7', color: '#742a2a' }}>
+                  🔒 Account locked. Please wait 15 minutes before trying again.
+                </div>
+              )}
+
+              {/* Verify Button */}
+              <button
+                type="submit"
+                disabled={loading || isLocked || getOtpString().length !== 6 || showManualEmailInput}
                 style={{
-                  ...styles.otpInput,
-                  ...(digit ? styles.otpInputFilled : {})
+                  ...styles.button,
+                  ...styles.verifyButton,
+                  ...(loading || isLocked || getOtpString().length !== 6 ? styles.verifyButtonDisabled : {})
                 }}
-              />
-            ))}
-          </div>
+                onMouseEnter={(e) => {
+                  if (!loading && !isLocked && getOtpString().length === 6) {
+                    e.target.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                {loading ? (
+                  <>
+                    <span style={styles.icon}>⏳</span> Verifying...
+                  </>
+                ) : (
+                  <>
+                    <span style={styles.icon}>✓</span> Verify Email
+                  </>
+                )}
+              </button>
 
-          {/* Attempts Warning */}
-          {attemptsRemaining < 5 && attemptsRemaining > 0 && !isLocked && (
-            <div style={styles.attemptsWarning}>
-              ⚠️ {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining
-            </div>
-          )}
-
-          {/* Locked Warning */}
-          {isLocked && (
-            <div style={{...styles.attemptsWarning, backgroundColor: '#fed7d7', color: '#742a2a'}}>
-              🔒 Account locked. Please wait 15 minutes before trying again.
-            </div>
-          )}
-
-          {/* Verify Button */}
-          <button
-            type="submit"
-            disabled={loading || isLocked || getOtpString().length !== 6 || showManualEmailInput}
-            style={{
-              ...styles.button,
-              ...styles.verifyButton,
-              ...(loading || isLocked || getOtpString().length !== 6 ? styles.verifyButtonDisabled : {})
-            }}
-            onMouseEnter={(e) => {
-              if (!loading && !isLocked && getOtpString().length === 6) {
-                e.target.style.transform = 'translateY(-2px)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-            }}
-          >
-            {loading ? (
-              <>
-                <span style={styles.icon}>⏳</span> Verifying...
-              </>
-            ) : (
-              <>
-                <span style={styles.icon}>✓</span> Verify Email
-              </>
-            )}
-          </button>
-
-          {/* Resend Button */}
-          <button
-            type="button"
-            onClick={resend}
-            disabled={resending || !canResend || isLocked || showManualEmailInput}
-            style={{
-              ...styles.button,
-              ...styles.resendButton,
-              ...(resending || !canResend || isLocked ? styles.resendButtonDisabled : {})
-            }}
-          >
-            {resending ? (
-              <>
-                <span style={styles.icon}>⏳</span> Sending...
-              </>
-            ) : canResend ? (
-              <>
-                <span style={styles.icon}>🔄</span> Resend Code
-              </>
-            ) : (
-              <>
-                <span style={styles.icon}>🔄</span> Resend (wait {formatTime(timeRemaining || 0)})
-              </>
-            )}
-          </button>
-        </form>
+              {/* Resend Button */}
+              <button
+                type="button"
+                onClick={resend}
+                disabled={resending || !canResend || isLocked || showManualEmailInput}
+                style={{
+                  ...styles.button,
+                  ...styles.resendButton,
+                  ...(resending || !canResend || isLocked ? styles.resendButtonDisabled : {})
+                }}
+              >
+                {resending ? (
+                  <>
+                    <span style={styles.icon}>⏳</span> Sending...
+                  </>
+                ) : canResend ? (
+                  <>
+                    <span style={styles.icon}>🔄</span> Resend Code
+                  </>
+                ) : (
+                  <>
+                    <span style={styles.icon}>🔄</span> Resend (wait {formatTime(timeRemaining || 0)})
+                  </>
+                )}
+              </button>
+            </form>
 
             {/* Help Text */}
             <div style={styles.helpText}>
               <p>
-                <span style={styles.icon}>💡</span> 
+                <span style={styles.icon}>💡</span>
                 <strong>Didn't receive the code?</strong>
               </p>
               <p style={{ margin: '8px 0 0 0' }}>

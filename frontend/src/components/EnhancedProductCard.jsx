@@ -14,13 +14,13 @@ import ProductBadges from './ProductBadges';
 import { getImageUrl } from '../utils/imageHandling';
 import { generateProductAltText, CATEGORY_CONFIG } from '../utils/constants';
 
-const EnhancedProductCard = ({ 
-  product, 
-  index, 
-  onAddToCart, 
-  onBuyNow, 
+const EnhancedProductCard = ({
+  product,
+  index,
+  onAddToCart,
+  onBuyNow,
   onQuickView,
-  onAuthRequired 
+  onAuthRequired
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -52,16 +52,17 @@ const EnhancedProductCard = ({
   const styles = {
     card: {
       position: 'relative',
-      background: 'white',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
       borderRadius: '12px',
-      border: isHovered ? '2px solid #1e3a8a' : '1px solid #e5e7eb',
+      border: isHovered ? '2px solid var(--accent-blue-primary)' : '1px solid var(--border-color)',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      boxShadow: isHovered 
+      boxShadow: isHovered
         ? '0 12px 24px rgba(0, 0, 0, 0.1)'
         : '0 2px 8px rgba(0, 0, 0, 0.04)',
       transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
@@ -71,7 +72,7 @@ const EnhancedProductCard = ({
       width: '100%',
       paddingTop: '100%', // 1:1 Aspect Ratio for consistency
       overflow: 'hidden',
-      background: '#f9fafb',
+      background: 'rgba(255, 255, 255, 0.05)',
     },
     imageWrapper: {
       position: 'absolute',
@@ -102,7 +103,7 @@ const EnhancedProductCard = ({
     },
     category: {
       fontSize: '10px',
-      color: '#9ca3af',
+      color: 'var(--text-secondary)',
       textTransform: 'uppercase',
       fontWeight: '600',
       letterSpacing: '0.8px',
@@ -110,7 +111,7 @@ const EnhancedProductCard = ({
     productName: {
       fontSize: '16px',
       fontWeight: '700',
-      color: '#111827',
+      color: 'var(--text-primary)',
       lineHeight: '1.4',
       display: '-webkit-box',
       WebkitLineClamp: 2,
@@ -127,7 +128,7 @@ const EnhancedProductCard = ({
     },
     reviewsCount: {
       fontSize: '12px',
-      color: '#9ca3af',
+      color: 'var(--text-secondary)',
     },
     priceSection: {
       display: 'flex',
@@ -139,19 +140,19 @@ const EnhancedProductCard = ({
     currentPrice: {
       fontSize: '24px',
       fontWeight: '800',
-      color: '#111827',
+      color: 'var(--text-primary)',
       letterSpacing: '-0.02em',
     },
     originalPrice: {
       fontSize: '14px',
       fontWeight: '500',
-      color: '#9ca3af',
+      color: 'var(--text-secondary)',
       textDecoration: 'line-through',
     },
     stockIndicator: {
       fontSize: '11px',
       fontWeight: '500',
-      color: '#6b7280',
+      color: 'var(--text-secondary)',
       marginTop: '4px',
     },
     actions: {
@@ -161,19 +162,19 @@ const EnhancedProductCard = ({
       width: '100%',
       minHeight: '48px', // Mobile tap target optimization
       padding: '14px 20px',
-      background: product.stock === 0 
-        ? '#e5e7eb'
-        : 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-      color: product.stock === 0 ? '#9ca3af' : 'white',
+      background: product.stock === 0
+        ? 'var(--glass-border)'
+        : 'var(--accent-blue-primary)',
+      color: product.stock === 0 ? 'var(--text-secondary)' : '#ffffff',
       border: 'none',
       borderRadius: '10px',
       fontSize: '15px',
       fontWeight: '700',
       cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
       transition: 'all 0.2s ease',
-      boxShadow: product.stock === 0 
+      boxShadow: product.stock === 0
         ? 'none'
-        : '0 2px 8px rgba(30, 58, 138, 0.3)',
+        : 'var(--shadow-md)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -186,9 +187,10 @@ const EnhancedProductCard = ({
       bottom: '16px',
       left: '50%',
       transform: 'translateX(-50%)',
-      backgroundColor: 'white',
-      color: '#1e3a8a',
-      border: '2px solid #1e3a8a',
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
       padding: '10px 20px',
       fontSize: '14px',
@@ -264,7 +266,7 @@ const EnhancedProductCard = ({
             onAuthRequired={onAuthRequired}
           />
         </div>
-        
+
         {/* Quick View Button - Shows on hover */}
         <button
           style={{
@@ -274,12 +276,12 @@ const EnhancedProductCard = ({
           onClick={handleQuickView}
           aria-label="Quick view product details"
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#1e3a8a';
-            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.backgroundColor = 'var(--accent-blue-primary)';
+            e.currentTarget.style.color = '#ffffff';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'white';
-            e.currentTarget.style.color = '#1e3a8a';
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = 'var(--text-primary)';
           }}
         >
           👁️ Quick View
