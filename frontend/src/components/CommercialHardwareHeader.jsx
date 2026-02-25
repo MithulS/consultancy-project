@@ -1,77 +1,60 @@
-/**
- * SRI AMMAN TRADERS HEADER COMPONENT
- * Professional header for hardware, electrical, plumbing, and paint materials store
- * Features: Top announcement bar, search bar with voice, navigation, account menu, cart
+﻿/**
+ * SRI AMMAN TRADERS — REDESIGNED HEADER
+ * Clean, professional layout: utility bar → main header → category nav
  */
 
 import React, { useState, useEffect, useRef } from 'react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const CATEGORIES = [
+  { label: 'Electrical',         icon: '⚡', color: '#F59E0B', key: 'Electrical' },
+  { label: 'Plumbing',           icon: '🚿', color: '#3B82F6', key: 'Plumbing' },
+  { label: 'Hardware',           icon: '🔩', color: '#6B7280', key: 'Hardware' },
+  { label: 'Paints & Coatings',  icon: '🎨', color: '#EC4899', key: 'Paints & Coatings' },
+  { label: 'Pipes & Fittings',   icon: '🔧', color: '#10B981', key: 'Pipes & Fittings' },
+  { label: 'Wiring & Cables',    icon: '🔌', color: '#8B5CF6', key: 'Wiring & Cables' },
+  { label: 'Switches & Sockets', icon: '💡', color: '#F97316', key: 'Switches & Sockets' },
+  { label: 'Water Tanks',        icon: '💧', color: '#06B6D4', key: 'Water Tanks' },
+  { label: 'Tools',              icon: '🛠️', color: '#EF4444', key: 'Tools & Equipment' },
+  { label: 'Safety',             icon: '🦺', color: '#84CC16', key: 'Safety & Protection' },
+];
 
-export default function CommercialHardwareHeader({ onNavigate }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [cartCount, setCartCount] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false);
+export default function CommercialHardwareHeader() {
+  const [searchQuery, setSearchQuery]         = useState('');
+  const [cartCount, setCartCount]             = useState(0);
+  const [isScrolled, setIsScrolled]           = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isListening, setIsListening] = useState(false);
-  const [voiceError, setVoiceError] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const [user, setUser]                       = useState(null);
+  const [isListening, setIsListening]         = useState(false);
+  const [voiceError, setVoiceError]           = useState('');
+  const [activeCategory, setActiveCategory]   = useState(null);
   const accountMenuRef = useRef(null);
   const recognitionRef = useRef(null);
-  const searchTimeoutRef = useRef(null);
-  const megaMenuRef = useRef(null);
 
   useEffect(() => {
-    // Load user data
     const loadUser = () => {
-      const userData = localStorage.getItem('user');
-      setUser(userData ? JSON.parse(userData) : null);
+      try { setUser(JSON.parse(localStorage.getItem('user'))); } catch { setUser(null); }
     };
-    loadUser();
-
-    // Load cart count
     const loadCart = () => {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
+      try {
+        const c = JSON.parse(localStorage.getItem('cart') || '[]');
+        setCartCount(c.reduce((s, i) => s + (i.quantity || 0), 0));
+      } catch { setCartCount(0); }
     };
-    loadCart();
-
-    // React to login / logout events from other components
-    const handleLogin = () => loadUser();
-    const handleLogoutEvent = () => {
-      setUser(null);
-      setUser(null);
-      setCartCount(0);
-    };
-    // React to cart updates dispatched anywhere in the app
-    const handleCartUpdate = () => loadCart();
-
-    window.addEventListener('userLoggedIn', handleLogin);
-    window.addEventListener('userLoggedOut', handleLogoutEvent);
-    window.addEventListener('cartUpdated', handleCartUpdate);
-    // Also sync when localStorage changes in other tabs
-    window.addEventListener('storage', loadCart);
-
-    // Scroll effect
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-
-    // Click outside to close account menu
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     const handleClickOutside = (e) => {
-      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target)) {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target))
         setShowAccountMenu(false);
-      }
     };
+    loadUser(); loadCart();
+    window.addEventListener('userLoggedIn', loadUser);
+    window.addEventListener('userLoggedOut', () => { setUser(null); setCartCount(0); });
+    window.addEventListener('cartUpdated', loadCart);
+    window.addEventListener('storage', loadCart);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
-      window.removeEventListener('userLoggedIn', handleLogin);
-      window.removeEventListener('userLoggedOut', handleLogoutEvent);
-      window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener('userLoggedIn', loadUser);
+      window.removeEventListener('cartUpdated', loadCart);
       window.removeEventListener('storage', loadCart);
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
@@ -80,444 +63,32 @@ export default function CommercialHardwareHeader({ onNavigate }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-
-    // Prevent double submissions
-    if (isSearching) {
-      return;
-    }
-
-    if (searchQuery.trim()) {
-      setIsSearching(true);
-      window.location.hash = `#dashboard?search=${encodeURIComponent(searchQuery)}`;
-
-      // Reset searching state after navigation
-      setTimeout(() => setIsSearching(false), 1000);
-    }
+    if (searchQuery.trim()) window.location.hash = `#dashboard?search=${encodeURIComponent(searchQuery)}`;
   };
-
-  // Cleanup function for preventing memory leaks
-  useEffect(() => {
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleVoiceSearch = () => {
-    // Check for browser support
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      setVoiceError('Voice search is not supported in your browser. Please use Chrome, Edge, or Safari.');
-      setTimeout(() => setVoiceError(''), 5000);
-      return;
-    }
-
-    try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-
-      // Configuration
-      recognition.lang = 'en-US';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-
-      // Store reference for cleanup
-      recognitionRef.current = recognition;
-
-      // Event handlers
-      recognition.onstart = () => {
-        setIsListening(true);
-        setVoiceError('');
-        console.log('🎤 Voice recognition started');
-      };
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const confidence = event.results[0][0].confidence;
-
-        console.log(`🎤 Recognized: "${transcript}" (confidence: ${(confidence * 100).toFixed(1)}%)`);
-
-        setSearchQuery(transcript);
-        setIsListening(false);
-
-        // Auto-submit search after voice input
-        setTimeout(() => {
-          if (transcript.trim()) {
-            window.location.hash = `#dashboard?search=${encodeURIComponent(transcript)}`;
-          }
-        }, 500);
-      };
-
-      recognition.onerror = (event) => {
-        console.error('🎤 Voice recognition error:', event.error);
-        setIsListening(false);
-
-        let errorMessage = 'Voice search failed. ';
-
-        switch (event.error) {
-          case 'no-speech':
-            errorMessage += 'No speech detected. Please try again.';
-            break;
-          case 'audio-capture':
-            errorMessage += 'No microphone found. Please check your device.';
-            break;
-          case 'not-allowed':
-            errorMessage += 'Microphone access denied. Please enable microphone permissions.';
-            break;
-          case 'network':
-            errorMessage += 'Network error. Please check your connection.';
-            break;
-          default:
-            errorMessage += 'Please try again or use text search.';
-        }
-
-        setVoiceError(errorMessage);
-        setTimeout(() => setVoiceError(''), 5000);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        console.log('🎤 Voice recognition ended');
-      };
-
-      // Request microphone permission and start
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(() => {
-          recognition.start();
-        })
-        .catch((err) => {
-          console.error('🎤 Microphone permission error:', err);
-          setVoiceError('Microphone access denied. Please enable microphone permissions in your browser settings.');
-          setTimeout(() => setVoiceError(''), 5000);
-        });
-
-    } catch (err) {
-      console.error('🎤 Voice search initialization error:', err);
-      setVoiceError('Failed to initialize voice search. Please try again.');
-      setTimeout(() => setVoiceError(''), 5000);
-    }
-  };
-
-  // Cleanup function for voice recognition
-  useEffect(() => {
-    return () => {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-        } catch (e) {
-          // Ignore errors on cleanup
-        }
-      }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { setVoiceError('Voice search not supported in this browser.'); setTimeout(() => setVoiceError(''), 4000); return; }
+    const r = new SR();
+    r.lang = 'en-IN'; r.continuous = false; r.interimResults = false;
+    recognitionRef.current = r;
+    r.onstart  = () => setIsListening(true);
+    r.onend    = () => setIsListening(false);
+    r.onerror  = () => { setIsListening(false); setVoiceError('Voice error. Try again.'); setTimeout(() => setVoiceError(''), 4000); };
+    r.onresult = (ev) => {
+      const t = ev.results[0][0].transcript;
+      setSearchQuery(t);
+      setIsListening(false);
+      setTimeout(() => { if (t.trim()) window.location.hash = `#dashboard?search=${encodeURIComponent(t)}`; }, 400);
     };
-  }, []);
-
-  const styles = {
-    // Header
-    header: {
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      padding: '16px 24px',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000,
-      boxShadow: 'var(--shadow-md)',
-      borderBottom: '1px solid var(--glass-border)'
-    },
-    headerContainer: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '16px 24px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '32px'
-    },
-
-    // Logo
-    logo: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      cursor: 'pointer',
-      flexShrink: 0
-    },
-    logoIcon: {
-      width: '48px',
-      height: '48px',
-      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
-      borderRadius: '12px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '24px',
-      fontWeight: 'bold',
-      color: '#FFFFFF',
-      boxShadow: '0 4px 12px var(--accent-blue-glow)',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      cursor: 'pointer'
-    },
-    logoText: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2px'
-    },
-    logoTitle: {
-      fontSize: '20px',
-      fontWeight: 700,
-      background: 'linear-gradient(135deg, #ffffff 0%, var(--accent-blue-primary) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      lineHeight: 1
-    },
-    logoSubtitle: {
-      fontSize: '12px',
-      color: 'var(--text-secondary)',
-      lineHeight: 1
-    },
-
-    // Search Bar
-    searchContainer: {
-      flex: 1,
-      maxWidth: '600px'
-    },
-    searchForm: {
-      display: 'flex',
-      gap: '0',
-      border: '1px solid var(--border-secondary)',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      transition: 'all var(--transition-normal)',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-      position: 'relative',
-      backdropFilter: 'var(--glass-blur)'
-    },
-    searchInput: {
-      flex: 1,
-      padding: '12px 20px',
-      border: 'none',
-      fontSize: '15px',
-      outline: 'none',
-      background: 'transparent',
-      color: 'var(--text-primary)'
-    },
-    voiceButton: {
-      padding: '0 16px',
-      backgroundColor: 'transparent',
-      border: 'none',
-      borderLeft: '1px solid var(--border-subtle)',
-      cursor: 'pointer',
-      fontSize: '20px',
-      transition: 'background-color 0.2s',
-      color: 'var(--text-secondary)'
-    },
-    searchButton: {
-      padding: '0 28px',
-      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
-      border: 'none',
-      color: '#FFFFFF',
-      cursor: 'pointer',
-      fontSize: '20px',
-      fontWeight: 600,
-      transition: 'all var(--transition-normal)',
-      position: 'relative',
-      overflow: 'hidden',
-      boxShadow: '0 0 15px var(--accent-blue-glow)'
-    },
-
-    // Action Buttons
-    actions: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-      flexShrink: 0
-    },
-    actionButton: {
-      position: 'relative',
-      padding: '10px 20px',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid var(--border-secondary)',
-      borderRadius: '12px',
-      cursor: 'pointer',
-      transition: 'all var(--transition-normal)',
-      boxShadow: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      fontSize: '15px',
-      fontWeight: 500,
-      color: 'var(--text-primary)',
-      textDecoration: 'none',
-      backdropFilter: 'blur(10px)'
-    },
-    trackButton: {
-      padding: '12px 28px',
-      background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
-      color: '#FFFFFF',
-      border: 'none',
-      borderRadius: '12px',
-      cursor: 'pointer',
-      fontWeight: 600,
-      fontSize: '14px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      transition: 'all var(--transition-normal)',
-      boxShadow: '0 4px 15px var(--accent-red-glow)',
-      position: 'relative',
-      overflow: 'hidden',
-      letterSpacing: '0.02em'
-    },
-    badge: {
-      position: 'absolute',
-      top: '-6px',
-      right: '-6px',
-      backgroundColor: 'var(--accent-red-primary)',
-      color: '#FFFFFF',
-      borderRadius: '10px',
-      padding: '2px 6px',
-      fontSize: '11px',
-      fontWeight: 600,
-      minWidth: '18px',
-      textAlign: 'center'
-    },
-
-    // Account Menu Dropdown
-    accountMenuContainer: {
-      position: 'relative'
-    },
-    accountMenu: {
-      position: 'absolute',
-      top: 'calc(100% + 12px)',
-      right: 0,
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      border: '1px solid var(--border-primary)',
-      borderRadius: '16px',
-      boxShadow: 'var(--shadow-lg)',
-      minWidth: '220px',
-      zIndex: 1000,
-      overflow: 'hidden'
-    },
-    menuItem: {
-      padding: '14px 20px',
-      cursor: 'pointer',
-      borderBottom: '1px solid var(--border-subtle)',
-      fontSize: '14px',
-      color: 'var(--text-primary)',
-      transition: 'background-color 0.2s',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px'
-    },
-    menuHeader: {
-      padding: '16px 20px',
-      borderBottom: '2px solid var(--border-primary)',
-      background: 'rgba(255, 255, 255, 0.02)'
-    },
-    userName: {
-      fontWeight: 600,
-      color: 'var(--text-primary)',
-      fontSize: '15px'
-    },
-    userEmail: {
-      fontSize: '12px',
-      color: 'var(--text-secondary)',
-      marginTop: '4px'
-    },
-
-    navBar: {
-      background: 'rgba(16, 30, 53, 0.4)',
-      backdropFilter: 'var(--glass-blur)',
-      borderBottom: '1px solid var(--border-secondary)',
-      borderTop: '1px solid rgba(255, 255, 255, 0.05)'
-    },
-    navContainer: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '0 24px',
-      display: 'flex',
-      gap: '40px',
-      alignItems: 'center',
-      overflowX: 'auto',
-      scrollbarWidth: 'none',
-      msOverflowStyle: 'none'
-    },
-    navLink: {
-      padding: '16px 0',
-      fontSize: '14px',
-      fontWeight: 600,
-      color: 'var(--text-secondary)',
-      cursor: 'pointer',
-      position: 'relative',
-      transition: 'color var(--transition-normal)',
-      whiteSpace: 'nowrap',
-      letterSpacing: '0.02em',
-      textTransform: 'uppercase'
-    },
-
-    // Mega Menu additions
-    megaMenuDropdown: {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      width: '100%',
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      borderBottom: '1px solid var(--border-primary)',
-      borderTop: '1px solid var(--border-primary)',
-      boxShadow: 'var(--shadow-xl)',
-      zIndex: 999,
-      display: showMegaMenu ? 'block' : 'none',
-      padding: '40px 0',
-      animation: 'slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-    },
-    megaMenuGrid: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '0 24px',
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: '32px'
-    },
-    megaMenuColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px'
-    },
-    megaMenuHeading: {
-      color: 'var(--text-primary)',
-      fontSize: '16px',
-      fontWeight: '700',
-      marginBottom: '8px',
-      borderBottom: '1px solid var(--border-subtle)',
-      paddingBottom: '8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.05em'
-    },
-    megaMenuItem: {
-      color: 'var(--text-secondary)',
-      fontSize: '14px',
-      cursor: 'pointer',
-      transition: 'all var(--transition-fast)',
-      textDecoration: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '6px 12px',
-      borderRadius: '8px',
-      marginLeft: '-12px'
-    }
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(() => r.start())
+      .catch(() => { setVoiceError('Microphone access denied.'); setTimeout(() => setVoiceError(''), 4000); });
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('cart');
-    setUser(null);
-    setCartCount(0);
-    setShowAccountMenu(false);
+    ['token', 'user', 'cart'].forEach(k => localStorage.removeItem(k));
+    setUser(null); setCartCount(0); setShowAccountMenu(false);
     window.dispatchEvent(new Event('userLoggedOut'));
     window.location.hash = '#home';
   };
@@ -525,463 +96,241 @@ export default function CommercialHardwareHeader({ onNavigate }) {
   return (
     <>
       <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .hover-lift:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-        }
-        .hover-scale:hover {
-          transform: scale(1.05);
-        }
-        .search-button-hover {
-          position: relative;
-          overflow: hidden;
-        }
-        .search-button-hover::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-          transition: left 0.5s;
-        }
-        .search-button-hover:hover::before {
-          left: 100%;
-        }
+        .sat-header *, .sat-header *::before, .sat-header *::after { box-sizing: border-box; }
+        .sat-search-wrap:focus-within { border-color: #3B82F6 !important; box-shadow: 0 0 0 3px rgba(59,130,246,.2) !important; }
+        .sat-search-input::placeholder { color: #64748B; }
+        .sat-search-input { font-family: inherit; }
+        .sat-btn-base { font-family: inherit; }
+        .sat-menu-item:hover { background: rgba(255,255,255,.05) !important; }
+        .sat-cat-pill:hover { border-color: var(--pill-color) !important; color: #F1F5F9 !important; background: color-mix(in srgb, var(--pill-color) 12%, transparent) !important; transform: translateY(-1px); }
+        @keyframes sat-down { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        .sat-dropdown { animation: sat-down .18s ease-out; }
+        .sat-nav { scrollbar-width: none; -ms-overflow-style: none; }
+        .sat-nav::-webkit-scrollbar { display: none; }
       `}</style>
 
-      {/* Main Header */}
-      <header style={styles.header}>
-        <div style={styles.headerContainer}>
+      {/* ── Utility Bar ── */}
+      <div className="sat-header" style={{ background: '#060E1C', borderBottom: '1px solid rgba(255,255,255,.05)', fontSize: '12px', color: '#64748B' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '5px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <span>📞 +91 79042 12501</span>
+            <span>✉️ support@sriammantraders.com</span>
+          </div>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <span style={{ color: '#34D399', fontWeight: 600 }}>✓ Free delivery above ₹999</span>
+            <span style={{ cursor: 'pointer', color: '#93C5FD' }} onClick={() => window.location.hash='#tracking'}>Track Order</span>
+            <span style={{ cursor: 'pointer', color: '#93C5FD' }} onClick={() => window.location.hash='#contact'}>Help</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main Header ── */}
+      <header className="sat-header" style={{
+        background: isScrolled ? 'rgba(10,18,36,0.96)' : 'linear-gradient(180deg, #0D1629 0%, #0F1E38 100%)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(255,255,255,.07)',
+        position: 'sticky', top: 0, zIndex: 1000,
+        boxShadow: isScrolled ? '0 4px 24px rgba(0,0,0,.55)' : 'none',
+        transition: 'background .3s, box-shadow .3s',
+      }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
+
           {/* Logo */}
-          <div
-            style={styles.logo}
-            onClick={() => window.location.hash = '#dashboard'}
-            onMouseEnter={(e) => {
-              e.currentTarget.querySelector('[data-logo-icon]').style.transform = 'scale(1.1) rotate(5deg)';
-              e.currentTarget.querySelector('[data-logo-icon]').style.boxShadow = '0 6px 20px rgba(11, 116, 255, 0.5)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.querySelector('[data-logo-icon]').style.transform = 'scale(1) rotate(0deg)';
-              e.currentTarget.querySelector('[data-logo-icon]').style.boxShadow = '0 4px 12px rgba(11, 116, 255, 0.3)';
-            }}
-          >
-            <div style={styles.logoIcon} data-logo-icon>SA</div>
-            <div style={styles.logoText}>
-              <div style={styles.logoTitle}>Sri Amman Traders</div>
-              <div style={styles.logoSubtitle}>Genuine Branded Products</div>
+          <div onClick={() => window.location.hash='#home'} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', flexShrink: 0, textDecoration: 'none' }}>
+            <div style={{
+              width: 44, height: 44,
+              background: 'linear-gradient(135deg, #F97316, #EF4444)',
+              borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 800, fontSize: 18, color: '#fff',
+              boxShadow: '0 4px 14px rgba(249,115,22,.4)',
+              letterSpacing: -1, flexShrink: 0,
+            }}>SA</div>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#F1F5F9', lineHeight: 1.15, letterSpacing: '-.3px', whiteSpace: 'nowrap' }}>Sri Amman Traders</div>
+              <div style={{ fontSize: 10.5, color: '#475569', fontWeight: 600, letterSpacing: '.5px', marginTop: 1 }}>GENUINE BRANDED PRODUCTS</div>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div style={styles.searchContainer}>
-            <form
-              onSubmit={handleSearch}
-              style={{
-                ...styles.searchForm,
-                borderColor: searchQuery ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Enter Item # or Keyword"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  // Only submit on Enter key, not on every keypress
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleSearch(e);
-                  }
-                }}
-                style={styles.searchInput}
-                aria-label="Search products"
-                autoComplete="off"
-              />
-              <button
-                type="button"
-                onClick={handleVoiceSearch}
-                disabled={isListening}
-                style={{
-                  ...styles.voiceButton,
-                  backgroundColor: isListening ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
-                  cursor: isListening ? 'not-allowed' : 'pointer',
-                }}
-                onMouseEnter={(e) => !isListening && (e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)')}
-                onMouseLeave={(e) => !isListening && (e.target.style.backgroundColor = 'transparent')}
-                aria-label={isListening ? 'Listening...' : 'Voice search'}
-                title={isListening ? 'Listening... Speak now' : 'Click to use voice search'}
-              >
-                {isListening ? '🔴' : '🎤'}
-              </button>
-              <button
-                type="submit"
-                style={styles.searchButton}
-                onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-blue-active) 0%, var(--accent-blue-primary) 100%)'}
-                onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)'}
-              >
-                🔍
-              </button>
-            </form>
-
-            {/* Voice Error Toast */}
-            {voiceError && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                marginTop: '8px',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                color: '#EF4444',
-                border: '1px solid rgba(239, 68, 68, 0.2)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                animation: 'slideDown 0.3s ease-out',
-                zIndex: 1000
+          {/* Search */}
+          <div style={{ flex: 1, maxWidth: 600, position: 'relative' }}>
+            <form onSubmit={handleSearch} aria-label="Product search">
+              <div className="sat-search-wrap" style={{
+                display: 'flex', borderRadius: 10, overflow: 'hidden',
+                border: '1.5px solid rgba(255,255,255,.1)',
+                background: 'rgba(255,255,255,.04)',
+                transition: 'border-color .2s, box-shadow .2s',
               }}>
-                <strong>⚠️ Voice Search Error:</strong> {voiceError}
+                <input
+                  className="sat-search-input"
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search products, brands, SKUs…"
+                  style={{ flex: 1, padding: '11px 16px', border: 'none', outline: 'none', background: 'transparent', color: '#F1F5F9', fontSize: 14 }}
+                  aria-label="Search products"
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  className="sat-btn-base"
+                  onClick={handleVoiceSearch}
+                  aria-label={isListening ? 'Listening' : 'Voice search'}
+                  style={{ padding: '0 13px', background: 'transparent', border: 'none', borderLeft: '1px solid rgba(255,255,255,.07)', cursor: 'pointer', fontSize: 16, color: isListening ? '#F59E0B' : '#475569', transition: 'color .2s' }}
+                >
+                  {isListening ? '🔴' : '🎙️'}
+                </button>
+                <button
+                  type="submit"
+                  className="sat-btn-base"
+                  aria-label="Search"
+                  style={{ padding: '0 20px', background: 'linear-gradient(135deg,#3B82F6,#2563EB)', border: 'none', color: '#fff', fontWeight: 700, fontSize: 16, cursor: 'pointer' }}
+                >🔍</button>
               </div>
+            </form>
+            {voiceError && (
+              <div role="alert" style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.25)', borderRadius: 8, padding: '9px 14px', fontSize: 13, color: '#FCA5A5', zIndex: 10 }}>{voiceError}</div>
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div style={styles.actions}>
-            {/* Track Order Button */}
+          {/* Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+
+            {/* Wholesale CTA */}
             <button
-              style={styles.trackButton}
-              onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-red-active) 0%, var(--accent-red-primary) 100%)'}
-              onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)'}
-              onClick={() => window.location.hash = '#tracking'}
+              className="sat-btn-base"
+              onClick={() => window.location.hash='#contact'}
+              style={{ padding: '10px 16px', background: 'linear-gradient(135deg,#F97316,#EF4444)', border: 'none', borderRadius: 9, color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer', boxShadow: '0 3px 12px rgba(249,115,22,.35)', display: 'flex', alignItems: 'center', gap: 6, transition: 'transform .15s, box-shadow .15s', whiteSpace: 'nowrap' }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 5px 18px rgba(249,115,22,.45)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 3px 12px rgba(249,115,22,.35)'; }}
             >
-              📦 TRACK MY ORDER
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+              Wholesale
             </button>
 
             {/* Account Menu */}
-            <div style={styles.accountMenuContainer} ref={accountMenuRef}>
+            <div ref={accountMenuRef} style={{ position: 'relative' }}>
               <button
-                style={styles.actionButton}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(66, 133, 244, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowAccountMenu(!showAccountMenu)}
+                className="sat-btn-base"
+                onClick={() => setShowAccountMenu(v => !v)}
+                aria-haspopup="true"
+                aria-expanded={showAccountMenu}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 14px', background: 'rgba(255,255,255,.04)', border: '1.5px solid rgba(255,255,255,.09)', borderRadius: 9, cursor: 'pointer', color: '#F1F5F9', transition: 'border-color .2s, background .2s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor='#3B82F6'; e.currentTarget.style.background='rgba(59,130,246,.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,.09)'; e.currentTarget.style.background='rgba(255,255,255,.04)'; }}
               >
-                <span style={{ fontSize: '20px' }}>👤</span>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                    {user ? 'Welcome' : 'Sign In'}
-                  </span>
-                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                    {user ? user.name?.split(' ')[0] : 'Register'}
-                  </span>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: 10, color: '#475569', lineHeight: 1 }}>{user ? 'Hello,' : 'Sign In /'}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{user ? (user.name?.split(' ')[0] || 'Account') : 'Register'}</div>
                 </div>
-                <span style={{ fontSize: '12px' }}>▼</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
 
               {showAccountMenu && (
-                <div style={styles.accountMenu}>
-                  {user ? (
-                    <>
-                      <div style={styles.menuHeader}>
-                        <div style={styles.userName}>{user.name}</div>
-                        <div style={styles.userEmail}>{user.email}</div>
-                      </div>
-                      <div
-                        style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        onClick={() => {
-                          window.location.hash = '#profile';
-                          setShowAccountMenu(false);
-                        }}
+                <div className="sat-dropdown" role="menu" style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, minWidth: 200, background: '#0F1E38', border: '1px solid rgba(255,255,255,.09)', borderRadius: 12, boxShadow: '0 16px 40px rgba(0,0,0,.55)', overflow: 'hidden', zIndex: 1100 }}>
+                  {user ? (<>
+                    <div style={{ padding: '13px 18px', borderBottom: '1px solid rgba(255,255,255,.06)', background: 'rgba(255,255,255,.02)' }}>
+                      <div style={{ fontWeight: 700, color: '#F1F5F9', fontSize: 14 }}>{user.name}</div>
+                      <div style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>{user.email}</div>
+                    </div>
+                    {[
+                      { icon: '👤', label: 'My Profile',  hash: '#profile' },
+                      { icon: '📦', label: 'My Orders',   hash: '#my-orders' },
+                      { icon: '❤️', label: 'Wishlist',    hash: '#wishlist' },
+                    ].map(item => (
+                      <div key={item.hash} className="sat-menu-item" role="menuitem" tabIndex={0}
+                        style={{ padding: '11px 18px', cursor: 'pointer', fontSize: 14, color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,.04)', transition: 'background .15s' }}
+                        onClick={() => { window.location.hash = item.hash; setShowAccountMenu(false); }}
+                        onKeyDown={e => e.key === 'Enter' && (window.location.hash = item.hash, setShowAccountMenu(false))}
                       >
-                        <span>👤</span> My Profile
+                        <span aria-hidden="true">{item.icon}</span>{item.label}
                       </div>
-                      <div
-                        style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        onClick={() => {
-                          window.location.hash = '#orders';
-                          setShowAccountMenu(false);
-                        }}
-                      >
-                        <span>📦</span> My Orders
-                      </div>
-                      <div
-                        style={{ ...styles.menuItem, borderBottom: 'none' }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        onClick={handleLogout}
-                      >
-                        <span>🚪</span> Logout
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        onClick={() => {
-                          window.location.hash = '#login';
-                          setShowAccountMenu(false);
-                        }}
-                      >
-                        <span>🔐</span> Sign In
-                      </div>
-                      <div
-                        style={{ ...styles.menuItem, borderBottom: 'none' }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        onClick={() => {
-                          window.location.hash = '#register';
-                          setShowAccountMenu(false);
-                        }}
-                      >
-                        <span>📝</span> Register
-                      </div>
-                    </>
-                  )}
+                    ))}
+                    <div className="sat-menu-item" role="menuitem" tabIndex={0}
+                      style={{ padding: '11px 18px', cursor: 'pointer', fontSize: 14, color: '#FC8181', display: 'flex', alignItems: 'center', gap: 10, transition: 'background .15s' }}
+                      onClick={handleLogout}
+                      onKeyDown={e => e.key === 'Enter' && handleLogout()}
+                    >
+                      <span aria-hidden="true">🚪</span>Sign Out
+                    </div>
+                  </>) : (<>
+                    <div className="sat-menu-item" role="menuitem" tabIndex={0}
+                      style={{ padding: '13px 18px', cursor: 'pointer', fontSize: 14, color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,.06)', transition: 'background .15s' }}
+                      onClick={() => { window.location.hash='#login'; setShowAccountMenu(false); }}
+                      onKeyDown={e => e.key === 'Enter' && (window.location.hash='#login', setShowAccountMenu(false))}
+                    ><span aria-hidden="true">🔐</span>Sign In</div>
+                    <div className="sat-menu-item" role="menuitem" tabIndex={0}
+                      style={{ padding: '13px 18px', cursor: 'pointer', fontSize: 14, color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: 10, transition: 'background .15s' }}
+                      onClick={() => { window.location.hash='#register'; setShowAccountMenu(false); }}
+                      onKeyDown={e => e.key === 'Enter' && (window.location.hash='#register', setShowAccountMenu(false))}
+                    ><span aria-hidden="true">📝</span>Create Account</div>
+                  </>)}
                 </div>
               )}
             </div>
 
             {/* Cart */}
             <button
-              style={{ ...styles.actionButton, position: 'relative' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
-                e.currentTarget.style.backgroundColor = 'rgba(66, 133, 244, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-secondary)';
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
-              onClick={() => window.location.hash = '#cart'}
+              className="sat-btn-base"
+              onClick={() => window.location.hash='#cart'}
+              aria-label={`Shopping cart, ${cartCount} item${cartCount !== 1 ? 's' : ''}`}
+              style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 15px', background: 'rgba(255,255,255,.04)', border: '1.5px solid rgba(255,255,255,.09)', borderRadius: 9, cursor: 'pointer', color: '#F1F5F9', transition: 'border-color .2s, background .2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor='#3B82F6'; e.currentTarget.style.background='rgba(59,130,246,.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,.09)'; e.currentTarget.style.background='rgba(255,255,255,.04)'; }}
             >
-              <span style={{ fontSize: '20px' }}>🛒</span>
-              <span style={{ fontWeight: 600 }}>Cart</span>
-              {cartCount > 0 && <span style={styles.badge}>{cartCount}</span>}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+              <span style={{ fontWeight: 600, fontSize: 14 }}>Cart</span>
+              {cartCount > 0 && <span style={{ background: '#EF4444', color: '#fff', borderRadius: 12, padding: '1px 7px', fontSize: 11, fontWeight: 700, minWidth: 20, textAlign: 'center' }} aria-hidden="true">{cartCount}</span>}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Category Navigation Bar */}
-      <nav style={styles.navBar} ref={megaMenuRef} onMouseLeave={() => setShowMegaMenu(false)}>
-        <div style={styles.navContainer}>
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--accent-blue-primary)';
-              setShowMegaMenu(true);
-            }}
-          >
-            ☰ Shop by Category
-          </div>
+      {/* ── Category Navigation ── */}
+      <nav aria-label="Product categories" className="sat-nav" style={{ background: '#080F1E', borderBottom: '1px solid rgba(255,255,255,.06)', overflowX: 'auto' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', gap: 6, minHeight: 50 }}>
 
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--accent-blue-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
-            onClick={() => window.location.hash = '#dashboard?featured=true'}
-          >
-            ⭐ Featured Brands
-          </div>
+          <button
+            className="sat-btn-base"
+            style={{ padding: '6px 14px', background: 'rgba(59,130,246,.15)', border: '1.5px solid #3B82F6', borderRadius: 20, color: '#93C5FD', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', transition: 'all .2s' }}
+            onClick={() => { setActiveCategory(null); window.location.hash='#dashboard'; }}
+            aria-current={!activeCategory ? 'page' : undefined}
+          >All Products</button>
 
-          <div
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--accent-blue-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
-            onClick={() => window.location.hash = '#dashboard?bestsellers=true'}
-          >
-            🔥 Bestsellers
-          </div>
+          <div style={{ width: 1, height: 26, background: 'rgba(255,255,255,.07)', margin: '0 6px', flexShrink: 0 }} aria-hidden="true" />
 
-          <div
-            style={{ ...styles.navLink, marginLeft: 'auto' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--accent-red-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
-            onClick={() => window.location.href = 'tel:+917904212501'}
-          >
-            📦 Wholesale Inquiry
-          </div>
-        </div>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.key}
+              className="sat-cat-pill sat-btn-base"
+              style={{
+                '--pill-color': cat.color,
+                display: 'flex', alignItems: 'center', gap: 5,
+                padding: '6px 12px',
+                background: activeCategory === cat.key ? `color-mix(in srgb, ${cat.color} 15%, transparent)` : 'transparent',
+                border: `1.5px solid ${activeCategory === cat.key ? cat.color : 'rgba(255,255,255,.07)'}`,
+                borderRadius: 20,
+                color: activeCategory === cat.key ? '#F1F5F9' : '#94A3B8',
+                fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                flexShrink: 0, whiteSpace: 'nowrap',
+                transition: 'all .2s',
+              } }
+              onClick={() => { setActiveCategory(cat.key); window.location.hash=`#dashboard?category=${encodeURIComponent(cat.key)}`; }}
+              aria-current={activeCategory === cat.key ? 'page' : undefined}
+            >
+              <span aria-hidden="true">{cat.icon}</span>
+              {cat.label}
+            </button>
+          ))}
 
-        {/* Mega Menu Dropdown */}
-        <div style={styles.megaMenuDropdown}>
-          <div style={styles.megaMenuGrid}>
-            <div style={styles.megaMenuColumn}>
-              <div style={styles.megaMenuHeading}>Core Building</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Electrical'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >⚡ Electrical Systems</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Wiring%20%26%20Cables'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🔌 Wiring & Cables</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Hardware'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🔩 Fasteners & Hardware</div>
-            </div>
-
-            <div style={styles.megaMenuColumn}>
-              <div style={styles.megaMenuHeading}>Plumbing & Water</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Plumbing'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🚿 Bathroom Fittings</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Pipes%20%26%20Fittings'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🔄 Pipes & Fittings</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Tanks'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >💧 Water Tanks</div>
-            </div>
-
-            <div style={styles.megaMenuColumn}>
-              <div style={styles.megaMenuHeading}>Finishes</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Paints%20%26%20Coatings'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🎨 Interior & Exterior Paints</div>
-              <div
-                style={styles.megaMenuItem}
-                onClick={() => { window.location.hash = '#dashboard?category=Tools'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >🛠️ Hand Tools</div>
-            </div>
-
-            <div style={styles.megaMenuColumn}>
-              <div style={styles.megaMenuHeading}>Top Brands</div>
-              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Asian Paints</div>
-              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Finolex Cables</div>
-              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Crompton</div>
-              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Havells</div>
-              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Sintex Plastics</div>
-            </div>
+          <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
+            <button
+              className="sat-btn-base"
+              style={{ padding: '6px 14px', background: 'transparent', border: '1.5px solid rgba(249,115,22,.35)', borderRadius: 20, color: '#FB923C', fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all .2s' }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(249,115,22,.1)'; e.currentTarget.style.borderColor='#F97316'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor='rgba(249,115,22,.35)'; }}
+              onClick={() => window.location.hash='#contact'}
+            >📋 Wholesale Inquiry</button>
           </div>
         </div>
       </nav>

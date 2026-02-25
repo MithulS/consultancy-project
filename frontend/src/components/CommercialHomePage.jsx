@@ -1,19 +1,11 @@
-/**
- * SRI AMMAN TRADERS HOME PAGE
- * Hardware, Electrical, Plumbing & Paint Materials Store
- * Serving retail and wholesale customers with genuine branded products
+﻿/**
+ * SRI AMMAN TRADERS — REDESIGNED HOME PAGE
  */
 
 import React, { useState, useEffect } from 'react';
 import CommercialHardwareHeader from './CommercialHardwareHeader';
 import CommercialHeroBanner from './CommercialHeroBanner';
-import SmartButton from './SmartButton';
 import Footer from './Footer';
-import SkeletonLoader from './SkeletonLoader';
-import ProductRating from './ProductRating';
-import EmptyState from './EmptyState';
-import OptimizedImage from './OptimizedImage';
-import { getImageUrl } from '../utils/imageHandling';
 import Loader from './Loader';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { FEATURED_BRANDS } from '../utils/constants';
@@ -23,512 +15,217 @@ import ProductQuickView from './ProductQuickView';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+const TRUST_CARDS = [
+  {
+    icon: '✅',
+    color: '#10B981',
+    title: 'Genuine Products',
+    text: '100% authentic goods from authorized dealers of Finolex, Havells, Asian Paints, Crompton, Anchor, and Sintex.',
+  },
+  {
+    icon: '💰',
+    color: '#F59E0B',
+    title: 'Fair Pricing',
+    text: 'Competitive prices for retail and wholesale. Special bulk discounts available for contractors and businesses.',
+  },
+  {
+    icon: '🚚',
+    color: '#3B82F6',
+    title: 'Fast Delivery',
+    text: 'Free delivery on orders above ₹999. Same‑day dispatch for in‑stock items to nearby areas.',
+  },
+  {
+    icon: '🤝',
+    color: '#8B5CF6',
+    title: 'Reliable Service',
+    text: 'Expert guidance and dedicated support. Building long‑term relationships with every customer.',
+  },
+];
+
+const PRODUCT_CATEGORIES = ['All', 'Electrical', 'Plumbing', 'Hardware', 'Paints & Coatings', 'Pipes & Fittings', 'Wiring & Cables', 'Water Tanks', 'Tools & Equipment'];
+
 export default function CommercialHomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]                   = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  // Animation hooks
   const [titleRef, titleVisible] = useScrollAnimation();
-  const [gridRef, gridVisible] = useScrollAnimation();
+  const [gridRef,  gridVisible]  = useScrollAnimation();
   const [aboutRef, aboutVisible] = useScrollAnimation();
   const [brandRef, brandVisible] = useScrollAnimation();
 
-  useEffect(() => {
-    fetchFeaturedProducts();
-  }, [selectedCategory]);
+  useEffect(() => { fetchFeaturedProducts(); }, [selectedCategory]);
 
   async function fetchFeaturedProducts() {
     try {
       setLoading(true);
-      const query = selectedCategory !== 'All' ? `?category=${selectedCategory}` : '';
-      const separator = query ? '&' : '?';
-      const res = await fetch(`${API}/api/products${query}${separator}limit=12`);
+      const q   = selectedCategory !== 'All' ? `?category=${encodeURIComponent(selectedCategory)}&limit=12` : '?limit=12';
+      const res = await fetch(`${API}/api/products${q}`);
       const data = await res.json();
-      if (res.ok) {
-        setFeaturedProducts(data.products || []);
-      }
-    } catch (err) {
-      console.error('Failed to fetch products');
-    } finally {
-      setLoading(false);
-    }
+      if (res.ok) setFeaturedProducts(data.products || []);
+    } catch { /* silent */ }
+    finally { setLoading(false); }
   }
 
-  const styles = {
-    page: {
-      minHeight: '100vh',
-      // Background handled by .dark-navy-theme class on body
-    },
-
-    // Featured Products Section
-    container: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '0 24px'
-    },
-    sectionTitle: {
-      fontSize: '42px',
-      fontWeight: 800,
-      color: 'var(--text-primary)',
-      textAlign: 'center',
-      marginBottom: '64px',
-      letterSpacing: '-0.02em',
-      opacity: 0,
-      transform: 'translateY(20px)',
-      transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-      ...(titleVisible && { opacity: 1, transform: 'translateY(0)' })
-    },
-    productsSection: {
-      padding: '64px 0',
-      position: 'relative',
-      overflow: 'hidden'
-      // Transparent to show body gradient
-    },
-    productsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: '24px',
-      opacity: 0,
-      transform: 'translateY(30px)',
-      transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
-      ...(gridVisible && { opacity: 1, transform: 'translateY(0)' })
-    },
-
-    // About Section
-    aboutSection: {
-      padding: '80px 0',
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      borderTop: '1px solid var(--border-subtle)',
-      borderBottom: '1px solid var(--border-subtle)'
-    },
-    aboutContent: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '48px',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      opacity: 0,
-      transform: 'translateY(40px)',
-      transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-      ...(aboutVisible && { opacity: 1, transform: 'translateY(0)' })
-    },
-    aboutCard: {
-      textAlign: 'center',
-      padding: '32px',
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid var(--border-subtle)',
-      borderRadius: '24px',
-      boxShadow: 'var(--shadow-md)',
-      backdropFilter: 'var(--glass-blur)',
-      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-    },
-    aboutIcon: {
-      fontSize: '48px',
-      marginBottom: '16px'
-    },
-    aboutTitle: {
-      fontSize: '20px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      marginBottom: '12px'
-    },
-    aboutText: {
-      fontSize: '15px',
-      color: 'var(--text-secondary)',
-      lineHeight: 1.6
-    },
-
-    // Featured Brands Section
-    brandsSection: {
-      padding: '80px 0',
-      background: 'transparent'
-    },
-    brandsTitle: {
-      fontSize: '36px',
-      fontWeight: 800,
-      color: 'var(--text-primary)',
-      textAlign: 'center',
-      marginBottom: '16px'
-    },
-    brandsSubtitle: {
-      fontSize: '18px',
-      color: 'var(--text-secondary)',
-      textAlign: 'center',
-      marginBottom: '48px'
-    },
-    brandsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '24px',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      opacity: 0,
-      transform: 'translateY(40px)',
-      transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
-      ...(brandVisible && { opacity: 1, transform: 'translateY(0)' })
-    },
-    brandCard: {
-      background: 'rgba(255, 255, 255, 0.02)',
-      border: '1px solid var(--border-subtle)',
-      borderRadius: '16px',
-      padding: '24px',
-      textAlign: 'center',
-      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-      cursor: 'pointer',
-      backdropFilter: 'var(--glass-blur)'
-    },
-    brandLogo: {
-      fontSize: '48px',
-      marginBottom: '12px'
-    },
-    brandName: {
-      fontSize: '20px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      marginBottom: '4px'
-    },
-    brandCategory: {
-      fontSize: '13px',
-      color: 'var(--accent-red-primary)',
-      fontWeight: 600,
-      marginBottom: '8px'
-    },
-    brandDescription: {
-      fontSize: '14px',
-      color: 'var(--text-secondary)',
-      lineHeight: 1.5
-    },
-
-    productCard: {
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      border: '1px solid var(--glass-border)',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      transition: 'all var(--transition-normal)',
-      cursor: 'pointer',
-      display: 'flex',
-      flexDirection: 'column',
-      boxShadow: 'var(--shadow-md)'
-    },
-    // Hover state handled by class .hover-lift in global css, or inline:
-    // We can add simple inline hover logic if needed, but CSS class is better.
-
-    productImage: {
-      width: '100%',
-      height: '240px',
-      objectFit: 'cover',
-      background: 'var(--gradient-navy-subtle)'
-    },
-    productInfo: {
-      padding: '20px',
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px'
-    },
-    productCategory: {
-      fontSize: '11px',
-      fontWeight: 600,
-      color: 'var(--text-tertiary)',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px',
-      padding: '4px 8px',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '4px',
-      width: 'fit-content',
-      border: '1px solid var(--border-subtle)'
-    },
-    productName: {
-      fontSize: '16px',
-      fontWeight: 600,
-      color: 'var(--text-primary)',
-      lineHeight: 1.5,
-      display: '-webkit-box',
-      WebkitLineClamp: 2,
-      WebkitBoxOrient: 'vertical',
-      overflow: 'hidden',
-      minHeight: '48px'
-    },
-    productPrice: {
-      fontSize: '22px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      marginTop: 'auto',
-      paddingTop: '12px',
-      letterSpacing: '0.5px'
-    },
-    addToCartButton: {
-      width: '100%',
-      padding: '12px 16px',
-      background: '#4285F4',
-      color: '#ffffff',
-      border: 'none',
-      borderRadius: '6px',
-      fontSize: '14px',
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      marginTop: '12px'
-    },
-
-
-    // Loading State
-    loadingContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '64px 0'
-    },
-    // Spinner replaced by Loader component
-
-    // CTA Section
-    ctaSection: {
-      background: 'var(--gradient-navy-secondary)',
-      color: 'var(--text-primary)',
-      padding: '100px 0',
-      textAlign: 'center',
-      marginTop: '64px',
-      borderTop: '1px solid var(--border-subtle)',
-      position: 'relative',
-      overflow: 'hidden'
-    },
-    ctaTitle: {
-      fontSize: '48px',
-      fontWeight: 800,
-      marginBottom: '24px',
-      background: 'linear-gradient(135deg, #ffffff 0%, var(--accent-blue-primary) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text'
-    },
-    ctaSubtitle: {
-      fontSize: '20px',
-      marginBottom: '40px',
-      color: 'var(--text-secondary)',
-      maxWidth: '600px',
-      margin: '0 auto 40px'
-    },
-    ctaButton: {
-      padding: '16px 48px',
-      background: 'linear-gradient(135deg, #ff4757 0%, #ee2a3a 100%)', // Red gradient
-      color: '#ffffff',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '18px',
-      fontWeight: 700,
-      cursor: 'pointer',
-      transition: 'all 0.3s',
-      boxShadow: '0 4px 15px var(--accent-red-glow)'
-    },
-
-    // Footer
-    footer: {
-      background: 'var(--navy-darkest)',
-      color: 'var(--text-secondary)',
-      padding: '64px 0 32px',
-      borderTop: '1px solid var(--border-subtle)'
-    },
-    footerGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '48px',
-      marginBottom: '48px'
-    },
-    footerColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px'
-    },
-    footerTitle: {
-      fontSize: '18px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      marginBottom: '8px'
-    },
-    footerLink: {
-      fontSize: '15px',
-      color: 'var(--text-secondary)',
-      cursor: 'pointer',
-      transition: 'color 0.2s'
-    },
-    footerBottom: {
-      borderTop: '1px solid var(--border-secondary)',
-      paddingTop: '32px',
-      textAlign: 'center',
-      fontSize: '14px',
-      color: 'var(--text-tertiary)'
-    }
-  };
-
-  // Add CSS animation for spinner
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
-
   const handleAddToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item._id === product._id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
-
+    const cart      = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existing  = cart.find(i => i._id === product._id);
+    if (existing) { existing.quantity = Math.min((existing.quantity || 1) + 1, 99); }
+    else           { cart.push({ ...product, quantity: 1 }); }
     localStorage.setItem('cart', JSON.stringify(cart));
     window.dispatchEvent(new Event('cartUpdated'));
-    showToast('Product added to cart!', 'success');
+    showToast('Added to cart!', 'success');
   };
 
   return (
-    <div style={styles.page} className="dark-navy-theme">
+    <div className="dark-navy-theme" style={{ minHeight: '100vh' }}>
       <CommercialHardwareHeader />
       <CommercialHeroBanner />
 
-      {/* About Sri Amman Traders */}
-      <section style={styles.aboutSection}>
-        <div style={styles.container}>
-          <h2 style={{ ...styles.sectionTitle, opacity: 1, transform: 'none', marginBottom: '48px' }}>
+      {/* ── Trust / Why Us ─────────────────────────────────────────── */}
+      <section style={{ padding: '72px 0', background: 'rgba(255,255,255,.02)', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, color: '#F1F5F9', marginBottom: 8, letterSpacing: '-.3px' }}>
             Why Choose Sri Amman Traders?
           </h2>
-          <div style={styles.aboutContent} ref={aboutRef}>
-            <div
-              style={styles.aboutCard}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-12px)';
-                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
-                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-              }}
-            >
-              <div style={styles.aboutIcon}>✅</div>
-              <h3 style={styles.aboutTitle}>Genuine Products</h3>
-              <p style={styles.aboutText}>
-                100% authentic products from authorized dealers of leading brands like Finolex, Crompton, Asian Paints, Havells, Anchor, and Sintex.
-              </p>
-            </div>
-            <div
-              style={styles.aboutCard}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-12px)';
-                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
-                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-              }}
-            >
-              <div style={styles.aboutIcon}>💰</div>
-              <h3 style={styles.aboutTitle}>Fair Pricing</h3>
-              <p style={styles.aboutText}>
-                Competitive prices for both retail and wholesale customers. Special bulk discounts available for contractors and businesses.
-              </p>
-            </div>
-            <div
-              style={styles.aboutCard}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-12px)';
-                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
-                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-              }}
-            >
-              <div style={styles.aboutIcon}>🤝</div>
-              <h3 style={styles.aboutTitle}>Reliable Service</h3>
-              <p style={styles.aboutText}>
-                Expert guidance, prompt delivery, and dedicated customer support. Building long-term relationships with our customers.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Brands */}
-      <section style={styles.brandsSection}>
-        <div style={styles.container}>
-          <h2 style={styles.brandsTitle}>Trusted Brands We Carry</h2>
-          <p style={styles.brandsSubtitle}>
-            Authorized dealer of India's leading manufacturers
+          <p style={{ textAlign: 'center', color: '#64748B', fontSize: 15, marginBottom: 48 }}>
+            Serving retail &amp; wholesale customers since 1995
           </p>
-          <div style={styles.brandsGrid} ref={brandRef}>
-            {FEATURED_BRANDS.map((brand, index) => (
+          <div
+            ref={aboutRef}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
+              gap: 24,
+              opacity: aboutVisible ? 1 : 0,
+              transform: aboutVisible ? 'none' : 'translateY(28px)',
+              transition: 'opacity .7s ease, transform .7s ease',
+            }}
+          >
+            {TRUST_CARDS.map((c) => (
               <div
-                key={index}
-                style={styles.brandCard}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.borderColor = 'var(--accent-red-primary)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px var(--accent-red-glow)';
-                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                }}
+                key={c.title}
+                style={{ padding: 28, borderRadius: 18, background: 'rgba(255,255,255,.03)', border: `1px solid ${c.color}30`, boxShadow: `0 0 0 0 ${c.color}00`, transition: 'all .25s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.border = `1px solid ${c.color}70`; e.currentTarget.style.background = `${c.color}0D`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.border = `1px solid ${c.color}30`; e.currentTarget.style.background = 'rgba(255,255,255,.03)'; }}
               >
-                <div style={styles.brandLogo}>{brand.logo}</div>
-                <div style={styles.brandName}>{brand.name}</div>
-                <div style={styles.brandCategory}>{brand.category}</div>
-                <div style={styles.brandDescription}>{brand.description}</div>
+                <div style={{ width: 52, height: 52, background: `${c.color}20`, border: `1.5px solid ${c.color}50`, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16 }} aria-hidden="true">{c.icon}</div>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: '#F1F5F9', marginBottom: 8 }}>{c.title}</h3>
+                <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 1.65 }}>{c.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section style={styles.productsSection} id="products-section">
-        <div style={styles.container}>
-          <h2 style={styles.sectionTitle} ref={titleRef}>
-            {selectedCategory === 'All' ? 'Featured Products' : `${selectedCategory} Products`}
+      {/* ── Featured Brands ────────────────────────────────────────── */}
+      <section style={{ padding: '72px 0' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 30, fontWeight: 800, color: '#F1F5F9', marginBottom: 6, letterSpacing: '-.3px' }}>
+            Trusted Brands We Carry
           </h2>
+          <p style={{ textAlign: 'center', color: '#64748B', fontSize: 14, marginBottom: 44 }}>
+            Authorized dealer of India's leading manufacturers
+          </p>
+          <div
+            ref={brandRef}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))',
+              gap: 16,
+              opacity: brandVisible ? 1 : 0,
+              transform: brandVisible ? 'none' : 'translateY(28px)',
+              transition: 'opacity .7s ease .1s, transform .7s ease .1s',
+            }}
+          >
+            {FEATURED_BRANDS.map((brand, i) => (
+              <div
+                key={i}
+                style={{ padding: '20px 16px', borderRadius: 14, background: 'rgba(255,255,255,.025)', border: '1px solid rgba(255,255,255,.07)', textAlign: 'center', cursor: 'pointer', transition: 'all .25s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = 'rgba(249,115,22,.5)'; e.currentTarget.style.background = 'rgba(249,115,22,.06)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'rgba(255,255,255,.07)'; e.currentTarget.style.background = 'rgba(255,255,255,.025)'; }}
+                onClick={() => { setSelectedCategory(brand.category || 'All'); document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+              >
+                <div style={{ fontSize: 38, marginBottom: 10 }} aria-hidden="true">{brand.logo}</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#F1F5F9', marginBottom: 3 }}>{brand.name}</div>
+                <div style={{ fontSize: 11, color: '#FB923C', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>{brand.category}</div>
+                <div style={{ fontSize: 12.5, color: '#64748B', lineHeight: 1.5 }}>{brand.description}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* ── Featured Products ──────────────────────────────────────── */}
+      <section id="products-section" style={{ padding: '72px 0', borderTop: '1px solid rgba(255,255,255,.05)' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
+          {/* Section header */}
+          <div ref={titleRef} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 32, opacity: titleVisible ? 1 : 0, transform: titleVisible ? 'none' : 'translateY(20px)', transition: 'opacity .6s, transform .6s' }}>
+            <div>
+              <h2 style={{ fontSize: 30, fontWeight: 800, color: '#F1F5F9', letterSpacing: '-.3px', marginBottom: 4 }}>
+                {selectedCategory === 'All' ? 'Featured Products' : `${selectedCategory}`}
+              </h2>
+              <p style={{ color: '#64748B', fontSize: 14 }}>Browse our selection of genuine branded products</p>
+            </div>
+            <button
+              style={{ padding: '9px 20px', background: 'transparent', border: '1.5px solid rgba(59,130,246,.5)', borderRadius: 20, color: '#93C5FD', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all .2s' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.1)'; e.currentTarget.style.borderColor = '#3B82F6'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(59,130,246,.5)'; }}
+              onClick={() => window.location.hash = '#dashboard'}
+            >View All Products →</button>
+          </div>
+
+          {/* Category filter pills */}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>
+            {PRODUCT_CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: 20,
+                  border: `1.5px solid ${selectedCategory === cat ? '#3B82F6' : 'rgba(255,255,255,.09)'}`,
+                  background: selectedCategory === cat ? 'rgba(59,130,246,.18)' : 'transparent',
+                  color: selectedCategory === cat ? '#93C5FD' : '#94A3B8',
+                  fontSize: 13, fontWeight: selectedCategory === cat ? 600 : 400,
+                  cursor: 'pointer', transition: 'all .2s',
+                }}
+                onMouseEnter={e => { if (selectedCategory !== cat) { e.currentTarget.style.borderColor = 'rgba(255,255,255,.2)'; e.currentTarget.style.color = '#CBD5E1'; } }}
+                onMouseLeave={e => { if (selectedCategory !== cat) { e.currentTarget.style.borderColor = 'rgba(255,255,255,.09)'; e.currentTarget.style.color = '#94A3B8'; } }}
+                onClick={() => setSelectedCategory(cat)}
+              >{cat}</button>
+            ))}
+          </div>
+
+          {/* Product grid */}
           {loading ? (
-            <div style={styles.loadingContainer}>
-              <Loader size={60} />
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '64px 0' }}>
+              <Loader size={56} />
+            </div>
+          ) : featuredProducts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '64px 0', color: '#64748B' }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }} aria-hidden="true">📦</div>
+              <p style={{ fontSize: 16 }}>No products found in this category.</p>
             </div>
           ) : (
-            <div className="products-grid" style={styles.productsGrid} ref={gridRef}>
+            <div
+              ref={gridRef}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))',
+                gap: 22,
+                opacity: gridVisible ? 1 : 0,
+                transform: gridVisible ? 'none' : 'translateY(28px)',
+                transition: 'opacity .8s ease .15s, transform .8s ease .15s',
+              }}
+            >
               {featuredProducts.map((product, index) => (
                 <EnhancedProductCard
                   key={product._id}
                   product={product}
                   index={index}
                   onAddToCart={handleAddToCart}
-                  onBuyNow={(prod) => {
-                    handleAddToCart(prod);
-                    window.location.hash = '#checkout';
-                  }}
+                  onBuyNow={(prod) => { handleAddToCart(prod); window.location.hash = '#checkout'; }}
                   onQuickView={(prod) => setQuickViewProduct(prod)}
                   onAuthRequired={() => showToast('Please login to use wishlist', 'info')}
                 />
@@ -538,91 +235,48 @@ export default function CommercialHomePage() {
         </div>
       </section>
 
-      {/* CTA Section - Wholesale Inquiry */}
-      <section id="wholesale" style={styles.ctaSection}>
-        <div style={styles.container}>
-          <h2 style={styles.ctaTitle}>Looking for Wholesale Pricing?</h2>
-          <p style={styles.ctaSubtitle}>
+      {/* ── Wholesale CTA ──────────────────────────────────────────── */}
+      <section style={{ padding: '80px 24px', background: 'linear-gradient(135deg,#0A1628 0%,#0F1E38 50%,#0A1628 100%)', borderTop: '1px solid rgba(255,255,255,.06)', textAlign: 'center' }}>
+        <div style={{ maxWidth: 640, margin: '0 auto' }}>
+          <div style={{ display: 'inline-block', padding: '4px 14px', background: 'rgba(249,115,22,.12)', border: '1px solid rgba(249,115,22,.25)', borderRadius: 20, color: '#FB923C', fontSize: 12.5, fontWeight: 600, letterSpacing: '.5px', marginBottom: 20 }}>
+            WHOLESALE &amp; BULK ORDERS
+          </div>
+          <h2 style={{ fontSize: 36, fontWeight: 800, color: '#F1F5F9', marginBottom: 14, letterSpacing: '-.4px' }}>
+            Looking for Wholesale Pricing?
+          </h2>
+          <p style={{ fontSize: 16, color: '#94A3B8', lineHeight: 1.7, marginBottom: 36 }}>
             We serve contractors, builders, and businesses with special bulk pricing and dedicated support. Contact us for wholesale rates and custom orders.
           </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              style={{
-                ...styles.ctaButton,
-                background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-                boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'scale(1.05)';
-                e.target.style.boxShadow = '0 10px 25px rgba(239, 68, 68, 0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'scale(1)';
-                e.target.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.4)';
-              }}
-              onClick={() => {
-                window.location.href = 'tel:+917904212501';
-              }}
-              aria-label="Call for wholesale inquiry"
-              title="Call us for wholesale pricing"
-            >
-              📞 Call for Wholesale Inquiry
-            </button>
+              style={{ padding: '13px 28px', background: 'linear-gradient(135deg,#F97316,#EF4444)', border: 'none', borderRadius: 10, color: '#fff', fontWeight: 700, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 18px rgba(249,115,22,.35)', transition: 'all .2s', display: 'flex', alignItems: 'center', gap: 8 }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(249,115,22,.45)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 18px rgba(249,115,22,.35)'; }}
+              onClick={() => window.location.href = 'tel:+917904212501'}
+            >📞 Call for Wholesale Rates</button>
             <button
-              style={{
-                ...styles.ctaButton,
-                background: 'transparent',
-                border: '2px solid #EF4444',
-                color: '#EF4444'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'scale(1.05)';
-                e.target.style.background = '#EF4444';
-                e.target.style.color = '#FFFFFF';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'scale(1)';
-                e.target.style.background = 'transparent';
-                e.target.style.color = '#EF4444';
-              }}
-              onClick={() => {
-                window.location.hash = '#contact';
-                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-              }}
-              aria-label="Contact for bulk orders"
-              title="Submit wholesale inquiry form"
-            >
-              📧 Submit Wholesale Inquiry
-            </button>
+              style={{ padding: '13px 28px', background: 'transparent', border: '1.5px solid rgba(249,115,22,.4)', borderRadius: 10, color: '#FB923C', fontWeight: 600, fontSize: 15, cursor: 'pointer', transition: 'all .2s' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(249,115,22,.08)'; e.currentTarget.style.borderColor = '#F97316'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(249,115,22,.4)'; }}
+              onClick={() => window.location.hash = '#contact'}
+            >📋 Submit Inquiry Form</button>
           </div>
-          <div style={{
-            marginTop: '32px',
-            fontSize: '14px',
-            color: 'var(--text-secondary)',
-            display: 'flex',
-            gap: '32px',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}>
-            <div>✅ Bulk Discounts Available</div>
-            <div>✅ Credit Terms for Regular Customers</div>
-            <div>✅ Direct Factory Prices</div>
+          <div style={{ marginTop: 28, display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap', fontSize: 13, color: '#64748B' }}>
+            <span>✓ Bulk Discounts Available</span>
+            <span>✓ Credit Terms for Regular Customers</span>
+            <span>✓ Direct Factory Prices</span>
           </div>
         </div>
       </section>
 
-      {/* Professional Footer */}
       <Footer theme="dark" />
-      {/* Quick View Modal */}
+
       <ProductQuickView
         isOpen={!!quickViewProduct}
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
         onAddToCart={handleAddToCart}
-        onBuyNow={(prod) => {
-          handleAddToCart(prod);
-          window.location.hash = '#checkout';
-        }}
+        onBuyNow={(prod) => { handleAddToCart(prod); window.location.hash = '#checkout'; }}
       />
     </div>
   );

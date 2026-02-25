@@ -676,14 +676,13 @@ export default function Dashboard() {
       boxShadow: '0 4px 15px rgba(30, 58, 138, 0.3)'
     },
     filtersSection: {
-      backgroundColor: 'rgba(16, 30, 53, 0.6)',
-      backdropFilter: 'var(--glass-blur)',
-      padding: '24px 32px',
-      margin: '24px auto',
-      borderRadius: '16px',
-      boxShadow: 'var(--shadow-lg)',
+      backgroundColor: 'transparent',
+      padding: '24px 32px 0',
+      margin: '0 auto',
       maxWidth: '1400px',
-      border: '1px solid rgba(255, 255, 255, 0.08)'
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
     },
     searchBar: {
       width: '100%',
@@ -704,29 +703,36 @@ export default function Dashboard() {
     categoryContainer: {
       display: 'flex',
       gap: '12px',
-      flexWrap: 'wrap'
+      overflowX: 'auto',
+      paddingBottom: '12px',
+      width: '100%',
+      justifyContent: 'flex-start',
+      scrollbarWidth: 'none', // Firefox
+      msOverflowStyle: 'none', // IE/Edge
+      WebkitOverflowScrolling: 'touch',
     },
     categoryBtn: {
       padding: '10px 24px',
-      borderRadius: '24px',
-      borderWidth: '1px',
-      borderStyle: 'solid',
-      color: 'var(--text-secondary)',
-      borderColor: 'var(--border-subtle)',
-      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+      borderRadius: '100px', // fully rounded pills
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      color: '#cbd5e1',
+      backgroundColor: 'rgba(30, 41, 59, 0.5)',
       cursor: 'pointer',
       fontSize: '14px',
       fontWeight: '600',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       backdropFilter: 'blur(10px)',
-      boxShadow: 'var(--shadow-sm)'
+      whiteSpace: 'nowrap',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     categoryBtnActive: {
-      background: 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)',
-      color: '#ffffff',
-      borderColor: 'transparent',
-      boxShadow: '0 6px 15px var(--accent-blue-glow)',
-      transform: 'translateY(-2px)'
+      background: 'rgba(59, 130, 246, 0.18)',
+      color: '#93C5FD',
+      border: '1.5px solid #3b82f6',
+      boxShadow: 'none',
+      transform: 'translateY(-1px)'
     },
     productsGrid: {
       display: 'grid',
@@ -928,17 +934,18 @@ export default function Dashboard() {
 
       {/* Filters Section */}
       <div style={styles.filtersSection}>
-        <div style={{ position: 'relative', width: '100%', maxWidth: '800px', marginBottom: '24px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '800px', marginBottom: '32px' }}>
           <EnhancedSearchBar
             onSearch={(query, queryFilters) => {
               setSearchTerm(query);
               if (queryFilters) handleFilterChange(queryFilters);
             }}
             onFilterChange={handleFilterChange}
-            placeholder="Search products..."
+            placeholder="Search for premium products..."
           />
         </div>
-        <div style={styles.categoryContainer} role="group" aria-label="Product categories">
+
+        <div style={styles.categoryContainer} className="category-scroll" role="group" aria-label="Product categories">
           {categories.map(cat => (
             <button
               key={cat}
@@ -951,17 +958,17 @@ export default function Dashboard() {
               aria-label={`Filter by ${cat} category`}
               onMouseOver={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = 'var(--border-primary)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = '#ffffff';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }
               }}
               onMouseOut={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
-                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.5)';
+                  e.currentTarget.style.color = '#cbd5e1';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
