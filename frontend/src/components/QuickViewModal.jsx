@@ -33,6 +33,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
   const handleBuyNow = () => {
     if (onBuyNow && product.stock > 0) {
       onBuyNow({ ...product, quantity });
+      onClose();
     }
   };
 
@@ -43,13 +44,15 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: 'rgba(17, 24, 39, 0.75)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 9999,
       padding: '20px',
-      animation: 'fadeIn 0.2s ease-in-out',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      animation: 'backdropBloom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
     },
     modal: {
       background: 'var(--glass-background)',

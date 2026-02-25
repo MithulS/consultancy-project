@@ -21,6 +21,7 @@ export default function Checkout() {
     address: '',
     city: '',
     postalCode: '',
+    phone: '',
     country: 'India',
     paymentMethod: 'cod'
   });
@@ -51,8 +52,8 @@ export default function Checkout() {
     setLoading(true);
 
     // Validation
-    if (!formData.address || !formData.city || !formData.postalCode) {
-      setError('Please fill in all shipping address fields');
+    if (!formData.address || !formData.city || !formData.postalCode || !formData.phone) {
+      setError('Please fill in all required shipping address fields');
       setLoading(false);
       return;
     }
@@ -61,11 +62,8 @@ export default function Checkout() {
       const token = localStorage.getItem('token');
       if (!token) {
         sessionStorage.setItem('redirectAfterLogin', '#checkout');
-        setError('Please login to place an order');
+        setError('Please login to place an order. Click "Back to Cart" and login first.');
         setLoading(false);
-        setTimeout(() => {
-          window.location.hash = '#login';
-        }, 1500);
         return;
       }
 
@@ -79,6 +77,7 @@ export default function Checkout() {
           address: formData.address,
           city: formData.city,
           postalCode: formData.postalCode,
+          phone: formData.phone,
           country: formData.country
         },
         paymentMethod: formData.paymentMethod
@@ -435,6 +434,21 @@ export default function Checkout() {
                     value={formData.postalCode}
                     onChange={handleChange}
                     placeholder="Postal code"
+                    style={styles.input}
+                    required
+                  />
+                </div>
+
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="10-digit mobile number"
+                    pattern="[0-9]{10}"
+                    maxLength={10}
                     style={styles.input}
                     required
                   />

@@ -18,6 +18,8 @@ import Loader from './Loader';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { FEATURED_BRANDS } from '../utils/constants';
 import { showToast } from './ToastNotification';
+import EnhancedProductCard from './EnhancedProductCard';
+import ProductQuickView from './ProductQuickView';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -25,10 +27,13 @@ export default function CommercialHomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
 
   // Animation hooks
   const [titleRef, titleVisible] = useScrollAnimation();
   const [gridRef, gridVisible] = useScrollAnimation();
+  const [aboutRef, aboutVisible] = useScrollAnimation();
+  const [brandRef, brandVisible] = useScrollAnimation();
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -94,24 +99,31 @@ export default function CommercialHomePage() {
     // About Section
     aboutSection: {
       padding: '80px 0',
-      background: 'linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%)',
-      borderTop: '1px solid #E5E7EB',
-      borderBottom: '1px solid #E5E7EB'
+      background: 'var(--glass-background)',
+      backdropFilter: 'var(--glass-blur)',
+      borderTop: '1px solid var(--border-subtle)',
+      borderBottom: '1px solid var(--border-subtle)'
     },
     aboutContent: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
       gap: '48px',
       maxWidth: '1200px',
-      margin: '0 auto'
+      margin: '0 auto',
+      opacity: 0,
+      transform: 'translateY(40px)',
+      transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+      ...(aboutVisible && { opacity: 1, transform: 'translateY(0)' })
     },
     aboutCard: {
       textAlign: 'center',
       padding: '32px',
-      background: '#FFFFFF',
-      borderRadius: '16px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-      transition: 'all 0.3s ease'
+      background: 'rgba(255, 255, 255, 0.03)',
+      border: '1px solid var(--border-subtle)',
+      borderRadius: '24px',
+      boxShadow: 'var(--shadow-md)',
+      backdropFilter: 'var(--glass-blur)',
+      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
     },
     aboutIcon: {
       fontSize: '48px',
@@ -120,30 +132,30 @@ export default function CommercialHomePage() {
     aboutTitle: {
       fontSize: '20px',
       fontWeight: 700,
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '12px'
     },
     aboutText: {
       fontSize: '15px',
-      color: '#6B7280',
+      color: 'var(--text-secondary)',
       lineHeight: 1.6
     },
 
     // Featured Brands Section
     brandsSection: {
       padding: '80px 0',
-      background: '#FFFFFF'
+      background: 'transparent'
     },
     brandsTitle: {
       fontSize: '36px',
       fontWeight: 800,
-      color: '#111827',
+      color: 'var(--text-primary)',
       textAlign: 'center',
       marginBottom: '16px'
     },
     brandsSubtitle: {
       fontSize: '18px',
-      color: '#6B7280',
+      color: 'var(--text-secondary)',
       textAlign: 'center',
       marginBottom: '48px'
     },
@@ -152,16 +164,21 @@ export default function CommercialHomePage() {
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
       gap: '24px',
       maxWidth: '1200px',
-      margin: '0 auto'
+      margin: '0 auto',
+      opacity: 0,
+      transform: 'translateY(40px)',
+      transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
+      ...(brandVisible && { opacity: 1, transform: 'translateY(0)' })
     },
     brandCard: {
-      background: '#F9FAFB',
-      border: '2px solid #E5E7EB',
-      borderRadius: '12px',
+      background: 'rgba(255, 255, 255, 0.02)',
+      border: '1px solid var(--border-subtle)',
+      borderRadius: '16px',
       padding: '24px',
       textAlign: 'center',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer'
+      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+      cursor: 'pointer',
+      backdropFilter: 'var(--glass-blur)'
     },
     brandLogo: {
       fontSize: '48px',
@@ -170,18 +187,18 @@ export default function CommercialHomePage() {
     brandName: {
       fontSize: '20px',
       fontWeight: 700,
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '4px'
     },
     brandCategory: {
       fontSize: '13px',
-      color: '#EF4444',
+      color: 'var(--accent-red-primary)',
       fontWeight: 600,
       marginBottom: '8px'
     },
     brandDescription: {
       fontSize: '14px',
-      color: '#6B7280',
+      color: 'var(--text-secondary)',
       lineHeight: 1.5
     },
 
@@ -376,7 +393,7 @@ export default function CommercialHomePage() {
   };
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="dark-navy-theme">
       <CommercialHardwareHeader />
       <CommercialHeroBanner />
 
@@ -386,16 +403,20 @@ export default function CommercialHomePage() {
           <h2 style={{ ...styles.sectionTitle, opacity: 1, transform: 'none', marginBottom: '48px' }}>
             Why Choose Sri Amman Traders?
           </h2>
-          <div style={styles.aboutContent}>
+          <div style={styles.aboutContent} ref={aboutRef}>
             <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-12px)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
+                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
               }}
             >
               <div style={styles.aboutIcon}>✅</div>
@@ -407,12 +428,16 @@ export default function CommercialHomePage() {
             <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-12px)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
+                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
               }}
             >
               <div style={styles.aboutIcon}>💰</div>
@@ -424,12 +449,16 @@ export default function CommercialHomePage() {
             <div
               style={styles.aboutCard}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-12px)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
+                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
               }}
             >
               <div style={styles.aboutIcon}>🤝</div>
@@ -449,20 +478,22 @@ export default function CommercialHomePage() {
           <p style={styles.brandsSubtitle}>
             Authorized dealer of India's leading manufacturers
           </p>
-          <div style={styles.brandsGrid}>
+          <div style={styles.brandsGrid} ref={brandRef}>
             {FEATURED_BRANDS.map((brand, index) => (
               <div
                 key={index}
                 style={styles.brandCard}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.borderColor = '#EF4444';
-                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(239, 68, 68, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = 'var(--accent-red-primary)';
+                  e.currentTarget.style.boxShadow = '0 12px 30px var(--accent-red-glow)';
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.05)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = '#E5E7EB';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
                   e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
                 }}
               >
                 <div style={styles.brandLogo}>{brand.logo}</div>
@@ -488,74 +519,19 @@ export default function CommercialHomePage() {
             </div>
           ) : (
             <div className="products-grid" style={styles.productsGrid} ref={gridRef}>
-              {featuredProducts.map((product) => (
-                <div
+              {featuredProducts.map((product, index) => (
+                <EnhancedProductCard
                   key={product._id}
-                  style={styles.productCard}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-                    e.currentTarget.style.borderColor = 'var(--border-primary)';
+                  product={product}
+                  index={index}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={(prod) => {
+                    handleAddToCart(prod);
+                    window.location.hash = '#checkout';
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                    e.currentTarget.style.borderColor = 'var(--glass-border)';
-                  }}
-                >
-                  <div style={{ position: 'relative', overflow: 'hidden' }}>
-                    <OptimizedImage
-                      src={getImageUrl(product.imageUrl)}
-                      alt={product.name}
-                      width={280}
-                      height={280}
-                      priority={featuredProducts.indexOf(product) < 3}
-                      style={styles.productImage}
-                    />
-                    <div className="card-overlay" style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.05) 0%, transparent 100%)',
-                      pointerEvents: 'none'
-                    }} />
-                  </div>
-                  <div style={styles.productInfo}>
-                    <div style={styles.productCategory}>{product.category}</div>
-                    <div style={styles.productName}>{product.name}</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto', paddingTop: '16px' }}>
-                      <div style={styles.productPrice}>
-                        ₹{product.price?.toFixed(2) || '0.00'}
-                      </div>
-                      <div style={{
-                        fontSize: '12px',
-                        color: '#10b981',
-                        fontWeight: 600,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '4px 10px',
-                        background: 'rgba(16, 185, 129, 0.1)',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(16, 185, 129, 0.2)',
-                        width: 'fit-content'
-                      }}>
-                        <span>📦</span> Wholesale rates available
-                      </div>
-                    </div>
-                    <SmartButton
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                        return true; // Show success animation
-                      }}
-                      variant="primary"
-                      size="medium"
-                      style={{ width: '100%' }}
-                    >
-                      Add to Cart
-                    </SmartButton>
-                  </div>
-                </div>
+                  onQuickView={(prod) => setQuickViewProduct(prod)}
+                  onAuthRequired={() => showToast('Please login to use wishlist', 'info')}
+                />
               ))}
             </div>
           )}
@@ -637,6 +613,17 @@ export default function CommercialHomePage() {
 
       {/* Professional Footer */}
       <Footer theme="dark" />
+      {/* Quick View Modal */}
+      <ProductQuickView
+        isOpen={!!quickViewProduct}
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        onAddToCart={handleAddToCart}
+        onBuyNow={(prod) => {
+          handleAddToCart(prod);
+          window.location.hash = '#checkout';
+        }}
+      />
     </div>
   );
 }

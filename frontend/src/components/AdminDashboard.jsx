@@ -1,5 +1,5 @@
 // Admin Dashboard - Product Management Interface
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ProductReports from './ProductReports';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -914,31 +914,17 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Price (₹) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    style={styles.input}
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    required
-                    placeholder="0.00"
-                  />
-                </div>
-
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Original Price (₹)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    style={styles.input}
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    placeholder="0.00"
-                  />
-                </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Price (₹) *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  style={styles.input}
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  required
+                  placeholder="0.00"
+                />
               </div>
 
               {/* Image Upload Section */}

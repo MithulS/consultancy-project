@@ -55,22 +55,22 @@ const EnhancedProductCard = ({
       background: 'var(--glass-background)',
       backdropFilter: 'var(--glass-blur)',
       borderRadius: '12px',
-      border: isHovered ? '2px solid var(--accent-blue-primary)' : '1px solid var(--border-color)',
+      border: isHovered ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--border-color)',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       cursor: 'pointer',
       boxShadow: isHovered
-        ? '0 12px 24px rgba(0, 0, 0, 0.1)'
-        : '0 2px 8px rgba(0, 0, 0, 0.04)',
-      transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        ? (product.numReviews > 500 ? '0 8px 32px rgba(251, 191, 36, 0.3)' : '0 8px 32px var(--accent-blue-glow)')
+        : '0 4px 12px rgba(0, 0, 0, 0.1)',
+      transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
     },
     imageContainer: {
       position: 'relative',
       width: '100%',
-      paddingTop: '100%', // 1:1 Aspect Ratio for consistency
+      paddingTop: '80%', // Reduced from 100% to make the image less tall
       overflow: 'hidden',
       background: 'rgba(255, 255, 255, 0.05)',
     },
@@ -95,10 +95,10 @@ const EnhancedProductCard = ({
       zIndex: 2,
     },
     cardContent: {
-      padding: '20px', // Increased for better mobile spacing
+      padding: '16px', // Reduced from 20px
       display: 'flex',
       flexDirection: 'column',
-      gap: '12px', // Increased spacing between elements
+      gap: '8px', // Reduced spacing between elements
       flex: 1,
     },
     category: {
@@ -109,7 +109,7 @@ const EnhancedProductCard = ({
       letterSpacing: '0.8px',
     },
     productName: {
-      fontSize: '16px',
+      fontSize: '15px',
       fontWeight: '700',
       color: 'var(--text-primary)',
       lineHeight: '1.4',
@@ -117,7 +117,7 @@ const EnhancedProductCard = ({
       WebkitLineClamp: 2,
       WebkitBoxOrient: 'vertical',
       overflow: 'hidden',
-      minHeight: '44px',
+      minHeight: '40px',
       marginTop: '2px',
     },
     ratingSection: {
@@ -138,7 +138,7 @@ const EnhancedProductCard = ({
       paddingTop: '8px',
     },
     currentPrice: {
-      fontSize: '24px',
+      fontSize: '20px',
       fontWeight: '800',
       color: 'var(--text-primary)',
       letterSpacing: '-0.02em',
@@ -160,15 +160,15 @@ const EnhancedProductCard = ({
     },
     btnPrimary: {
       width: '100%',
-      minHeight: '48px', // Mobile tap target optimization
-      padding: '14px 20px',
+      minHeight: '40px', // Mobile tap target optimization
+      padding: '10px 16px',
       background: product.stock === 0
         ? 'var(--glass-border)'
         : 'var(--accent-blue-primary)',
       color: product.stock === 0 ? 'var(--text-secondary)' : '#ffffff',
       border: 'none',
-      borderRadius: '10px',
-      fontSize: '15px',
+      borderRadius: '8px',
+      fontSize: '14px',
       fontWeight: '700',
       cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
       transition: 'all 0.2s ease',
@@ -267,25 +267,7 @@ const EnhancedProductCard = ({
           />
         </div>
 
-        {/* Quick View Button - Shows on hover */}
-        <button
-          style={{
-            ...styles.quickViewBtn,
-            opacity: isHovered ? 1 : 0,
-          }}
-          onClick={handleQuickView}
-          aria-label="Quick view product details"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--accent-blue-primary)';
-            e.currentTarget.style.color = '#ffffff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = 'var(--text-primary)';
-          }}
-        >
-          👁️ Quick View
-        </button>
+
       </div>
 
       {/* Content Section */}

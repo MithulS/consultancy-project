@@ -24,13 +24,13 @@ import { getImageUrl } from '../utils/imageHandling';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const ProductDetailModal = ({ 
-  productId, 
+const ProductDetailModal = ({
+  productId,
   product: initialProduct,
-  isOpen, 
-  onClose, 
-  onAddToCart, 
-  onBuyNow 
+  isOpen,
+  onClose,
+  onAddToCart,
+  onBuyNow
 }) => {
   const [product, setProduct] = useState(initialProduct || null);
   const [loading, setLoading] = useState(!initialProduct);
@@ -42,14 +42,14 @@ const ProductDetailModal = ({
   const [reviews, setReviews] = useState([]);
   const [imageZoom, setImageZoom] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
-  
+
   const modalRef = useRef(null);
   const imageRef = useRef(null);
 
   // Fetch full product details with related products
   const fetchProductDetails = useCallback(async () => {
     if (!productId && !initialProduct) return;
-    
+
     try {
       setLoading(true);
       setError(null);
@@ -58,11 +58,11 @@ const ProductDetailModal = ({
       if (!initialProduct) {
         const response = await fetch(`${API}/api/products/${productId}`);
         const data = await response.json();
-        
+
         if (!data.success) {
           throw new Error(data.msg || 'Failed to fetch product');
         }
-        
+
         setProduct(data.product);
       }
 
@@ -73,7 +73,7 @@ const ProductDetailModal = ({
           `${API}/api/products?category=${category}&limit=4`
         );
         const relatedData = await relatedResponse.json();
-        
+
         if (relatedData.success) {
           // Filter out current product
           const currentId = productId || initialProduct?._id;
@@ -154,11 +154,11 @@ const ProductDetailModal = ({
   // Image zoom handlers
   const handleMouseMove = (e) => {
     if (!imageZoom) return;
-    
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     setZoomPosition({ x, y });
   };
 
@@ -178,10 +178,12 @@ const ProductDetailModal = ({
   // Action handlers
   const handleAddToCart = () => {
     onAddToCart(product, quantity);
+    onClose();
   };
 
   const handleBuyNow = () => {
     onBuyNow(product, quantity);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -194,14 +196,14 @@ const ProductDetailModal = ({
   // Get stock status
   const getStockStatus = () => {
     if (!product) return { text: '', className: '', available: false };
-    
+
     if (product.stock === 0) {
       return { text: 'Out of Stock', className: 'out-of-stock', available: false };
     } else if (product.stock <= 10) {
-      return { 
-        text: `Only ${product.stock} left!`, 
-        className: 'low-stock', 
-        available: true 
+      return {
+        text: `Only ${product.stock} left!`,
+        className: 'low-stock',
+        available: true
       };
     } else {
       return { text: 'In Stock', className: 'in-stock', available: true };
@@ -229,7 +231,7 @@ const ProductDetailModal = ({
           -webkit-backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
-          justifyContent: center;
+          justify-content: center;
           z-index: 10000;
           padding: 20px;
           animation: fadeIn 0.3s ease;
@@ -875,14 +877,14 @@ const ProductDetailModal = ({
         }
       `}</style>
 
-      <div 
+      <div
         className="product-detail-overlay"
         onClick={handleOverlayClick}
         role="dialog"
         aria-modal="true"
         aria-labelledby="product-title"
       >
-        <div 
+        <div
           className="product-detail-modal"
           ref={modalRef}
           tabIndex={-1}
@@ -926,7 +928,7 @@ const ProductDetailModal = ({
               <div className="modal-content">
                 {/* Image Gallery Section */}
                 <div className="image-gallery-section">
-                  <div 
+                  <div
                     className={`main-image-container ${imageZoom ? 'zoomed' : ''}`}
                     onClick={() => setImageZoom(!imageZoom)}
                     onMouseMove={handleMouseMove}
@@ -988,8 +990,8 @@ const ProductDetailModal = ({
 
                   {/* Rating */}
                   <div className="product-rating-section">
-                    <ProductRating 
-                      rating={product.rating || 4.5} 
+                    <ProductRating
+                      rating={product.rating || 4.5}
                       size="large"
                     />
                     <span className="review-count">

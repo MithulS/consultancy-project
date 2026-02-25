@@ -8,9 +8,9 @@ export default function LoadingOverlay({ message = 'Loading...', show = false })
     <div style={styles.overlay}>
       <div style={styles.content}>
         <div style={styles.spinner}>
-          <div style={styles.spinnerCircle}></div>
-          <div style={styles.spinnerCircle}></div>
-          <div style={styles.spinnerCircle}></div>
+          <div style={{ ...styles.spinnerCircle, animationDelay: '-0.32s' }}></div>
+          <div style={{ ...styles.spinnerCircle, animationDelay: '-0.16s' }}></div>
+          <div style={{ ...styles.spinnerCircle, animationDelay: '0s' }}></div>
         </div>
         <p style={styles.message}>{message}</p>
       </div>

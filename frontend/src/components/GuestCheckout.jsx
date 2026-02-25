@@ -95,8 +95,9 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
         {message && (
           <div style={{
             ...styles.message,
-            backgroundColor: message.includes('✅') ? '#d1fae5' : '#fee2e2',
-            color: message.includes('✅') ? '#065f46' : '#991b1b'
+            background: message.includes('✅') ? 'var(--gradient-success)' : 'var(--gradient-error)',
+            color: message.includes('✅') ? '#065f46' : '#991b1b',
+            border: message.includes('✅') ? '1px solid #10b981' : '1px solid #ef4444'
           }}>
             {message}
           </div>
@@ -430,7 +431,7 @@ const styles = {
     flex: 2,
     padding: '14px 16px',
     background: 'var(--gradient-cta)',
-    color: 'white',
+    color: 'var(--text-primary, white)',
     border: 'none',
     borderRadius: 'var(--border-radius-md)',
     fontSize: '16px',
@@ -442,7 +443,7 @@ const styles = {
   createAccountSection: {
     marginTop: '24px',
     padding: '16px',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    background: 'var(--gradient-success, rgba(16, 185, 129, 0.1))',
     borderRadius: '12px',
     textAlign: 'center',
     border: '1px solid var(--glass-border)'
@@ -454,14 +455,14 @@ const styles = {
   },
   createAccountBtn: {
     padding: '10px 20px',
-    background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
-    color: 'white',
+    background: 'var(--gradient-cta)',
+    color: 'var(--text-primary, white)',
     border: 'none',
     borderRadius: '10px',
     fontSize: '14px',
     fontWeight: '600',
     cursor: 'pointer',
-    boxShadow: '0 4px 12px var(--accent-blue-glow)'
+    boxShadow: 'var(--shadow-md)'
   },
   privacyText: {
     fontSize: '12px',

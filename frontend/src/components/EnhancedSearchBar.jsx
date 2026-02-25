@@ -156,8 +156,10 @@ export default function EnhancedSearchBar({
     container: {
       position: 'relative',
       width: '100%',
-      maxWidth: '800px',
-      margin: '0 auto'
+      width: '100%',
+      maxWidth: showSuggestions ? '800px' : '600px',
+      margin: '0 auto',
+      transition: 'max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
     },
     searchWrapper: {
       position: 'relative',
@@ -179,12 +181,13 @@ export default function EnhancedSearchBar({
     },
     searchBoxFocused: {
       borderColor: 'var(--accent-blue-primary)',
-      boxShadow: '0 4px 16px rgba(46, 134, 222, 0.2)'
+      boxShadow: '0 8px 24px rgba(46, 134, 222, 0.15)'
     },
     searchIcon: {
       fontSize: '20px',
-      color: '#9ca3af',
-      marginRight: '12px'
+      color: showSuggestions ? 'var(--accent-blue-primary)' : '#9ca3af',
+      marginRight: '12px',
+      transition: 'color 0.3s ease'
     },
     input: {
       flex: 1,

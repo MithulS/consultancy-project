@@ -77,7 +77,7 @@ const ProductDetailPage = ({ onAddToCart, onBuyNow }) => {
           url={`/product/${productId}`}
           type="product"
           price={product.price}
-          currency="USD"
+          currency="INR"
           availability={product.stock > 0 ? 'in stock' : 'out of stock'}
         />
       )}

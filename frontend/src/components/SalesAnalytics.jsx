@@ -1,6 +1,13 @@
 // Sales Analytics Dashboard Component
 import React, { useState, useEffect } from 'react';
+import {
+  BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, AreaChart, Area
+} from 'recharts';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const COLORS = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'];
+const STATUS_COLORS = ['#fbbf24', '#34d399', '#f87171', '#60a5fa', '#a78bfa'];
 
 // Inject CSS animations
 const styleSheet = document.createElement('style');
@@ -28,6 +35,15 @@ styleSheet.textContent = `
   @keyframes gradientShift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
+  }
+  .dark-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .dark-date-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
   }
 `;
 if (!document.querySelector('[data-analytics-styles]')) {
@@ -127,47 +143,46 @@ export default function SalesAnalytics() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%)',
-      backgroundSize: '400% 400%',
-      animation: 'gradientShift 15s ease infinite',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
       padding: '32px',
-      position: 'relative'
+      position: 'relative',
+      color: '#f8fafc',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
     },
     header: {
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: 'rgba(30, 41, 59, 0.7)',
       backdropFilter: 'blur(20px)',
       borderRadius: '24px',
       padding: '32px 40px',
       marginBottom: '28px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2), 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       animation: 'fadeIn 0.6s ease-out'
     },
     title: {
       fontSize: '36px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       marginBottom: '12px',
-      letterSpacing: '-0.5px',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      letterSpacing: '-0.5px'
     },
     subtitle: {
       fontSize: '15px',
-      color: '#6b7280',
+      color: '#94a3b8',
       fontWeight: '500',
       letterSpacing: '0.3px'
     },
     filtersCard: {
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: 'rgba(30, 41, 59, 0.7)',
       backdropFilter: 'blur(20px)',
       borderRadius: '20px',
       padding: '28px 32px',
       marginBottom: '28px',
-      boxShadow: '0 4px 24px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       animation: 'fadeIn 0.6s ease-out 0.1s backwards'
     },
     filtersGrid: {
@@ -184,34 +199,38 @@ export default function SalesAnalytics() {
     label: {
       fontSize: '13px',
       fontWeight: '600',
-      color: '#475569',
+      color: '#94a3b8',
       textTransform: 'uppercase',
       letterSpacing: '0.5px'
     },
     input: {
       padding: '12px 16px',
       fontSize: '14px',
-      border: '2px solid #e5e7eb',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
       borderRadius: '12px',
       outline: 'none',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      backgroundColor: 'rgba(15, 23, 42, 0.6)',
+      color: '#f8fafc',
       fontWeight: '500',
-      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.04)',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)',
       cursor: 'pointer'
     },
     select: {
       padding: '10px 14px',
       fontSize: '14px',
-      border: '2px solid #e2e8f0',
-      borderRadius: '8px',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRadius: '12px',
       outline: 'none',
-      backgroundColor: '#f8fafc',
-      cursor: 'pointer'
+      backgroundColor: 'rgba(15, 23, 42, 0.6)',
+      color: '#f8fafc',
+      cursor: 'pointer',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)'
     },
     applyBtn: {
       padding: '14px 32px',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
       color: 'white',
       border: 'none',
       borderRadius: '12px',
@@ -220,7 +239,7 @@ export default function SalesAnalytics() {
       cursor: 'pointer',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       alignSelf: 'flex-end',
-      boxShadow: '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+      boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
       position: 'relative',
       overflow: 'hidden',
       letterSpacing: '0.5px'
@@ -232,12 +251,12 @@ export default function SalesAnalytics() {
       marginBottom: '28px'
     },
     statCard: {
-      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%)',
+      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
       backdropFilter: 'blur(20px)',
       borderRadius: '20px',
       padding: '28px 24px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-      border: '1px solid rgba(255, 255, 255, 0.4)',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       animation: 'fadeIn 0.6s ease-out',
       position: 'relative',
@@ -246,7 +265,7 @@ export default function SalesAnalytics() {
     statLabel: {
       fontSize: '13px',
       fontWeight: '600',
-      color: '#64748b',
+      color: '#94a3b8',
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
       marginBottom: '8px'
@@ -254,7 +273,7 @@ export default function SalesAnalytics() {
     statValue: {
       fontSize: '40px',
       fontWeight: '800',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
@@ -264,49 +283,52 @@ export default function SalesAnalytics() {
     },
     statSubtext: {
       fontSize: '13px',
-      color: '#64748b'
+      color: '#94a3b8'
     },
     tabs: {
       display: 'flex',
       gap: '8px',
       marginBottom: '24px',
-      borderBottom: '2px solid #e2e8f0'
+      borderBottom: '2px solid rgba(255, 255, 255, 0.1)'
     },
     tab: {
       padding: '14px 28px',
       fontSize: '15px',
       fontWeight: '600',
-      color: '#6b7280',
-      background: 'rgba(255, 255, 255, 0.5)',
-      border: 'none',
+      color: '#94a3b8',
+      background: 'rgba(30, 41, 59, 0.4)',
+      border: '1px solid transparent',
       borderRadius: '12px 12px 0 0',
       cursor: 'pointer',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      marginBottom: '0',
+      marginBottom: '-2px',
       position: 'relative',
       letterSpacing: '0.3px'
     },
     tabActive: {
-      color: '#667eea',
-      background: 'rgba(255, 255, 255, 0.95)',
-      boxShadow: '0 -4px 12px rgba(102, 126, 234, 0.15)',
+      color: '#60a5fa',
+      background: 'rgba(30, 41, 59, 0.9)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+      borderBottom: '2px solid rgba(30, 41, 59, 0.9)',
       fontWeight: '700',
-      transform: 'translateY(-2px)'
+      transform: 'translateY(1px)' // cover the border line smoothly
     },
     chartCard: {
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: 'rgba(30, 41, 59, 0.7)',
       backdropFilter: 'blur(20px)',
       borderRadius: '20px',
       padding: '32px',
       marginBottom: '28px',
-      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       animation: 'fadeIn 0.6s ease-out 0.2s backwards'
     },
     chartTitle: {
       fontSize: '18px',
       fontWeight: '700',
-      color: '#0f172a',
+      color: '#f8fafc',
       marginBottom: '20px'
     },
     barChart: {
@@ -318,13 +340,13 @@ export default function SalesAnalytics() {
     },
     bar: {
       flex: 1,
-      background: 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%)',
       borderRadius: '8px 8px 0 0',
       position: 'relative',
       cursor: 'pointer',
       transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
       minWidth: '40px',
-      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
       animation: 'slideIn 0.6s ease-out'
     },
     barLabel: {
@@ -333,7 +355,7 @@ export default function SalesAnalytics() {
       left: '50%',
       transform: 'translateX(-50%) rotate(-45deg)',
       fontSize: '11px',
-      color: '#64748b',
+      color: '#94a3b8',
       whiteSpace: 'nowrap',
       transformOrigin: 'left'
     },
@@ -344,7 +366,7 @@ export default function SalesAnalytics() {
       transform: 'translateX(-50%)',
       fontSize: '11px',
       fontWeight: '600',
-      color: '#0f172a',
+      color: '#f8fafc',
       whiteSpace: 'nowrap'
     },
     table: {
@@ -354,19 +376,19 @@ export default function SalesAnalytics() {
     th: {
       textAlign: 'left',
       padding: '16px 14px',
-      borderBottom: '2px solid rgba(102, 126, 234, 0.2)',
+      borderBottom: '2px solid rgba(255, 255, 255, 0.1)',
       fontSize: '12px',
       fontWeight: '700',
-      color: '#667eea',
+      color: '#60a5fa',
       textTransform: 'uppercase',
       letterSpacing: '1px',
-      background: 'linear-gradient(to bottom, rgba(102, 126, 234, 0.05), transparent)'
+      background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.05), transparent)'
     },
     td: {
       padding: '18px 14px',
-      borderBottom: '1px solid rgba(102, 126, 234, 0.08)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
       fontSize: '15px',
-      color: '#374151',
+      color: '#cbd5e1',
       fontWeight: '500',
       transition: 'background 0.2s ease'
     },
@@ -377,25 +399,26 @@ export default function SalesAnalytics() {
       fontSize: '12px',
       fontWeight: '700',
       letterSpacing: '0.5px',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.3)'
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.1)'
     },
     error: {
-      background: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
-      color: '#991b1b',
+      background: 'linear-gradient(135deg, rgba(153, 27, 27, 0.2) 0%, rgba(127, 29, 29, 0.3) 100%)',
+      color: '#fca5a5',
       padding: '20px 24px',
       borderRadius: '16px',
       marginBottom: '24px',
-      border: '2px solid #fca5a5',
-      boxShadow: '0 4px 16px rgba(239, 68, 68, 0.2)',
+      border: '1px solid rgba(248, 113, 113, 0.3)',
+      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
       fontWeight: '600',
-      animation: 'fadeIn 0.4s ease-out'
+      animation: 'fadeIn 0.4s ease-out',
+      backdropFilter: 'blur(20px)'
     },
     loading: {
       textAlign: 'center',
       padding: '60px',
       fontSize: '16px',
-      color: '#64748b'
+      color: '#94a3b8'
     }
   };
 
@@ -404,13 +427,14 @@ export default function SalesAnalytics() {
       <div style={styles.container}>
         <div style={{
           ...styles.loading,
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'rgba(30, 41, 59, 0.7)',
           backdropFilter: 'blur(20px)',
           borderRadius: '20px',
           padding: '60px 40px',
           margin: '100px auto',
           maxWidth: '400px',
-          boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)'
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+          border: '1px solid rgba(255, 255, 255, 0.08)'
         }}>
           <div style={{
             fontSize: '64px',
@@ -420,13 +444,13 @@ export default function SalesAnalytics() {
           <div style={{
             fontSize: '18px',
             fontWeight: '600',
-            color: '#667eea',
+            color: '#60a5fa',
             letterSpacing: '0.5px'
           }}>Loading analytics data...</div>
           <div style={{
             width: '80px',
             height: '4px',
-            background: 'linear-gradient(90deg, #667eea, #764ba2)',
+            background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
             borderRadius: '2px',
             margin: '24px auto 0',
             animation: 'shimmer 2s infinite'
@@ -450,22 +474,23 @@ export default function SalesAnalytics() {
       )}
 
       <div style={styles.filtersCard}>
-        <div style={styles.filterGrid}>
+        <div style={styles.filtersGrid}>
           <div style={styles.inputGroup}>
             <label style={styles.label}>Start Date</label>
             <input
               type="date"
+              className="dark-date-input"
               style={styles.input}
               value={filters.startDate}
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                e.target.style.borderColor = '#60a5fa';
+                e.target.style.boxShadow = '0 0 0 3px rgba(96, 165, 250, 0.2)';
                 e.target.style.transform = 'scale(1.02)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.04)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
                 e.target.style.transform = 'scale(1)';
               }}
             />
@@ -475,17 +500,18 @@ export default function SalesAnalytics() {
             <label style={styles.label}>End Date</label>
             <input
               type="date"
+              className="dark-date-input"
               style={styles.input}
               value={filters.endDate}
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                e.target.style.borderColor = '#60a5fa';
+                e.target.style.boxShadow = '0 0 0 3px rgba(96, 165, 250, 0.2)';
                 e.target.style.transform = 'scale(1.02)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.04)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
                 e.target.style.transform = 'scale(1)';
               }}
             />
@@ -498,19 +524,19 @@ export default function SalesAnalytics() {
               value={filters.interval}
               onChange={(e) => setFilters({ ...filters, interval: e.target.value })}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                e.target.style.borderColor = '#60a5fa';
+                e.target.style.boxShadow = '0 0 0 3px rgba(96, 165, 250, 0.2)';
                 e.target.style.transform = 'scale(1.02)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.04)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
                 e.target.style.transform = 'scale(1)';
               }}
             >
-              <option value="daily">📅 Daily</option>
-              <option value="weekly">📆 Weekly</option>
-              <option value="monthly">🗓️ Monthly</option>
+              <option value="daily" style={{ background: '#1e293b' }}>📅 Daily</option>
+              <option value="weekly" style={{ background: '#1e293b' }}>📆 Weekly</option>
+              <option value="monthly" style={{ background: '#1e293b' }}>🗓️ Monthly</option>
             </select>
           </div>
 
@@ -519,11 +545,11 @@ export default function SalesAnalytics() {
             onClick={fetchAnalytics}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px) scale(1.02)';
-              e.target.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+              e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
             }}
             onMouseOut={(e) => {
               e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+              e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
             }}
           >
             🔄 Refresh Data
@@ -538,11 +564,11 @@ export default function SalesAnalytics() {
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)';
               }}
             >
               <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>💰</div>
@@ -555,11 +581,11 @@ export default function SalesAnalytics() {
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)';
               }}
             >
               <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>📎</div>
@@ -572,11 +598,11 @@ export default function SalesAnalytics() {
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)';
               }}
             >
               <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>📈</div>
@@ -589,20 +615,20 @@ export default function SalesAnalytics() {
               style={styles.statCard}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 1)';
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(102, 126, 234, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)';
               }}
             >
               <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '48px', opacity: '0.1' }}>✅</div>
               <div style={styles.statLabel}>Order Status</div>
               <div style={{ fontSize: '14px', marginTop: '12px' }}>
                 {Object.entries(summary.salesByStatus).map(([status, count]) => (
-                  <div key={status} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', padding: '8px', background: 'rgba(102, 126, 234, 0.05)', borderRadius: '8px' }}>
-                    <span style={{ textTransform: 'capitalize', color: '#6b7280', fontWeight: '600' }}>{status}:</span>
-                    <span style={{ fontWeight: '700', color: '#667eea' }}>{count}</span>
+                  <div key={status} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', padding: '8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px' }}>
+                    <span style={{ textTransform: 'capitalize', color: '#94a3b8', fontWeight: '600' }}>{status}:</span>
+                    <span style={{ fontWeight: '700', color: '#60a5fa' }}>{count}</span>
                   </div>
                 ))}
               </div>
@@ -638,43 +664,74 @@ export default function SalesAnalytics() {
 
           {activeTab === 'overview' && (
             <div style={styles.chartCard}>
-              <h3 style={styles.chartTitle}>Revenue Overview</h3>
-              <p style={{ color: '#6b7280', marginBottom: '32px', fontSize: '15px', fontWeight: '500' }}>
-                Total revenue breakdown across all orders
-              </p>
-              <div style={{
-                textAlign: 'center',
-                padding: '60px 40px',
-                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(244, 114, 182, 0.05) 100%)',
-                borderRadius: '16px',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '120px', opacity: '0.03' }}>💰</div>
+              <h3 style={styles.chartTitle}>Revenue Overview & Order Status</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
                 <div style={{
-                  fontSize: '80px',
-                  marginBottom: '24px',
-                  animation: 'pulse 2s ease-in-out infinite'
-                }}>💰</div>
-                <div style={{
-                  fontSize: '56px',
-                  fontWeight: '800',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  letterSpacing: '-2px',
-                  marginBottom: '16px'
+                  textAlign: 'center',
+                  padding: '60px 40px',
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                  borderRadius: '16px',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  border: '1px solid rgba(255, 255, 255, 0.05)'
                 }}>
-                  {formatCurrency(summary.totalRevenue)}
+                  <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '120px', opacity: '0.03' }}>💰</div>
+                  <div style={{
+                    fontSize: '80px',
+                    marginBottom: '24px',
+                    animation: 'pulse 2s ease-in-out infinite'
+                  }}>💰</div>
+                  <div style={{
+                    fontSize: '48px',
+                    fontWeight: '800',
+                    background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    letterSpacing: '-2px',
+                    marginBottom: '16px'
+                  }}>
+                    {formatCurrency(summary.totalRevenue)}
+                  </div>
+                  <div style={{
+                    fontSize: '16px',
+                    color: '#94a3b8',
+                    fontWeight: '600',
+                    letterSpacing: '0.5px'
+                  }}>
+                    From <span style={{ color: '#60a5fa', fontWeight: '700' }}>{summary.totalOrders}</span> orders
+                  </div>
                 </div>
-                <div style={{
-                  fontSize: '16px',
-                  color: '#6b7280',
-                  fontWeight: '600',
-                  letterSpacing: '0.5px'
-                }}>
-                  From <span style={{ color: '#667eea', fontWeight: '700' }}>{summary.totalOrders}</span> orders
+
+                <div style={{ height: 380, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <h4 style={{ color: '#cbd5e1', marginBottom: '8px', fontWeight: '600', fontSize: '15px' }}>Orders by Status</h4>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={Object.entries(summary.salesByStatus).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }))}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={5}
+                        dataKey="value"
+                        nameKey="name"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {Object.entries(summary.salesByStatus).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip
+                        contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)', backgroundColor: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', color: '#f8fafc' }}
+                        itemStyle={{ color: '#cbd5e1' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -683,39 +740,27 @@ export default function SalesAnalytics() {
           {activeTab === 'trends' && trends.length > 0 && (
             <div style={styles.chartCard}>
               <h3 style={styles.chartTitle}>Sales Trends ({filters.interval})</h3>
-              <div style={styles.barChart}>
-                {trends.map((trend, index) => {
-                  const maxRevenue = Math.max(...trends.map(t => t.revenue));
-                  const height = (trend.revenue / maxRevenue) * 100;
-
-                  return (
-                    <div
-                      key={index}
-                      style={{
-                        ...styles.bar,
-                        height: `${height}%`,
-                        background: index % 2 === 0
-                          ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
-                          : 'linear-gradient(180deg, #f093fb 0%, #f5576c 100%)',
-                        animationDelay: `${index * 0.05}s`
-                      }}
-                      title={`${trend.date}: ${formatCurrency(trend.revenue)}`}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.5)';
-                        e.currentTarget.style.filter = 'brightness(1.2)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
-                        e.currentTarget.style.filter = 'brightness(1)';
-                      }}
-                    >
-                      <div style={styles.barValue}>{formatCurrency(trend.revenue)}</div>
-                      <div style={styles.barLabel}>{formatDate(trend.date)}</div>
-                    </div>
-                  );
-                })}
+              <div style={{ height: 400, width: '100%', marginTop: '24px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={trends} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="date" tickFormatter={formatDate} stroke="#94a3b8" tick={{ fontSize: 12, fill: '#94a3b8' }} />
+                    <YAxis stroke="#94a3b8" tickFormatter={(value) => value >= 1000 ? `₹${(value / 1000).toFixed(1)}k` : `₹${value}`} tick={{ fontSize: 12, fill: '#94a3b8' }} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.1)" />
+                    <RechartsTooltip
+                      formatter={(value) => [formatCurrency(value), 'Revenue']}
+                      labelFormatter={(label) => formatDate(label)}
+                      contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)', backgroundColor: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', color: '#f8fafc' }}
+                      itemStyle={{ color: '#cbd5e1' }}
+                    />
+                    <Area type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" name="Revenue" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
           )}
@@ -723,6 +768,31 @@ export default function SalesAnalytics() {
           {activeTab === 'products' && (
             <div style={styles.chartCard}>
               <h3 style={styles.chartTitle}>Top Selling Products</h3>
+
+              <div style={{ height: 400, width: '100%', marginBottom: '40px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={[...summary.topProducts].slice(0, 10).sort((a, b) => a.revenue - b.revenue)}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 150, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.1)" />
+                    <XAxis type="number" tickFormatter={(value) => value >= 1000 ? `₹${(value / 1000).toFixed(1)}k` : `₹${value}`} stroke="#94a3b8" tick={{ fontSize: 12, fill: '#94a3b8' }} />
+                    <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 12, fill: '#cbd5e1' }} />
+                    <RechartsTooltip
+                      formatter={(value) => [formatCurrency(value), 'Revenue']}
+                      contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', backgroundColor: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', color: '#f8fafc' }}
+                      itemStyle={{ color: '#cbd5e1' }}
+                    />
+                    <Bar dataKey="revenue" fill="#8b5cf6" radius={[0, 8, 8, 0]} name="Revenue" barSize={20}>
+                      {[...summary.topProducts].slice(0, 10).map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
               <div style={{ overflowX: 'auto' }}>
                 <table style={styles.table}>
                   <thead>
@@ -739,7 +809,7 @@ export default function SalesAnalytics() {
                     {summary.topProducts.slice(0, 10).map((product, index) => (
                       <tr
                         key={product.productId}
-                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
                         onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                         style={{ transition: 'background 0.2s ease' }}
                       >
@@ -747,9 +817,10 @@ export default function SalesAnalytics() {
                           <span style={{
                             ...styles.badge,
                             background: index < 3
-                              ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
-                              : 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%)',
-                            color: index < 3 ? '#78350f' : '#4b5563'
+                              ? 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.3) 100%)'
+                              : 'rgba(255,255,255,0.1)',
+                            color: index < 3 ? '#fbbf24' : '#cbd5e1',
+                            border: index < 3 ? '1px solid rgba(251, 191, 36, 0.5)' : '1px solid rgba(255,255,255,0.1)'
                           }}>
                             {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                           </span>
@@ -758,8 +829,9 @@ export default function SalesAnalytics() {
                         <td style={styles.td}>
                           <span style={{
                             ...styles.badge,
-                            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
-                            color: '#1e40af'
+                            background: 'rgba(59, 130, 246, 0.1)',
+                            color: '#60a5fa',
+                            border: '1px solid rgba(59, 130, 246, 0.3)'
                           }}>
                             {product.category}
                           </span>
@@ -780,6 +852,36 @@ export default function SalesAnalytics() {
           {activeTab === 'categories' && (
             <div style={styles.chartCard}>
               <h3 style={styles.chartTitle}>Sales by Category</h3>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', marginBottom: '40px', alignItems: 'center' }}>
+                <div style={{ height: 350, width: '100%', background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={categorySales}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={5}
+                        dataKey="revenue"
+                        nameKey="category"
+                      >
+                        {categorySales.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip
+                        formatter={(value) => formatCurrency(value)}
+                        contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', backgroundColor: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', color: '#f8fafc' }}
+                        itemStyle={{ color: '#cbd5e1' }}
+                      />
+                      <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#cbd5e1' }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
               <div style={{ overflowX: 'auto' }}>
                 <table style={styles.table}>
                   <thead>
@@ -797,15 +899,16 @@ export default function SalesAnalytics() {
                       return (
                         <tr
                           key={category.category}
-                          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)'}
+                          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
                           onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                           style={{ transition: 'background 0.2s ease' }}
                         >
                           <td style={styles.td}>
                             <span style={{
                               ...styles.badge,
-                              background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
-                              color: '#3730a3',
+                              background: 'rgba(99, 102, 241, 0.1)',
+                              color: '#818cf8',
+                              border: '1px solid rgba(99, 102, 241, 0.3)',
                               fontSize: '13px'
                             }}>
                               🏷️ {category.category}
@@ -821,21 +924,21 @@ export default function SalesAnalytics() {
                               <div style={{
                                 width: '120px',
                                 height: '10px',
-                                background: 'linear-gradient(to right, #e5e7eb, #f3f4f6)',
+                                background: 'rgba(255, 255, 255, 0.1)',
                                 borderRadius: '10px',
                                 overflow: 'hidden',
-                                boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.1)'
+                                boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.4)'
                               }}>
                                 <div style={{
                                   width: `${percentage}%`,
                                   height: '100%',
-                                  background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                                  background: 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)',
                                   borderRadius: '10px',
                                   transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                                  boxShadow: '0 0 8px rgba(102, 126, 234, 0.4)'
+                                  boxShadow: '0 0 8px rgba(59, 130, 246, 0.4)'
                                 }}></div>
                               </div>
-                              <span style={{ fontWeight: '700', color: '#667eea', minWidth: '50px' }}>{percentage}%</span>
+                              <span style={{ fontWeight: '700', color: '#60a5fa', minWidth: '50px' }}>{percentage}%</span>
                             </div>
                           </td>
                         </tr>

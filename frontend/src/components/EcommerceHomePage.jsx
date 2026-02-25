@@ -411,15 +411,15 @@ export default function EcommerceHomePage() {
           {/* Dual CTA Buttons */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="#products" style={styles.heroCTA}>
-              🛍️ Shop Now
+              <span aria-hidden="true">🛒️</span> Shop Now
             </a>
-            <a href="#products?featured=true" style={{
+            <a href="#products" style={{
               ...styles.heroCTA,
               background: 'white',
               color: '#667eea',
               border: '2px solid white'
             }}>
-              ⚡ Today's Deals
+              <span aria-hidden="true">⚡</span> Today's Deals
             </a>
           </div>
 
@@ -432,15 +432,15 @@ export default function EcommerceHomePage() {
             flexWrap: 'wrap'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <span style={{ fontSize: '24px' }}>📦</span>
+              <span style={{ fontSize: '24px' }} aria-hidden="true">📦</span>
               <span style={{ fontSize: '14px', fontWeight: '600' }}>50,000+ Orders Delivered</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <span style={{ fontSize: '24px' }}>🏆</span>
+              <span style={{ fontSize: '24px' }} aria-hidden="true">🏆</span>
               <span style={{ fontSize: '14px', fontWeight: '600' }}>ISO Certified Quality</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <span style={{ fontSize: '24px' }}>💯</span>
+              <span style={{ fontSize: '24px' }} aria-hidden="true">💯</span>
               <span style={{ fontSize: '14px', fontWeight: '600' }}>100% Genuine Products</span>
             </div>
           </div>
@@ -469,7 +469,7 @@ export default function EcommerceHomePage() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <span style={styles.categoryIcon}>{cat.icon}</span>
+                <span style={styles.categoryIcon} aria-hidden="true">{cat.icon}</span>
                 <div style={styles.categoryName}>{cat.name}</div>
               </a>
             ))}
@@ -483,9 +483,8 @@ export default function EcommerceHomePage() {
           <h2 style={styles.sectionTitle}>Featured Products</h2>
           <div style={styles.productGrid}>
             {featuredProducts.slice(0, 8).map((product) => (
-              <a
+              <div
                 key={product._id}
-                href={`#product/${product._id}`}
                 style={styles.productCard}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)';
@@ -496,26 +495,35 @@ export default function EcommerceHomePage() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <img
-                  src={getImageUrl(product.imageUrl)}
-                  alt={product.name}
-                  style={styles.productImage}
-                  loading="lazy"
-                />
-                <div style={styles.productBody}>
-                  <h3 style={styles.productTitle}>{product.name}</h3>
-                  <div style={styles.productPrice}>₹{product.price}</div>
+                <a href={`#product/${product._id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
+                  <img
+                    src={getImageUrl(product.imageUrl)}
+                    alt={product.name}
+                    style={styles.productImage}
+                    loading="lazy"
+                  />
+                  <div style={styles.productBody}>
+                    <h3 style={styles.productTitle}>{product.name}</h3>
+                    <div style={styles.productPrice}>₹{product.price}</div>
+                  </div>
+                </a>
+                <div style={{ padding: '0 16px 16px' }}>
                   <button
                     style={styles.addToCartBtn}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
+                      const existing = JSON.parse(localStorage.getItem('cart') || '[]');
+                      const idx = existing.findIndex(i => i._id === product._id);
+                      if (idx > -1) existing[idx].quantity += 1;
+                      else existing.push({ ...product, quantity: 1 });
+                      localStorage.setItem('cart', JSON.stringify(existing));
+                      window.dispatchEvent(new Event('cartUpdated'));
                       showToast('Added to cart!', 'success');
                     }}
                   >
                     Add to Cart
                   </button>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         </div>
@@ -527,21 +535,21 @@ export default function EcommerceHomePage() {
           <h2 style={styles.sectionTitle}>Why Choose Us</h2>
           <div style={styles.promoGrid}>
             <div style={styles.promoTile}>
-              <div style={styles.promoIcon}>✨</div>
+              <div style={styles.promoIcon} aria-hidden="true">✨</div>
               <div style={styles.promoTitle}>Premium Quality</div>
               <div style={styles.promoText}>
                 Sourced from top brands and manufacturers
               </div>
             </div>
             <div style={styles.promoTile}>
-              <div style={styles.promoIcon}>💰</div>
+              <div style={styles.promoIcon} aria-hidden="true">💰</div>
               <div style={styles.promoTitle}>Best Prices</div>
               <div style={styles.promoText}>
                 Competitive pricing with regular discounts
               </div>
             </div>
             <div style={styles.promoTile}>
-              <div style={styles.promoIcon}>👨‍🔧</div>
+              <div style={styles.promoIcon} aria-hidden="true">👨‍🔧</div>
               <div style={styles.promoTitle}>Expert Support</div>
               <div style={styles.promoText}>
                 Professional guidance for your projects
@@ -575,7 +583,7 @@ export default function EcommerceHomePage() {
                 }}
               >
                 {/* Icon Wrapper with Gradient Background */}
-                <div style={styles.brandIconWrapper}>
+                <div style={styles.brandIconWrapper} aria-hidden="true">
                   <div style={styles.brandIcon}>{brand.icon}</div>
                 </div>
 
@@ -594,7 +602,7 @@ export default function EcommerceHomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '48px' }}>
             {trustBadges.map((badge, idx) => (
               <div key={idx} style={styles.trustBadge}>
-                <div style={styles.trustIcon}>{badge.icon}</div>
+                <div style={styles.trustIcon} aria-hidden="true">{badge.icon}</div>
                 <div style={styles.trustTitle}>{badge.title}</div>
                 <div style={styles.trustSubtitle}>{badge.subtitle}</div>
               </div>
@@ -631,8 +639,8 @@ export default function EcommerceHomePage() {
                 borderRadius: '12px',
                 borderLeft: '4px solid #10b981'
               }}>
-                <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                  {'⭐'.repeat(5)}
+                <div role="img" aria-label="5 out of 5 stars" style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                  {[...Array(5)].map((_, i) => <span key={i} aria-hidden="true" style={{ color: '#FBBF24', fontSize: '16px' }}>★</span>)}
                 </div>
                 <p style={{
                   fontSize: '14px',
@@ -654,8 +662,8 @@ export default function EcommerceHomePage() {
                 borderRadius: '12px',
                 borderLeft: '4px solid #10b981'
               }}>
-                <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                  {'⭐'.repeat(5)}
+                <div role="img" aria-label="5 out of 5 stars" style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                  {[...Array(5)].map((_, i) => <span key={i} aria-hidden="true" style={{ color: '#FBBF24', fontSize: '16px' }}>★</span>)}
                 </div>
                 <p style={{
                   fontSize: '14px',
@@ -677,8 +685,8 @@ export default function EcommerceHomePage() {
                 borderRadius: '12px',
                 borderLeft: '4px solid #10b981'
               }}>
-                <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                  {'⭐'.repeat(5)}
+                <div role="img" aria-label="5 out of 5 stars" style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                  {[...Array(5)].map((_, i) => <span key={i} aria-hidden="true" style={{ color: '#FBBF24', fontSize: '16px' }}>★</span>)}
                 </div>
                 <p style={{
                   fontSize: '14px',
@@ -705,19 +713,19 @@ export default function EcommerceHomePage() {
               flexWrap: 'wrap'
             }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>🏅</div>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }} aria-hidden="true">🏅</div>
                 <div style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>ISO 9001:2015</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>🔒</div>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }} aria-hidden="true">🔒</div>
                 <div style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>SSL Secured</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>✓</div>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }} aria-hidden="true">✓</div>
                 <div style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>Verified Seller</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>🌟</div>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }} aria-hidden="true">🌟</div>
                 <div style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280' }}>4.8/5 Rating</div>
               </div>
             </div>
@@ -734,8 +742,6 @@ export default function EcommerceHomePage() {
               <ul style={styles.footerLinks}>
                 <li><a href="#about" style={styles.footerLink}>About Us</a></li>
                 <li><a href="#contact" style={styles.footerLink}>Contact</a></li>
-                <li><a href="#careers" style={styles.footerLink}>Careers</a></li>
-                <li><a href="#press" style={styles.footerLink}>Press</a></li>
               </ul>
             </div>
             <div>
@@ -758,10 +764,10 @@ export default function EcommerceHomePage() {
             <div>
               <div style={styles.footerTitle}>Connect</div>
               <ul style={styles.footerLinks}>
-                <li><a href="#facebook" style={styles.footerLink}>Facebook</a></li>
-                <li><a href="#instagram" style={styles.footerLink}>Instagram</a></li>
-                <li><a href="#twitter" style={styles.footerLink}>Twitter</a></li>
-                <li><a href="#youtube" style={styles.footerLink}>YouTube</a></li>
+                <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>Facebook</a></li>
+                <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>Instagram</a></li>
+                <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>Twitter</a></li>
+                <li><a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>YouTube</a></li>
               </ul>
             </div>
           </div>

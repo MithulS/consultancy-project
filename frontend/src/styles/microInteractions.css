@@ -14,17 +14,21 @@
 .btn-interactive {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
+  /* Hardware acceleration */
 }
 
 .btn-interactive:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .btn-interactive:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Faster snap on press */
 }
 
 /* Ripple effect */
@@ -51,13 +55,15 @@
    ============================================ */
 
 .card-hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .card-hover-lift:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
   z-index: 10;
 }
 
@@ -147,8 +153,8 @@
   font-size: 16px;
 }
 
-.input-enhanced:focus + .floating-label,
-.input-enhanced:not(:placeholder-shown) + .floating-label {
+.input-enhanced:focus+.floating-label,
+.input-enhanced:not(:placeholder-shown)+.floating-label {
   top: 8px;
   transform: translateY(0);
   font-size: 12px;
@@ -165,10 +171,13 @@
 }
 
 @keyframes badgePulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
   }
+
   50% {
     transform: scale(1.05);
     box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
@@ -180,9 +189,26 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-  20%, 40%, 60%, 80% { transform: translateX(4px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 /* ============================================
@@ -199,7 +225,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dots-loading {
@@ -215,12 +243,25 @@
   animation: dotBounce 1.4s infinite ease-in-out both;
 }
 
-.dots-loading span:nth-child(1) { animation-delay: -0.32s; }
-.dots-loading span:nth-child(2) { animation-delay: -0.16s; }
+.dots-loading span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dots-loading span:nth-child(2) {
+  animation-delay: -0.16s;
+}
 
 @keyframes dotBounce {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
 }
 
 /* ============================================
@@ -351,18 +392,21 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* ============================================
@@ -382,6 +426,7 @@
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -393,6 +438,7 @@
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(400px);
     opacity: 0;
@@ -407,18 +453,17 @@
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--skeleton-base, #e5e7eb) 0%,
-    var(--skeleton-highlight, #f3f4f6) 50%,
-    var(--skeleton-base, #e5e7eb) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--skeleton-base, #e5e7eb) 0%,
+      var(--skeleton-highlight, #f3f4f6) 50%,
+      var(--skeleton-base, #e5e7eb) 100%);
   background-size: 1000px 100%;
   animation: shimmerSkeleton 2s infinite linear;
 }
@@ -428,6 +473,7 @@
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

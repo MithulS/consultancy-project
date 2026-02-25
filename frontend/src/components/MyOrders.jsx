@@ -320,7 +320,7 @@ export default function MyOrders() {
             return (
               <div
                 key={order._id}
-                className="card animate-fadeIn shadow-md hover-lift transition-all"
+                className="card animate-staggered-glide shadow-md hover-lift transition-all"
                 style={{
                   marginBottom: '24px',
                   animationDelay: `${index * 0.1}s`,

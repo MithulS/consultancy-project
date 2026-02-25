@@ -21,60 +21,87 @@ const Wishlist = lazy(() => import('./Wishlist'));
 
 export default function UserRouter({ currentPage, authKey }) {
     const renderUserContent = () => {
+        let content;
         switch (currentPage) {
             case 'home':
-                return <CommercialHomePage key={authKey} />;
+                content = <CommercialHomePage key={authKey} />;
+                break;
             case 'register':
-                return <RegisterModern />;
+                content = <RegisterModern />;
+                break;
             case 'verify-otp':
-                return <VerifyOTPEnhanced />;
+                content = <VerifyOTPEnhanced />;
+                break;
             case 'forgot-password':
-                return <ForgotPassword />;
+                content = <ForgotPassword />;
+                break;
             case 'reset-password':
-                return <ResetPassword />;
+                content = <ResetPassword />;
+                break;
             case 'dashboard':
-                return <Dashboard />;
+                content = <Dashboard />;
+                break;
             case 'login':
-                return <LoginModern />;
+                content = <LoginModern />;
+                break;
             case 'contact':
-                return <ContactPage key={authKey} />;
+                content = <ContactPage key={authKey} />;
+                break;
             case 'products':
             case 'about':
             case 'catalog':
-                return <CommercialHomePage key={authKey} />;
+                content = <CommercialHomePage key={authKey} />;
+                break;
 
             // Lazy loaded user routes
             case 'cart':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><Cart /></Suspense>;
+                content = <Cart />;
+                break;
             case 'checkout':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><Checkout /></Suspense>;
+                content = <Checkout />;
+                break;
             case 'guest-checkout':
                 const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
-                return (
-                    <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}>
-                        <GuestCheckout
-                            cart={guestCart}
-                            onComplete={() => {
-                                localStorage.removeItem('guestCart');
-                                window.location.hash = '#home';
-                            }}
-                            onCancel={() => window.location.hash = '#home'}
-                        />
-                    </Suspense>
+                content = (
+                    <GuestCheckout
+                        cart={guestCart}
+                        onComplete={() => {
+                            localStorage.removeItem('guestCart');
+                            window.location.hash = '#home';
+                        }}
+                        onCancel={() => window.location.hash = '#home'}
+                    />
                 );
+                break;
             case 'my-orders':
             case 'orders':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><MyOrders /></Suspense>;
+                content = <MyOrders />;
+                break;
             case 'profile':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><Profile /></Suspense>;
+                content = <Profile />;
+                break;
             case 'wishlist':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><Wishlist onNavigate={(page) => window.location.hash = `#${page}`} /></Suspense>;
+                content = <Wishlist onNavigate={(page) => window.location.hash = `#${page}`} />;
+                break;
             case 'track-order':
             case 'tracking':
-                return <Suspense fallback={<LoadingOverlay show={true} message="Loading..." />}><PublicTracking /></Suspense>;
+                content = <PublicTracking />;
+                break;
             default:
-                return <NotFound />;
+                content = <NotFound />;
+                break;
         }
+
+        return (
+            <Suspense fallback={<LoadingOverlay show={true} message="Loading Page..." />}>
+                <div
+                    key={currentPage}
+                    style={{ animation: 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}
+                >
+                    {content}
+                </div>
+            </Suspense>
+        );
     };
 
     return renderUserContent();

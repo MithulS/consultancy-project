@@ -36,47 +36,7 @@ import {
   Notification,
   LoadingContainer
 } from './StyledComponents';
-
-// Inject CSS animations for modern UI
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes gradientFlow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.02); }
-  }
-  @keyframes slideInRight {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-`;
-if (!document.querySelector('[data-dashboard-styles]')) {
-  styleSheet.setAttribute('data-dashboard-styles', 'true');
-  document.head.appendChild(styleSheet);
-}
+import '../styles/dashboardAnimations.css';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);

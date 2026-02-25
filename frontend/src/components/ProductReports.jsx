@@ -188,7 +188,8 @@ export default function ProductReports({ onClose }) {
       transition: 'all 0.2s'
     },
     section: {
-      marginBottom: '24px'
+      marginBottom: '24px',
+      animation: 'staggeredGlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both'
     },
     label: {
       display: 'block',
@@ -322,6 +323,24 @@ export default function ProductReports({ onClose }) {
 
   return (
     <div style={styles.overlay} onClick={onClose}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes staggeredGlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()} ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div style={styles.header}>
           <h2 id="modal-title" style={styles.title}>📊 Download Product Reports</h2>
@@ -352,7 +371,7 @@ export default function ProductReports({ onClose }) {
         )}
 
         {/* Report Type Selection */}
-        <div style={styles.section}>
+        <div style={{ ...styles.section, animationDelay: '0.1s' }}>
           <label style={styles.label}>📋 Report Type</label>
           <div style={styles.radioGroup}>
             <div
@@ -394,7 +413,7 @@ export default function ProductReports({ onClose }) {
 
         {/* Product Selection (only for individual) */}
         {reportType === 'individual' && (
-          <div style={styles.section}>
+          <div style={{ ...styles.section, animationDelay: '0.2s' }}>
             <label style={styles.label}>🏷️ Select Product</label>
             <select
               value={selectedProduct}
@@ -414,7 +433,7 @@ export default function ProductReports({ onClose }) {
         )}
 
         {/* Date Range Selection */}
-        <div style={styles.section}>
+        <div style={{ ...styles.section, animationDelay: '0.3s' }}>
           <label style={styles.label}>📅 Date Range</label>
           <div style={styles.radioGroup}>
             <div
@@ -474,7 +493,7 @@ export default function ProductReports({ onClose }) {
 
         {/* Custom Date Inputs */}
         {dateRange === 'custom' && (
-          <div style={styles.section}>
+          <div style={{ ...styles.section, animationDelay: '0.4s' }}>
             <div style={styles.dateGroup}>
               <div>
                 <label style={{ ...styles.label, fontSize: '12px' }}>Start Date</label>
@@ -503,7 +522,7 @@ export default function ProductReports({ onClose }) {
         )}
 
         {/* Info Box */}
-        <div style={styles.infoBox}>
+        <div style={{ ...styles.infoBox, animation: 'staggeredGlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both', animationDelay: '0.5s' }}>
           <div style={styles.infoTitle}>
             <span>💡</span>
             <span>Report Details</span>
@@ -526,7 +545,7 @@ export default function ProductReports({ onClose }) {
         </div>
 
         {/* Action Buttons */}
-        <div style={styles.buttonGroup}>
+        <div style={{ ...styles.buttonGroup, animation: 'staggeredGlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both', animationDelay: '0.6s' }}>
           <button
             style={{ ...styles.button, ...styles.cancelBtn }}
             onClick={onClose}
@@ -563,20 +582,6 @@ export default function ProductReports({ onClose }) {
         </div>
       </div>
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.9); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

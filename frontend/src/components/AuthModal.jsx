@@ -1,5 +1,6 @@
 // AuthModal.jsx - Professional Login/Register Modal with Enhanced UX
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -17,20 +18,15 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState('');
 
-  // Close on escape key
+  // Ref for focus trap (handles Tab cycling and Escape key)
+  const modalRef = useRef(null);
+  useFocusTrap(modalRef, isOpen, onClose);
+
+  // Scroll lock when modal is open
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -59,11 +55,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        setMessage('✅ Login successful! Adding item to cart...');
-
-        setTimeout(() => {
-          onAuthSuccess(data.user);
-        }, 800);
+        onAuthSuccess(data.user);
       } else {
         setMessage('❌ ' + data.msg);
       }
@@ -114,7 +106,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
 
   return (
     <div style={styles.overlay} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div ref={modalRef} style={styles.modal} onClick={(e) => e.stopPropagation()}>
         {/* Close Button - Accessible */}
         <button
           style={styles.closeBtn}
@@ -129,38 +121,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
           </svg>
         </button>
 
-        {/* Welcome Offer Banner - Dismissible */}
-        {showIncentive && (
-          <div style={styles.incentiveBanner} role="banner">
-            <div style={styles.incentiveContent}>
-              <div style={styles.incentiveIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 12V22H4V12"></path>
-                  <path d="M22 7H2V12H22V7Z"></path>
-                  <path d="M12 22V7"></path>
-                  <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z"></path>
-                  <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z"></path>
-                </svg>
-              </div>
-              <div>
-                <strong style={styles.incentiveTitle}>First Order Special</strong>
-                <p style={styles.incentiveText}>Get <strong>10% OFF</strong> + Free Shipping on your first purchase</p>
-              </div>
-            </div>
-            <button
-              style={styles.dismissBtn}
-              onClick={() => setShowIncentive(false)}
-              aria-label="Dismiss welcome offer"
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.35)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)'}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-        )}
+
 
         {/* Header Section */}
         <div style={styles.header}>
@@ -201,47 +162,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
           </div>
         )}
 
-        {/* Account Benefits - Modern Grid Layout */}
-        <div style={styles.benefitsSection}>
-          <h3 style={styles.benefitsTitle}>Account Benefits</h3>
-          <div style={styles.benefitsGrid}>
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitIconCircle}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
-              </div>
-              <span style={styles.benefitLabel}>Save Items</span>
-            </div>
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitIconCircle}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-              </div>
-              <span style={styles.benefitLabel}>Track Orders</span>
-            </div>
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitIconCircle}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <span style={styles.benefitLabel}>Fast Checkout</span>
-            </div>
-            <div style={styles.benefitCard}>
-              <div style={styles.benefitIconCircle}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                </svg>
-              </div>
-              <span style={styles.benefitLabel}>Exclusive Deals</span>
-            </div>
-          </div>
-        </div>
+
 
         {/* Google Login - Premium Style */}
         <button
@@ -715,7 +636,7 @@ const styles = {
     zIndex: 9999,
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    animation: 'fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+    animation: 'backdropBloom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
     padding: '20px'
   },
 

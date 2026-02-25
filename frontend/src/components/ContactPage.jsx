@@ -139,7 +139,8 @@ export default function ContactPage() {
     container: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '60px 24px'
+      padding: '60px 24px',
+      color: 'var(--text-primary)'
     },
     header: {
       textAlign: 'center',
@@ -174,7 +175,7 @@ export default function ContactPage() {
     formTitle: {
       fontSize: '24px',
       fontWeight: 600,
-      color: '#111827',
+      color: 'var(--text-primary)',
       marginBottom: '24px'
     },
     formGroup: {
@@ -188,7 +189,7 @@ export default function ContactPage() {
       marginBottom: '8px'
     },
     required: {
-      color: '#DC2626'
+      color: 'var(--accent-red-primary, #DC2626)'
     },
     input: {
       width: '100%',
@@ -204,7 +205,7 @@ export default function ContactPage() {
       boxSizing: 'border-box'
     },
     inputError: {
-      borderColor: '#DC2626'
+      borderColor: 'var(--accent-red-primary, #DC2626)'
     },
     select: {
       width: '100%',
@@ -236,7 +237,7 @@ export default function ContactPage() {
       boxSizing: 'border-box'
     },
     errorText: {
-      color: '#DC2626',
+      color: 'var(--accent-red-primary, #DC2626)',
       fontSize: '13px',
       marginTop: '4px',
       display: 'block'
@@ -244,9 +245,8 @@ export default function ContactPage() {
     submitButton: {
       width: '100%',
       padding: '14px 24px',
-      backgroundColor: 'var(--accent-blue-primary)',
-      background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
-      color: '#FFFFFF',
+      background: 'var(--gradient-cta)',
+      color: 'var(--text-primary, #FFFFFF)',
       border: 'none',
       borderRadius: '8px',
       fontSize: '16px',
@@ -254,10 +254,10 @@ export default function ContactPage() {
       cursor: 'pointer',
       transition: 'all 0.2s',
       marginTop: '8px',
-      boxShadow: '0 4px 12px var(--accent-blue-glow)'
+      boxShadow: 'var(--shadow-md)'
     },
     submitButtonDisabled: {
-      backgroundColor: '#9CA3AF',
+      opacity: '0.6',
       cursor: 'not-allowed'
     },
     infoCard: {
@@ -337,14 +337,16 @@ export default function ContactPage() {
       fontWeight: 500
     },
     alertSuccess: {
-      backgroundColor: '#D1FAE5',
+      background: 'var(--gradient-success, linear-gradient(135deg, #d1fae5, #a7f3d0))',
       color: '#065F46',
-      border: '1px solid #A7F3D0'
+      border: '1px solid #10b981',
+      boxShadow: 'var(--shadow-sm)'
     },
     alertError: {
-      backgroundColor: '#FEE2E2',
+      background: 'var(--gradient-error, linear-gradient(135deg, #fee2e2, #fecaca))',
       color: '#991B1B',
-      border: '1px solid #FECACA'
+      border: '1px solid #ef4444',
+      boxShadow: 'var(--shadow-sm)'
     }
   };
 

@@ -28,13 +28,20 @@
 
 .dark-navy-theme {
   /* === PRIMARY NAVY COLORS === */
-  --navy-darkest: #0a1628;        /* Ultra deep navy - main background */
-  --navy-darker: #101e35;         /* Very dark navy */
-  --navy-dark: #1a2942;           /* Dark navy */
-  --navy-medium: #243750;         /* Medium navy */
-  --navy-light: #2d455e;          /* Light navy */
-  --navy-lighter: #3a5472;        /* Lighter navy */
-  --navy-lightest: #4a6685;       /* Lightest navy - borders */
+  --navy-darkest: #0a1628;
+  /* Ultra deep navy - main background */
+  --navy-darker: #101e35;
+  /* Very dark navy */
+  --navy-dark: #1a2942;
+  /* Dark navy */
+  --navy-medium: #243750;
+  /* Medium navy */
+  --navy-light: #2d455e;
+  /* Light navy */
+  --navy-lighter: #3a5472;
+  /* Lighter navy */
+  --navy-lightest: #4a6685;
+  /* Lightest navy - borders */
 
   /* === GRADIENT BACKGROUNDS === */
   --gradient-navy-primary: linear-gradient(135deg, #0a1628 0%, #1a2942 50%, #243750 100%);
@@ -44,36 +51,51 @@
   --gradient-navy-subtle: linear-gradient(180deg, #0a1628 0%, #101e35 100%);
 
   /* === ACCENT COLORS - RED === */
-  --accent-red-primary: #ff4757;     /* Vibrant red */
-  --accent-red-hover: #ff3838;       /* Brighter on hover */
-  --accent-red-active: #ee2a3a;      /* Darker when pressed */
+  --accent-red-primary: #ff4757;
+  /* Vibrant red */
+  --accent-red-hover: #ff3838;
+  /* Brighter on hover */
+  --accent-red-active: #ee2a3a;
+  /* Darker when pressed */
   --accent-red-glow: rgba(255, 71, 87, 0.5);
   --accent-red-subtle: rgba(255, 71, 87, 0.15);
 
   /* === ACCENT COLORS - BLUE === */
-  --accent-blue-primary: #2e86de;    /* Bright blue */
-  --accent-blue-hover: #2980d9;      /* Lighter on hover */
-  --accent-blue-active: #2472c4;     /* Darker when pressed */
+  --accent-blue-primary: #2e86de;
+  /* Bright blue */
+  --accent-blue-hover: #2980d9;
+  /* Lighter on hover */
+  --accent-blue-active: #2472c4;
+  /* Darker when pressed */
   --accent-blue-glow: rgba(46, 134, 222, 0.5);
   --accent-blue-subtle: rgba(46, 134, 222, 0.15);
 
   /* === ACCENT COLORS - COMPLEMENTARY === */
-  --accent-orange: #ff9f43;          /* Orange for Buy Now */
+  --accent-orange: #ff9f43;
+  /* Orange for Buy Now */
   --accent-orange-hover: #ff8c1a;
   --accent-orange-glow: rgba(255, 159, 67, 0.5);
-  
-  --accent-green: #2ecc71;           /* Green for success */
+
+  --accent-green: #2ecc71;
+  /* Green for success */
   --accent-green-glow: rgba(46, 204, 113, 0.4);
-  
-  --accent-cyan: #00d2d3;            /* Cyan for info */
-  --accent-purple: #a55eea;          /* Purple for premium */
+
+  --accent-cyan: #00d2d3;
+  /* Cyan for info */
+  --accent-purple: #a55eea;
+  /* Purple for premium */
 
   /* === TEXT COLORS === */
-  --text-primary: #ffffff;           /* White - main text */
-  --text-secondary: #c5d0de;         /* Light gray - secondary text */
-  --text-tertiary: #8fa3b8;          /* Gray - tertiary text */
-  --text-muted: #6b7f94;             /* Muted gray - placeholders */
-  --text-inverse: #0a1628;           /* Dark - for light backgrounds */
+  --text-primary: #ffffff;
+  /* White - main text */
+  --text-secondary: #c5d0de;
+  /* Light gray - secondary text */
+  --text-tertiary: #8fa3b8;
+  /* Gray - tertiary text */
+  --text-muted: #6b7f94;
+  /* Muted gray - placeholders */
+  --text-inverse: #0a1628;
+  /* Dark - for light backgrounds */
 
   /* === BORDER & DIVIDER COLORS === */
   --border-primary: rgba(74, 102, 133, 0.4);
@@ -86,7 +108,7 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
-  
+
   --glow-blue: 0 0 20px var(--accent-blue-glow);
   --glow-red: 0 0 20px var(--accent-red-glow);
   --glow-orange: 0 0 20px var(--accent-orange-glow);
@@ -116,6 +138,58 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Stunning Dynamic Ambient Background Glow for the Entire Project! */
+.dark-navy-theme::before,
+.dark-navy-theme::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dark-navy-theme::before {
+  background: radial-gradient(circle at 15% 50%, rgba(46, 134, 222, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(255, 71, 87, 0.1), transparent 25%);
+  animation: ambientGlowRotate 20s infinite alternate ease-in-out;
+}
+
+.dark-navy-theme::after {
+  background: radial-gradient(circle at 50% 80%, rgba(46, 204, 113, 0.05), transparent 40%);
+  animation: ambientGlowDistortion 15s infinite alternate ease-in-out;
+}
+
+@keyframes ambientGlowRotate {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  50% {
+    transform: scale(1.2) translate(5%, 5%);
+  }
+
+  100% {
+    transform: scale(1) translate(-5%, -5%);
+  }
+}
+
+@keyframes ambientGlowDistortion {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* ============================================
@@ -430,6 +504,7 @@
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -441,6 +516,7 @@
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -655,7 +731,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 50%, var(--accent-blue-glow) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, var(--accent-red-glow) 0%, transparent 50%);
   opacity: 0.3;
@@ -853,7 +929,8 @@
   }
 
   .dark-navy-theme .nav-menu {
-    display: none; /* Replace with mobile menu */
+    display: none;
+    /* Replace with mobile menu */
   }
 
   .dark-navy-theme .category-grid {
@@ -936,7 +1013,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================

@@ -121,8 +121,8 @@ export default function ProductFilters({
     },
     filterGroup: {
       marginBottom: '0',
-      animation: 'slideIn 0.3s ease-out',
-      animationFillMode: 'backwards'
+      animation: 'staggeredGlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      opacity: 0
     },
     filterLabel: {
       fontSize: '14px',
@@ -302,7 +302,7 @@ export default function ProductFilters({
         <div style={styles.filterPanel}>
           <div style={styles.filterGrid} className="filter-grid">
             {/* Price Range */}
-            <div style={styles.filterGroup}>
+            <div style={{ ...styles.filterGroup, animationDelay: '0.1s' }}>
               <label style={styles.filterLabel}>Price Range</label>
               <div style={styles.priceInputs}>
                 <input
@@ -326,7 +326,7 @@ export default function ProductFilters({
             </div>
 
             {/* Rating Filter */}
-            <div style={styles.filterGroup}>
+            <div style={{ ...styles.filterGroup, animationDelay: '0.2s' }}>
               <label style={styles.filterLabel}>Minimum Rating</label>
               <div style={styles.ratingOptions}>
                 {[4, 3, 2, 1].map(rating => (
@@ -343,7 +343,7 @@ export default function ProductFilters({
             </div>
 
             {/* Stock Filter */}
-            <div style={styles.filterGroup}>
+            <div style={{ ...styles.filterGroup, animationDelay: '0.3s' }}>
               <label style={styles.filterLabel}>Availability</label>
               <div
                 style={styles.checkbox}

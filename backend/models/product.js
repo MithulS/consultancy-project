@@ -38,7 +38,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['Electrical', 'Plumbing', 'Hardware', 'Tools', 'Lighting', 'Paints', 'Heating', 'Safety', 'Accessories'],
+    enum: ['Electrical', 'Plumbing', 'Hardware', 'Paints & Coatings', 'Pipes & Fittings', 'Wiring & Cables', 'Switches & Sockets', 'Water Tanks', 'Tools & Equipment', 'Safety & Protection'],
     default: 'Hardware'
   },
   brand: {

@@ -50,7 +50,6 @@ export default function ToastNotification() {
       gap: '12px',
       fontSize: '14px',
       fontWeight: '500',
-      animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1), fadeOut 0.3s ease-out 2.7s',
       background: 'var(--glass-background)',
       backdropFilter: 'var(--glass-blur)',
       border: '1px solid var(--border-secondary)',
@@ -114,7 +113,11 @@ export default function ToastNotification() {
         {toasts.map(toast => (
           <div
             key={toast.id}
-            style={{ ...styles.toast, ...getTypeStyle(toast.type) }}
+            style={{
+              ...styles.toast,
+              ...getTypeStyle(toast.type),
+              animation: `slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1), fadeOut 0.3s ease-out ${(toast.duration - 300) / 1000}s forwards`
+            }}
             role="alert"
             aria-live="polite"
           >

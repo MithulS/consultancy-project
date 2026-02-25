@@ -373,7 +373,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       position: 'absolute',
       top: '-6px',
       right: '-6px',
-      backgroundColor: '#EF4444',
+      backgroundColor: 'var(--accent-red-primary)',
       color: '#FFFFFF',
       borderRadius: '10px',
       padding: '2px 6px',
@@ -466,11 +466,12 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       background: 'var(--glass-background)',
       backdropFilter: 'var(--glass-blur)',
       borderBottom: '1px solid var(--border-primary)',
-      boxShadow: 'var(--shadow-lg)',
+      borderTop: '1px solid var(--border-primary)',
+      boxShadow: 'var(--shadow-xl)',
       zIndex: 999,
       display: showMegaMenu ? 'block' : 'none',
       padding: '40px 0',
-      animation: 'slideDown 0.3s ease-out'
+      animation: 'slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
     },
     megaMenuGrid: {
       maxWidth: '1400px',
@@ -499,11 +500,14 @@ export default function CommercialHardwareHeader({ onNavigate }) {
       color: 'var(--text-secondary)',
       fontSize: '14px',
       cursor: 'pointer',
-      transition: 'color var(--transition-fast)',
+      transition: 'all var(--transition-fast)',
       textDecoration: 'none',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px'
+      gap: '8px',
+      padding: '6px 12px',
+      borderRadius: '8px',
+      marginLeft: '-12px'
     }
   };
 
@@ -594,7 +598,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               onSubmit={handleSearch}
               style={{
                 ...styles.searchForm,
-                borderColor: searchQuery ? '#4285F4' : '#E5E7EB'
+                borderColor: searchQuery ? 'var(--accent-blue-primary)' : 'var(--border-secondary)'
               }}
             >
               <input
@@ -619,10 +623,10 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                 disabled={isListening}
                 style={{
                   ...styles.voiceButton,
-                  backgroundColor: isListening ? '#FEF3C7' : 'transparent',
+                  backgroundColor: isListening ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
                   cursor: isListening ? 'not-allowed' : 'pointer',
                 }}
-                onMouseEnter={(e) => !isListening && (e.target.style.backgroundColor = '#F3F4F6')}
+                onMouseEnter={(e) => !isListening && (e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)')}
                 onMouseLeave={(e) => !isListening && (e.target.style.backgroundColor = 'transparent')}
                 aria-label={isListening ? 'Listening...' : 'Voice search'}
                 title={isListening ? 'Listening... Speak now' : 'Click to use voice search'}
@@ -632,8 +636,8 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               <button
                 type="submit"
                 style={styles.searchButton}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#3367D6'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#4285F4'}
+                onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-blue-active) 0%, var(--accent-blue-primary) 100%)'}
+                onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-blue-primary) 0%, var(--accent-blue-active) 100%)'}
               >
                 🔍
               </button>
@@ -647,11 +651,12 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                 left: 0,
                 right: 0,
                 marginTop: '8px',
-                backgroundColor: '#FEE2E2',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 padding: '12px 16px',
                 borderRadius: '8px',
                 fontSize: '14px',
-                color: '#991B1B',
+                color: '#EF4444',
+                border: '1px solid rgba(239, 68, 68, 0.2)',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 animation: 'slideDown 0.3s ease-out',
                 zIndex: 1000
@@ -666,8 +671,8 @@ export default function CommercialHardwareHeader({ onNavigate }) {
             {/* Track Order Button */}
             <button
               style={styles.trackButton}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#DC2626'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#EF4444'}
+              onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-red-active) 0%, var(--accent-red-primary) 100%)'}
+              onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)'}
               onClick={() => window.location.hash = '#tracking'}
             >
               📦 TRACK MY ORDER
@@ -678,21 +683,21 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               <button
                 style={styles.actionButton}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#4285F4';
-                  e.currentTarget.style.backgroundColor = '#F0F9FF';
+                  e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(66, 133, 244, 0.1)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#E5E7EB';
+                  e.currentTarget.style.borderColor = 'var(--border-secondary)';
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
                 onClick={() => setShowAccountMenu(!showAccountMenu)}
               >
                 <span style={{ fontSize: '20px' }}>👤</span>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '11px', color: '#6B7280' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     {user ? 'Welcome' : 'Sign In'}
                   </span>
-                  <span style={{ fontWeight: 600, color: '#111827' }}>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                     {user ? user.name?.split(' ')[0] : 'Register'}
                   </span>
                 </div>
@@ -709,7 +714,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                       </div>
                       <div
                         style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F3F4F6'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                         onClick={() => {
                           window.location.hash = '#profile';
@@ -720,7 +725,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                       </div>
                       <div
                         style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F3F4F6'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                         onClick={() => {
                           window.location.hash = '#orders';
@@ -731,7 +736,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                       </div>
                       <div
                         style={{ ...styles.menuItem, borderBottom: 'none' }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#FEE2E2'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                         onClick={handleLogout}
                       >
@@ -742,7 +747,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                     <>
                       <div
                         style={styles.menuItem}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F3F4F6'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                         onClick={() => {
                           window.location.hash = '#login';
@@ -753,7 +758,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
                       </div>
                       <div
                         style={{ ...styles.menuItem, borderBottom: 'none' }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F3F4F6'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                         onClick={() => {
                           window.location.hash = '#register';
@@ -772,11 +777,11 @@ export default function CommercialHardwareHeader({ onNavigate }) {
             <button
               style={{ ...styles.actionButton, position: 'relative' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#4285F4';
-                e.currentTarget.style.backgroundColor = '#F0F9FF';
+                e.currentTarget.style.borderColor = 'var(--accent-blue-primary)';
+                e.currentTarget.style.backgroundColor = 'rgba(66, 133, 244, 0.1)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#E5E7EB';
+                e.currentTarget.style.borderColor = 'var(--border-secondary)';
                 e.currentTarget.style.backgroundColor = 'transparent';
               }}
               onClick={() => window.location.hash = '#cart'}
@@ -795,7 +800,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#4285F4';
+              e.currentTarget.style.color = 'var(--accent-blue-primary)';
               setShowMegaMenu(true);
             }}
           >
@@ -805,7 +810,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#4285F4';
+              e.currentTarget.style.color = 'var(--accent-blue-primary)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--text-secondary)';
@@ -818,7 +823,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
           <div
             style={styles.navLink}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#4285F4';
+              e.currentTarget.style.color = 'var(--accent-blue-primary)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--text-secondary)';
@@ -831,7 +836,7 @@ export default function CommercialHardwareHeader({ onNavigate }) {
           <div
             style={{ ...styles.navLink, marginLeft: 'auto' }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#EF4444';
+              e.currentTarget.style.color = 'var(--accent-red-primary)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--text-secondary)';
@@ -850,20 +855,44 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Electrical'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >⚡ Electrical Systems</div>
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Wiring%20%26%20Cables'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🔌 Wiring & Cables</div>
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Hardware'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🔩 Fasteners & Hardware</div>
             </div>
 
@@ -872,20 +901,44 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Plumbing'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🚿 Bathroom Fittings</div>
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Pipes%20%26%20Fittings'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🔄 Pipes & Fittings</div>
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Tanks'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >💧 Water Tanks</div>
             </div>
 
@@ -894,24 +947,40 @@ export default function CommercialHardwareHeader({ onNavigate }) {
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Paints%20%26%20Coatings'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🎨 Interior & Exterior Paints</div>
               <div
                 style={styles.megaMenuItem}
                 onClick={() => { window.location.hash = '#dashboard?category=Tools'; setShowMegaMenu(false); }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-blue-primary)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }}
               >🛠️ Hand Tools</div>
             </div>
 
             <div style={styles.megaMenuColumn}>
               <div style={styles.megaMenuHeading}>Top Brands</div>
-              <div style={styles.megaMenuItem}>✨ Asian Paints</div>
-              <div style={styles.megaMenuItem}>✨ Finolex Cables</div>
-              <div style={styles.megaMenuItem}>✨ Crompton</div>
-              <div style={styles.megaMenuItem}>✨ Havells</div>
-              <div style={styles.megaMenuItem}>✨ Sintex Plastics</div>
+              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Asian Paints</div>
+              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Finolex Cables</div>
+              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Crompton</div>
+              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Havells</div>
+              <div style={styles.megaMenuItem} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateX(4px)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'none'; }}>✨ Sintex Plastics</div>
             </div>
           </div>
         </div>

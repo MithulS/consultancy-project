@@ -15,30 +15,30 @@ import React, { useState } from 'react';
 import SmartButton from './SmartButton';
 import { getImageUrl } from '../utils/imageHandling';
 
-export default function DarkThemeProductCard({ 
-  product, 
-  onAddToCart, 
+export default function DarkThemeProductCard({
+  product,
+  onAddToCart,
   onBuyNow,
-  showQuickView = true 
+  showQuickView = true
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   // Calculate discount percentage
-  const discountPercent = product.originalPrice 
+  const discountPercent = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
   // Determine stock status
   const stockStatus = product.stock > 50 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock';
-  const stockLabel = product.stock > 50 
-    ? `✓ ${product.stock} in stock` 
-    : product.stock > 0 
-    ? `⚠ Only ${product.stock} left` 
-    : '✗ Out of stock';
+  const stockLabel = product.stock > 50
+    ? `✓ ${product.stock} in stock`
+    : product.stock > 0
+      ? `⚠ Only ${product.stock} left`
+      : '✗ Out of stock';
 
   return (
-    <div 
+    <div
       className="dark-navy-theme product-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -58,7 +58,7 @@ export default function DarkThemeProductCard({
           onLoad={() => setImageLoaded(true)}
           style={{ display: imageLoaded ? 'block' : 'none' }}
         />
-        
+
         {/* Discount Badge */}
         {discountPercent > 0 && (
           <div style={styles.discountBadge}>
@@ -66,14 +66,7 @@ export default function DarkThemeProductCard({
           </div>
         )}
 
-        {/* Quick View Button (appears on hover) */}
-        {showQuickView && isHovered && (
-          <div style={styles.quickViewOverlay}>
-            <button className="btn-ghost" style={styles.quickViewBtn}>
-              👁️ Quick View
-            </button>
-          </div>
-        )}
+
       </div>
 
       {/* Product Details */}
@@ -132,7 +125,7 @@ export default function DarkThemeProductCard({
 
         {/* Action Buttons */}
         <div className="product-actions">
-          <button 
+          <button
             className="btn-buy-now"
             onClick={() => onBuyNow(product)}
             disabled={product.stock === 0}
@@ -159,24 +152,24 @@ export default function DarkThemeProductCard({
 
         {/* Additional Actions */}
         <div style={styles.secondaryActions}>
-          <button 
-            className="icon-button" 
+          <button
+            className="icon-button"
             style={styles.iconBtn}
             title="Add to Wishlist"
             aria-label="Add to Wishlist"
           >
             ❤️
           </button>
-          <button 
-            className="icon-button" 
+          <button
+            className="icon-button"
             style={styles.iconBtn}
             title="Compare"
             aria-label="Add to Compare"
           >
             ⚖️
           </button>
-          <button 
-            className="icon-button" 
+          <button
+            className="icon-button"
             style={styles.iconBtn}
             title="Share"
             aria-label="Share Product"

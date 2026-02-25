@@ -10,6 +10,7 @@
 
 /* Small devices (landscape phones, 576px and up) */
 @media (max-width: 768px) {
+
   /* Header adjustments */
   .commercial-header .header-container {
     flex-direction: column;
@@ -228,6 +229,7 @@ img[loading="lazy"] {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -269,6 +271,7 @@ html {
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
+
   .commercial-header,
   .nav-bar,
   .hero-section,
@@ -285,42 +288,15 @@ html {
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .commercial-header {
-    background-color: #1F2937 !important;
-    border-bottom-color: #374151 !important;
-  }
-
-  .nav-bar {
-    background-color: #111827 !important;
-    border-bottom-color: #374151 !important;
-  }
-
-  .categories-section,
-  .trust-section {
-    background-color: #1F2937 !important;
-  }
-
-  .category-card,
-  .product-card,
-  .brand-card {
-    background-color: #374151 !important;
-    border-color: #4B5563 !important;
-  }
-
-  .section-title,
-  .product-name,
-  .category-name {
-    color: #F9FAFB !important;
-  }
-}
+/* Dark mode support logic has been centralized to the darkNavyTheme.css variables. */
+/* Using @media (prefers-color-scheme: dark) with hardcoded HEX values overrides our beautiful gradient design system. */
 
 /* ============================================
    PRINT STYLES
    ============================================ */
 
 @media print {
+
   .commercial-header,
   .nav-bar,
   .cta-section,

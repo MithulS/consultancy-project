@@ -26,6 +26,7 @@ export default function Cart() {
 
   function updateQuantity(productId, newQuantity) {
     if (newQuantity < 1) return;
+    if (newQuantity > 99) return;
 
     const updatedCart = cart.map(item =>
       item._id === productId ? { ...item, quantity: newQuantity } : item
@@ -38,6 +39,21 @@ export default function Cart() {
     const updatedCart = cart.filter(item => item._id !== productId);
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+  }
+
+  function handleRemove(productId, event) {
+    const element = event.currentTarget.closest('.cart-item-row');
+    if (element) {
+      element.style.animation = 'none'; // reset
+      // Trigger reflow
+      void element.offsetWidth;
+      element.classList.add('animate-slide-out-collapse');
+      setTimeout(() => {
+        removeFromCart(productId);
+      }, 350);
+    } else {
+      removeFromCart(productId);
+    }
   }
 
   function clearCart() {
@@ -300,16 +316,18 @@ export default function Cart() {
         <div style={styles.cartGrid}>
           {/* Cart Items */}
           <div style={styles.cartItems}>
-            {cart.map(item => (
+            {cart.map((item, index) => (
               <div
                 key={item._id}
-                style={styles.cartItem}
-                className="card-hover-lift"
+                style={{ ...styles.cartItem, animationDelay: `${index * 0.1}s` }}
+                className="card-hover-lift cart-item-row animate-staggered-glide"
                 onMouseEnter={(e) => {
+                  if (e.currentTarget.classList.contains('animate-slide-out-collapse')) return;
                   e.currentTarget.style.transform = 'translateY(-4px)';
                   e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
                 }}
                 onMouseLeave={(e) => {
+                  if (e.currentTarget.classList.contains('animate-slide-out-collapse')) return;
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                 }}
@@ -354,7 +372,7 @@ export default function Cart() {
 
                   <button
                     style={styles.removeBtn}
-                    onClick={() => removeFromCart(item._id)}
+                    onClick={(e) => handleRemove(item._id, e)}
                   >
                     🗑️ Remove
                   </button>

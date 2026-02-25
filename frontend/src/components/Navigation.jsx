@@ -23,6 +23,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
   }
 
   function logout() {
+    // Clear cart so it doesn't persist to the next user on shared devices
+    localStorage.removeItem('cart');
     if (isAdmin) {
       localStorage.removeItem('adminToken');
       localStorage.removeItem('isAdmin');
@@ -167,7 +169,7 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       padding: '16px',
       gap: '8px',
       flexDirection: 'column',
-      animation: 'slideDown 0.3s ease-out'
+      animation: 'menuBloom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards'
     },
     mobileMenuVisible: {
       display: 'flex'
@@ -223,30 +225,16 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           {!isAdmin && (
             <>
               <button
-                style={{ ...styles.navButton, ...styles.primaryButton }}
+                className={`nav-link-btn ${currentPage === 'my-orders' ? 'active' : ''}`}
+                style={styles.navButton}
                 onClick={() => window.location.hash = '#my-orders'}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-                }}
               >
                 📦 Orders
               </button>
               <button
-                style={{ ...styles.navButton, ...styles.secondaryButton, position: 'relative' }}
+                className={`nav-link-btn ${currentPage === 'cart' ? 'active' : ''}`}
+                style={styles.navButton}
                 onClick={() => window.location.hash = '#cart'}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-                }}
               >
                 🛒 Cart
               </button>
@@ -255,30 +243,16 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           {isAdmin && (
             <>
               <button
-                style={{ ...styles.navButton, ...styles.warningButton }}
+                className={`nav-link-btn ${currentPage === 'sales-analytics' ? 'active' : ''}`}
+                style={styles.navButton}
                 onClick={() => window.location.hash = '#sales-analytics'}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(245, 158, 11, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-                }}
               >
                 📊 Analytics
               </button>
               <button
-                style={{ ...styles.navButton, ...styles.primaryButton }}
+                className={`nav-link-btn ${currentPage === 'admin-settings' ? 'active' : ''}`}
+                style={styles.navButton}
                 onClick={() => window.location.hash = '#admin-settings'}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-                }}
               >
                 ⚙️ Settings
               </button>
@@ -306,25 +280,63 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
             {userName && <span style={styles.userName}>👤 {userName}</span>}
             {!isAdmin && (
               <>
-                <button style={{ ...styles.navButton, ...styles.primaryButton }} onClick={() => { window.location.hash = '#my-orders'; setShowMobileMenu(false); }}>📦 Orders</button>
-                <button style={{ ...styles.navButton, ...styles.secondaryButton }} onClick={() => { window.location.hash = '#cart'; setShowMobileMenu(false); }}>🛒 Cart</button>
+                <button className={`nav-btn-mobile ${currentPage === 'my-orders' ? 'active' : ''}`} style={{ ...styles.navButton }} onClick={() => { window.location.hash = '#my-orders'; setShowMobileMenu(false); }}>📦 Orders</button>
+                <button className={`nav-btn-mobile ${currentPage === 'cart' ? 'active' : ''}`} style={{ ...styles.navButton }} onClick={() => { window.location.hash = '#cart'; setShowMobileMenu(false); }}>🛒 Cart</button>
               </>
             )}
             {isAdmin && (
               <>
-                <button style={{ ...styles.navButton, ...styles.warningButton }} onClick={() => { window.location.hash = '#sales-analytics'; setShowMobileMenu(false); }}>📊 Analytics</button>
-                <button style={{ ...styles.navButton, ...styles.primaryButton }} onClick={() => { window.location.hash = '#admin-settings'; setShowMobileMenu(false); }}>⚙️ Settings</button>
+                <button className={`nav-btn-mobile ${currentPage === 'sales-analytics' ? 'active' : ''}`} style={{ ...styles.navButton }} onClick={() => { window.location.hash = '#sales-analytics'; setShowMobileMenu(false); }}>📊 Analytics</button>
+                <button className={`nav-btn-mobile ${currentPage === 'admin-settings' ? 'active' : ''}`} style={{ ...styles.navButton }} onClick={() => { window.location.hash = '#admin-settings'; setShowMobileMenu(false); }}>⚙️ Settings</button>
               </>
             )}
-            <button style={{ ...styles.navButton, ...styles.dangerButton }} onClick={logout}>🚪 Logout</button>
+            <button className="nav-btn-mobile" style={{ ...styles.navButton, ...styles.dangerButton }} onClick={logout}>🚪 Logout</button>
           </div>
         )}
       </div>
 
       <style>{`
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
+        .nav-link-btn {
+          position: relative;
+          background: transparent !important;
+          color: var(--text-secondary) !important;
+          border: 1px solid transparent !important;
+          box-shadow: none !important;
+        }
+        .nav-link-btn:hover {
+          color: var(--text-primary) !important;
+          background: rgba(255, 255, 255, 0.05) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px var(--accent-blue-glow) !important;
+        }
+        .nav-link-btn.active {
+          color: var(--accent-blue-primary) !important;
+          background: rgba(59, 130, 246, 0.1) !important;
+          border-color: rgba(59, 130, 246, 0.3) !important;
+          box-shadow: 0 0 20px var(--accent-blue-glow) !important;
+        }
+        .nav-link-btn.active::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 10%;
+          width: 80%;
+          height: 3px;
+          background: var(--accent-blue-primary);
+          border-radius: 4px;
+          box-shadow: 0 0 10px var(--accent-blue-primary);
+        }
+        .nav-btn-mobile {
+          background: transparent !important;
+          color: var(--text-primary) !important;
+        }
+        .nav-btn-mobile.active {
+          background: rgba(59, 130, 246, 0.1) !important;
+          border-left: 3px solid var(--accent-blue-primary) !important;
+        }
+        @keyframes menuBloom {
+          from { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transform: translateY(-10px); }
+          to { opacity: 1; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); transform: translateY(0); }
         }
         @media (max-width: 768px) {
           nav [style*="menuButton"] { display: block !important; }

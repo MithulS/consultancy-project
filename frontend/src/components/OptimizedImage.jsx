@@ -13,9 +13,9 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-export default function OptimizedImage({ 
-  src, 
-  alt, 
+export default function OptimizedImage({
+  src,
+  alt,
   width,
   height,
   className = '',
@@ -79,19 +79,6 @@ export default function OptimizedImage({
     setIsLoaded(true);
   };
 
-  // Generate srcset for responsive images
-  const generateSrcSet = (url) => {
-    // For external URLs or placeholder, just return the URL
-    if (url.includes('placehold') || url.includes('cloudinary')) {
-      return undefined;
-    }
-    
-    // For local images, create different sizes
-    const base = url.replace(/\.(jpg|jpeg|png|webp)$/i, '');
-    const ext = url.match(/\.(jpg|jpeg|png|webp)$/i)?.[0] || '.jpg';
-    
-    return `${base}-400w${ext} 400w, ${base}-800w${ext} 800w, ${base}-1200w${ext} 1200w`;
-  };
 
   const containerStyle = {
     position: 'relative',
@@ -132,17 +119,8 @@ export default function OptimizedImage({
       {/* Actual Image - only load when in view */}
       {isInView && !hasError && (
         <picture>
-          {/* WebP format for modern browsers */}
-          <source
-            srcSet={imageUrl.replace(/\.(jpg|jpeg|png)$/i, '.webp')}
-            type="image/webp"
-          />
-          
-          {/* Fallback to original format */}
           <img
             src={imageUrl}
-            srcSet={generateSrcSet(imageUrl)}
-            sizes={sizes}
             alt={alt}
             style={imageStyle}
             loading={priority ? 'eager' : 'lazy'}

@@ -140,12 +140,15 @@ export const initializeAuth = async () => {
   const isValid = await validateToken();
   
   if (!isValid) {
-    // Clear any stale token/user data
+    // Clear any stale token/user data (user token only — don't touch admin tokens)
     clearAuth();
-    // Only redirect away from strictly protected routes (not dashboard — guests can browse)
+    // Only redirect away from strictly protected USER routes
+    // Admin routes are handled internally by AdminDashboard / AdminRouter
     const hash = window.location.hash;
-    const strictlyProtected = ['#profile', '#my-orders', '#checkout', '#admin-dashboard'];
-    if (strictlyProtected.some(r => hash.startsWith(r))) {
+    const adminRoutes = ['#admin', '#admin-dashboard', '#admin-settings', '#admin-order-tracking', '#sales-analytics', '#secret-admin-login'];
+    const isAdminRoute = adminRoutes.some(r => hash.startsWith(r));
+    const strictlyProtected = ['#profile', '#my-orders', '#checkout'];
+    if (!isAdminRoute && strictlyProtected.some(r => hash.startsWith(r))) {
       console.log('⚠️ Invalid token on protected route, redirecting to login');
       sessionStorage.setItem('redirectAfterLogin', hash);
       window.location.hash = '#login';

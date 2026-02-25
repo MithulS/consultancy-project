@@ -16,6 +16,7 @@ export default function App() {
   const [authKey, setAuthKey] = useState(Date.now()); // Force remount on auth change
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Loading...');
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     // Initialize authentication on app load
@@ -109,18 +110,24 @@ export default function App() {
           setLoadingMessage('Loading...');
         }
 
-        // Check if it's reset password page with query params
-        if (window.location.search.includes('token') && window.location.search.includes('email')) {
-          setCurrentPage('reset-password');
-        } else {
-          setCurrentPage(hash);
-        }
+        setIsTransitioning(true);
 
-        // Track page view in analytics
-        analytics.pageView(hash);
+        setTimeout(() => {
+          // Check if it's reset password page with query params
+          if (window.location.search.includes('token') && window.location.search.includes('email')) {
+            setCurrentPage('reset-password');
+          } else {
+            setCurrentPage(hash);
+          }
 
-        // Hide loading after route change
-        setTimeout(() => setIsLoading(false), 300);
+          // Track page view in analytics
+          analytics.pageView(hash);
+
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          setIsTransitioning(false);
+          setIsLoading(false);
+        }, 300); // Wait for exit animation to complete
+
       } catch (error) {
         console.error('❌ Route handling error:', error);
         analytics.error('Route handling failed', error.stack, { hash: window.location.hash });
@@ -134,6 +141,82 @@ export default function App() {
 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Global scroll animation observer
+  useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+
+    const observer = new IntersectionObserver((entries, observerInstance) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-animating');
+          entry.target.classList.add('is-revealed');
+
+          // Remove animation class after transition so hover states don't get laggy
+          setTimeout(() => {
+            if (entry.target) {
+              entry.target.classList.remove('reveal-animating');
+              entry.target.style.willChange = 'auto';
+            }
+          }, 800);
+
+          observerInstance.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.05,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    // Observer function to attach classes to new elements dynamically
+    const applyRevealClasses = () => {
+      const targetSelectors = [
+        'section',
+        'article',
+        '.product-card:not(.reveal-on-scroll)',
+        '.category-card:not(.reveal-on-scroll)',
+        '.stat-card:not(.reveal-on-scroll)',
+        '.feature-item:not(.reveal-on-scroll)',
+        '.info-card:not(.reveal-on-scroll)',
+        '.chartCard:not(.reveal-on-scroll)',
+        '.hero-content:not(.reveal-on-scroll)'
+      ].join(',');
+
+      const elements = document.querySelectorAll(targetSelectors);
+      elements.forEach(el => {
+        // Only apply if it hasn't been applied yet, but make sure to check
+        if (!el.classList.contains('is-revealed') && !el.classList.contains('reveal-on-scroll')) {
+          el.classList.add('reveal-on-scroll');
+          observer.observe(el);
+        }
+      });
+    };
+
+    // Use MutationObserver for continuous coverage without heavy re-rendering
+    const mutationObserver = new MutationObserver((mutations) => {
+      let shouldApply = false;
+      mutations.forEach(mutation => {
+        if (mutation.addedNodes.length > 0) {
+          shouldApply = true;
+        }
+      });
+      if (shouldApply) {
+        applyRevealClasses();
+      }
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Initial apply map
+    setTimeout(applyRevealClasses, 100);
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [currentPage]);
 
   const renderContent = () => {
     const adminPages = [
@@ -172,7 +255,11 @@ export default function App() {
           Skip to main content
         </a>
 
-        <div id="main-content" tabIndex="-1">
+        <div
+          id="main-content"
+          tabIndex="-1"
+          className={`page-transition ${isTransitioning ? 'is-exiting' : 'is-entering'}`}
+        >
           {renderContent()}
           <ToastNotification />
           <LoadingOverlay show={isLoading} message={loadingMessage} />

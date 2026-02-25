@@ -218,56 +218,7 @@ export default function Footer({ theme = 'dark' }) {
       <div style={styles.container}>
         {/* Top Section - Main Content */}
         <div style={styles.topSection}>
-          {/* Newsletter Column */}
-          <div style={styles.column}>
-            <h3 style={styles.columnTitle}>Stay Updated</h3>
-            <p style={{ ...styles.link, cursor: 'default' }}>
-              Subscribe to get special offers, free giveaways, and exclusive deals.
-            </p>
-            <form onSubmit={handleNewsletterSubmit} style={styles.newsletterForm}>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={styles.input}
-                disabled={subscribeStatus === 'loading'}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#4285F4';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = themeConfig.inputBorder;
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-              <button
-                type="submit"
-                style={styles.subscribeButton}
-                disabled={subscribeStatus === 'loading'}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                {subscribeStatus === 'loading' ? '...' : 'Subscribe'}
-              </button>
-            </form>
-            {subscribeStatus === 'success' && (
-              <p style={{ ...styles.statusMessage, color: '#2ed573' }}>
-                ✓ Successfully subscribed!
-              </p>
-            )}
-            {subscribeStatus === 'error' && (
-              <p style={{ ...styles.statusMessage, color: '#ff6b6b' }}>
-                ✗ Please enter a valid email address
-              </p>
-            )}
-          </div>
+
 
           {/* Quick Links Columns */}
           {Object.entries(quickLinks).map(([title, links]) => (

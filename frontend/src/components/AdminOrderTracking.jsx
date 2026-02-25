@@ -208,6 +208,92 @@ export default function AdminOrderTracking() {
     return badges[status] || 'badge-warning';
   }
 
+  function generateInvoice(order) {
+    const invoiceWindow = window.open('', '_blank');
+    const invoiceHtml = `
+      <html>
+        <head>
+          <title>Invoice - Order #${order._id.slice(-8).toUpperCase()}</title>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+            .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+            .brand h1 { margin: 0; color: #1a2942; font-size: 32px; }
+            .brand p { margin: 5px 0 0; color: #666; }
+            .invoice-details { text-align: right; }
+            .invoice-details h2 { margin: 0 0 10px; color: #ff4757; font-size: 28px; text-transform: uppercase; letter-spacing: 2px; }
+            .customer-info { margin-bottom: 40px; background: #f8fafc; padding: 20px; border-radius: 8px; }
+            .customer-info h3 { margin-top: 0; color: #1a2942; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+            th { background: #1a2942; color: white; padding: 12px; text-align: left; }
+            td { padding: 12px; border-bottom: 1px solid #eee; }
+            .total-section { text-align: right; margin-top: 20px; font-size: 24px; font-weight: bold; color: #1a2942; }
+            .footer { margin-top: 60px; text-align: center; color: #888; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
+            @media print { body { padding: 0; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="brand">
+              <h1>Sri Amman Traders</h1>
+              <p>123 Commerce Avenue, Tech District</p>
+              <p>Email: contact@sriamman.com | Phone: +91 7904212501</p>
+            </div>
+            <div class="invoice-details">
+              <h2>INVOICE</h2>
+              <p><strong>Order ID:</strong> #${order._id.slice(-8).toUpperCase()}</p>
+              <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+              <p><strong>Status:</strong> ${order.status.replace(/_/g, ' ').toUpperCase()}</p>
+            </div>
+          </div>
+          
+          <div class="customer-info">
+            <h3>Bill To:</h3>
+            <p><strong>Name:</strong> ${order.user?.name || 'Valued Customer'}</p>
+            <p><strong>Email:</strong> ${order.user?.email || 'N/A'}</p>
+            ${order.shippingAddress ? `<p><strong>Address:</strong> ${order.shippingAddress.street}, ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.zipCode}</p>` : ''}
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Item Description</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.items.map(item => `
+                <tr>
+                  <td>${item.product?.name || 'Product'}</td>
+                  <td>${item.quantity}</td>
+                  <td>₹${(item.price || 0).toFixed(2)}</td>
+                  <td>₹${((item.price || 0) * item.quantity).toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="total-section">
+            Total Amount: ₹${order.totalAmount.toFixed(2)}
+          </div>
+
+          <div class="footer">
+            <p>Thank you for your business!</p>
+            <p>This is a computer-generated invoice and does not require a signature.</p>
+          </div>
+        </body>
+      </html>
+    `;
+    invoiceWindow.document.write(invoiceHtml);
+    invoiceWindow.document.close();
+    invoiceWindow.focus();
+    // Use a small timeout to allow styles to load before printing
+    setTimeout(() => {
+      invoiceWindow.print();
+    }, 250);
+  }
+
   const filteredOrders = statusFilter === 'all'
     ? orders
     : orders.filter(order => order.status === statusFilter);
@@ -408,13 +494,22 @@ export default function AdminOrderTracking() {
                       </div>
                     </td>
                     <td style={styles.td}>
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => openUpdateModal(order)}
-                        style={{ fontSize: '12px' }}
-                      >
-                        📝 Update
-                      </button>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => openUpdateModal(order)}
+                          style={{ fontSize: '12px' }}
+                        >
+                          📝 Update
+                        </button>
+                        <button
+                          className="btn btn-sm"
+                          onClick={() => generateInvoice(order)}
+                          style={{ fontSize: '12px', background: 'var(--glass-background)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+                        >
+                          📄 Invoice
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

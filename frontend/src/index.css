@@ -21,6 +21,80 @@
 /* Base styles now managed by unifiedDesignSystem.css */
 /* This file only contains accessibility-specific utilities */
 
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(100, 116, 139, 0.5) rgba(15, 23, 42, 0.8);
+  /* Firefox */
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   PREMIUM CUSTOM SCROLLBAR (WEBKIT)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.8);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 10px;
+  border: 2px solid rgba(15, 23, 42, 0.8);
+  /* Creates padding between thumb and track edge */
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.8);
+  border: 2px solid rgba(15, 23, 42, 0.8);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* ============================================================
+   PAGE TRANSITION UTILITIES
+   ============================================================ */
+.page-transition {
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+}
+
+.page-transition.is-exiting {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition.is-entering {
+  animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ============================================================
    ACCESSIBILITY UTILITIES
    ============================================================ */
@@ -208,7 +282,7 @@ textarea:disabled {
   :focus-visible {
     outline-width: 4px !important;
   }
-  
+
   button,
   input,
   select,
@@ -219,6 +293,7 @@ textarea:disabled {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
