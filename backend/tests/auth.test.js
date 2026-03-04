@@ -23,11 +23,11 @@ beforeAll(async () => {
   // Create in-memory MongoDB instance for testing
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
-  
+
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
   }
-  
+
   await mongoose.connect(mongoUri);
 });
 
@@ -43,7 +43,7 @@ afterEach(async () => {
 });
 
 describe('Authentication API Tests', () => {
-  
+
   describe('POST /api/auth/register', () => {
     it('should register a new user with valid data', async () => {
       const userData = {
@@ -61,11 +61,11 @@ describe('Authentication API Tests', () => {
       // Note: Will likely fail to send email in test environment
       // but should still create user and return appropriate response
       expect([201, 500]).toContain(res.status);
-      
+
       if (res.status === 201) {
         expect(res.body).toHaveProperty('msg');
         expect(res.body).toHaveProperty('email', userData.email);
-        
+
         // Verify user was created in database
         const user = await User.findOne({ email: userData.email });
         expect(user).toBeTruthy();
@@ -153,7 +153,7 @@ describe('Authentication API Tests', () => {
       const bcrypt = require('bcryptjs');
       testOtp = '123456';
       const hashedOtp = await bcrypt.hash(testOtp, 10);
-      
+
       testUser = await User.create({
         username: 'testuser',
         name: 'Test User',
@@ -251,14 +251,11 @@ describe('Authentication API Tests', () => {
     const testPassword = 'Test@1234';
 
     beforeEach(async () => {
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash(testPassword, 10);
-      
       testUser = await User.create({
         username: 'testuser',
         name: 'Test User',
         email: 'test@example.com',
-        password: hashedPassword,
+        password: testPassword,
         isVerified: true // Verified user
       });
     });
@@ -303,15 +300,11 @@ describe('Authentication API Tests', () => {
     });
 
     it('should reject login for unverified user', async () => {
-      // Create unverified user
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash(testPassword, 10);
-      
       const unverifiedUser = await User.create({
         username: 'unverified',
         name: 'Unverified User',
         email: 'unverified@example.com',
-        password: hashedPassword,
+        password: testPassword,
         isVerified: false
       });
 
@@ -394,7 +387,7 @@ describe('Authentication API Tests', () => {
           password: 'WrongPassword'
         });
 
-      const logs = await AuditLog.find({ 
+      const logs = await AuditLog.find({
         email: 'audit@example.com',
         action: 'LOGIN_FAILED'
       });

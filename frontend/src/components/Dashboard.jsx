@@ -4,7 +4,7 @@ import AuthModal from './AuthModal';
 import SmartButton from './SmartButton';
 import Footer from './Footer';
 import SkeletonLoader from './SkeletonLoader';
-import ProductRating from './ProductRating';
+
 import EmptyState from './EmptyState';
 import SearchSuggestions from './SearchSuggestions';
 import EnhancedSearchBar from './EnhancedSearchBar';
@@ -106,12 +106,12 @@ export default function Dashboard() {
 
       if (searchParam) {
         setSearchTerm(searchParam);
-        console.log('🔍 Search parameter from URL:', searchParam);
+        if (import.meta.env.DEV) console.log('🔍 Search parameter from URL:', searchParam);
       }
 
       if (categoryParam && categories.includes(categoryParam)) {
         setSelectedCategory(categoryParam);
-        console.log('📋 Category parameter from URL:', categoryParam);
+        if (import.meta.env.DEV) console.log('📋 Category parameter from URL:', categoryParam);
       }
     }
   }, []);
@@ -210,7 +210,7 @@ export default function Dashboard() {
     if (debouncedSearchTerm) {
       analyticsDebounceRef.current = setTimeout(() => {
         analytics.search(debouncedSearchTerm, products.length);
-        console.log(`📊 Analytics: Search for "${debouncedSearchTerm}" - ${products.length} results`);
+        if (import.meta.env.DEV) console.log(`📊 Analytics: Search for "${debouncedSearchTerm}" - ${products.length} results`);
       }, 500);
     }
 
@@ -321,7 +321,7 @@ export default function Dashboard() {
   }
 
   // Cart interceptor - prompts for login/register on first add to cart
-  function addToCart(product, buyNow = false) {
+  function addToCart(product, buyNow = false, quantity = 1) {
     const token = localStorage.getItem('token');
 
     // Check if user is logged in
@@ -335,7 +335,7 @@ export default function Dashboard() {
       });
 
       // Store pending product and show auth modal
-      setPendingProduct(product);
+      setPendingProduct({ ...product, quantity });
       setPendingBuyNow(buyNow);
       setShowAuthModal(true);
 
@@ -348,22 +348,24 @@ export default function Dashboard() {
     }
 
     // User is logged in, proceed with adding to cart
-    addToCartAuthenticated(product, buyNow);
+    addToCartAuthenticated(product, buyNow, quantity);
   }
 
   // Actually add product to cart (used when user is authenticated)
-  function addToCartAuthenticated(product, buyNow = false) {
-    const existingItem = cart.find(item => item._id === product._id);
+  function addToCartAuthenticated(product, buyNow = false, quantity = 1) {
+    // Always read fresh from localStorage to avoid stale React state on rapid clicks
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = currentCart.find(item => item._id === product._id);
     let updatedCart;
 
     if (existingItem) {
-      updatedCart = cart.map(item =>
+      updatedCart = currentCart.map(item =>
         item._id === product._id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + quantity }
           : item
       );
     } else {
-      updatedCart = [...cart, { ...product, quantity: 1 }];
+      updatedCart = [...currentCart, { ...product, quantity }];
     }
 
     setCart(updatedCart);
@@ -386,12 +388,12 @@ export default function Dashboard() {
   }
 
   // Wrapper functions for EnhancedProductCard compatibility
-  const handleAddToCart = useCallback((product) => {
-    addToCart(product, false);
+  const handleAddToCart = useCallback((product, quantity) => {
+    addToCart(product, false, quantity || product.quantity || 1);
   }, [cart]);
 
-  const handleBuyNow = useCallback((product) => {
-    addToCart(product, true);
+  const handleBuyNow = useCallback((product, quantity) => {
+    addToCart(product, true, quantity || product.quantity || 1);
   }, [cart]);
 
   // Quick View Handler
@@ -510,7 +512,7 @@ export default function Dashboard() {
 
     // Add the pending product to cart
     if (pendingProduct) {
-      addToCartAuthenticated(pendingProduct, pendingBuyNow);
+      addToCartAuthenticated(pendingProduct, pendingBuyNow, pendingProduct.quantity || 1);
       setPendingProduct(null);
       setPendingBuyNow(false);
     }
@@ -676,10 +678,14 @@ export default function Dashboard() {
       boxShadow: '0 4px 15px rgba(30, 58, 138, 0.3)'
     },
     filtersSection: {
-      backgroundColor: 'transparent',
-      padding: '24px 32px 0',
-      margin: '0 auto',
-      maxWidth: '1400px',
+      backgroundColor: 'rgba(15, 23, 42, 0.8)',
+      padding: '32px 24px 24px',
+      margin: '24px auto',
+      borderRadius: '24px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05)',
+      width: 'calc(100% - 48px)',
+      maxWidth: '1200px',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
@@ -704,41 +710,40 @@ export default function Dashboard() {
       display: 'flex',
       gap: '12px',
       overflowX: 'auto',
-      paddingBottom: '12px',
+      paddingBottom: '8px',
       width: '100%',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       scrollbarWidth: 'none', // Firefox
       msOverflowStyle: 'none', // IE/Edge
       WebkitOverflowScrolling: 'touch',
     },
     categoryBtn: {
-      padding: '10px 24px',
-      borderRadius: '100px', // fully rounded pills
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      color: '#cbd5e1',
-      backgroundColor: 'rgba(30, 41, 59, 0.5)',
+      padding: '8px 20px',
+      borderRadius: '30px', // fully rounded pills
+      border: '1px solid rgba(255, 255, 255, 0.05)',
+      color: '#94a3b8',
+      backgroundColor: 'transparent',
       cursor: 'pointer',
-      fontSize: '14px',
-      fontWeight: '600',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backdropFilter: 'blur(10px)',
+      fontSize: '13px',
+      fontWeight: '500',
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
       whiteSpace: 'nowrap',
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
     },
     categoryBtnActive: {
-      background: 'rgba(59, 130, 246, 0.18)',
-      color: '#93C5FD',
-      border: '1.5px solid #3b82f6',
-      boxShadow: 'none',
-      transform: 'translateY(-1px)'
+      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+      color: '#ffffff',
+      border: '1px solid transparent',
+      boxShadow: '0 4px 15px rgba(139, 92, 246, 0.25)',
+      fontWeight: '600'
     },
     productsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
       gap: '24px',
-      padding: '0 32px 48px',
+      padding: 'clamp(0px, 2vw, 32px) clamp(12px, 3vw, 32px) 48px',
       maxWidth: '1400px',
       margin: '0 auto'
     },
@@ -867,7 +872,9 @@ export default function Dashboard() {
     notification: {
       position: 'fixed',
       top: '90px',
-      right: '32px',
+      right: 'clamp(8px, 3vw, 32px)',
+      left: 'clamp(8px, 3vw, auto)',
+      maxWidth: 'min(400px, calc(100vw - 16px))',
       backgroundImage: 'linear-gradient(135deg, #10b981, #059669)',
       color: 'white',
       padding: '18px 28px',
@@ -934,7 +941,7 @@ export default function Dashboard() {
 
       {/* Filters Section */}
       <div style={styles.filtersSection}>
-        <div style={{ position: 'relative', width: '100%', maxWidth: '800px', marginBottom: '32px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '600px', marginBottom: '24px' }}>
           <EnhancedSearchBar
             onSearch={(query, queryFilters) => {
               setSearchTerm(query);
@@ -944,6 +951,13 @@ export default function Dashboard() {
             placeholder="Search for premium products..."
           />
         </div>
+
+        {/* Hide ScrollBar CSS injection */}
+        <style>{`
+          .category-scroll::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
 
         <div style={styles.categoryContainer} className="category-scroll" role="group" aria-label="Product categories">
           {categories.map(cat => (
@@ -958,18 +972,16 @@ export default function Dashboard() {
               aria-label={`Filter by ${cat} category`}
               onMouseOver={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.color = '#ffffff';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.color = '#f8fafc';
                 }
               }}
               onMouseOut={(e) => {
                 if (selectedCategory !== cat) {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.5)';
-                  e.currentTarget.style.color = '#cbd5e1';
-                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#94a3b8';
                 }
               }}
             >
@@ -980,7 +992,7 @@ export default function Dashboard() {
       </div>
 
       {/* Product Filters and Sort */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: 'calc(100% - 48px)', padding: '0' }}>
         <ProductFilters
           onFilterChange={handleFilterChange}
           onSortChange={handleSortChange}
@@ -1066,17 +1078,6 @@ export default function Dashboard() {
                 <div style={styles.productInfo}>
                   <div style={styles.productCategory}>{product.category}</div>
                   <h3 style={styles.productName}>{product.name}</h3>
-
-                  {/* Product Rating */}
-                  {product.rating && product.rating > 0 && (
-                    <div style={{ marginBottom: '8px' }}>
-                      <ProductRating
-                        rating={product.rating}
-                        reviewCount={product.reviewCount || 0}
-                        size="small"
-                      />
-                    </div>
-                  )}
 
                   {/* Price with Discount */}
                   <div style={{ ...styles.priceContainer, marginTop: 'auto', paddingTop: '12px' }}>

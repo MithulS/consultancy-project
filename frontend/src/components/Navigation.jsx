@@ -11,10 +11,10 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
 
   function generateBreadcrumbs(page) {
     const breadcrumbMap = {
-      'dashboard': [{ label: 'Home', path: '#dashboard' }],
-      'cart': [{ label: 'Home', path: '#dashboard' }, { label: 'Cart', path: '#cart' }],
-      'checkout': [{ label: 'Home', path: '#dashboard' }, { label: 'Cart', path: '#cart' }, { label: 'Checkout', path: '#checkout' }],
-      'my-orders': [{ label: 'Home', path: '#dashboard' }, { label: 'My Orders', path: '#my-orders' }],
+      'dashboard': [{ label: 'Home', path: '#home' }],
+      'cart': [{ label: 'Home', path: '#home' }, { label: 'Cart', path: '#cart' }],
+      'checkout': [{ label: 'Home', path: '#home' }, { label: 'Cart', path: '#cart' }, { label: 'Checkout', path: '#checkout' }],
+      'my-orders': [{ label: 'Home', path: '#home' }, { label: 'My Orders', path: '#my-orders' }],
       'admin-dashboard': [{ label: 'Admin Home', path: '#admin-dashboard' }],
       'admin-settings': [{ label: 'Admin Home', path: '#admin-dashboard' }, { label: 'Settings', path: '#admin-settings' }],
       'sales-analytics': [{ label: 'Admin Home', path: '#admin-dashboard' }, { label: 'Analytics', path: '#sales-analytics' }]
@@ -183,15 +183,17 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <h1
               style={styles.logo}
-              onClick={() => window.location.hash = isAdmin ? '#admin-dashboard' : '#dashboard'}
+              onClick={() => window.location.hash = isAdmin ? '#admin-dashboard' : '#home'}
             >
-              {isAdmin ? '🛡️ Admin Panel' : '🛒 ElectroStore'}
+              {isAdmin ? '🛡️ Admin Panel' : '🏪 Sri Amman Traders'}
             </h1>
 
             <button
+              className="nav-burger-btn"
               style={styles.menuButton}
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               aria-label="Toggle menu"
+              aria-expanded={showMobileMenu}
             >
               {showMobileMenu ? '✕' : '☰'}
             </button>
@@ -220,7 +222,7 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           )}
         </div>
 
-        <div style={{ ...styles.navLinks, display: showMobileMenu ? 'none' : 'flex' }}>
+        <div className="nav-links-desktop" style={{ ...styles.navLinks, display: showMobileMenu ? 'none' : 'flex' }}>
           {userName && <span style={styles.userName}>👤 {userName}</span>}
           {!isAdmin && (
             <>
@@ -296,6 +298,9 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       </div>
 
       <style>{`
+        .nav-burger-btn {
+          display: none;
+        }
         .nav-link-btn {
           position: relative;
           background: transparent !important;
@@ -339,8 +344,8 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
           to { opacity: 1; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); transform: translateY(0); }
         }
         @media (max-width: 768px) {
-          nav [style*="menuButton"] { display: block !important; }
-          nav [style*="navLinks"] { display: none !important; }
+          .nav-burger-btn { display: block !important; }
+          .nav-links-desktop { display: none !important; }
         }
       `}</style>
     </nav>

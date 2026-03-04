@@ -76,7 +76,7 @@ router.post('/exit-intent-signup', async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: '🎁 Your 10% Discount Code - Welcome to HomeHardware!',
+      subject: '🎁 Your 10% Discount Code - Welcome to Sri Amman Traders!',
       html: `
         <!DOCTYPE html>
         <html>
@@ -94,7 +94,7 @@ router.post('/exit-intent-signup', async (req, res) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎉 Welcome to HomeHardware!</h1>
+              <h1>🎉 Welcome to Sri Amman Traders!</h1>
               <p>Thank you for joining our community</p>
             </div>
             <div class="content">
@@ -112,11 +112,11 @@ router.post('/exit-intent-signup', async (req, res) => {
                 <a href="${process.env.CLIENT_URL}" class="button">Start Shopping</a>
               </p>
               
-              <p>Happy shopping!<br>The HomeHardware Team</p>
+              <p>Happy shopping!<br>The Sri Amman Traders Team</p>
             </div>
             <div class="footer">
               <p>You're receiving this because you signed up on our website.</p>
-              <p>HomeHardware © ${new Date().getFullYear()}. All rights reserved.</p>
+              <p>Sri Amman Traders © ${new Date().getFullYear()}. All rights reserved.</p>
             </div>
           </div>
         </body>
@@ -162,7 +162,7 @@ router.post('/newsletter-signup', async (req, res) => {
       subject: '✅ Newsletter Subscription Confirmed',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2>Welcome to HomeHardware Newsletter!</h2>
+          <h2>Welcome to Sri Amman Traders Newsletter!</h2>
           <p>Hi ${name || 'there'},</p>
           <p>You've successfully subscribed to our newsletter. You'll now receive:</p>
           <ul>

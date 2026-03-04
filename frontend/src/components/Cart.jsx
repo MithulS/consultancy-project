@@ -14,6 +14,9 @@ const getImageUrl = (imageUrl) => {
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  const FREE_SHIPPING_THRESHOLD = 999;
 
   useEffect(() => {
     loadCart();
@@ -131,7 +134,8 @@ export default function Cart() {
     cartGrid: {
       display: 'grid',
       gridTemplateColumns: '1fr 400px',
-      gap: '24px'
+      gap: '24px',
+      alignItems: 'start'
     },
     cartItems: {
       display: 'flex',
@@ -282,10 +286,10 @@ export default function Cart() {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.logo} onClick={() => window.location.hash = '#dashboard'}>
-            🛒 ElectroStore
+          <h1 style={styles.logo} onClick={() => window.location.hash = '#home'}>
+            🏪 Sri Amman Traders
           </h1>
-          <button style={styles.backBtn} onClick={() => window.location.hash = '#dashboard'}>
+          <button style={styles.backBtn} onClick={() => window.location.hash = '#home'}>
             ← Back to Shop
           </button>
         </div>
@@ -302,18 +306,23 @@ export default function Cart() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.logo} onClick={() => window.location.hash = '#dashboard'}>
-          🛒 ElectroStore
+        <h1 style={styles.logo} onClick={() => window.location.hash = '#home'}>
+          🏪 Sri Amman Traders
         </h1>
-        <button style={styles.backBtn} onClick={() => window.location.hash = '#dashboard'}>
+        <button style={styles.backBtn} onClick={() => window.location.hash = '#home'}>
           ← Back to Shop
         </button>
       </div>
 
       <div style={styles.content}>
+        <style>{`
+          @media (max-width: 768px) {
+            .cart-responsive-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
         <h1 style={styles.title}>Shopping Cart ({getTotalItems()} items)</h1>
 
-        <div style={styles.cartGrid}>
+        <div style={styles.cartGrid} className="cart-responsive-grid">
           {/* Cart Items */}
           <div style={styles.cartItems}>
             {cart.map((item, index) => (
@@ -385,46 +394,77 @@ export default function Cart() {
           <div style={styles.summary}>
             <h2 style={styles.summaryTitle}>Order Summary</h2>
 
-            <div style={styles.summaryRow}>
-              <span>Items ({getTotalItems()})</span>
-              <span>₹{getTotalAmount().toFixed(2)}</span>
-            </div>
+            {(() => {
+              const subtotal = getTotalAmount();
+              const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 99;
+              const amountToFree = FREE_SHIPPING_THRESHOLD - subtotal;
+              const grandTotal = subtotal + shippingCost;
+              return (
+                <>
+                  <div style={styles.summaryRow}>
+                    <span>Items ({getTotalItems()})</span>
+                    <span>₹{subtotal.toFixed(2)}</span>
+                  </div>
 
-            <div style={styles.summaryRow}>
-              <span>Shipping</span>
-              <span style={{ color: '#10b981', fontWeight: '600' }}>FREE</span>
-            </div>
+                  <div style={styles.summaryRow}>
+                    <span>Shipping</span>
+                    {shippingCost === 0
+                      ? <span style={{ color: '#10b981', fontWeight: '600' }}>FREE</span>
+                      : <span>₹{shippingCost.toFixed(2)}</span>
+                    }
+                  </div>
 
-            <div style={styles.summaryTotal}>
-              <span>Total</span>
-              <span style={{ color: 'var(--accent-blue-primary)' }}>₹{getTotalAmount().toFixed(2)}</span>
-            </div>
+                  {shippingCost > 0 && (
+                    <div style={{ fontSize: '13px', color: '#F59E0B', marginBottom: '8px', padding: '8px 12px', background: 'rgba(245,158,11,0.08)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.2)' }}>
+                      🚚 Add ₹{amountToFree.toFixed(2)} more for FREE delivery
+                    </div>
+                  )}
 
-            <button
-              style={styles.checkoutBtn}
-              onClick={() => window.location.hash = '#checkout'}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px var(--accent-red-glow)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px var(--accent-red-glow)';
-              }}
-            >
-              Proceed to Checkout
-            </button>
+                  <div style={styles.summaryTotal}>
+                    <span>Total</span>
+                    <span style={{ color: 'var(--accent-blue-primary)' }}>₹{grandTotal.toFixed(2)}</span>
+                  </div>
 
-            <button
-              style={styles.clearBtn}
-              onClick={() => {
-                if (confirm('Are you sure you want to clear your cart?')) {
-                  clearCart();
-                }
-              }}
-            >
-              Clear Cart
-            </button>
+                  <button
+                    style={styles.checkoutBtn}
+                    onClick={() => window.location.hash = '#checkout'}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = '0 6px 20px var(--accent-red-glow)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 4px 12px var(--accent-red-glow)';
+                    }}
+                  >
+                    Proceed to Checkout
+                  </button>
+
+                  {showClearConfirm ? (
+                    <div style={{ marginTop: '12px', padding: '14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px' }}>
+                      <p style={{ fontSize: '14px', color: '#FCA5A5', marginBottom: '12px', textAlign: 'center' }}>Clear all items from cart?</p>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          style={{ flex: 1, padding: '10px', background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+                          onClick={() => { clearCart(); setShowClearConfirm(false); }}
+                        >Yes, clear</button>
+                        <button
+                          style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+                          onClick={() => setShowClearConfirm(false)}
+                        >Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      style={styles.clearBtn}
+                      onClick={() => setShowClearConfirm(true)}
+                    >
+                      Clear Cart
+                    </button>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>

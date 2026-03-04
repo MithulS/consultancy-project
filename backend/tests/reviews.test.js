@@ -1,11 +1,16 @@
 // Unit tests for Review Rating System
 const request = require('supertest');
 const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../index');
 const Review = require('../models/review');
 const Product = require('../models/product');
 const User = require('../models/user');
 const Order = require('../models/order');
+
+let mongoServer;
+
+jest.setTimeout(30000);
 
 describe('Review Rating System Tests', () => {
   let authToken;
@@ -15,11 +20,18 @@ describe('Review Rating System Tests', () => {
 
   beforeAll(async () => {
     // Connect to test database
-    await mongoose.connect(process.env.TEST_MONGODB_URI || 'mongodb://localhost:27017/hardware-test');
+    mongoServer = await MongoMemoryServer.create();
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.disconnect();
+    }
+    await mongoose.connect(mongoServer.getUri());
   });
 
   afterAll(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
+    if (mongoServer) {
+      await mongoServer.stop();
+    }
   });
 
   beforeEach(async () => {
@@ -63,7 +75,7 @@ describe('Review Rating System Tests', () => {
   describe('Rating Calculation Logic', () => {
     test('should calculate correct average for multiple reviews', async () => {
       const ratings = [5, 4, 5, 3, 4];
-      
+
       for (const rating of ratings) {
         await Review.create({
           product: testProduct._id,
@@ -112,7 +124,7 @@ describe('Review Rating System Tests', () => {
         order: testOrder._id,
         rating: 4
       });
-      
+
       const secondUser = await User.create({
         name: 'User 2',
         email: 'user2@example.com',
@@ -349,7 +361,7 @@ describe('Review Rating System Tests', () => {
   describe('Rating Distribution Tests', () => {
     test('should calculate correct distribution', async () => {
       const ratings = [5, 5, 4, 4, 4, 3, 3, 2, 1];
-      
+
       for (let i = 0; i < ratings.length; i++) {
         const user = await User.create({
           name: `User ${i}`,

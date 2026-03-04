@@ -7,11 +7,10 @@
    1. MOBILE-FIRST BASE STYLES
    ====================== */
 
-/* Touch-friendly minimum tap target size */
-.btn, button, a, input[type="button"], input[type="submit"] {
+/* Touch-friendly minimum tap target size — applies to interactive controls only */
+.btn, button, input[type="button"], input[type="submit"] {
   min-height: 44px;
   min-width: 44px;
-  padding: 12px 20px;
 }
 
 /* Prevent text size adjustment on orientation change */

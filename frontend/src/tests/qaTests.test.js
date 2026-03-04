@@ -1,6 +1,7 @@
 // Frontend QA Test Suite - Automated Browser Tests
 // Run with: npm test (after installing test dependencies)
 
+import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -328,7 +329,7 @@ describe('🐛 Error Handling', () => {
         
         render() {
           if (this.state.hasError) {
-            return <h1>Something went wrong.</h1>;
+            return React.createElement('h1', null, 'Something went wrong.');
           }
           return this.props.children;
         }

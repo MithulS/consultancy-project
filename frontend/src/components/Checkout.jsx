@@ -17,6 +17,8 @@ export default function Checkout() {
   const [success, setSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
 
+  const FREE_SHIPPING_THRESHOLD = 999;
+
   const [formData, setFormData] = useState({
     address: '',
     city: '',
@@ -184,7 +186,8 @@ export default function Checkout() {
     grid: {
       display: 'grid',
       gridTemplateColumns: '1fr 400px',
-      gap: '24px'
+      gap: '24px',
+      alignItems: 'start'
     },
     formSection: {
       background: 'var(--glass-background)',
@@ -335,8 +338,8 @@ export default function Checkout() {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.logo} onClick={() => window.location.hash = '#dashboard'}>
-            🛒 ElectroStore
+          <h1 style={styles.logo} onClick={() => window.location.hash = '#home'}>
+            🏪 Sri Amman Traders
           </h1>
         </div>
         <div style={styles.content}>
@@ -376,8 +379,8 @@ export default function Checkout() {
   return (
     <div className="checkout-container" style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.logo} onClick={() => window.location.hash = '#dashboard'}>
-          🛒 ElectroStore
+        <h1 style={styles.logo} onClick={() => window.location.hash = '#home'}>
+          🏪 Sri Amman Traders
         </h1>
         <button style={styles.backBtn} onClick={() => window.location.hash = '#cart'}>
           ← Back to Cart
@@ -385,6 +388,12 @@ export default function Checkout() {
       </div>
 
       <div style={styles.content}>
+        <style>{`
+          @media (max-width: 768px) {
+            .checkout-grid { grid-template-columns: 1fr !important; }
+            .checkout-grid > :last-child { position: static !important; top: auto !important; }
+          }
+        `}</style>
         <h1 style={styles.title}>Checkout</h1>
 
         {error && (
@@ -518,12 +527,21 @@ export default function Checkout() {
 
             <div style={styles.summaryRow}>
               <span>Shipping</span>
-              <span style={{ color: 'var(--accent-green)', fontWeight: '600' }}>FREE</span>
+              {getTotalAmount() >= FREE_SHIPPING_THRESHOLD
+                ? <span style={{ color: 'var(--accent-green)', fontWeight: '600' }}>FREE</span>
+                : <span>₹99.00</span>
+              }
             </div>
+
+            {getTotalAmount() < FREE_SHIPPING_THRESHOLD && (
+              <div style={{ fontSize: '13px', color: '#F59E0B', marginBottom: '8px', padding: '8px 12px', background: 'rgba(245,158,11,0.08)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.2)' }}>
+                🚚 Add ₹{(FREE_SHIPPING_THRESHOLD - getTotalAmount()).toFixed(2)} more for FREE delivery
+              </div>
+            )}
 
             <div className="summaryTotal" style={styles.summaryTotal}>
               <span>Total</span>
-              <span style={{ color: 'var(--accent-blue-primary)' }}>₹{getTotalAmount().toFixed(2)}</span>
+              <span style={{ color: 'var(--accent-blue-primary)' }}>₹{(getTotalAmount() + (getTotalAmount() >= FREE_SHIPPING_THRESHOLD ? 0 : 99)).toFixed(2)}</span>
             </div>
 
             <div className="mobile-fixed-btn-container">
@@ -539,7 +557,7 @@ export default function Checkout() {
                 onMouseOver={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
                 onMouseOut={(e) => !loading && (e.target.style.transform = 'translateY(0)')}
               >
-                {loading ? 'Placing Order...' : `Place Order (₹${getTotalAmount().toFixed(2)})`}
+                {loading ? 'Placing Order...' : `Place Order (₹${(getTotalAmount() + (getTotalAmount() >= FREE_SHIPPING_THRESHOLD ? 0 : 99)).toFixed(2)})`}
               </button>
             </div>
           </div>

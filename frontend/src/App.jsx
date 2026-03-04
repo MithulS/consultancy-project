@@ -10,6 +10,7 @@ import { initializeAuth } from './utils/navigation';
 import { initializePerformanceOptimizations } from './utils/performanceOptimizations';
 import UserRouter from './components/UserRouter';
 import AdminRouter from './components/AdminRouter';
+import SmoothScrollProvider from './components/SmoothScrollProvider';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -123,7 +124,12 @@ export default function App() {
           // Track page view in analytics
           analytics.pageView(hash);
 
-          window.scrollTo({ top: 0, behavior: 'instant' });
+          // Use Lenis scrollTo if available, otherwise fall back to native
+          if (window.__lenis) {
+            window.__lenis.scrollTo(0, { immediate: true });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }
           setIsTransitioning(false);
           setIsLoading(false);
         }, 300); // Wait for exit animation to complete
@@ -147,6 +153,12 @@ export default function App() {
     // Only run in browser environment
     if (typeof window === 'undefined') return;
 
+    // Helper: immediately reveal an element without animation
+    const revealImmediately = (el) => {
+      el.classList.add('is-revealed');
+      el.style.willChange = 'auto';
+    };
+
     const observer = new IntersectionObserver((entries, observerInstance) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -166,8 +178,8 @@ export default function App() {
       });
     }, {
       root: null,
-      threshold: 0.05,
-      rootMargin: '0px 0px -40px 0px'
+      threshold: 0.0,
+      rootMargin: '100px 0px 0px 0px' // Trigger a little above the viewport top too
     });
 
     // Observer function to attach classes to new elements dynamically
@@ -185,11 +197,18 @@ export default function App() {
       ].join(',');
 
       const elements = document.querySelectorAll(targetSelectors);
+      const viewportHeight = window.innerHeight;
       elements.forEach(el => {
-        // Only apply if it hasn't been applied yet, but make sure to check
         if (!el.classList.contains('is-revealed') && !el.classList.contains('reveal-on-scroll')) {
-          el.classList.add('reveal-on-scroll');
-          observer.observe(el);
+          const rect = el.getBoundingClientRect();
+          // If the element is already in or above the viewport, reveal it immediately
+          // This fixes the blank page issue when navigating back
+          if (rect.top < viewportHeight && rect.bottom > 0) {
+            revealImmediately(el);
+          } else {
+            el.classList.add('reveal-on-scroll');
+            observer.observe(el);
+          }
         }
       });
     };
@@ -209,8 +228,9 @@ export default function App() {
 
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Initial apply map
-    setTimeout(applyRevealClasses, 100);
+    // Apply immediately and also after a short delay for lazy-loaded content
+    applyRevealClasses();
+    setTimeout(applyRevealClasses, 150);
 
     return () => {
       observer.disconnect();
@@ -234,38 +254,40 @@ export default function App() {
   return (
     <ErrorBoundary>
       <AccessibilityWrapper>
-        {/* Skip Navigation Link for Accessibility */}
-        <a
-          href="#main-content"
-          style={{
-            position: 'absolute',
-            top: '-100px',
-            left: '0',
-            background: '#000',
-            color: '#fff',
-            padding: '8px 16px',
-            zIndex: 10000,
-            textDecoration: 'none',
-            fontWeight: 600,
-            borderRadius: '0 0 4px 0'
-          }}
-          onFocus={(e) => e.currentTarget.style.top = '0'}
-          onBlur={(e) => e.currentTarget.style.top = '-100px'}
-        >
-          Skip to main content
-        </a>
+        <SmoothScrollProvider>
+          {/* Skip Navigation Link for Accessibility */}
+          <a
+            href="#main-content"
+            style={{
+              position: 'absolute',
+              top: '-100px',
+              left: '0',
+              background: '#000',
+              color: '#fff',
+              padding: '8px 16px',
+              zIndex: 10000,
+              textDecoration: 'none',
+              fontWeight: 600,
+              borderRadius: '0 0 4px 0'
+            }}
+            onFocus={(e) => e.currentTarget.style.top = '0'}
+            onBlur={(e) => e.currentTarget.style.top = '-100px'}
+          >
+            Skip to main content
+          </a>
 
-        <div
-          id="main-content"
-          tabIndex="-1"
-          className={`page-transition ${isTransitioning ? 'is-exiting' : 'is-entering'}`}
-        >
-          {renderContent()}
-          <ToastNotification />
-          <LoadingOverlay show={isLoading} message={loadingMessage} />
-          <ExitIntentPopup />
-          <ChatWidget />
-        </div>
+          <div
+            id="main-content"
+            tabIndex="-1"
+            className={`page-transition ${isTransitioning ? 'is-exiting' : 'is-entering'}`}
+          >
+            {renderContent()}
+            <ToastNotification />
+            <LoadingOverlay show={isLoading} message={loadingMessage} />
+            <ExitIntentPopup />
+            <ChatWidget />
+          </div>
+        </SmoothScrollProvider>
       </AccessibilityWrapper>
     </ErrorBoundary>
   );

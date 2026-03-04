@@ -43,38 +43,7 @@ const trackLoginEvent = (method, success = true) => {
   }
 };
 
-// Inject CSS animations
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  @keyframes gradientFlow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.05); }
-  }
-`;
-if (!document.querySelector('[data-login-modern-styles]')) {
-  styleSheet.setAttribute('data-login-modern-styles', 'true');
-  document.head.appendChild(styleSheet);
-}
+// CSS animations are defined in global stylesheets (animations.css / microInteractions.css)
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -165,7 +134,7 @@ export default function Login() {
           sessionStorage.removeItem('redirectAfterLogin');
           window.location.hash = redirectTo;
         } else {
-          window.location.hash = '#dashboard';
+          window.location.hash = '#home';
         }
       }, 800);
     } catch (err) {
@@ -230,9 +199,9 @@ export default function Login() {
     // Check if already logged in (token exists in localStorage)
     const existingToken = localStorage.getItem('token');
     if (existingToken && !token && !error) {
-      // Already logged in, redirect to dashboard
-      console.log('✅ Already authenticated, redirecting to dashboard...');
-      window.location.hash = '#dashboard';
+      // Already logged in, redirect to home
+      if (import.meta.env.DEV) console.log('✅ Already authenticated, redirecting to home...');
+      window.location.hash = '#home';
       return;
     }
 
@@ -243,15 +212,13 @@ export default function Login() {
 
     // Clear old processed flag if more than 5 seconds old
     if (processedCallback && processedTime && (now - parseInt(processedTime) > 5000)) {
-      console.log('🔄 Clearing old OAuth processing flag...');
+      if (import.meta.env.DEV) console.log('🔄 Clearing old OAuth processing flag...');
       sessionStorage.removeItem('oauth_callback_processed');
       sessionStorage.removeItem('oauth_callback_time');
     }
 
     if (token && !sessionStorage.getItem('oauth_callback_processed')) {
-      console.log('✅ Google OAuth token received, processing...');
-
-      // Mark callback as processed to prevent loops (with timestamp)
+      if (import.meta.env.DEV) console.log('✅ Google OAuth token received, processing...');
       sessionStorage.setItem('oauth_callback_processed', 'true');
       sessionStorage.setItem('oauth_callback_time', Date.now().toString());
 
@@ -271,9 +238,9 @@ export default function Login() {
           return res.json();
         })
         .then(data => {
-          console.log('✅ User profile loaded:', data.email);
+          if (import.meta.env.DEV) console.log('✅ User profile loaded:', data.email);
           localStorage.setItem('user', JSON.stringify(data));
-          setMsg('✅ Welcome back! Redirecting to dashboard...');
+          setMsg('✅ Welcome back! Redirecting...');
           trackLoginEvent('google', true);
 
           // Set flag for welcome message
@@ -296,7 +263,7 @@ export default function Login() {
             sessionStorage.removeItem('redirectAfterLogin');
             window.location.hash = redirectTo;
           } else {
-            window.location.hash = '#dashboard';
+            window.location.hash = '#home';
           }
 
           // ✅ NO RELOAD - Let React handle state updates

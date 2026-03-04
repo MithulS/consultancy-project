@@ -107,10 +107,37 @@ export default function CommercialHardwareHeader() {
         .sat-dropdown { animation: sat-down .18s ease-out; }
         .sat-nav { scrollbar-width: none; -ms-overflow-style: none; }
         .sat-nav::-webkit-scrollbar { display: none; }
+
+        /* ── Mobile Responsive ── */
+        @media (max-width: 768px) {
+          .sat-utility-bar { display: none !important; }
+          .sat-main-header-inner {
+            flex-wrap: wrap;
+            gap: 10px !important;
+            padding: 10px 16px !important;
+          }
+          .sat-search-container {
+            order: 3;
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+          }
+          .sat-logo-wrap { flex: 1 1 auto; }
+          .sat-actions-wrap { flex-shrink: 0; }
+          .sat-wholesale-btn { display: none !important; }
+          .sat-account-label { display: none !important; }
+          .sat-account-chevron { display: none !important; }
+          .sat-cart-label { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .sat-logo-text { display: none !important; }
+        }
+        @media (min-width: 769px) {
+          .sat-utility-bar { display: block; }
+        }
       `}</style>
 
       {/* ── Utility Bar ── */}
-      <div className="sat-header" style={{ background: '#060E1C', borderBottom: '1px solid rgba(255,255,255,.05)', fontSize: '12px', color: '#64748B' }}>
+      <div className="sat-header sat-utility-bar" style={{ background: '#060E1C', borderBottom: '1px solid rgba(255,255,255,.05)', fontSize: '12px', color: '#64748B' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '5px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 20 }}>
             <span>📞 +91 79042 12501</span>
@@ -133,10 +160,10 @@ export default function CommercialHardwareHeader() {
         boxShadow: isScrolled ? '0 4px 24px rgba(0,0,0,.55)' : 'none',
         transition: 'background .3s, box-shadow .3s',
       }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div className="sat-main-header-inner" style={{ maxWidth: 1400, margin: '0 auto', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
 
           {/* Logo */}
-          <div onClick={() => window.location.hash='#home'} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', flexShrink: 0, textDecoration: 'none' }}>
+          <div className="sat-logo-wrap" onClick={() => window.location.hash='#home'} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', flexShrink: 0, textDecoration: 'none' }}>
             <div style={{
               width: 44, height: 44,
               background: 'linear-gradient(135deg, #F97316, #EF4444)',
@@ -145,14 +172,14 @@ export default function CommercialHardwareHeader() {
               boxShadow: '0 4px 14px rgba(249,115,22,.4)',
               letterSpacing: -1, flexShrink: 0,
             }}>SA</div>
-            <div>
+            <div className="sat-logo-text">
               <div style={{ fontSize: 16, fontWeight: 700, color: '#F1F5F9', lineHeight: 1.15, letterSpacing: '-.3px', whiteSpace: 'nowrap' }}>Sri Amman Traders</div>
               <div style={{ fontSize: 10.5, color: '#475569', fontWeight: 600, letterSpacing: '.5px', marginTop: 1 }}>GENUINE BRANDED PRODUCTS</div>
             </div>
           </div>
 
           {/* Search */}
-          <div style={{ flex: 1, maxWidth: 600, position: 'relative' }}>
+          <div className="sat-search-container" style={{ flex: 1, maxWidth: 600, position: 'relative' }}>
             <form onSubmit={handleSearch} aria-label="Product search">
               <div className="sat-search-wrap" style={{
                 display: 'flex', borderRadius: 10, overflow: 'hidden',
@@ -193,11 +220,11 @@ export default function CommercialHardwareHeader() {
           </div>
 
           {/* Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <div className="sat-actions-wrap" style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
 
             {/* Wholesale CTA */}
             <button
-              className="sat-btn-base"
+              className="sat-btn-base sat-wholesale-btn"
               onClick={() => window.location.hash='#contact'}
               style={{ padding: '10px 16px', background: 'linear-gradient(135deg,#F97316,#EF4444)', border: 'none', borderRadius: 9, color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer', boxShadow: '0 3px 12px rgba(249,115,22,.35)', display: 'flex', alignItems: 'center', gap: 6, transition: 'transform .15s, box-shadow .15s', whiteSpace: 'nowrap' }}
               onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 5px 18px rgba(249,115,22,.45)'; }}
@@ -219,11 +246,11 @@ export default function CommercialHardwareHeader() {
                 onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,.09)'; e.currentTarget.style.background='rgba(255,255,255,.04)'; }}
               >
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <div style={{ textAlign: 'left' }}>
+                <div className="sat-account-label" style={{ textAlign: 'left' }}>
                   <div style={{ fontSize: 10, color: '#475569', lineHeight: 1 }}>{user ? 'Hello,' : 'Sign In /'}</div>
                   <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{user ? (user.name?.split(' ')[0] || 'Account') : 'Register'}</div>
                 </div>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="sat-account-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
 
               {showAccountMenu && (
@@ -279,7 +306,7 @@ export default function CommercialHardwareHeader() {
               onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,.09)'; e.currentTarget.style.background='rgba(255,255,255,.04)'; }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-              <span style={{ fontWeight: 600, fontSize: 14 }}>Cart</span>
+              <span className="sat-cart-label" style={{ fontWeight: 600, fontSize: 14 }}>Cart</span>
               {cartCount > 0 && <span style={{ background: '#EF4444', color: '#fff', borderRadius: 12, padding: '1px 7px', fontSize: 11, fontWeight: 700, minWidth: 20, textAlign: 'center' }} aria-hidden="true">{cartCount}</span>}
             </button>
           </div>

@@ -20,6 +20,7 @@ export default function MyOrders() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [showTracking, setShowTracking] = useState(false);
+  const [cancelConfirmId, setCancelConfirmId] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -73,8 +74,6 @@ export default function MyOrders() {
   }
 
   async function cancelOrder(orderId) {
-    if (!confirm('Are you sure you want to cancel this order?')) return;
-
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(`${API}/api/orders/${orderId}/cancel`, {
@@ -139,8 +138,9 @@ export default function MyOrders() {
           color: 'var(--text-primary)',
           boxShadow: 'var(--shadow-md)'
         }}>
-          <h1 className="text-gradient" style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>
-            🛒 ElectroStore
+          <h1 style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}
+            onClick={() => window.location.hash = '#home'}>
+            🏪 Sri Amman Traders
           </h1>
         </nav>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px' }}>
@@ -178,26 +178,30 @@ export default function MyOrders() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'transparent' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--gradient-navy-primary)' }}>
       {/* Navigation */}
       <nav style={{
         padding: '16px 32px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: 'var(--glass-background)',
+        background: 'var(--glass-background)',
+        backdropFilter: 'var(--glass-blur)',
         color: 'var(--text-primary)',
         boxShadow: 'var(--shadow-md)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
         marginBottom: '32px'
       }}>
         <h1
-          className="text-gradient"
-          onClick={() => window.location.hash = '#dashboard'}
-          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+          onClick={() => window.location.hash = '#home'}
+          style={{ cursor: 'pointer', fontSize: '24px', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}
         >
-          🛒 ElectroStore
+          🏪 Sri Amman Traders
         </h1>
-        <div className="flex items-center gap-4">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button
             style={{
               padding: '10px 20px',
@@ -208,7 +212,7 @@ export default function MyOrders() {
               cursor: 'pointer',
               fontSize: '14px',
               fontWeight: '600',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s ease'
             }}
             onClick={() => window.location.hash = '#cart'}
           >
@@ -224,10 +228,9 @@ export default function MyOrders() {
               cursor: 'pointer',
               fontSize: '14px',
               fontWeight: '600',
-              marginLeft: '12px',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s ease'
             }}
-            onClick={() => window.location.hash = '#dashboard'}
+            onClick={() => window.location.hash = '#home'}
           >
             🏠 Home
           </button>
@@ -241,7 +244,7 @@ export default function MyOrders() {
         </h1>
 
         {/* Status Filters */}
-        <div className="flex gap-3" style={{ marginBottom: 'var(--space-6)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '6px', scrollbarWidth: 'none' }}>
           {['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(status => (
             <button
               key={status}
@@ -295,7 +298,7 @@ export default function MyOrders() {
             </p>
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => window.location.hash = '#dashboard'}
+              onClick={() => window.location.hash = '#home'}
               style={{
                 padding: '12px 32px',
                 background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
@@ -397,8 +400,7 @@ export default function MyOrders() {
                         </div>
                         <div style={{
                           fontSize: '14px',
-                          color: 'var(--text-secondary)',
-                          fontFamily: 'monospace'
+                          color: 'var(--text-secondary)'
                         }}>
                           Qty: {item.quantity} × ₹{item.price.toFixed(2)} = <span className="text-gradient" style={{ fontWeight: '700', color: 'var(--accent-blue-primary)' }}>₹{(item.quantity * item.price).toFixed(2)}</span>
                         </div>
@@ -429,10 +431,9 @@ export default function MyOrders() {
                   paddingTop: '16px',
                   borderTop: '1px solid var(--glass-border)'
                 }}>
-                  <div className="text-gradient" style={{
-                    fontSize: '24px',
+                  <div style={{
+                    fontSize: '22px',
                     fontWeight: '700',
-                    fontFamily: 'monospace',
                     color: 'var(--accent-blue-primary)'
                   }}>
                     Total: ₹{order.totalAmount.toFixed(2)}
@@ -455,9 +456,22 @@ export default function MyOrders() {
                       📦 Track Order
                     </button>
                     {canCancel && (
+                      cancelConfirmId === order._id ? (
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <span style={{ fontSize: '13px', color: '#FCA5A5' }}>Cancel this order?</span>
+                          <button
+                            onClick={() => { cancelOrder(order._id); setCancelConfirmId(null); }}
+                            style={{ padding: '10px 16px', background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
+                          >Yes</button>
+                          <button
+                            onClick={() => setCancelConfirmId(null)}
+                            style={{ padding: '10px 16px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
+                          >No</button>
+                        </div>
+                      ) : (
                       <button
                         className="btn btn-error transition-all"
-                        onClick={() => cancelOrder(order._id)}
+                        onClick={() => setCancelConfirmId(order._id)}
                         style={{
                           padding: '12px 24px',
                           background: 'linear-gradient(135deg, var(--accent-red-primary) 0%, var(--accent-red-active) 100%)',
@@ -471,6 +485,7 @@ export default function MyOrders() {
                       >
                         ❌ Cancel Order
                       </button>
+                      )
                     )}
                   </div>
                 </div>

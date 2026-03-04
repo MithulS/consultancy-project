@@ -61,10 +61,12 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       maxWidth: '900px',
       width: '100%',
       maxHeight: '85vh',
-      overflow: 'auto',
+      overflow: 'hidden',
       position: 'relative',
       boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       animation: 'slideUp 0.3s ease-out',
+      display: 'flex',
+      flexDirection: 'column',
     },
     closeButton: {
       position: 'absolute',
@@ -91,6 +93,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       gridTemplateColumns: '1fr 1fr',
       gap: '32px',
       padding: '32px',
+      overflow: 'hidden',
+      height: '100%',
     },
     imageSection: {
       display: 'flex',
@@ -120,7 +124,27 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     detailsSection: {
       display: 'flex',
       flexDirection: 'column',
+      height: '100%',
+      maxHeight: '100%',
+      overflow: 'hidden',
+    },
+    scrollableContent: {
+      flex: 1,
+      overflowY: 'auto',
+      paddingRight: '12px',
+      display: 'flex',
+      flexDirection: 'column',
       gap: '16px',
+      scrollbarWidth: 'thin',
+    },
+    stickyFooter: {
+      flexShrink: 0,
+      paddingTop: '16px',
+      marginTop: '12px',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
     },
     category: {
       fontSize: '12px',
@@ -279,9 +303,19 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
       to { transform: translateY(0); opacity: 1; }
     }
     @media (max-width: 768px) {
+      .quick-view-modal {
+        overflow-y: auto !important;
+      }
       .quick-view-content {
         grid-template-columns: 1fr !important;
         padding: 24px !important;
+      }
+      .details-container {
+        max-height: none !important;
+        height: auto !important;
+      }
+      .scrollable-info {
+        overflow-y: visible !important;
       }
     }
   `;
@@ -290,7 +324,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
     <>
       <style>{responsiveStyles}</style>
       <div style={styles.overlay} onClick={onClose}>
-        <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div style={styles.modal} className="quick-view-modal" onClick={(e) => e.stopPropagation()}>
           <button
             style={styles.closeButton}
             onClick={onClose}
@@ -331,52 +365,74 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
             </div>
 
             {/* Details Section */}
-            <div style={styles.detailsSection}>
-              <span style={styles.category}>{product.category}</span>
+            <div style={styles.detailsSection} className="details-container">
+              <div style={styles.scrollableContent} className="scrollable-info">
+                <span style={styles.category}>{product.category}</span>
 
-              <h2 style={styles.productName}>{product.name}</h2>
+                <h2 style={styles.productName}>{product.name}</h2>
 
-              {product.rating > 0 && (
-                <div style={styles.ratingSection}>
-                  <ProductRating rating={product.rating} />
-                  {product.numReviews > 0 && (
-                    <span style={styles.reviewsCount}>
-                      ({product.numReviews.toLocaleString()} reviews)
-                    </span>
-                  )}
-                </div>
-              )}
-
-              <div style={styles.priceSection}>
-                <span style={styles.currentPrice}>
-                  ₹{product.price.toLocaleString()}
-                </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <>
-                    <span style={styles.originalPrice}>
-                      ₹{product.originalPrice.toLocaleString()}
-                    </span>
-                    {discount && (
-                      <span style={styles.discountBadge}>
-                        Save {discount}%
+                {product.rating > 0 && (
+                  <div style={styles.ratingSection}>
+                    <ProductRating rating={product.rating} />
+                    {product.numReviews > 0 && (
+                      <span style={styles.reviewsCount}>
+                        ({product.numReviews.toLocaleString()} reviews)
                       </span>
                     )}
-                  </>
+                  </div>
                 )}
+
+                <div style={styles.priceSection}>
+                  <span style={styles.currentPrice}>
+                    ₹{product.price.toLocaleString()}
+                  </span>
+                  {product.originalPrice && product.originalPrice > product.price && (
+                    <>
+                      <span style={styles.originalPrice}>
+                        ₹{product.originalPrice.toLocaleString()}
+                      </span>
+                      {discount && (
+                        <span style={styles.discountBadge}>
+                          Save {discount}%
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {product.description && (
+                  <p style={styles.description}>{product.description}</p>
+                )}
+
+                {product.stock > 0 && (
+                  <div style={styles.stockInfo}>
+                    ✓ {product.stock <= 10 ? `Only ${product.stock} left` : 'In Stock'}
+                  </div>
+                )}
+
+                {product.stock === 0 && (
+                  <div style={{
+                    ...styles.stockInfo,
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    color: 'var(--accent-red-primary)',
+                  }}>
+                    ✕ Out of Stock
+                  </div>
+                )}
+
+                <div style={styles.viewFullDetails}>
+                  <a
+                    href={`#product/${product._id}`}
+                    style={styles.viewFullLink}
+                    onClick={onClose}
+                  >
+                    View Full Details →
+                  </a>
+                </div>
               </div>
 
-              {product.description && (
-                <p style={styles.description}>{product.description}</p>
-              )}
-
               {product.stock > 0 && (
-                <div style={styles.stockInfo}>
-                  ✓ {product.stock <= 10 ? `Only ${product.stock} left` : 'In Stock'}
-                </div>
-              )}
-
-              {product.stock > 0 && (
-                <>
+                <div style={styles.stickyFooter}>
                   <div style={styles.quantitySection}>
                     <span style={styles.quantityLabel}>Quantity:</span>
                     <div style={styles.quantityControl}>
@@ -430,28 +486,8 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => 
                       ⚡ Buy Now
                     </button>
                   </div>
-                </>
-              )}
-
-              {product.stock === 0 && (
-                <div style={{
-                  ...styles.stockInfo,
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  color: 'var(--accent-red-primary)',
-                }}>
-                  ✕ Out of Stock
                 </div>
               )}
-
-              <div style={styles.viewFullDetails}>
-                <a
-                  href={`#product/${product._id}`}
-                  style={styles.viewFullLink}
-                  onClick={onClose}
-                >
-                  View Full Details →
-                </a>
-              </div>
             </div>
           </div>
         </div>

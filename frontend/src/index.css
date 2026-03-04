@@ -5,6 +5,12 @@
 @import './styles/colorUtilities.css';
 
 /* ============================================================
+   RESPONSIVE & MOBILE OPTIMIZATIONS
+   ============================================================ */
+@import './styles/responsive.css';
+@import './styles/mobileOptimizations.css';
+
+/* ============================================================
    DARK NAVY THEME - PREMIUM E-COMMERCE THEME
    ============================================================ */
 @import './styles/darkNavyTheme.css';

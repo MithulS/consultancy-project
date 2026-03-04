@@ -236,3 +236,96 @@ img {
 @media (prefers-color-scheme: dark) {
   /* Will be implemented later if needed */
 }
+
+/* ============================================================
+   DASHBOARD PAGE — RESPONSIVE OVERRIDES
+   ============================================================ */
+
+/* Products grid — override any lingering inline styles */
+@media (max-width: 640px) {
+  .grid-products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .grid-products {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* Category scroll pills on mobile */
+@media (max-width: 768px) {
+  .category-scroll {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    justify-content: flex-start !important;
+  }
+}
+
+/* Footer newsletter form — stack on mobile */
+@media (max-width: 480px) {
+  .newsletter-form,
+  div[style*="display: flex"][style*="gap: 8px"] {
+    flex-direction: column !important;
+  }
+}
+
+/* Checkout & Cart — full-width cards on mobile */
+@media (max-width: 640px) {
+  .cart-item,
+  .checkout-section {
+    padding: 12px !important;
+  }
+}
+
+/* Product detail page — single column on mobile */
+@media (max-width: 768px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .product-detail-image {
+    max-height: 300px;
+  }
+}
+
+/* Admin dashboard tables — scroll on mobile */
+@media (max-width: 768px) {
+  .admin-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-table-wrap table {
+    min-width: 640px;
+  }
+}
+
+/* Modals / drawers — full screen on mobile */
+@media (max-width: 640px) {
+  .modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    min-height: 100dvh !important;
+  }
+
+  .cart-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+}
+
+/* Sticky bottom action bar helper */
+@media (max-width: 768px) {
+  .has-bottom-bar {
+    padding-bottom: 72px;
+  }
+}

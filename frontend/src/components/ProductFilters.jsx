@@ -62,13 +62,19 @@ export default function ProductFilters({
       justifyContent: 'space-between',
       alignItems: 'center',
       gap: '16px',
-      marginBottom: '16px',
-      flexWrap: 'wrap'
+      marginBottom: '24px',
+      flexWrap: 'wrap',
+      backgroundColor: 'rgba(15, 23, 42, 0.8)',
+      padding: '16px 24px',
+      borderRadius: '24px',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05)',
     },
     resultCount: {
-      fontSize: '14px',
-      color: 'var(--text-secondary)',
-      fontWeight: '500'
+      fontSize: '15px',
+      color: '#cbd5e1',
+      fontWeight: '600',
+      letterSpacing: '0.3px'
     },
     controls: {
       display: 'flex',
@@ -77,32 +83,36 @@ export default function ProductFilters({
       flexWrap: 'wrap'
     },
     sortDropdown: {
-      padding: '10px 16px',
-      border: '1px solid var(--border-color)',
-      borderRadius: '10px',
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
+      padding: '10px 40px 10px 16px',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      borderRadius: '12px',
+      background: 'rgba(255, 255, 255, 0.05)',
       fontSize: '14px',
       fontWeight: '500',
-      color: 'var(--text-primary)',
+      color: '#e2e8f0',
       cursor: 'pointer',
-      minWidth: '180px',
-      transition: 'all 0.2s ease'
+      appearance: 'none',
+      minWidth: '200px',
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23cbd5e1\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'right 16px center',
+      boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.1)'
     },
     filterBtn: {
       padding: '10px 20px',
-      border: '1px solid var(--border-color)',
-      borderRadius: '10px',
-      background: isExpanded ? 'var(--accent-blue-primary)' : 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      color: isExpanded ? '#ffffff' : 'var(--text-primary)',
+      border: '1px solid ' + (isExpanded ? 'transparent' : 'rgba(255, 255, 255, 0.08)'),
+      borderRadius: '12px',
+      background: isExpanded ? '#3b82f6' : 'rgba(255, 255, 255, 0.05)',
+      color: '#e2e8f0',
       fontSize: '14px',
-      fontWeight: '600',
+      fontWeight: '500',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
-      transition: 'all 0.2s ease'
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: isExpanded ? '0 4px 15px rgba(59, 130, 246, 0.4)' : 'none'
     },
     filterPanel: {
       background: 'var(--glass-background)',

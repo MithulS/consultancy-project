@@ -69,6 +69,12 @@ export default function CommercialHomePage() {
   }
 
   const handleAddToCart = (product) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showToast('Please login to add items to cart', 'warning');
+      setTimeout(() => { window.location.hash = '#login'; }, 800);
+      return;
+    }
     const cart      = JSON.parse(localStorage.getItem('cart') || '[]');
     const existing  = cart.find(i => i._id === product._id);
     if (existing) { existing.quantity = Math.min((existing.quantity || 1) + 1, 99); }

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -175,7 +175,11 @@
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -271,6 +275,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,11 +293,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Product model for e-commerce platform
@@ -327,7 +335,7 @@ const productSchema = <span class="cstat-no" title="statement not covered" >new 
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['Electrical', 'Plumbing', 'Hardware', 'Tools', 'Lighting', 'Paints', 'Heating', 'Safety', 'Accessories'],
+    enum: ['Electrical', 'Plumbing', 'Hardware', 'Paints &amp; Coatings', 'Pipes &amp; Fittings', 'Wiring &amp; Cables', 'Switches &amp; Sockets', 'Water Tanks', 'Tools &amp; Equipment', 'Safety &amp; Protection'],
     default: 'Hardware'
   },
   brand: {
@@ -380,6 +388,15 @@ const productSchema = <span class="cstat-no" title="statement not covered" >new 
   timestamps: true
 });
 &nbsp;
+// Indexes for better query performance
+<span class="cstat-no" title="statement not covered" >productSchema.index({ name: 'text', description: 'text' }); </span>// Full-text search
+<span class="cstat-no" title="statement not covered" >productSchema.index({ category: 1, price: 1 }); </span>// Category browsing with price sorting
+<span class="cstat-no" title="statement not covered" >productSchema.index({ featured: 1, createdAt: -1 }); </span>// Featured products
+<span class="cstat-no" title="statement not covered" >productSchema.index({ stock: 1 }); </span>// Low-stock queries
+<span class="cstat-no" title="statement not covered" >productSchema.index({ isActive: 1, createdAt: -1 }); </span>// Active products listing
+<span class="cstat-no" title="statement not covered" >productSchema.index({ brand: 1 }); </span>// Brand filtering
+<span class="cstat-no" title="statement not covered" >productSchema.index({ tags: 1 }); </span>// Tag-based search
+&nbsp;
 // Update inStock based on stock quantity before saving
 <span class="cstat-no" title="statement not covered" >productSchema.pre('save', <span class="fstat-no" title="function not covered" >fu</span>nction() {</span>
 <span class="cstat-no" title="statement not covered" >  this.inStock = this.stock &gt; 0;</span>
@@ -393,11 +410,6 @@ const productSchema = <span class="cstat-no" title="statement not covered" >new 
   }
 });
 &nbsp;
-// Index for searching and filtering
-<span class="cstat-no" title="statement not covered" >productSchema.index({ name: 'text', description: 'text', brand: 'text' });</span>
-<span class="cstat-no" title="statement not covered" >productSchema.index({ category: 1, price: 1 });</span>
-<span class="cstat-no" title="statement not covered" >productSchema.index({ featured: 1, createdAt: -1 });</span>
-&nbsp;
 <span class="cstat-no" title="statement not covered" >module.exports = mongoose.model('Product', productSchema);</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -406,7 +418,7 @@ const productSchema = <span class="cstat-no" title="statement not covered" >new 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-14T07:27:02.040Z
+                at 2026-02-28T06:53:52.501Z
             </div>
         <script src="../prettify.js"></script>
         <script>

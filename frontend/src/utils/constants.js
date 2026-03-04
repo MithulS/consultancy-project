@@ -137,9 +137,9 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:50
  * Application settings
  */
 export const APP_CONFIG = {
-  name: 'HomeHardware',
-  tagline: 'Quality Hardware & Home Improvement',
-  supportEmail: 'support@homehardware.com',
+  name: 'Sri Amman Traders',
+  tagline: 'Genuine Branded Products - Hardware, Electrical, Plumbing & Paints',
+  supportEmail: 'support@sriammantraders.com',
   currency: '₹',
   defaultProductImage: 'https://via.placeholder.com/300x300?text=No+Image'
 };

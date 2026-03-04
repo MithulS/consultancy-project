@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Toast from './Toast';
 import PasswordStrength from './PasswordStrength';
+import SkeletonLoader from './SkeletonLoader';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -97,7 +98,8 @@ export default function Profile() {
       if (ordersData.success) {
         const orders = ordersData.orders || [];
         const completed = orders.filter(o => o.status === 'delivered');
-        const totalSpent = completed.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+        const allPaid = orders.filter(o => o.status !== 'cancelled');
+        const totalSpent = allPaid.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
 
         setStats({
           totalOrders: orders.length,
@@ -206,7 +208,7 @@ export default function Profile() {
   const styles = {
     container: {
       minHeight: '100vh',
-      backgroundColor: 'transparent',
+      background: 'var(--gradient-navy-primary)',
       padding: '40px 20px'
     },
     content: {
@@ -355,8 +357,13 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.container, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ color: 'white', fontSize: '20px' }}>Loading...</div>
+      <div style={{ minHeight: '100vh', background: 'var(--gradient-navy-primary)', padding: '32px' }}>
+        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'var(--glass-background)', backdropFilter: 'var(--glass-blur)', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px', borderRadius: '12px' }}>
+          <span style={{ fontSize: '22px', fontWeight: '700', color: 'var(--text-primary)', cursor: 'pointer' }} onClick={() => window.location.hash = '#home'}>🏪 Sri Amman Traders</span>
+        </nav>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <SkeletonLoader type="product" count={3} variant="shimmer" />
+        </div>
       </div>
     );
   }
@@ -364,6 +371,22 @@ export default function Profile() {
   return (
     <div style={styles.container}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+
+      {/* Navigation Header */}
+      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'var(--glass-background)', backdropFilter: 'var(--glass-blur)', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px', borderRadius: '12px', maxWidth: '900px', margin: '0 auto 32px' }}>
+        <span
+          style={{ fontSize: '22px', fontWeight: '700', color: 'var(--text-primary)', cursor: 'pointer' }}
+          onClick={() => window.location.hash = '#home'}
+        >
+          🏪 Sri Amman Traders
+        </span>
+        <button
+          style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.08)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}
+          onClick={() => window.location.hash = '#home'}
+        >
+          ← Back to Shop
+        </button>
+      </nav>
 
       <div style={styles.content}>
         <div style={styles.header}>

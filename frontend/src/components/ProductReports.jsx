@@ -1,6 +1,8 @@
 // Product Reports Component - Download reports with various filters
 import React, { useState, useEffect, useRef } from 'react';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -12,6 +14,7 @@ export default function ProductReports({ onClose }) {
   const [dateRange, setDateRange] = useState('monthly'); // 'monthly', 'yearly', 'custom'
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [format, setFormat] = useState('csv'); // 'csv' or 'pdf'
   const [message, setMessage] = useState('');
 
   const modalRef = useRef(null);
@@ -36,6 +39,72 @@ export default function ProductReports({ onClose }) {
   function showMessage(msg, duration = 3000) {
     setMessage(msg);
     setTimeout(() => setMessage(''), duration);
+  }
+
+  // Parse CSV text into [headers[], rows[][]] 
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    return lines.map(line => {
+      const cells = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQuotes = !inQuotes; }
+        else if (ch === ',' && !inQuotes) { cells.push(current); current = ''; }
+        else { current += ch; }
+      }
+      cells.push(current);
+      return cells;
+    });
+  }
+
+  async function buildPDF(csvText, filename) {
+    const rows = parseCSV(csvText);
+    if (rows.length < 2) { showMessage('\u274c No data to generate PDF'); return; }
+
+    const headers = rows[0];
+    const body    = rows.slice(1);
+
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+    // ── Title bar ──
+    doc.setFillColor(15, 30, 56);
+    doc.rect(0, 0, doc.internal.pageSize.width, 52, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Sri Amman Traders — Product Report', 40, 32);
+
+    // ── Sub-title ──
+    const now = new Date().toLocaleString('en-IN');
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated: ${now}`, 40, 46);
+
+    // ── Table ──
+    autoTable(doc, {
+      head: [headers],
+      body,
+      startY: 62,
+      styles: { fontSize: 7.5, cellPadding: 4, overflow: 'linebreak' },
+      headStyles: { fillColor: [59, 130, 246], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [240, 246, 255] },
+      margin: { left: 20, right: 20 },
+      didDrawPage: (data) => {
+        // Footer with page number
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8);
+        doc.setTextColor(120);
+        doc.text(
+          `Page ${data.pageNumber} of ${pageCount}`,
+          doc.internal.pageSize.width - 80,
+          doc.internal.pageSize.height - 10
+        );
+      }
+    });
+
+    doc.save(filename.replace('.csv', '.pdf'));
   }
 
   async function downloadReport() {
@@ -98,11 +167,6 @@ export default function ProductReports({ onClose }) {
       const blob = await res.blob();
       console.log('📦 Blob received, size:', blob.size, 'type:', blob.type);
 
-      // Create download link
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-
       // Generate filename
       const productName = reportType === 'individual'
         ? products.find(p => p._id === selectedProduct)?.name.replace(/[^a-z0-9]/gi, '_')
@@ -110,17 +174,27 @@ export default function ProductReports({ onClose }) {
       const dateStr = dateRange === 'custom'
         ? `${startDate}_to_${endDate}`
         : dateRange;
-      a.download = `Product_Report_${productName}_${dateStr}_${Date.now()}.csv`;
+      const filename = `Product_Report_${productName}_${dateStr}_${Date.now()}.csv`;
 
-      console.log('💾 Downloading file:', a.download);
-
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(downloadUrl);
+      if (format === 'pdf') {
+        // Build PDF from the CSV data client-side
+        const csvText = await blob.text();
+        await buildPDF(csvText, filename);
+        showMessage('✅ PDF downloaded successfully!');
+      } else {
+        // Standard CSV download
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+        showMessage('✅ CSV downloaded successfully!');
+      }
 
       console.log('✅ Download completed successfully');
-      showMessage('✅ Report downloaded successfully!');
     } catch (err) {
       console.error('❌ Download error:', err);
       console.error('❌ Error stack:', err.stack);
@@ -280,9 +354,13 @@ export default function ProductReports({ onClose }) {
       letterSpacing: '0.05em'
     },
     downloadBtn: {
-      backgroundImage: 'linear-gradient(135deg, #667eea, #764ba2)',
+      backgroundImage: format === 'pdf'
+        ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+        : 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
-      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
+      boxShadow: format === 'pdf'
+        ? '0 4px 15px rgba(239, 68, 68, 0.35)'
+        : '0 4px 15px rgba(102, 126, 234, 0.3)'
     },
     cancelBtn: {
       backgroundColor: '#f3f4f6',
@@ -369,6 +447,43 @@ export default function ProductReports({ onClose }) {
             {message}
           </div>
         )}
+
+        {/* Format Selection */}
+        <div style={{ ...styles.section, animationDelay: '0.05s' }}>
+          <label style={styles.label}>📄 Download Format</label>
+          <div style={styles.radioGroup}>
+            <div
+              style={{
+                ...styles.radioOption,
+                ...(format === 'csv' ? styles.radioOptionActive : {})
+              }}
+              onClick={() => setFormat('csv')}
+            >
+              <input
+                type="radio" name="format" value="csv"
+                checked={format === 'csv'}
+                onChange={e => setFormat(e.target.value)}
+                style={styles.radio}
+              />
+              <label style={styles.radioLabel}>📊 CSV (Excel)</label>
+            </div>
+            <div
+              style={{
+                ...styles.radioOption,
+                ...(format === 'pdf' ? { ...styles.radioOptionActive, borderColor: '#ef4444', background: 'rgba(239,68,68,0.08)' } : {})
+              }}
+              onClick={() => setFormat('pdf')}
+            >
+              <input
+                type="radio" name="format" value="pdf"
+                checked={format === 'pdf'}
+                onChange={e => setFormat(e.target.value)}
+                style={styles.radio}
+              />
+              <label style={styles.radioLabel}>📑 PDF Document</label>
+            </div>
+          </div>
+        </div>
 
         {/* Report Type Selection */}
         <div style={{ ...styles.section, animationDelay: '0.1s' }}>
@@ -540,7 +655,10 @@ export default function ProductReports({ onClose }) {
             • Custom: Select any date range for detailed analysis
           </p>
           <p style={styles.infoText}>
-            • Format: CSV file (can be opened in Excel, Google Sheets)
+            • CSV: Spreadsheet format (Excel, Google Sheets)
+          </p>
+          <p style={styles.infoText}>
+            • PDF: Print-ready document with branded header and table
           </p>
         </div>
 
@@ -577,7 +695,7 @@ export default function ProductReports({ onClose }) {
               }
             }}
           >
-            {loading ? '⏳ Generating...' : '📥 Download Report'}
+            {loading ? '⏳ Generating…' : format === 'pdf' ? '📑 Download PDF' : '📥 Download CSV'}
           </button>
         </div>
       </div>

@@ -1,13 +1,85 @@
-/**
- * CONTACT PAGE COMPONENT
- * Professional contact form with validation and error handling
- * Includes multiple contact methods and business information
- */
-
 import React, { useState, useEffect } from 'react';
 import CommercialHardwareHeader from './CommercialHardwareHeader';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const Icons = {
+  Phone: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  ),
+  Mail: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  ),
+  Message: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+    </svg>
+  ),
+  MapPin: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  User: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  ),
+  Building: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+      <path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01" />
+      <path d="M16 6h.01" />
+      <path d="M12 6h.01" />
+      <path d="M12 10h.01" />
+      <path d="M12 14h.01" />
+      <path d="M16 10h.01" />
+      <path d="M16 14h.01" />
+      <path d="M8 10h.01" />
+      <path d="M8 14h.01" />
+    </svg>
+  ),
+  Tag: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" />
+      <path d="M7 7h.01" />
+    </svg>
+  ),
+  Pen: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m18 2 4 4" />
+      <path d="m7.5 20.5 14-14a2.828 2.828 0 1 0-4-4l-14 14a2 2 0 0 0-.5.8L2 22l4.2-1.1a2 2 0 0 0 .8-.5Z" />
+      <path d="m15 5 4 4" />
+    </svg>
+  ),
+  CheckCircle: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  ),
+  AlertCircle: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" x2="12" y1="8" y2="12" />
+      <line x1="12" x2="12.01" y1="16" y2="16" />
+    </svg>
+  ),
+  Send: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  )
+};
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,48 +94,25 @@ export default function ContactPage() {
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+  const [submitStatus, setSubmitStatus] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Handle responsive design
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Form validation
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^\+?[\d\s-()]{10,}$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid phone number';
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
-    }
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Valid email is required';
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    else if (!/^\+?[\d\s-()]{10,}$/.test(formData.phone)) newErrors.phone = 'Valid phone number is required';
+    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+    else if (formData.message.trim().length < 10) newErrors.message = 'Message must be at least 10 characters';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -71,25 +120,13 @@ export default function ContactPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setSubmitting(true);
     setSubmitStatus(null);
@@ -97,31 +134,20 @@ export default function ContactPage() {
     try {
       const response = await fetch(`${API}/api/contact`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
-
       if (response.ok) {
         setSubmitStatus('success');
-        // Reset form
         setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          subject: '',
-          message: '',
-          inquiryType: 'general'
+          name: '', email: '', phone: '', company: '',
+          subject: '', message: '', inquiryType: 'general'
         });
-        // Scroll to top to show success message
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => setSubmitStatus(null), 5000);
       } else {
         setSubmitStatus('error');
-        console.error('Form submission failed:', data);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -131,331 +157,420 @@ export default function ContactPage() {
     }
   };
 
-  const styles = {
-    page: {
-      backgroundColor: 'transparent',
-      minHeight: '100vh'
-    },
-    container: {
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '60px 24px',
-      color: 'var(--text-primary)'
-    },
-    header: {
-      textAlign: 'center',
-      marginBottom: '60px'
-    },
-    title: {
-      fontSize: '42px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      marginBottom: '16px',
-      textShadow: '0 0 20px rgba(46, 134, 222, 0.5)'
-    },
-    subtitle: {
-      fontSize: '18px',
-      color: 'var(--text-secondary)',
-      maxWidth: '600px',
-      margin: '0 auto'
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: '40px'
-    },
-    formCard: {
-      backgroundColor: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      borderRadius: '12px',
-      padding: '40px',
-      boxShadow: 'var(--shadow-lg)',
-      border: '1px solid var(--glass-border)'
-    },
-    formTitle: {
-      fontSize: '24px',
-      fontWeight: 600,
-      color: 'var(--text-primary)',
-      marginBottom: '24px'
-    },
-    formGroup: {
-      marginBottom: '24px'
-    },
-    label: {
-      display: 'block',
-      fontSize: '14px',
-      fontWeight: 500,
-      color: 'var(--text-secondary)',
-      marginBottom: '8px'
-    },
-    required: {
-      color: 'var(--accent-red-primary, #DC2626)'
-    },
-    input: {
-      width: '100%',
-      padding: '12px 16px',
-      fontSize: '15px',
-      border: '1px solid var(--glass-border)',
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      color: 'var(--text-primary)',
-      borderRadius: '8px',
-      outline: 'none',
-      transition: 'border-color 0.2s, box-shadow 0.2s',
-      fontFamily: 'inherit',
-      boxSizing: 'border-box'
-    },
-    inputError: {
-      borderColor: 'var(--accent-red-primary, #DC2626)'
-    },
-    select: {
-      width: '100%',
-      padding: '12px 16px',
-      fontSize: '15px',
-      border: '1px solid var(--glass-border)',
-      borderRadius: '8px',
-      outline: 'none',
-      transition: 'border-color 0.2s',
-      fontFamily: 'inherit',
-      backgroundColor: 'rgba(31, 41, 55, 0.9)', // Darker background for select options visibility
-      color: 'var(--text-primary)',
-      cursor: 'pointer',
-      boxSizing: 'border-box'
-    },
-    textarea: {
-      width: '100%',
-      padding: '12px 16px',
-      fontSize: '15px',
-      border: '1px solid var(--glass-border)',
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      color: 'var(--text-primary)',
-      borderRadius: '8px',
-      outline: 'none',
-      transition: 'border-color 0.2s',
-      fontFamily: 'inherit',
-      minHeight: '150px',
-      resize: 'vertical',
-      boxSizing: 'border-box'
-    },
-    errorText: {
-      color: 'var(--accent-red-primary, #DC2626)',
-      fontSize: '13px',
-      marginTop: '4px',
-      display: 'block'
-    },
-    submitButton: {
-      width: '100%',
-      padding: '14px 24px',
-      background: 'var(--gradient-cta)',
-      color: 'var(--text-primary, #FFFFFF)',
-      border: 'none',
-      borderRadius: '8px',
-      fontSize: '16px',
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'all 0.2s',
-      marginTop: '8px',
-      boxShadow: 'var(--shadow-md)'
-    },
-    submitButtonDisabled: {
-      opacity: '0.6',
-      cursor: 'not-allowed'
-    },
-    infoCard: {
-      backgroundColor: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      borderRadius: '12px',
-      padding: '40px',
-      boxShadow: 'var(--shadow-lg)',
-      border: '1px solid var(--glass-border)',
-      height: 'fit-content'
-    },
-    infoTitle: {
-      fontSize: '24px',
-      fontWeight: 600,
-      color: 'var(--text-primary)',
-      marginBottom: '24px'
-    },
-    contactMethod: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '16px',
-      marginBottom: '24px',
-      padding: '16px',
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      borderRadius: '8px',
-      border: '1px solid var(--glass-border)'
-    },
-    icon: {
-      fontSize: '24px',
-      flexShrink: 0
-    },
-    contactDetails: {
-      flex: 1
-    },
-    contactLabel: {
-      fontSize: '14px',
-      fontWeight: 500,
-      color: 'var(--text-secondary)',
-      marginBottom: '4px'
-    },
-    contactValue: {
-      fontSize: '16px',
-      fontWeight: 500,
-      color: 'var(--text-primary)'
-    },
-    contactLink: {
-      color: 'var(--accent-blue-primary)',
-      textDecoration: 'none',
-      transition: 'color 0.2s'
-    },
-    businessHours: {
-      marginTop: '32px',
-      padding: '24px',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      borderRadius: '8px',
-      border: '1px solid var(--glass-border)'
-    },
-    hoursTitle: {
-      fontSize: '16px',
-      fontWeight: 600,
-      color: 'var(--text-primary)',
-      marginBottom: '12px'
-    },
-    hoursText: {
-      fontSize: '14px',
-      color: 'var(--text-secondary)',
-      marginBottom: '4px'
-    },
-    alert: {
-      padding: '16px 20px',
-      borderRadius: '8px',
-      marginBottom: '24px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      fontSize: '15px',
-      fontWeight: 500
-    },
-    alertSuccess: {
-      background: 'var(--gradient-success, linear-gradient(135deg, #d1fae5, #a7f3d0))',
-      color: '#065F46',
-      border: '1px solid #10b981',
-      boxShadow: 'var(--shadow-sm)'
-    },
-    alertError: {
-      background: 'var(--gradient-error, linear-gradient(135deg, #fee2e2, #fecaca))',
-      color: '#991B1B',
-      border: '1px solid #ef4444',
-      boxShadow: 'var(--shadow-sm)'
-    }
-  };
-
   return (
-    <div style={styles.page}>
+    <div className="contact-page-wrapper">
+      <style>
+        {`
+          .contact-page-wrapper {
+            background-color: transparent;
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding-bottom: 80px;
+          }
+          
+          .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            position: relative;
+          }
+          
+          .contact-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 10;
+          }
+          
+          .contact-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+          }
+          
+          .contact-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+          }
+          
+          .contact-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            position: relative;
+            z-index: 10;
+          }
+          
+          @media (max-width: 992px) {
+            .contact-grid {
+              grid-template-columns: 1fr;
+              gap: 40px;
+            }
+          }
+          
+          .contact-form-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .contact-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+          }
+          
+          .contact-form-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          
+          .contact-input-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+          }
+          
+          .contact-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+          }
+          
+          .contact-required {
+            color: var(--accent-red-primary, #ef4444);
+          }
+          
+          .input-icon-container {
+            position: absolute;
+            left: 16px;
+            top: 42px;
+            color: #64748b;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            display: flex;
+          }
+          
+          .textarea-icon-container {
+            top: 44px;
+          }
+          
+          .contact-input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            font-size: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(15, 23, 42, 0.6);
+            color: var(--text-primary);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+          }
+          
+          .contact-textarea {
+            padding-left: 44px;
+            min-height: 140px;
+            resize: vertical;
+          }
+          
+          .contact-input:focus {
+            border-color: var(--accent-blue-primary, #3b82f6);
+            background-color: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+          
+          .contact-input:focus ~ .input-icon-container {
+            color: var(--accent-blue-primary, #3b82f6);
+          }
+          
+          .contact-input.error {
+            border-color: var(--accent-red-primary, #ef4444);
+          }
+          
+          .contact-input.error ~ .input-icon-container {
+            color: var(--accent-red-primary, #ef4444);
+          }
+          
+          .error-text {
+            color: var(--accent-red-primary, #ef4444);
+            font-size: 13px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          }
+          
+          .contact-submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+            margin-top: 10px;
+          }
+          
+          .contact-submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -10px rgba(59, 130, 246, 0.6);
+          }
+          
+          .contact-submit-btn:active:not(:disabled) {
+            transform: translateY(1px);
+          }
+          
+          .contact-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            box-shadow: none;
+          }
+          
+          .info-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            height: fit-content;
+          }
+          
+          .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .contact-method:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          }
+          
+          .method-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue-primary, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+          }
+          
+          .contact-method:hover .method-icon-wrap {
+            background: var(--accent-blue-primary, #3b82f6);
+            color: white;
+            transform: scale(1.05);
+          }
+          
+          .method-details {
+            flex: 1;
+          }
+          
+          .method-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+          }
+          
+          .method-value {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+          }
+          
+          a.method-value:hover {
+            color: var(--accent-blue-primary, #3b82f6);
+          }
+          
+          .status-alert {
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: slideDown 0.4s ease-out;
+            border: 1px solid rgba(255,255,255,0.1);
+          }
+          
+          @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #34d399;
+          }
+          
+          .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #f87171;
+          }
+
+          .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(15,23,42,0) 70%);
+            top: -100px;
+            right: -200px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+          }
+        `}
+      </style>
+
       <CommercialHardwareHeader />
 
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>Contact Our Experts</h1>
-          <p style={styles.subtitle}>
+      <div className="contact-container">
+        <div className="ambient-glow"></div>
+        <div className="contact-header">
+          <h1 className="contact-title">Contact Our Experts</h1>
+          <p className="contact-subtitle">
             Have questions about our products or need professional assistance?
             Our team is here to help you find the perfect hardware solution.
           </p>
         </div>
 
         {submitStatus === 'success' && (
-          <div style={{ ...styles.alert, ...styles.alertSuccess }}>
-            <span>✓</span>
-            <span>Thank you! Your message has been sent successfully. We'll get back to you within 24 hours.</span>
+          <div className="status-alert alert-success">
+            <Icons.CheckCircle />
+            <span>Thank you! Your message has been sent successfully. We'll get back to you shortly.</span>
           </div>
         )}
 
         {submitStatus === 'error' && (
-          <div style={{ ...styles.alert, ...styles.alertError }}>
-            <span>⚠</span>
-            <span>Sorry, there was an error sending your message. Please try again or contact us directly via phone or email.</span>
+          <div className="status-alert alert-error">
+            <Icons.AlertCircle />
+            <span>Sorry, there was an error sending your message. Please try again or contact us directly.</span>
           </div>
         )}
 
-        <div style={styles.grid}>
+        <div className="contact-grid">
           {/* Contact Form */}
-          <div style={styles.formCard}>
-            <h2 style={styles.formTitle}>Send Us a Message</h2>
+          <div className="contact-form-card">
+            <h2 className="contact-form-title">
+              <Icons.Message />
+              Send Us a Message
+            </h2>
 
             <form onSubmit={handleSubmit}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>
-                  Full Name <span style={styles.required}>*</span>
-                </label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Full Name <span className="contact-required">*</span></label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  style={{
-                    ...styles.input,
-                    ...(errors.name && styles.inputError)
-                  }}
+                  className={`contact-input ${errors.name ? 'error' : ''}`}
                   placeholder="John Doe"
                 />
-                {errors.name && <span style={styles.errorText}>{errors.name}</span>}
+                <div className="input-icon-container"><Icons.User /></div>
+                {errors.name && <span className="error-text"><Icons.AlertCircle /> {errors.name}</span>}
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>
-                  Email Address <span style={styles.required}>*</span>
-                </label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Email Address <span className="contact-required">*</span></label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  style={{
-                    ...styles.input,
-                    ...(errors.email && styles.inputError)
-                  }}
+                  className={`contact-input ${errors.email ? 'error' : ''}`}
                   placeholder="john@company.com"
                 />
-                {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+                <div className="input-icon-container"><Icons.Mail /></div>
+                {errors.email && <span className="error-text"><Icons.AlertCircle /> {errors.email}</span>}
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>
-                  Phone Number <span style={styles.required}>*</span>
-                </label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Phone Number <span className="contact-required">*</span></label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  style={{
-                    ...styles.input,
-                    ...(errors.phone && styles.inputError)
-                  }}
+                  className={`contact-input ${errors.phone ? 'error' : ''}`}
                   placeholder="+1 (555) 123-4567"
                 />
-                {errors.phone && <span style={styles.errorText}>{errors.phone}</span>}
+                <div className="input-icon-container"><Icons.Phone /></div>
+                {errors.phone && <span className="error-text"><Icons.AlertCircle /> {errors.phone}</span>}
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Company Name</label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Company Name</label>
                 <input
                   type="text"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  style={styles.input}
+                  className="contact-input"
                   placeholder="Your Company Name"
                 />
+                <div className="input-icon-container"><Icons.Building /></div>
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Inquiry Type</label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Inquiry Type</label>
                 <select
                   name="inquiryType"
                   value={formData.inquiryType}
                   onChange={handleChange}
-                  style={styles.select}
+                  className="contact-input"
+                  style={{ paddingLeft: '44px' }}
                 >
                   <option value="general">General Inquiry</option>
                   <option value="product">Product Information</option>
@@ -464,122 +579,95 @@ export default function ContactPage() {
                   <option value="bulk">Bulk Orders</option>
                   <option value="partnership">Partnership Opportunities</option>
                 </select>
+                <div className="input-icon-container"><Icons.Tag /></div>
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>
-                  Subject <span style={styles.required}>*</span>
-                </label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Subject <span className="contact-required">*</span></label>
                 <input
                   type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  style={{
-                    ...styles.input,
-                    ...(errors.subject && styles.inputError)
-                  }}
+                  className={`contact-input ${errors.subject ? 'error' : ''}`}
                   placeholder="How can we help you?"
                 />
-                {errors.subject && <span style={styles.errorText}>{errors.subject}</span>}
+                <div className="input-icon-container"><Icons.Pen /></div>
+                {errors.subject && <span className="error-text"><Icons.AlertCircle /> {errors.subject}</span>}
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>
-                  Message <span style={styles.required}>*</span>
-                </label>
+              <div className="contact-input-wrapper">
+                <label className="contact-label">Message <span className="contact-required">*</span></label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  style={{
-                    ...styles.textarea,
-                    ...(errors.message && styles.inputError)
-                  }}
+                  className={`contact-input contact-textarea ${errors.message ? 'error' : ''}`}
                   placeholder="Please provide details about your inquiry..."
                 />
-                {errors.message && <span style={styles.errorText}>{errors.message}</span>}
+                <div className="input-icon-container textarea-icon-container"><Icons.Message /></div>
+                {errors.message && <span className="error-text"><Icons.AlertCircle /> {errors.message}</span>}
               </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                style={{
-                  ...styles.submitButton,
-                  ...(submitting && styles.submitButtonDisabled)
-                }}
-                onMouseEnter={(e) => {
-                  if (!submitting) {
-                    e.target.style.backgroundColor = '#0956CC';
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(11, 116, 255, 0.3)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!submitting) {
-                    e.target.style.backgroundColor = '#0B74FF';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = 'none';
-                  }
-                }}
-              >
+              <button type="submit" disabled={submitting} className="contact-submit-btn">
                 {submitting ? 'Sending...' : 'Send Message'}
+                {!submitting && <Icons.Send />}
               </button>
             </form>
           </div>
 
           {/* Contact Information */}
-          <div>
-            <div style={styles.infoCard}>
-              <h2 style={styles.infoTitle}>Get In Touch</h2>
+          <div className="info-card">
+            <h2 className="contact-form-title" style={{ marginBottom: '40px' }}>Get In Touch</h2>
 
-              <div style={styles.contactMethod}>
-                <div style={styles.icon}>📞</div>
-                <div style={styles.contactDetails}>
-                  <div style={styles.contactLabel}>Phone</div>
-                  <a href="tel:+917904212501" style={{ ...styles.contactValue, ...styles.contactLink }}>
-                    +91 7904212501
-                  </a>
-                </div>
-              </div>
-
-              <div style={styles.contactMethod}>
-                <div style={styles.icon}>📧</div>
-                <div style={styles.contactDetails}>
-                  <div style={styles.contactLabel}>Email</div>
-                  <a href="mailto:info@homehardware.com" style={{ ...styles.contactValue, ...styles.contactLink }}>
-                    info@homehardware.com
-                  </a>
-                </div>
-              </div>
-
-              <div style={styles.contactMethod}>
-                <div style={styles.icon}>💬</div>
-                <div style={styles.contactDetails}>
-                  <div style={styles.contactLabel}>Live Chat</div>
-                  <div style={styles.contactValue}>Available on website</div>
-                </div>
-              </div>
-
-              <div style={styles.contactMethod}>
-                <div style={styles.icon}>📍</div>
-                <div style={styles.contactDetails}>
-                  <div style={styles.contactLabel}>Address</div>
-                  <div style={styles.contactValue}>
-                    123 Hardware Street<br />
-                    New York, NY 10001<br />
-                    United States
-                  </div>
-                </div>
-              </div>
-
-              <div style={styles.businessHours}>
-                <div style={styles.hoursTitle}>Business Hours</div>
-                <div style={styles.hoursText}><strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM EST</div>
-                <div style={styles.hoursText}><strong>Saturday:</strong> 9:00 AM - 4:00 PM EST</div>
-                <div style={styles.hoursText}><strong>Sunday:</strong> Closed</div>
+            <div className="contact-method">
+              <div className="method-icon-wrap"><Icons.Phone /></div>
+              <div className="method-details">
+                <div className="method-label">Direct Line</div>
+                <a href="tel:+917904212501" className="method-value">+91 7904212501</a>
               </div>
             </div>
+
+            <div className="contact-method">
+              <div className="method-icon-wrap"><Icons.Mail /></div>
+              <div className="method-details">
+                <div className="method-label">Email Support</div>
+                <a href="mailto:support@sriammantraders.com" className="method-value">support@sriammantraders.com</a>
+              </div>
+            </div>
+
+            <div className="contact-method">
+              <div className="method-icon-wrap"><Icons.MapPin /></div>
+              <div className="method-details">
+                <div className="method-label">Headquarters</div>
+                <div className="method-value" style={{ lineHeight: '1.5' }}>
+                  Chinnasalem Main Road<br />
+                  Kallakurichi, Tamil Nadu 606213<br />
+                  India
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="method-details">
+                <div className="method-label" style={{ marginBottom: '16px', fontSize: '16px', color: 'var(--text-primary)' }}>
+                  Business Hours
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '14px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Monday - Friday</span>
+                  <span style={{ fontWeight: 500 }}>8:00 AM - 6:00 PM IST</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '14px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Saturday</span>
+                  <span style={{ fontWeight: 500 }}>9:00 AM - 4:00 PM IST</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Sunday</span>
+                  <span style={{ fontWeight: 500, color: 'var(--accent-red-primary, #ef4444)' }}>Closed</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

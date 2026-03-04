@@ -20,11 +20,11 @@ process.env.NODE_ENV = 'development';
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
-  
+
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
   }
-  
+
   await mongoose.connect(mongoUri);
 });
 
@@ -38,7 +38,7 @@ afterEach(async () => {
 });
 
 describe('Security Test Suite', () => {
-  
+
   describe('XSS (Cross-Site Scripting) Prevention', () => {
     it('should escape HTML in registration name field', async () => {
       const xssPayloads = [
@@ -61,13 +61,13 @@ describe('Security Test Suite', () => {
 
         if (res.status === 201) {
           const user = await User.findOne({ email: 'test@example.com' });
-          
+
           // Name should not contain script tags
           expect(user.name).not.toContain('<script>');
           expect(user.name).not.toContain('<img');
           expect(user.name).not.toContain('javascript:');
           expect(user.name).not.toContain('onerror=');
-          
+
           await User.deleteMany({ email: 'test@example.com' });
         }
       }
@@ -91,7 +91,7 @@ describe('Security Test Suite', () => {
 
     it('should sanitize special characters in inputs', async () => {
       const specialChars = ['<', '>', '"', "'", '&', '/', '\\'];
-      
+
       for (const char of specialChars) {
         const res = await request(app)
           .post('/api/auth/register')
@@ -180,7 +180,7 @@ describe('Security Test Suite', () => {
   describe('Rate Limiting', () => {
     it('should enforce rate limits on registration endpoint', async () => {
       const requests = [];
-      
+
       // Make 20 registration attempts
       for (let i = 0; i < 20; i++) {
         requests.push(
@@ -196,7 +196,7 @@ describe('Security Test Suite', () => {
       }
 
       const results = await Promise.all(requests);
-      
+
       // Some requests should be rate limited (429 status)
       const rateLimited = results.filter(r => r.status === 429);
       expect(rateLimited.length).toBeGreaterThan(0);
@@ -204,7 +204,7 @@ describe('Security Test Suite', () => {
 
     it('should enforce rate limits on login endpoint', async () => {
       const requests = [];
-      
+
       // Make 20 login attempts
       for (let i = 0; i < 20; i++) {
         requests.push(
@@ -218,7 +218,7 @@ describe('Security Test Suite', () => {
       }
 
       const results = await Promise.all(requests);
-      
+
       // Some requests should be rate limited
       const rateLimited = results.filter(r => r.status === 429);
       expect(rateLimited.length).toBeGreaterThan(0);
@@ -229,7 +229,7 @@ describe('Security Test Suite', () => {
       const bcrypt = require('bcryptjs');
       const testOtp = '123456';
       const hashedOtp = await bcrypt.hash(testOtp, 10);
-      
+
       await User.create({
         username: 'testuser',
         name: 'Test User',
@@ -242,7 +242,7 @@ describe('Security Test Suite', () => {
       });
 
       const requests = [];
-      
+
       // Make 20 OTP verification attempts
       for (let i = 0; i < 20; i++) {
         requests.push(
@@ -256,7 +256,7 @@ describe('Security Test Suite', () => {
       }
 
       const results = await Promise.all(requests);
-      
+
       // Should be rate limited or account locked
       const blocked = results.filter(r => [429, 400].includes(r.status));
       expect(blocked.length).toBeGreaterThan(0);
@@ -291,7 +291,7 @@ describe('Security Test Suite', () => {
 
     it('should hash passwords before storing', async () => {
       const plainPassword = 'Test@1234';
-      
+
       const res = await request(app)
         .post('/api/auth/register')
         .send({
@@ -303,7 +303,7 @@ describe('Security Test Suite', () => {
 
       if (res.status === 201) {
         const user = await User.findOne({ email: 'test@example.com' });
-        
+
         // Password should be hashed, not plain text
         expect(user.password).not.toBe(plainPassword);
         expect(user.password.length).toBeGreaterThan(20); // bcrypt hashes are longer
@@ -314,14 +314,11 @@ describe('Security Test Suite', () => {
 
   describe('JWT Token Security', () => {
     it('should sign tokens with secret', async () => {
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash('Test@1234', 10);
-      
       await User.create({
         username: 'testuser',
         name: 'Test User',
         email: 'test@example.com',
-        password: hashedPassword,
+        password: 'Test@1234',
         isVerified: true
       });
 
@@ -341,15 +338,11 @@ describe('Security Test Suite', () => {
     });
 
     it('should include expiration in tokens', async () => {
-      const bcrypt = require('bcryptjs');
-      const jwt = require('jsonwebtoken');
-      const hashedPassword = await bcrypt.hash('Test@1234', 10);
-      
       await User.create({
         username: 'testuser',
         name: 'Test User',
         email: 'test@example.com',
-        password: hashedPassword,
+        password: 'Test@1234',
         isVerified: true
       });
 
@@ -363,7 +356,7 @@ describe('Security Test Suite', () => {
       if (res.status === 200) {
         const token = res.body.token;
         const decoded = jwt.decode(token);
-        
+
         expect(decoded.exp).toBeDefined();
         expect(decoded.exp).toBeGreaterThan(Date.now() / 1000);
       }
@@ -373,7 +366,7 @@ describe('Security Test Suite', () => {
   describe('Input Length Limits', () => {
     it('should reject excessively long email', async () => {
       const longEmail = 'a'.repeat(300) + '@example.com';
-      
+
       const res = await request(app)
         .post('/api/auth/register')
         .send({
@@ -388,7 +381,7 @@ describe('Security Test Suite', () => {
 
     it('should reject excessively long username', async () => {
       const longUsername = 'a'.repeat(100);
-      
+
       const res = await request(app)
         .post('/api/auth/register')
         .send({
@@ -403,7 +396,7 @@ describe('Security Test Suite', () => {
 
     it('should reject excessively long name', async () => {
       const longName = 'a'.repeat(500);
-      
+
       const res = await request(app)
         .post('/api/auth/register')
         .send({
@@ -419,15 +412,12 @@ describe('Security Test Suite', () => {
 
   describe('Account Enumeration Prevention', () => {
     it('should return same error for existing and non-existing users on login', async () => {
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash('Test@1234', 10);
-      
       // Create existing user
       await User.create({
         username: 'existinguser',
         name: 'Existing User',
         email: 'existing@example.com',
-        password: hashedPassword,
+        password: 'Test@1234',
         isVerified: true
       });
 
@@ -455,14 +445,11 @@ describe('Security Test Suite', () => {
 
   describe('Session Security', () => {
     it('should not expose sensitive data in responses', async () => {
-      const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash('Test@1234', 10);
-      
       await User.create({
         username: 'testuser',
         name: 'Test User',
         email: 'test@example.com',
-        password: hashedPassword,
+        password: 'Test@1234',
         isVerified: true
       });
 

@@ -91,7 +91,7 @@ describe('AdminDashboard Component', () => {
 
       render(<AdminDashboard />);
 
-      expect(screen.getByText(/loading/i)).toBeInTheDocument();
+      expect(screen.getByRole('status')).toBeInTheDocument();
     });
   });
 
@@ -105,11 +105,11 @@ describe('AdminDashboard Component', () => {
       render(<AdminDashboard />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Add Product/i)).toBeInTheDocument();
+        expect(screen.getByText(/Add New Product/i)).toBeInTheDocument();
       });
 
       // Click add product button
-      const addButton = screen.getByText(/Add Product/i);
+      const addButton = screen.getByText(/Add New Product/i);
       fireEvent.click(addButton);
 
       // Wait for modal
@@ -124,11 +124,11 @@ describe('AdminDashboard Component', () => {
 
       const fileInput = screen.getByLabelText(/Upload from Device/i, { exact: false });
       
-      await userEvent.upload(fileInput, largeFile);
+      fireEvent.change(fileInput, { target: { files: [largeFile] } });
 
       // Should show error
       await waitFor(() => {
-        expect(screen.getByText(/5MB/i)).toBeInTheDocument();
+        expect(screen.getByText(/Maximum size is 5MB/i)).toBeInTheDocument();
       });
     });
 
@@ -141,10 +141,10 @@ describe('AdminDashboard Component', () => {
       render(<AdminDashboard />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Add Product/i)).toBeInTheDocument();
+        expect(screen.getByText(/Add New Product/i)).toBeInTheDocument();
       });
 
-      const addButton = screen.getByText(/Add Product/i);
+      const addButton = screen.getByText(/Add New Product/i);
       fireEvent.click(addButton);
 
       await waitFor(() => {
@@ -158,11 +158,11 @@ describe('AdminDashboard Component', () => {
 
       const fileInput = screen.getByLabelText(/Upload from Device/i, { exact: false });
       
-      await userEvent.upload(fileInput, invalidFile);
+      fireEvent.change(fileInput, { target: { files: [invalidFile] } });
 
       // Should show error
       await waitFor(() => {
-        expect(screen.getByText(/JPG, PNG, GIF, WEBP/i)).toBeInTheDocument();
+        expect(screen.getByText(/Please upload JPG/i)).toBeInTheDocument();
       });
     });
 
@@ -175,10 +175,10 @@ describe('AdminDashboard Component', () => {
       render(<AdminDashboard />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Add Product/i)).toBeInTheDocument();
+        expect(screen.getByText(/Add New Product/i)).toBeInTheDocument();
       });
 
-      const addButton = screen.getByText(/Add Product/i);
+      const addButton = screen.getByText(/Add New Product/i);
       fireEvent.click(addButton);
 
       await waitFor(() => {
@@ -192,11 +192,11 @@ describe('AdminDashboard Component', () => {
 
       const fileInput = screen.getByLabelText(/Upload from Device/i, { exact: false });
       
-      await userEvent.upload(fileInput, validFile);
+      fireEvent.change(fileInput, { target: { files: [validFile] } });
 
       // Should show preview
       await waitFor(() => {
-        const preview = screen.getByAlt(/Upload preview/i);
+        const preview = screen.getByAltText(/Product preview/i);
         expect(preview).toBeInTheDocument();
       });
     });
@@ -295,10 +295,10 @@ describe('AdminDashboard Component', () => {
       render(<AdminDashboard />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Add Product/i)).toBeInTheDocument();
+        expect(screen.getByText(/Add New Product/i)).toBeInTheDocument();
       });
 
-      const addButton = screen.getByText(/Add Product/i);
+      const addButton = screen.getByText(/Add New Product/i);
       fireEvent.click(addButton);
 
       await waitFor(() => {

@@ -1,29 +1,15 @@
 // File Upload Configuration - Secure image upload with validation
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
-// Create uploads directory if it doesn't exist
-const uploadDir = path.join(__dirname, '../uploads/products');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('📁 Created uploads directory:', uploadDir);
-}
-
-// Configure storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    // Generate unique filename: timestamp-randomstring-originalname
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    const nameWithoutExt = path.basename(file.originalname, ext);
-    const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9]/g, '_');
-    cb(null, `${sanitizedName}-${uniqueSuffix}${ext}`);
-  }
-});
+// ── Storage ──────────────────────────────────────────────────────────────────
+// Use memory storage – the route handler will:
+//   1. Run Sharp optimisation on the in-memory buffer
+//   2. Save the result directly to MongoDB GridFS
+//
+// (disk-based storage was removed; the uploads/products directory is only kept
+//  as a local backup during migration)
+const storage = multer.memoryStorage();
 
 // File filter - only allow image types
 const fileFilter = (req, file, cb) => {
@@ -63,4 +49,4 @@ const upload = multer({
   }
 });
 
-module.exports = { upload, uploadDir };
+module.exports = { upload };

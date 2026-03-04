@@ -27,11 +27,11 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     // ============================================================
     // 1. VALIDATION - Ensure all required fields are provided
     // ============================================================
-    
+
     if (!currentPassword || !currentPassword.trim()) {
-      return res.status(400).json({ 
-        success: false, 
-        msg: 'Current password is required for security verification' 
+      return res.status(400).json({
+        success: false,
+        msg: 'Current password is required for security verification'
       });
     }
 
@@ -45,42 +45,42 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
 
     // At least one field must be provided to update
     if (!newEmail && !newPassword && !newUsername && !newPhoneNumber) {
-      return res.status(400).json({ 
-        success: false, 
-        msg: 'Please provide at least one field to update (email, username, password, or phone number)' 
+      return res.status(400).json({
+        success: false,
+        msg: 'Please provide at least one field to update (email, username, password, or phone number)'
       });
     }
 
     // ============================================================
     // 2. FETCH CURRENT ADMIN USER
     // ============================================================
-    
-    const admin = await User.findById(adminId);
-    
+
+    const admin = await User.findById(adminId).select('+password');
+
     if (!admin) {
-      return res.status(404).json({ 
-        success: false, 
-        msg: 'Admin user not found' 
+      return res.status(404).json({
+        success: false,
+        msg: 'Admin user not found'
       });
     }
 
     // ============================================================
     // 3. VERIFY CURRENT PASSWORD - Security check
     // ============================================================
-    
+
     const isPasswordValid = await bcrypt.compare(currentPassword, admin.password);
-    
+
     if (!isPasswordValid) {
-      return res.status(401).json({ 
-        success: false, 
-        msg: 'Current password is incorrect. Please try again.' 
+      return res.status(401).json({
+        success: false,
+        msg: 'Current password is incorrect. Please try again.'
       });
     }
 
     // ============================================================
     // 4. VALIDATE NEW EMAIL FORMAT (if provided)
     // ============================================================
-    
+
     if (newEmail) {
       // Skip validation if email hasn't changed
       if (newEmail.toLowerCase() === admin.email.toLowerCase()) {
@@ -89,24 +89,24 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       } else {
         // Email regex pattern for validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
+
         if (!emailRegex.test(newEmail)) {
-          return res.status(400).json({ 
-            success: false, 
-            msg: 'Invalid email format. Please provide a valid email address.' 
+          return res.status(400).json({
+            success: false,
+            msg: 'Invalid email format. Please provide a valid email address.'
           });
         }
 
         // Check if email is already taken by another user
-        const emailExists = await User.findOne({ 
-          email: newEmail.toLowerCase(), 
+        const emailExists = await User.findOne({
+          email: newEmail.toLowerCase(),
           _id: { $ne: adminId } // Exclude current admin
         });
 
         if (emailExists) {
-          return res.status(409).json({ 
-            success: false, 
-            msg: 'This email is already registered. Please use a different email.' 
+          return res.status(409).json({
+            success: false,
+            msg: 'This email is already registered. Please use a different email.'
           });
         }
       }
@@ -115,7 +115,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     // ============================================================
     // 5. VALIDATE NEW USERNAME (if provided)
     // ============================================================
-    
+
     if (newUsername) {
       // Skip validation if username hasn't changed
       if (newUsername === admin.username) {
@@ -124,32 +124,32 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       } else {
         // Username must be at least 3 characters
         if (newUsername.length < 3) {
-          return res.status(400).json({ 
-            success: false, 
-            msg: 'Username must be at least 3 characters long' 
+          return res.status(400).json({
+            success: false,
+            msg: 'Username must be at least 3 characters long'
           });
         }
 
         // Username can only contain alphanumeric and underscores
         const usernameRegex = /^[a-zA-Z0-9_]+$/;
-        
+
         if (!usernameRegex.test(newUsername)) {
-          return res.status(400).json({ 
-            success: false, 
-            msg: 'Username can only contain letters, numbers, and underscores' 
+          return res.status(400).json({
+            success: false,
+            msg: 'Username can only contain letters, numbers, and underscores'
           });
         }
 
         // Check if username is already taken by another user
-        const usernameExists = await User.findOne({ 
-          username: newUsername, 
-          _id: { $ne: adminId } 
+        const usernameExists = await User.findOne({
+          username: newUsername,
+          _id: { $ne: adminId }
         });
 
         if (usernameExists) {
-          return res.status(409).json({ 
-            success: false, 
-            msg: 'This username is already taken. Please choose a different username.' 
+          return res.status(409).json({
+            success: false,
+            msg: 'This username is already taken. Please choose a different username.'
           });
         }
       }
@@ -158,21 +158,21 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     // ============================================================
     // 6. VALIDATE NEW PASSWORD STRENGTH (if provided)
     // ============================================================
-    
+
     if (newPassword) {
       // Confirm password must match
       if (newPassword !== confirmPassword) {
-        return res.status(400).json({ 
-          success: false, 
-          msg: 'New password and confirm password do not match' 
+        return res.status(400).json({
+          success: false,
+          msg: 'New password and confirm password do not match'
         });
       }
 
       // Password must be at least 6 characters
       if (newPassword.length < 6) {
-        return res.status(400).json({ 
-          success: false, 
-          msg: 'Password must be at least 6 characters long' 
+        return res.status(400).json({
+          success: false,
+          msg: 'Password must be at least 6 characters long'
         });
       }
 
@@ -183,9 +183,9 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
 
       if (!hasUpperCase || !hasLowerCase || !hasNumber) {
-        return res.status(400).json({ 
-          success: false, 
-          msg: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+        return res.status(400).json({
+          success: false,
+          msg: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
         });
       }
 
@@ -198,7 +198,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     // ============================================================
     // 6.5. VALIDATE PHONE NUMBER (if provided)
     // ============================================================
-    
+
     if (newPhoneNumber) {
       // Skip validation if phone number hasn't changed
       if (newPhoneNumber === admin.phoneNumber) {
@@ -208,20 +208,20 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
         // Basic phone number validation (flexible format)
         // Allows: +1-234-567-8900, (123) 456-7890, 1234567890, +911234567890, etc.
         const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-        
+
         if (!phoneRegex.test(newPhoneNumber)) {
-          return res.status(400).json({ 
-            success: false, 
-            msg: 'Invalid phone number format. Use only numbers, spaces, dashes, parentheses, and plus sign.' 
+          return res.status(400).json({
+            success: false,
+            msg: 'Invalid phone number format. Use only numbers, spaces, dashes, parentheses, and plus sign.'
           });
         }
 
         // Check minimum length (at least 10 digits)
         const digitsOnly = newPhoneNumber.replace(/\D/g, '');
         if (digitsOnly.length < 10) {
-          return res.status(400).json({ 
-            success: false, 
-            msg: 'Phone number must contain at least 10 digits' 
+          return res.status(400).json({
+            success: false,
+            msg: 'Phone number must contain at least 10 digits'
           });
         }
       }
@@ -229,18 +229,18 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
 
     // Re-check if at least one field has a value after validation
     if (!newEmail && !newPassword && !newUsername && !newPhoneNumber) {
-      return res.status(400).json({ 
-        success: false, 
-        msg: 'No changes detected. Please modify at least one field.' 
+      return res.status(400).json({
+        success: false,
+        msg: 'No changes detected. Please modify at least one field.'
       });
     }
 
     // ============================================================
     // 7. UPDATE ADMIN CREDENTIALS
     // ============================================================
-    
+
     let updateFields = {};
-    
+
     // Update email if provided
     if (newEmail) {
       updateFields.email = newEmail.toLowerCase();
@@ -258,8 +258,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
 
     // Hash and update password if provided
     if (newPassword) {
-      const salt = await bcrypt.genSalt(10);
-      updateFields.password = await bcrypt.hash(newPassword, salt);
+      updateFields.password = newPassword;
     }
 
     // Apply updates to admin user
@@ -269,15 +268,15 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
     // ============================================================
     // 8. PREPARE SUCCESS RESPONSE
     // ============================================================
-    
+
     const updatedFields = [];
     if (newEmail) updatedFields.push('email');
     if (newUsername) updatedFields.push('username');
     if (newPhoneNumber) updatedFields.push('phone number');
     if (newPassword) updatedFields.push('password');
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       msg: `Admin credentials updated successfully! Updated: ${updatedFields.join(', ')}`,
       admin: {
         id: admin._id,
@@ -290,8 +289,8 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
 
   } catch (err) {
     console.error('❌ Update admin credentials error:', err);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       msg: 'Server error while updating credentials. Please try again later.',
       error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
@@ -306,16 +305,16 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
 router.get('/profile', verifyAdmin, async (req, res) => {
   try {
     const admin = await User.findById(req.userId).select('-password -otp -otpExpiresAt -resetPasswordToken');
-    
+
     if (!admin) {
-      return res.status(404).json({ 
-        success: false, 
-        msg: 'Admin profile not found' 
+      return res.status(404).json({
+        success: false,
+        msg: 'Admin profile not found'
       });
     }
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       admin: {
         id: admin._id,
         username: admin.username,
@@ -329,9 +328,9 @@ router.get('/profile', verifyAdmin, async (req, res) => {
 
   } catch (err) {
     console.error('❌ Get admin profile error:', err);
-    res.status(500).json({ 
-      success: false, 
-      msg: 'Server error while fetching profile' 
+    res.status(500).json({
+      success: false,
+      msg: 'Server error while fetching profile'
     });
   }
 });

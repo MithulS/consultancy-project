@@ -326,11 +326,13 @@ export default function AdminDashboard() {
     header: {
       background: '#ffffff',
       color: '#0f172a',
-      padding: '20px 40px',
+      padding: 'clamp(12px, 2.5vw, 20px) clamp(16px, 4vw, 40px)',
       borderBottom: '1px solid #e2e8f0',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      flexWrap: 'wrap',
+      gap: '12px',
       animation: 'fadeInUp 0.6s ease-out'
     },
     title: {
@@ -390,7 +392,7 @@ export default function AdminDashboard() {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
       gap: '24px',
-      padding: '32px 40px',
+      padding: 'clamp(16px, 3vw, 32px) clamp(16px, 4vw, 40px)',
       maxWidth: '1400px',
       margin: '0 auto'
     },
@@ -419,7 +421,7 @@ export default function AdminDashboard() {
       letterSpacing: '-1px'
     },
     content: {
-      padding: '0 40px 40px',
+      padding: '0 clamp(16px, 4vw, 40px) 40px',
       maxWidth: '1400px',
       margin: '0 auto'
     },
@@ -632,7 +634,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div style={styles.container}>
+      <div style={styles.container} role="status" aria-busy="true" aria-label="Loading products">
         <div style={styles.header}>
           <h1 style={styles.title}>🛡️ Admin Dashboard</h1>
         </div>
@@ -894,12 +896,17 @@ export default function AdminDashboard() {
             </h2>
             <form style={styles.form} onSubmit={handleSubmit}>
               <div style={styles.formGroup}>
-                <label style={styles.label}>Product Name *</label>
+                <label htmlFor="productName" style={styles.label}>Product Name *</label>
                 <input
+                  id="productName"
                   type="text"
                   style={styles.input}
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => {
+                    // Strip HTML/script tags from product name
+                    const sanitized = e.target.value.replace(/<[^>]*>/g, '');
+                    setFormData({ ...formData, name: sanitized });
+                  }}
                   required
                 />
               </div>
@@ -1034,7 +1041,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
                 <div style={styles.formGroup}>
                   <label style={styles.label}>Category *</label>
                   <select
@@ -1083,7 +1090,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
                 <div style={styles.formGroup}>
                   <label style={styles.label}>Stock Quantity *</label>
                   <input

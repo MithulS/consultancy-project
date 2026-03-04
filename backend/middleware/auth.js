@@ -10,7 +10,7 @@ const authMiddleware = (req, res, next) => {
   try {
     // Get token from header
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ msg: 'No token, authorization denied' });
     }
@@ -20,19 +20,19 @@ const authMiddleware = (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Add user info to request object
     req.user = decoded;
-    
+
     // Continue to the next middleware or route handler
     next();
   } catch (err) {
     console.error('Auth middleware error:', err.message);
-    
+
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ msg: 'Token has expired' });
     }
-    
+
     return res.status(401).json({ msg: 'Token is not valid' });
   }
 };
@@ -45,18 +45,18 @@ const adminMiddleware = (req, res, next) => {
   try {
     // First verify the token (assumes authMiddleware was called first)
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ msg: 'No token, authorization denied' });
     }
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Check if user is admin
     if (!decoded.isAdmin) {
-      return res.status(403).json({ 
-        msg: 'Access denied. Admin privileges required.' 
+      return res.status(403).json({
+        msg: 'Access denied. Admin privileges required.'
       });
     }
 
@@ -65,6 +65,9 @@ const adminMiddleware = (req, res, next) => {
     next();
   } catch (err) {
     console.error('Admin middleware error:', err.message);
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ msg: 'Token has expired' });
+    }
     return res.status(401).json({ msg: 'Token is not valid' });
   }
 };

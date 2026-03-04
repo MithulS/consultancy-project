@@ -22,17 +22,17 @@ process.env.JWT_SECRET = 'test-secret-key-12345';
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
-  
+
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
   }
-  
+
   await mongoose.connect(mongoUri);
 
   // Create admin user
   const bcrypt = require('bcryptjs');
   const hashedPassword = await bcrypt.hash('Admin@123', 10);
-  
+
   adminUser = await User.create({
     username: 'admintest',
     name: 'Admin Test',
@@ -60,7 +60,7 @@ afterAll(async () => {
   } catch (err) {
     // Directory might not exist
   }
-  
+
   await mongoose.disconnect();
   await mongoServer.stop();
 });
@@ -79,7 +79,7 @@ afterEach(async () => {
 });
 
 describe('POST /api/upload/image - Image Upload Tests', () => {
-  
+
   describe('Authentication & Authorization', () => {
     it('should reject upload without token', async () => {
       const res = await request(app)
@@ -129,7 +129,7 @@ describe('POST /api/upload/image - Image Upload Tests', () => {
 
     it('should reject file larger than 5MB', async () => {
       const largeBuffer = Buffer.alloc(6 * 1024 * 1024); // 6MB
-      
+
       const res = await request(app)
         .post('/api/upload/image')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -161,7 +161,7 @@ describe('POST /api/upload/image - Image Upload Tests', () => {
 
     it('should accept valid image formats (jpg, png, gif, webp)', async () => {
       const validFormats = ['test.jpg', 'test.jpeg', 'test.png', 'test.gif', 'test.webp'];
-      
+
       // Note: Without a real image, Sharp will fail, but we can verify the format check passes
       for (const filename of validFormats) {
         const res = await request(app)
@@ -246,7 +246,7 @@ describe('POST /api/upload/image - Image Upload Tests', () => {
 });
 
 describe('DELETE /api/upload/image/:filename - Image Deletion Tests', () => {
-  
+
   describe('Authentication & Authorization', () => {
     it('should reject deletion without token', async () => {
       const res = await request(app)
@@ -285,7 +285,7 @@ describe('DELETE /api/upload/image/:filename - Image Deletion Tests', () => {
           .set('Authorization', `Bearer ${adminToken}`)
           .expect(400);
 
-        expect(res.body.msg).toContain('Invalid filename');
+        expect(res.body.msg).toContain('Invalid image id');
       }
     });
 
@@ -295,14 +295,15 @@ describe('DELETE /api/upload/image/:filename - Image Deletion Tests', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(400);
 
-      expect(res.body.msg).toContain('Invalid filename');
+      expect(res.body.msg).toContain('Invalid image id');
     });
   });
 
   describe('Functionality', () => {
     it('should return 404 for non-existent file', async () => {
+      const fakeId = new mongoose.Types.ObjectId().toString();
       const res = await request(app)
-        .delete('/api/upload/image/nonexistent.jpg')
+        .delete(`/api/upload/image/${fakeId}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(404);
 

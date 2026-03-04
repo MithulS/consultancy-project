@@ -120,7 +120,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve static files - uploaded images
+// Serve static files - uploaded images (kept for backward compatibility during migration)
 app.use('/uploads', express.static('uploads'));
 
 // API routes
@@ -128,6 +128,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/admin', require('./routes/adminManagement'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/images', require('./routes/images'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/wishlist', require('./routes/wishlist'));

@@ -100,7 +100,7 @@ async function updateProductImages() {
       const newUrl = `/uploads/products/${imageName}`;
       
       product.imageUrl = newUrl;
-      product.imageAltText = `${product.name} - ${product.category} product from HomeHardware`;
+      product.imageAltText = `${product.name} - ${product.category} product from Sri Amman Traders`;
       
       await product.save();
       

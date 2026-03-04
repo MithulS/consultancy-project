@@ -7,7 +7,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import OptimizedImage from './OptimizedImage';
-import ProductRating from './ProductRating';
+
 import PriceDisplay from './PriceDisplay';
 import WishlistButton from './WishlistButton';
 import ProductBadges from './ProductBadges';
@@ -277,18 +277,6 @@ const EnhancedProductCard = ({
 
         {/* Product Name - Prominent, 2 lines max */}
         <h3 style={styles.productName}>{product.name}</h3>
-
-        {/* Rating - Uniform format */}
-        {product.rating > 0 && (
-          <div style={styles.ratingSection}>
-            <ProductRating rating={product.rating} />
-            {product.numReviews > 0 && (
-              <span style={styles.reviewsCount}>
-                ({product.numReviews.toLocaleString()})
-              </span>
-            )}
-          </div>
-        )}
 
         {/* Price Section - Emphasized */}
         <div style={styles.priceSection}>

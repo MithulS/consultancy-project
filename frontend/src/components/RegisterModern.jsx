@@ -106,7 +106,7 @@ export default function Register() {
     const processedCallback = sessionStorage.getItem('oauth_callback_processed');
 
     if (token && !processedCallback) {
-      console.log('✅ Google OAuth token received, processing registration...');
+      if (import.meta.env.DEV) console.log('✅ Google OAuth token received, processing registration...');
 
       // Mark callback as processed to prevent loops
       sessionStorage.setItem('oauth_callback_processed', 'true');
@@ -126,9 +126,9 @@ export default function Register() {
           return res.json();
         })
         .then(data => {
-          console.log('✅ User profile loaded:', data.email);
+          if (import.meta.env.DEV) console.log('✅ User profile loaded:', data.email);
           localStorage.setItem('user', JSON.stringify(data));
-          setMsg('✅ Welcome! Redirecting to dashboard...');
+          setMsg('✅ Welcome! Redirecting...');
           trackRegistrationEvent('google', true);
 
           // Set flag for welcome message
@@ -142,7 +142,7 @@ export default function Register() {
           setTimeout(() => {
             // Clear the callback processed flag after redirect
             sessionStorage.removeItem('oauth_callback_processed');
-            window.location.hash = '#dashboard';
+            window.location.hash = '#home';
           }, 1000);
         })
         .catch(err => {
@@ -212,9 +212,11 @@ export default function Register() {
     setLoading(true);
 
     try {
-      console.log('🚀 Initiating registration request...');
-      console.log('📍 API URL:', `${API}/api/auth/register`);
-      console.log('📦 Payload:', { name: form.name, email: form.email });
+      if (import.meta.env.DEV) {
+        console.log('🚀 Initiating registration request...');
+        console.log('📍 API URL:', `${API}/api/auth/register`);
+        console.log('📦 Payload:', { name: form.name, email: form.email });
+      }
 
       // Add timeout to detect hung requests
       const controller = new AbortController();
@@ -229,7 +231,7 @@ export default function Register() {
 
       clearTimeout(timeoutId);
 
-      console.log('📡 Response received:', res.status, res.statusText);
+      if (import.meta.env.DEV) console.log('📡 Response received:', res.status, res.statusText);
 
       // Check if response is JSON
       const contentType = res.headers.get('content-type');
@@ -240,7 +242,7 @@ export default function Register() {
       let data;
       try {
         data = await res.json();
-        console.log('📦 Response data:', data);
+        if (import.meta.env.DEV) console.log('📦 Response data:', data);
       } catch (jsonError) {
         console.error('❌ JSON parse error:', jsonError);
         throw new Error(`Server returned invalid JSON. Response status: ${res.status}`);
@@ -252,7 +254,7 @@ export default function Register() {
       }
 
       // Success!
-      console.log('✅ Registration successful!');
+      if (import.meta.env.DEV) console.log('✅ Registration successful!');
 
       // Track successful registration
       trackRegistrationEvent('email', true);

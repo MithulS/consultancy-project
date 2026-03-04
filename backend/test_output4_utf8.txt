@@ -1,0 +1,2993 @@
+﻿
+> backend@1.0.0 test
+> jest --coverage --verbose
+
+  console.log
+    [dotenv@17.3.1] injecting env (14) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:15:9)
+
+  console.warn
+    ΓÜá∩╕Å  Stripe: STRIPE_SECRET_KEY not found in .env file
+
+    [0m [90m 15 |[39m     stripe [33m=[39m require([32m'stripe'[39m)(process[33m.[39menv[33m.[39m[33mSTRIPE_SECRET_KEY[39m)[33m;[39m
+     [90m 16 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 17 |[39m     console[33m.[39mwarn([32m'ΓÜá∩╕Å  Stripe: STRIPE_SECRET_KEY not found in .env file'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 18 |[39m   }
+     [90m 19 |[39m } [36mcatch[39m (error) {
+     [90m 20 |[39m   console[33m.[39merror([32m'Γ¥î Stripe initialization error:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m[0m
+
+      at Object.warn (routes/payments.js:17:13)
+      at Object.require (index.js:139:26)
+      at Object.require (tests/reviews.test.js:5:13)
+
+  console.log
+    ΓÜá∩╕Å  Redis not available - continuing without caching
+
+      at log (index.js:166:13)
+
+  console.log
+    Γ£à Mail transporter ready
+
+      at log (routes/auth.js:48:15)
+
+node.exe : FAIL tests/reviews.test.js
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL tests/reviews.test.js:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Review Rating System Tests
+    Rating Calculation Logic
+      ├ù should calculate correct average for multiple reviews (180 ms)
+      ├ù should handle single review correctly (117 ms)
+      ├ù should return 0 for product with no reviews (76 ms)
+      ├ù should round to one decimal place (74 ms)
+    Data Integrity Tests
+      ├ù should prevent duplicate reviews from same user (74 ms)
+      ├ù should validate rating is between 1 and 5 (72 ms)
+      ├ù should require product, user, order, and rating fields (75 ms)
+    Product Rating Update Tests
+      ├ù should update product rating when review is created (71 ms)
+      ├ù should update product rating when review is deleted (69 ms)
+      ├ù should reset rating to 0 when all reviews are deleted (69 ms)
+    Edge Cases
+      ├ù should handle all 5-star reviews (70 ms)
+      ├ù should handle all 1-star reviews (70 ms)
+      ├ù should handle review update changing rating (84 ms)
+    Rating Distribution Tests
+      ├ù should calculate correct distribution (69 ms)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Rating Calculation Logic ΓÇ║ should calculate correct average for multiple reviews
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Rating Calculation Logic ΓÇ║ should handle single review correctly
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Rating Calculation Logic ΓÇ║ should return 0 for product with no reviews
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Rating Calculation Logic ΓÇ║ should round to one decimal place
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Data Integrity Tests ΓÇ║ should prevent duplicate reviews from same user
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Data Integrity Tests ΓÇ║ should validate rating is between 1 and 5
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Data Integrity Tests ΓÇ║ should require product, user, order, and rating fields
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Product Rating Update Tests ΓÇ║ should update product rating when review is 
+created
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Product Rating Update Tests ΓÇ║ should update product rating when review is 
+deleted
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Product Rating Update Tests ΓÇ║ should reset rating to 0 when all reviews are 
+deleted
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Edge Cases ΓÇ║ should handle all 5-star reviews
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Edge Cases ΓÇ║ should handle all 1-star reviews
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Edge Cases ΓÇ║ should handle review update changing rating
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  ΓùÅ Review Rating System Tests ΓÇ║ Rating Distribution Tests ΓÇ║ should calculate correct distribution
+
+    ValidationError: Product validation failed: category: `Tools` is not a valid enum value for path `category`.
+
+    [0m [90m 49 |[39m
+     [90m 50 |[39m     [90m// Create test product[39m
+    [31m[1m>[22m[39m[90m 51 |[39m     testProduct [33m=[39m [36mawait[39m 
+[33mProduct[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 52 |[39m       name[33m:[39m [32m'Test Product'[39m[33m,[39m
+     [90m 53 |[39m       description[33m:[39m [32m'Test description'[39m[33m,[39m
+     [90m 54 |[39m       price[33m:[39m [35m100[39m[33m,[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 3)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:51:19)
+
+  console.error
+    Admin middleware error: jwt malformed
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.error
+    Admin middleware error: jwt expired
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c21a607919228c09227',
+      hasCurrentPassword: false,
+      newEmail: 'new@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c0922a',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c0922d',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09230',
+      hasCurrentPassword: true,
+      newEmail: 'notanemail',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09230',
+      hasCurrentPassword: true,
+      newEmail: '@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09230',
+      hasCurrentPassword: true,
+      newEmail: 'test@',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09230',
+      hasCurrentPassword: true,
+      newEmail: 'test@.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09237',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09237',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09237',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09237',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c22a607919228c09237',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.warn
+    ΓÜá∩╕Å Password without special character - less secure
+
+    [0m [90m 192 |[39m       [90m// Recommended: special character (optional but recommended)[39m
+     [90m 193 |[39m       [36mif[39m ([33m![39mhasSpecialChar) {
+    [31m[1m>[22m[39m[90m 194 |[39m         console[33m.[39mwarn([32m'ΓÜá∩╕Å Password without special character - less secure'[39m)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 195 |[39m       }
+     [90m 196 |[39m     }
+     [90m 197 |[39m[0m
+
+      at warn (routes/adminManagement.js:194:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09240',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09244',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09244',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user@name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09244',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user<name>',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09244',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user/name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09244',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'ab',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c0924c',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c09256',
+      hasCurrentPassword: true,
+      newEmail: 'admin@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ΓÅ¡∩╕Å Email unchanged, skipping validation
+
+      at log (routes/adminManagement.js:87:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c23a607919228c0925a',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c09261',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c09268',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c0926e',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c09276',
+      hasCurrentPassword: true,
+      newEmail: '  trimmed@test.com  ',
+      newUsername: '  trimmeduser  ',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c0927e',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent0',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c0927e',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent1',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69a28c24a607919228c0927e',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent2',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:18:13)
+
+FAIL tests/adminManagement.test.js
+  PUT /api/admin/update-credentials
+    Authentication & Authorization
+      ΓêÜ should reject requests without token (126 ms)
+      ΓêÜ should reject requests with invalid token (76 ms)
+      ΓêÜ should reject requests from non-admin users (71 ms)
+      ΓêÜ should reject requests with expired token (73 ms)
+    Input Validation
+      ΓêÜ should reject request without current password (75 ms)
+      ΓêÜ should reject request with empty current password (81 ms)
+      ΓêÜ should reject request with no fields to update (71 ms)
+      ΓêÜ should reject invalid email format (352 ms)
+      ├ù should reject weak passwords (542 ms)
+      ΓêÜ should reject mismatched password confirmation (132 ms)
+      ΓêÜ should reject username with invalid characters (398 ms)
+    Password Verification
+      ΓêÜ should reject incorrect current password (131 ms)
+    Duplicate Prevention
+      ├ù should reject email already taken by another user (65 ms)
+      ├ù should reject username already taken by another user (65 ms)
+      ΓêÜ should allow updating to same email (no change) (132 ms)
+    Successful Updates
+      ΓêÜ should successfully update email (141 ms)
+      ΓêÜ should successfully update username (140 ms)
+      ├ù should successfully update password and hash it (288 ms)
+      ├ù should successfully update multiple fields at once (268 ms)
+      ΓêÜ should trim whitespace from inputs (140 ms)
+    Concurrent Updates
+      ΓêÜ should handle concurrent update attempts (279 ms)
+  GET /api/admin/profile
+    ├ù should return admin profile with valid token (74 ms)
+    ├ù should not return password in profile (73 ms)
+    ΓêÜ should reject requests without admin token (71 ms)
+
+  ΓùÅ PUT /api/admin/update-credentials ΓÇ║ Input Validation ΓÇ║ should reject weak passwords
+
+    expected 400 "Bad Request", got 200 "OK"
+
+    [0m [90m 174 |[39m             confirmPassword[33m:[39m password
+     [90m 175 |[39m           })
+    [31m[1m>[22m[39m[90m 176 |[39m           [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m     |[39m            [31m[1m^[22m[39m
+     [90m 177 |[39m
+     [90m 178 |[39m         expect(res[33m.[39mbody[33m.[39mmsg [33m||[39m 
+res[33m.[39mbody[33m.[39msuccess)[33m.[39mtoBeDefined()[33m;[39m
+     [90m 179 |[39m       }[0m
+
+      at Object.expect (tests/adminManagement.test.js:176:12)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ΓùÅ PUT /api/admin/update-credentials ΓÇ║ Duplicate Prevention ΓÇ║ should reject email already taken by another user
+
+    ReferenceError: bcrypt is not defined
+
+    [0m [90m 240 |[39m         name[33m:[39m [32m'Other User'[39m[33m,[39m
+     [90m 241 |[39m         email[33m:[39m [32m'taken@test.com'[39m[33m,[39m
+    [31m[1m>[22m[39m[90m 242 |[39m         password[33m:[39m [36mawait[39m 
+bcrypt[33m.[39mhash([32m'Pass@123'[39m[33m,[39m [35m10[39m)[33m,[39m
+     [90m     |[39m                         [31m[1m^[22m[39m
+     [90m 243 |[39m         isVerified[33m:[39m [36mtrue[39m
+     [90m 244 |[39m       })[33m;[39m
+     [90m 245 |[39m[0m
+
+      at Object.bcrypt (tests/adminManagement.test.js:242:25)
+
+  ΓùÅ PUT /api/admin/update-credentials ΓÇ║ Duplicate Prevention ΓÇ║ should reject username already taken by another 
+user
+
+    ReferenceError: bcrypt is not defined
+
+    [0m [90m 261 |[39m         name[33m:[39m [32m'Other User'[39m[33m,[39m
+     [90m 262 |[39m         email[33m:[39m [32m'other@test.com'[39m[33m,[39m
+    [31m[1m>[22m[39m[90m 263 |[39m         password[33m:[39m [36mawait[39m 
+bcrypt[33m.[39mhash([32m'Pass@123'[39m[33m,[39m [35m10[39m)[33m,[39m
+     [90m     |[39m                         [31m[1m^[22m[39m
+     [90m 264 |[39m         isVerified[33m:[39m [36mtrue[39m
+     [90m 265 |[39m       })[33m;[39m
+     [90m 266 |[39m[0m
+
+      at Object.bcrypt (tests/adminManagement.test.js:263:25)
+
+  ΓùÅ PUT /api/admin/update-credentials ΓÇ║ Successful Updates ΓÇ║ should successfully update password and hash it
+
+    ReferenceError: bcrypt is not defined
+
+    [0m [90m 349 |[39m       
+expect(updatedUser[33m.[39mpassword)[33m.[39mnot[33m.[39mtoBe(newPassword)[33m;[39m [90m// Should be 
+hashed[39m
+     [90m 350 |[39m
+    [31m[1m>[22m[39m[90m 351 |[39m       [36mconst[39m isMatch [33m=[39m [36mawait[39m 
+bcrypt[33m.[39mcompare(newPassword[33m,[39m updatedUser[33m.[39mpassword)[33m;[39m
+     [90m     |[39m                       [31m[1m^[22m[39m
+     [90m 352 |[39m       expect(isMatch)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 353 |[39m     })[33m;[39m
+     [90m 354 |[39m[0m
+
+      at Object.<anonymous> (tests/adminManagement.test.js:351:23)
+
+  ΓùÅ PUT /api/admin/update-credentials ΓÇ║ Successful Updates ΓÇ║ should successfully update multiple fields at once
+
+    ReferenceError: bcrypt is not defined
+
+    [0m [90m 375 |[39m       
+expect(updatedUser[33m.[39musername)[33m.[39mtoBe(updates[33m.[39mnewUsername)[33m;[39m
+     [90m 376 |[39m
+    [31m[1m>[22m[39m[90m 377 |[39m       [36mconst[39m isMatch [33m=[39m [36mawait[39m 
+bcrypt[33m.[39mcompare(updates[33m.[39mnewPassword[33m,[39m updatedUser[33m.[39mpassword)[33m;[39m
+     [90m     |[39m                       [31m[1m^[22m[39m
+     [90m 378 |[39m       expect(isMatch)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 379 |[39m     })[33m;[39m
+     [90m 380 |[39m[0m
+
+      at Object.<anonymous> (tests/adminManagement.test.js:377:23)
+
+  ΓùÅ GET /api/admin/profile ΓÇ║ should return admin profile with valid token
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+    [0m [90m 424 |[39m       [33m.[39mexpect([35m200[39m)[33m;[39m
+     [90m 425 |[39m
+    [31m[1m>[22m[39m[90m 426 |[39m     
+expect(res[33m.[39mbody[33m.[39muser)[33m.[39mtoBeDefined()[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 427 |[39m     
+expect(res[33m.[39mbody[33m.[39muser[33m.[39memail)[33m.[39mtoBe(adminUser[33m.[39memail)[33m;[39m
+     [90m 428 |[39m   })[33m;[39m
+     [90m 429 |[39m[0m
+
+      at Object.toBeDefined (tests/adminManagement.test.js:426:27)
+
+  ΓùÅ GET /api/admin/profile ΓÇ║ should not return password in profile
+
+    TypeError: Cannot read properties of undefined (reading 'password')
+
+    [0m [90m 434 |[39m       [33m.[39mexpect([35m200[39m)[33m;[39m
+     [90m 435 |[39m
+    [31m[1m>[22m[39m[90m 436 |[39m     
+expect(res[33m.[39mbody[33m.[39muser[33m.[39mpassword)[33m.[39mtoBeUndefined()[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 437 |[39m   })[33m;[39m
+     [90m 438 |[39m
+     [90m 439 |[39m   it([32m'should reject requests without admin token'[39m[33m,[39m [36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.password (tests/adminManagement.test.js:436:26)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: '<script>alert("XSS")</script>',
+      otpPlain: '161344',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:61:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:64:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:65:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:66:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê  Name: <script>alert("XSS")</script>                              Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 161344                                                 Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:183:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '213960',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:61:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:64:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:65:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:66:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 213960                                                 Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:183:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1772260391220@example.com',
+      name: 'Test<User',
+      otpPlain: '262659',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:61:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:64:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:65:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:66:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  To: test1772260391220@example.com                                Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê  Name: Test<User                                                  Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 262659                                                 Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1772260391220@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1772260391220@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1772260391220@example.com - OTP sent
+
+      at log (routes/auth.js:183:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin'-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR '1'='1 - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - '; DROP TABLE users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR 1=1-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - ' UNION SELECT * FROM users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    ΓÜá∩╕Å  Mail transporter error (verify): Missing credentials for "PLAIN"
+
+    [0m [90m 43 |[39m   transporter[33m.[39mverify((err[33m,[39m success) [33m=>[39m {
+     [90m 44 |[39m     [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 45 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail transporter error (verify):'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 46 |[39m       console[33m.[39mlog([32m'≡ƒôº Email delivery unavailable - using console OTP in development mode'[39m)[33m;[39m
+     [90m 47 |[39m     } [36melse[39m {
+     [90m 48 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter ready'[39m)[33m;[39m[0m
+
+      at error (routes/auth.js:45:15)
+      at node_modules/nodemailer/lib/smtp-transport/index.js:388:36
+      at SMTPConnection.login (node_modules/nodemailer/lib/smtp-connection/index.js:454:24)
+      at node_modules/nodemailer/lib/smtp-transport/index.js:380:32
+      at SMTPConnection.<anonymous> (node_modules/nodemailer/lib/smtp-connection/index.js:215:17)
+      at SMTPConnection._actionEHLO (node_modules/nodemailer/lib/smtp-connection/index.js:1403:14)
+      at SMTPConnection._processResponse (node_modules/nodemailer/lib/smtp-connection/index.js:998:20)
+      at SMTPConnection._onData (node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
+      at TLSSocket.SMTPConnection._onSocketData (node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+
+  console.log
+    ≡ƒôº Email delivery unavailable - using console OTP in development mode
+
+      at log (routes/auth.js:46:15)
+
+  console.log
+    ΓÜá∩╕Å  Email sending failed (using console OTP instead): Missing credentials for "PLAIN"
+
+      at Timeout.log [as _onTimeout] (routes/auth.js:97:17)
+
+  console.log
+    ΓÜá∩╕Å  Email sending failed (using console OTP instead): Missing credentials for "PLAIN"
+
+      at Timeout.log [as _onTimeout] (routes/auth.js:97:17)
+
+  console.log
+    ΓÜá∩╕Å  Email sending failed (using console OTP instead): Missing credentials for "PLAIN"
+
+      at Timeout.log [as _onTimeout] (routes/auth.js:97:17)
+
+FAIL tests/security.test.js
+  Security Test Suite
+    XSS (Cross-Site Scripting) Prevention
+      ├ù should escape HTML in registration name field (263 ms)
+      ├ù should escape HTML in username field (229 ms)
+      ├ù should sanitize special characters in inputs (236 ms)
+    SQL Injection Prevention
+      ΓêÜ should reject SQL injection in email field (66 ms)
+      ├ù should handle MongoDB injection attempts (9 ms)
+    NoSQL Injection Prevention
+      ├ù should reject object-based email in login (9 ms)
+      ├ù should reject array-based inputs (8 ms)
+    Rate Limiting
+      ΓêÜ should enforce rate limits on registration endpoint (82 ms)
+      ΓêÜ should enforce rate limits on login endpoint (75 ms)
+      ΓêÜ should enforce rate limits on OTP verification (908 ms)
+    Password Security
+      ├ù should enforce strong password requirements (6 ms)
+      ΓêÜ should hash passwords before storing (5 ms)
+    JWT Token Security
+      ΓêÜ should sign tokens with secret (71 ms)
+      ΓêÜ should include expiration in tokens (71 ms)
+    Input Length Limits
+      ├ù should reject excessively long email (6 ms)
+      ├ù should reject excessively long username (7 ms)
+      ├ù should reject excessively long name (6 ms)
+    Account Enumeration Prevention
+      ΓêÜ should return same error for existing and non-existing users on login (110 ms)
+    Session Security
+      ΓêÜ should not expose sensitive data in responses (75 ms)
+
+  ΓùÅ Security Test Suite ΓÇ║ XSS (Cross-Site Scripting) Prevention ΓÇ║ should escape HTML in registration name field
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<script>alert(\"XSS\")</script>"
+
+    [0m [90m 64 |[39m
+     [90m 65 |[39m           [90m// Name should not contain script tags[39m
+    [31m[1m>[22m[39m[90m 66 |[39m           
+expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'<script>'[39m)[33m;[39m
+     [90m    |[39m                                 [31m[1m^[22m[39m
+     [90m 67 |[39m           
+expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'<img'[39m)[33m;[39m
+     [90m 68 |[39m           
+expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'javascript:'[39m)[33m;[39m
+     [90m 69 |[39m           
+expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'onerror='[39m)[33m;[39m[0m
+
+      at Object.toContain (tests/security.test.js:66:33)
+
+  ΓùÅ Security Test Suite ΓÇ║ XSS (Cross-Site Scripting) Prevention ΓÇ║ should escape HTML in username field
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<script>alert(1)</script>"
+
+    [0m [90m 86 |[39m       [36mif[39m (res[33m.[39mstatus [33m===[39m [35m201[39m) {
+     [90m 87 |[39m         [36mconst[39m user [33m=[39m [36mawait[39m [33mUser[39m[33m.[39mfindOne({ 
+email[33m:[39m [32m'test@example.com'[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 88 |[39m         
+expect(user[33m.[39musername)[33m.[39mnot[33m.[39mtoContain([32m'<script>'[39m)[33m;[39m
+     [90m    |[39m                                   [31m[1m^[22m[39m
+     [90m 89 |[39m       }
+     [90m 90 |[39m     })[33m;[39m
+     [90m 91 |[39m[0m
+
+      at Object.toContain (tests/security.test.js:88:35)
+
+  ΓùÅ Security Test Suite ΓÇ║ XSS (Cross-Site Scripting) Prevention ΓÇ║ should sanitize special characters in inputs
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: 429
+    Received array: [400, 201]
+
+    [0m [90m 104 |[39m
+     [90m 105 |[39m         [90m// Should either reject or sanitize[39m
+    [31m[1m>[22m[39m[90m 106 |[39m         expect([[35m400[39m[33m,[39m 
+[35m201[39m])[33m.[39mtoContain(res[33m.[39mstatus)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 107 |[39m       }
+     [90m 108 |[39m     })[33m;[39m
+     [90m 109 |[39m   })[33m;[39m[0m
+
+      at Object.toContain (tests/security.test.js:106:28)
+
+  ΓùÅ Security Test Suite ΓÇ║ SQL Injection Prevention ΓÇ║ should handle MongoDB injection attempts
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 149 |[39m
+     [90m 150 |[39m         [90m// Should reject non-string inputs[39m
+    [31m[1m>[22m[39m[90m 151 |[39m         expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 152 |[39m       }
+     [90m 153 |[39m     })[33m;[39m
+     [90m 154 |[39m   })[33m;[39m[0m
+
+      at Object.toBe (tests/security.test.js:151:28)
+
+  ΓùÅ Security Test Suite ΓÇ║ NoSQL Injection Prevention ΓÇ║ should reject object-based email in login
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 163 |[39m         })[33m;[39m
+     [90m 164 |[39m
+    [31m[1m>[22m[39m[90m 165 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 166 |[39m     })[33m;[39m
+     [90m 167 |[39m
+     [90m 168 |[39m     it([32m'should reject array-based inputs'[39m[33m,[39m [36masync[39m () [33m=>[39m 
+{[0m
+
+      at Object.toBe (tests/security.test.js:165:26)
+
+  ΓùÅ Security Test Suite ΓÇ║ NoSQL Injection Prevention ΓÇ║ should reject array-based inputs
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 174 |[39m         })[33m;[39m
+     [90m 175 |[39m
+    [31m[1m>[22m[39m[90m 176 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 177 |[39m     })[33m;[39m
+     [90m 178 |[39m   })[33m;[39m
+     [90m 179 |[39m[0m
+
+      at Object.toBe (tests/security.test.js:176:26)
+
+  ΓùÅ Security Test Suite ΓÇ║ Password Security ΓÇ║ should enforce strong password requirements
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: 429
+    Received array: [400, 500]
+
+    [0m [90m 286 |[39m
+     [90m 287 |[39m         [90m// Should be rejected[39m
+    [31m[1m>[22m[39m[90m 288 |[39m         expect([[35m400[39m[33m,[39m 
+[35m500[39m])[33m.[39mtoContain(res[33m.[39mstatus)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 289 |[39m       }
+     [90m 290 |[39m     })[33m;[39m
+     [90m 291 |[39m[0m
+
+      at Object.toContain (tests/security.test.js:288:28)
+
+  ΓùÅ Security Test Suite ΓÇ║ Input Length Limits ΓÇ║ should reject excessively long email
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 377 |[39m         })[33m;[39m
+     [90m 378 |[39m
+    [31m[1m>[22m[39m[90m 379 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 380 |[39m     })[33m;[39m
+     [90m 381 |[39m
+     [90m 382 |[39m     it([32m'should reject excessively long username'[39m[33m,[39m [36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toBe (tests/security.test.js:379:26)
+
+  ΓùÅ Security Test Suite ΓÇ║ Input Length Limits ΓÇ║ should reject excessively long username
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 392 |[39m         })[33m;[39m
+     [90m 393 |[39m
+    [31m[1m>[22m[39m[90m 394 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 395 |[39m     })[33m;[39m
+     [90m 396 |[39m
+     [90m 397 |[39m     it([32m'should reject excessively long name'[39m[33m,[39m [36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toBe (tests/security.test.js:394:26)
+
+  ΓùÅ Security Test Suite ΓÇ║ Input Length Limits ΓÇ║ should reject excessively long name
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 407 |[39m         })[33m;[39m
+     [90m 408 |[39m
+    [31m[1m>[22m[39m[90m 409 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 410 |[39m     })[33m;[39m
+     [90m 411 |[39m   })[33m;[39m
+     [90m 412 |[39m[0m
+
+      at Object.toBe (tests/security.test.js:409:26)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '746466',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:61:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:64:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:65:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:66:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 746466                                                 Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:183:15)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - duplicate@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com verified
+
+      at log (routes/auth.js:269:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] ACCOUNT_LOCKED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    ΓÜá∩╕Å  Mail transporter error (verify): Missing credentials for "PLAIN"
+
+    [0m [90m 43 |[39m   transporter[33m.[39mverify((err[33m,[39m success) [33m=>[39m {
+     [90m 44 |[39m     [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 45 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail transporter error (verify):'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 46 |[39m       console[33m.[39mlog([32m'≡ƒôº Email delivery unavailable - using console OTP in development mode'[39m)[33m;[39m
+     [90m 47 |[39m     } [36melse[39m {
+     [90m 48 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter ready'[39m)[33m;[39m[0m
+
+      at error (routes/auth.js:45:15)
+      at node_modules/nodemailer/lib/smtp-transport/index.js:388:36
+      at SMTPConnection.login (node_modules/nodemailer/lib/smtp-connection/index.js:454:24)
+      at node_modules/nodemailer/lib/smtp-transport/index.js:380:32
+      at SMTPConnection.<anonymous> (node_modules/nodemailer/lib/smtp-connection/index.js:215:17)
+      at SMTPConnection._actionEHLO (node_modules/nodemailer/lib/smtp-connection/index.js:1403:14)
+      at SMTPConnection._processResponse (node_modules/nodemailer/lib/smtp-connection/index.js:998:20)
+      at SMTPConnection._onData (node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
+      at TLSSocket.SMTPConnection._onSocketData (node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+
+  console.log
+    ≡ƒôº Email delivery unavailable - using console OTP in development mode
+
+      at log (routes/auth.js:46:15)
+
+  console.log
+    ΓÜá∩╕Å  Email sending failed (using console OTP instead): Missing credentials for "PLAIN"
+
+      at Timeout.log [as _onTimeout] (routes/auth.js:97:17)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 374 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 375 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 376 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 377 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 378 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 379 |[39m   }[0m
+
+      at error (routes/auth.js:376:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 374 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 375 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 376 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 377 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 378 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 379 |[39m   }[0m
+
+      at error (routes/auth.js:376:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - nonexistent@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 374 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 375 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 376 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 377 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 378 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 379 |[39m   }[0m
+
+      at error (routes/auth.js:376:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - unverified@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '810143',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:61:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:64:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:65:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:66:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 810143                                                 Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    [AUDIT] OTP_RESEND - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Resent OTP to test@example.com
+
+      at log (routes/auth.js:309:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+FAIL tests/auth.test.js
+  Authentication API Tests
+    POST /api/auth/register
+      ΓêÜ should register a new user with valid data (257 ms)
+      ΓêÜ should reject registration with missing fields (7 ms)
+      ΓêÜ should reject registration with duplicate email (86 ms)
+      ├ù should reject registration with duplicate username (77 ms)
+    POST /api/auth/verify-otp
+      ΓêÜ should verify OTP with correct code (265 ms)
+      ΓêÜ should reject invalid OTP and track attempts (202 ms)
+      ΓêÜ should lock account after 5 failed attempts (499 ms)
+      ΓêÜ should reject expired OTP (138 ms)
+    POST /api/auth/login
+      ├ù should login with valid credentials (105 ms)
+      ├ù should reject login with incorrect password (88 ms)
+      ΓêÜ should reject login for non-existent user (78 ms)
+      ├ù should reject login for unverified user (155 ms)
+    POST /api/auth/resend-otp
+      ΓêÜ should reset attempts and lock when resending OTP (157 ms)
+      ΓêÜ should reject resend for verified user (76 ms)
+    Audit Logging
+      ├ù should log successful registration (9 ms)
+      ΓêÜ should log failed login attempts (16 ms)
+
+  ΓùÅ Authentication API Tests ΓÇ║ POST /api/auth/register ΓÇ║ should reject registration with duplicate username
+
+    expected 400 "Bad Request", got 429 "Too Many Requests"
+
+    [0m [90m 140 |[39m         [33m.[39mpost([32m'/api/auth/register'[39m)
+     [90m 141 |[39m         [33m.[39msend(userData2)
+    [31m[1m>[22m[39m[90m 142 |[39m         [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 143 |[39m
+     [90m 144 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Username already 
+taken'[39m)[33m;[39m
+     [90m 145 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:142:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ΓùÅ Authentication API Tests ΓÇ║ POST /api/auth/login ΓÇ║ should login with valid credentials
+
+    expected 200 "OK", got 500 "Internal Server Error"
+
+    [0m [90m 268 |[39m           password[33m:[39m testPassword
+     [90m 269 |[39m         })
+    [31m[1m>[22m[39m[90m 270 |[39m         [33m.[39mexpect([35m200[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 271 |[39m
+     [90m 272 |[39m       expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'token'[39m)[33m;[39m
+     [90m 273 |[39m       expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'user'[39m)[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:270:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ΓùÅ Authentication API Tests ΓÇ║ POST /api/auth/login ΓÇ║ should reject login with incorrect password
+
+    expected 400 "Bad Request", got 500 "Internal Server Error"
+
+    [0m [90m 283 |[39m           password[33m:[39m [32m'WrongPassword123'[39m
+     [90m 284 |[39m         })
+    [31m[1m>[22m[39m[90m 285 |[39m         [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 286 |[39m
+     [90m 287 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Invalid 
+credentials'[39m)[33m;[39m
+     [90m 288 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:285:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ΓùÅ Authentication API Tests ΓÇ║ POST /api/auth/login ΓÇ║ should reject login for unverified user
+
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+
+    [0m [90m 315 |[39m           password[33m:[39m testPassword
+     [90m 316 |[39m         })
+    [31m[1m>[22m[39m[90m 317 |[39m         [33m.[39mexpect([35m403[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 318 |[39m
+     [90m 319 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Email not 
+verified'[39m)[33m;[39m
+     [90m 320 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:317:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ΓùÅ Authentication API Tests ΓÇ║ Audit Logging ΓÇ║ should log successful registration
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+    [0m [90m 377 |[39m       [90m// Check if audit log was created[39m
+     [90m 378 |[39m       [36mconst[39m logs [33m=[39m [36mawait[39m [33mAuditLog[39m[33m.[39mfind({ 
+email[33m:[39m userData[33m.[39memail })[33m;[39m
+    [31m[1m>[22m[39m[90m 379 |[39m       
+expect(logs[33m.[39mlength)[33m.[39mtoBeGreaterThan([35m0[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 380 |[39m     })[33m;[39m
+     [90m 381 |[39m
+     [90m 382 |[39m     it([32m'should log failed login attempts'[39m[33m,[39m [36masync[39m () [33m=>[39m 
+{[0m
+
+      at Object.toBeGreaterThan (tests/auth.test.js:379:27)
+
+(node:11464) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is 
+deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11464) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is 
+deprecated. Use `returnDocument: 'after'` instead.
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+PASS tests/wishlist.test.js
+  Wishlist API
+    GET /api/wishlist
+      ΓêÜ TC-W01: returns empty wishlist for new user (40 ms)
+      ΓêÜ TC-W02: requires authentication (12 ms)
+      ΓêÜ TC-W03: returns count of 0 for empty wishlist (13 ms)
+      ΓêÜ TC-W04: returns items after adding a product (27 ms)
+    POST /api/wishlist/add
+      ΓêÜ TC-W05: adds a product to wishlist (28 ms)
+      ΓêÜ TC-W06: requires authentication (10 ms)
+      ΓêÜ TC-W07: rejects missing productId (10 ms)
+      ΓêÜ TC-W08: rejects non-existent product (11 ms)
+      ΓêÜ TC-W09: rejects duplicate add (product already in wishlist) (15 ms)
+      ΓêÜ TC-W10: wishlist count increases by 1 after add (27 ms)
+    DELETE /api/wishlist/remove/:productId
+      ΓêÜ TC-W11: removes a product from wishlist (16 ms)
+      ΓêÜ TC-W12: requires authentication to remove (8 ms)
+      ΓêÜ TC-W13: wishlist is empty after removing the only item (21 ms)
+    DELETE /api/wishlist/clear
+      ΓêÜ TC-W14: clears entire wishlist (16 ms)
+      ΓêÜ TC-W15: requires authentication to clear (9 ms)
+      ΓêÜ TC-W16: wishlist count is 0 after clear (19 ms)
+    Wishlist Isolation
+      ΓêÜ TC-W17: two users have isolated wishlists (23 ms)
+      ΓêÜ TC-W18: can add multiple different products (42 ms)
+      ΓêÜ TC-W19: returns success + correct structure from GET (22 ms)
+      ΓêÜ TC-W20: expired token is rejected (12 ms)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:15:9)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP instead): Missing credentials for "PLAIN"".
+
+    [0m [90m  95 |[39m         console[33m.[39mlog([32m'Γ£à Email sent successfully to'[39m[33m,[39m 
+toEmail)[33m;[39m
+     [90m  96 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m  97 |[39m         console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using 
+console OTP instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m  98 |[39m       }
+     [90m  99 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try in background, don't block[39m
+     [90m 100 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:97:17)
+
+  console.error
+    Admin middleware error: jwt malformed
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:62:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'large.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: File too large
+
+    [0m [90m 29 |[39m     [36mtry[39m {
+     [90m 30 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 31 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 32 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 33 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 34 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:31:17)
+      at done (node_modules/multer/lib/make-middleware.js:59:7)
+      at node_modules/multer/lib/make-middleware.js:79:11
+      at node_modules/multer/lib/remove-uploaded-files.js:20:9
+      at MemoryStorage._removeFile (node_modules/multer/storage/memory.js:16:3)
+      at remove (node_modules/multer/lib/make-middleware.js:72:19)
+      at handleFile (node_modules/multer/lib/remove-uploaded-files.js:10:5)
+      at removeUploadedFiles (node_modules/multer/lib/remove-uploaded-files.js:25:3)
+      at Counter.<anonymous> (node_modules/multer/lib/make-middleware.js:75:9)
+      at Counter.decrement (node_modules/multer/lib/counter.js:15:32)
+      at node_modules/multer/lib/make-middleware.js:162:34
+      at node_modules/multer/storage/memory.js:7:5
+      at ConcatStream.<anonymous> (node_modules/concat-stream/index.js:37:43)
+      at finishMaybe (node_modules/readable-stream/lib/_stream_writable.js:579:14)
+      at endWritable (node_modules/readable-stream/lib/_stream_writable.js:594:3)
+      at ConcatStream.Writable.end (node_modules/readable-stream/lib/_stream_writable.js:535:22)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.pdf',
+      mimetype: 'application/pdf',
+      extension: '.pdf'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .pdf
+
+    [0m [90m 29 |[39m     [36mtry[39m {
+     [90m 30 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 31 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 32 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 33 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 34 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:31:17)
+      at done (node_modules/multer/lib/make-middleware.js:59:7)
+      at node_modules/multer/lib/make-middleware.js:79:11
+      at removeUploadedFiles (node_modules/multer/lib/remove-uploaded-files.js:5:28)
+      at node_modules/multer/lib/make-middleware.js:75:9
+      at Counter.onceZero (node_modules/multer/lib/counter.js:23:29)
+      at abortWithError (node_modules/multer/lib/make-middleware.js:70:21)
+      at node_modules/multer/lib/make-middleware.js:135:18
+      at cb (config/upload.js:38:5)
+      at wrappedFileFilter (node_modules/multer/index.js:44:7)
+      at Multipart.<anonymous> (node_modules/multer/lib/make-middleware.js:132:7)
+      at HeaderParser.cb (node_modules/busboy/lib/types/multipart.js:358:14)
+      at HeaderParser.push (node_modules/busboy/lib/types/multipart.js:162:20)
+      at SBMH.ssCb [as _cb] (node_modules/busboy/lib/types/multipart.js:394:37)
+      at feed (node_modules/streamsearch/lib/sbmh.js:219:14)
+      at SBMH.push (node_modules/streamsearch/lib/sbmh.js:104:16)
+      at Multipart._write (node_modules/busboy/lib/types/multipart.js:567:19)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.php',
+      mimetype: 'application/x-httpd-php',
+      extension: '.php'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .php
+
+    [0m [90m 29 |[39m     [36mtry[39m {
+     [90m 30 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 31 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 32 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 33 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 34 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:31:17)
+      at done (node_modules/multer/lib/make-middleware.js:59:7)
+      at node_modules/multer/lib/make-middleware.js:79:11
+      at removeUploadedFiles (node_modules/multer/lib/remove-uploaded-files.js:5:28)
+      at node_modules/multer/lib/make-middleware.js:75:9
+      at Counter.onceZero (node_modules/multer/lib/counter.js:23:29)
+      at abortWithError (node_modules/multer/lib/make-middleware.js:70:21)
+      at node_modules/multer/lib/make-middleware.js:135:18
+      at cb (config/upload.js:38:5)
+      at wrappedFileFilter (node_modules/multer/index.js:44:7)
+      at Multipart.<anonymous> (node_modules/multer/lib/make-middleware.js:132:7)
+      at HeaderParser.cb (node_modules/busboy/lib/types/multipart.js:358:14)
+      at HeaderParser.push (node_modules/busboy/lib/types/multipart.js:162:20)
+      at SBMH.ssCb [as _cb] (node_modules/busboy/lib/types/multipart.js:394:37)
+      at feed (node_modules/streamsearch/lib/sbmh.js:219:14)
+      at SBMH.push (node_modules/streamsearch/lib/sbmh.js:104:16)
+      at Multipart._write (node_modules/busboy/lib/types/multipart.js:567:19)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.exe',
+      mimetype: 'application/x-msdos-program',
+      extension: '.exe'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .exe
+
+    [0m [90m 29 |[39m     [36mtry[39m {
+     [90m 30 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 31 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 32 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 33 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 34 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:31:17)
+      at done (node_modules/multer/lib/make-middleware.js:59:7)
+      at node_modules/multer/lib/make-middleware.js:79:11
+      at removeUploadedFiles (node_modules/multer/lib/remove-uploaded-files.js:5:28)
+      at node_modules/multer/lib/make-middleware.js:75:9
+      at Counter.onceZero (node_modules/multer/lib/counter.js:23:29)
+      at abortWithError (node_modules/multer/lib/make-middleware.js:70:21)
+      at node_modules/multer/lib/make-middleware.js:135:18
+      at cb (config/upload.js:38:5)
+      at wrappedFileFilter (node_modules/multer/index.js:44:7)
+      at Multipart.<anonymous> (node_modules/multer/lib/make-middleware.js:132:7)
+      at HeaderParser.cb (node_modules/busboy/lib/types/multipart.js:358:14)
+      at HeaderParser.push (node_modules/busboy/lib/types/multipart.js:162:20)
+      at SBMH.ssCb [as _cb] (node_modules/busboy/lib/types/multipart.js:394:37)
+      at feed (node_modules/streamsearch/lib/sbmh.js:219:14)
+      at SBMH.push (node_modules/streamsearch/lib/sbmh.js:104:16)
+      at Multipart._write (node_modules/busboy/lib/types/multipart.js:567:19)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.js',
+      mimetype: 'application/javascript',
+      extension: '.js'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .js
+
+    [0m [90m 29 |[39m     [36mtry[39m {
+     [90m 30 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 31 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 32 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 33 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 34 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:31:17)
+      at done (node_modules/multer/lib/make-middleware.js:59:7)
+      at node_modules/multer/lib/make-middleware.js:79:11
+      at removeUploadedFiles (node_modules/multer/lib/remove-uploaded-files.js:5:28)
+      at node_modules/multer/lib/make-middleware.js:75:9
+      at Counter.onceZero (node_modules/multer/lib/counter.js:23:29)
+      at abortWithError (node_modules/multer/lib/make-middleware.js:70:21)
+      at node_modules/multer/lib/make-middleware.js:135:18
+      at cb (config/upload.js:38:5)
+      at wrappedFileFilter (node_modules/multer/index.js:44:7)
+      at Multipart.<anonymous> (node_modules/multer/lib/make-middleware.js:132:7)
+      at HeaderParser.cb (node_modules/busboy/lib/types/multipart.js:358:14)
+      at HeaderParser.push (node_modules/busboy/lib/types/multipart.js:162:20)
+      at SBMH.ssCb [as _cb] (node_modules/busboy/lib/types/multipart.js:394:37)
+      at feed (node_modules/streamsearch/lib/sbmh.js:219:14)
+      at SBMH.push (node_modules/streamsearch/lib/sbmh.js:104:16)
+      at Multipart._write (node_modules/busboy/lib/types/multipart.js:567:19)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpeg', mimetype: 'image/jpeg', extension: '.jpeg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.png', mimetype: 'image/png', extension: '.png' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.gif', mimetype: 'image/gif', extension: '.gif' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.webp', mimetype: 'image/webp', extension: '.webp' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'passwd.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'config.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'secret.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test<script>alert.jpg',
+      mimetype: 'image/jpeg',
+      extension: '.jpg'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+  console.error
+    Delete error: MongoRuntimeError: File not found for id 69a28c2f7ee38352e81a9f79
+        at GridFSBucket.delete (D:\consultancy\backend\node_modules\mongoose\node_modules\mongodb\src\gridfs\index.ts:187:13)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at D:\consultancy\backend\routes\upload.js:85:5 {
+      errorLabelSet: Set(0) {}
+    }
+
+    [0m [90m 87 |[39m     res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m msg[33m:[39m [32m'Image deleted successfully'[39m })[33m;[39m
+     [90m 88 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 89 |[39m     console[33m.[39merror([32m'Delete error:'[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 90 |[39m     [36mif[39m (error[33m.[39mmessage [33m&&[39m error[33m.[39mmessage[33m.[39mincludes([32m'File not found'[39m))
+     [90m 91 |[39m       [36mreturn[39m res[33m.[39mstatus([35m404[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Image not found'[39m })[33m;[39m
+     [90m 92 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Failed to delete image'[39m })[33m;[39m[0m
+
+      at error (routes/upload.js:89:13)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 47 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 48 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 49 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 50 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 51 |[39m       }
+     [90m 52 |[39m[0m
+
+      at error (routes/upload.js:49:17)
+
+PASS tests/upload.test.js
+  POST /api/upload/image - Image Upload Tests
+    Authentication & Authorization
+      ΓêÜ should reject upload without token (19 ms)
+      ΓêÜ should reject upload with invalid token (8 ms)
+      ΓêÜ should reject upload from non-admin user (7 ms)
+    File Validation
+      ΓêÜ should reject upload without file (5 ms)
+      ΓêÜ should reject file larger than 5MB (32 ms)
+      ΓêÜ should reject invalid file types (43 ms)
+      ΓêÜ should accept valid image formats (jpg, png, gif, webp) (40 ms)
+    Security Tests
+      ΓêÜ should reject filename with path traversal attempts (23 ms)
+      ΓêÜ should sanitize special characters in filenames (7 ms)
+      ΓêÜ should generate unique filenames for concurrent uploads (34 ms)
+    Image Processing
+      ΓêÜ should strip EXIF metadata from images (1 ms)
+      ΓêÜ should optimize and resize large images (1 ms)
+  DELETE /api/upload/image/:filename - Image Deletion Tests
+    Authentication & Authorization
+      ΓêÜ should reject deletion without token (5 ms)
+      ΓêÜ should reject deletion from non-admin (5 ms)
+    Security Tests
+      ΓêÜ should reject path traversal in filename (17 ms)
+      ΓêÜ should reject deletion of files with directory separators (8 ms)
+    Functionality
+      ΓêÜ should return 404 for non-existent file (16 ms)
+  Error Handling
+    ΓêÜ should handle disk full errors gracefully (1 ms)
+    ΓêÜ should clean up files on processing failure (8 ms)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware.test.js:70:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware.test.js:83:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware.test.js:96:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware.test.js:118:7)
+
+  console.error
+    Admin middleware error: jwt expired
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Object.verifyAdmin (tests/middleware.test.js:177:7)
+
+  console.error
+    Admin middleware error: invalid signature
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Object.verifyAdmin (tests/middleware.test.js:189:7)
+
+PASS tests/middleware.test.js
+  Auth Middleware
+    verifyToken
+      ΓêÜ TC-M01: allows request with valid token (4 ms)
+      ΓêÜ TC-M02: rejects request with no Authorization header (1 ms)
+      ΓêÜ TC-M03: rejects token that does not start with Bearer (1 ms)
+      ΓêÜ TC-M04: rejects expired token (5 ms)
+      ΓêÜ TC-M05: rejects token signed with wrong secret (3 ms)
+      ΓêÜ TC-M06: rejects tampered token payload (3 ms)
+      ΓêÜ TC-M07: attaches decoded user data to req.user (2 ms)
+      ΓêÜ TC-M08: rejects completely malformed token string (2 ms)
+    verifyAdmin
+      ΓêÜ TC-M09: allows admin with isAdmin:true in token (1 ms)
+      ΓêÜ TC-M10: rejects regular user (isAdmin:false) (1 ms)
+      ΓêÜ TC-M11: rejects token missing isAdmin field (1 ms)
+      ΓêÜ TC-M12: rejects request with no token
+      ΓêÜ TC-M13: rejects expired admin token (2 ms)
+      ΓêÜ TC-M14: rejects admin token signed with wrong secret (3 ms)
+      ΓêÜ TC-M15: attaches decoded user info to req.user on success (1 ms)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:48:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 28 |[39m     next()[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m
+     [90m 32 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 33 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:30:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:66:7)
+
+  console.error
+    Admin middleware error: jwt expired
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Object.verifyAdmin (tests/middleware/auth.test.js:212:7)
+
+  console.error
+    Admin middleware error: invalid signature
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Object.verifyAdmin (tests/middleware/auth.test.js:236:7)
+
+  console.error
+    Admin middleware error: invalid signature
+
+    [0m [90m 65 |[39m     next()[33m;[39m
+     [90m 66 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 67 |[39m     console[33m.[39merror([32m'Admin middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 68 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 69 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m
+     [90m 70 |[39m     }[0m
+
+      at error (middleware/auth.js:67:13)
+      at Object.verifyAdmin (tests/middleware/auth.test.js:261:7)
+
+PASS tests/middleware/auth.test.js
+  Authentication Middleware Tests
+    verifyToken middleware
+      ΓêÜ should reject requests without authorization header (2 ms)
+      ΓêÜ should reject requests with malformed authorization header (1 ms)
+      ΓêÜ should reject requests with invalid token (3 ms)
+      ΓêÜ should reject requests with expired token (3 ms)
+      ΓêÜ should accept requests with valid token (1 ms)
+      ΓêÜ should handle case-insensitive Bearer prefix
+    verifyAdmin middleware
+      ΓêÜ should reject requests without token (1 ms)
+      ΓêÜ should reject requests from non-admin users (1 ms)
+      ΓêÜ should reject requests without isAdmin flag (1 ms)
+      ΓêÜ should accept requests from admin users (1 ms)
+      ΓêÜ should set both user and userId on request
+      ΓêÜ should reject expired admin tokens (2 ms)
+    Token Security
+      ΓêÜ should reject token signed with different secret (2 ms)
+      ΓêÜ should reject tampered tokens (3 ms)
+
+-----------------------|---------|----------|---------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                                                                                                                                                            
+-----------------------|---------|----------|---------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+All files              |   21.74 |       12 |   11.29 |   21.91 |                                                                                                                                                                                                                              
+ config                |    38.7 |       20 |      20 |   39.33 |                                                                                                                                                                                                                              
+  cloudinary.js        |       0 |        0 |       0 |       0 | 2-104                                                                                                                                                                                                                        
+  db.js                |   19.23 |        0 |       0 |   20.83 | 7-43                                                                                                                                                                                                                         
+  gridfs.js            |   85.71 |       50 |   66.66 |     100 | 18-20                                                                                                                                                                                                                        
+  logger.js            |   57.89 |    36.36 |       0 |   57.89 | 18-22,70,76,87-96                                                                                                                                                                                                            
+  redis.js             |   29.68 |    16.66 |   23.07 |   29.68 | 28-29,33,37,46-85,92-106,112-127,136-137                                                                                                                                                                                     
+  upload.js            |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+ middleware            |   54.05 |    46.66 |   28.57 |   54.05 |                                                                                                                                                                                                                              
+  auth.js              |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  errorHandler.js      |       0 |        0 |       0 |       0 | 4-45                                                                                                                                                                                                                         
+  rateLimiter.js       |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  validators.js        |       0 |        0 |       0 |       0 | 2-209                                                                                                                                                                                                                        
+ models                |   49.11 |     3.38 |    7.69 |    50.3 |                                                                                                                                                                                                                              
+  auditLog.js          |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  cart.js              |   71.42 |      100 |       0 |   71.42 | 36-37                                                                                                                                                                                                                        
+  chatbotConfig.js     |   38.88 |        0 |       0 |      50 | 481,485-488,492-495                                                                                                                                                                                                          
+  conversation.js      |   21.59 |        0 |       0 |   21.83 | 220-223,228-247,251-262,266-275,280-288,293-302,310,316-322,326-386                                                                                                                                                          
+  inventoryLog.js      |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  order.js             |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  product.js           |   81.25 |        0 |      50 |   81.25 | 110-112                                                                                                                                                                                                                      
+  review.js            |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+  user.js              |    90.9 |      100 |      50 |      90 | 40                                                                                                                                                                                                                           
+  wishlist.js          |     100 |      100 |     100 |     100 |                                                                                                                                                                                                                              
+ routes                |   19.85 |    12.51 |   11.11 |      20 |                                                                                                                                                                                                                              
+  adminManagement.js   |   80.18 |     82.1 |     100 |   80.39 | 61,107,122-123,150,204-222,256,292-293,311,331-332                                                                                                                                                                           
+  analytics.js         |    7.65 |        0 |       0 |    8.28 | 10-116,126-193,203-270,280-332,347-366,372-391,397-410                                                                                                                                                                       
+  auth.js              |   26.07 |    14.09 |   31.25 |   26.05 | 33,95,105-116,122-136,148,186-195,207-208,212,272-274,286-287,312-321,327-342,359-374,384-433,439-470,478-498,504-546,552-589,595-677,685,691-724,729-884,890-917,931-1064,1077-1127,1140-1273,1286-1516,1529-1598,1611-1829 
+  auth_enhanced.js     |       0 |        0 |       0 |       0 | 6-554                                                                                                                                                                                                                        
+  cart.js              |      10 |        0 |       0 |   10.08 | 10-35,45-113,123-181,191-217,227-248,258-309                                                                                                                                                                                 
+  chatbot.js           |   11.93 |        0 |       0 |   12.06 | 25-120,141-211,228-259,276-304,319-352,367-392,409-433,446-479,492-521,534-570,583-601                                                                                                                                       
+  comparison.js        |   13.95 |        0 |       0 |   14.63 | 11-99,112-148                                                                                                                                                                                                                
+  contact.js           |   18.18 |        0 |       0 |   18.18 | 13-18,44-234,248                                                                                                                                                                                                             
+  emailMonitoring.js   |       0 |        0 |       0 |       0 | 6-143                                                                                                                                                                                                                        
+  images.js            |   21.42 |        0 |       0 |   21.42 | 20-56                                                                                                                                                                                                                        
+  inventory.js         |   13.72 |        0 |       0 |   14.28 | 16-57,67-104,114-141,151-164,174-184,194-263,273-330                                                                                                                                                                         
+  marketing.js         |    20.4 |        0 |       0 |   21.27 | 22-50,63-135,148-269                                                                                                                                                                                                         
+  notifications.js     |   21.27 |        0 |       0 |   21.27 | 18-35,48-68,81-108,121-137,150-163                                                                                                                                                                                           
+  orders.js            |    8.88 |        0 |       0 |       9 | 19-128,138-164,174-200,210-241,251-340,350-401,411-430,440-484,496-540,550-617,627-670,680-712,722-755                                                                                                                       
+  payments.js          |   14.14 |      3.7 |       0 |   14.28 | 15,20,28-134,147-193,206-257,266-295                                                                                                                                                                                         
+  products.js          |   11.57 |        0 |       0 |   11.82 | 9-107,113-123,129-184,190-226,232-245,251-256                                                                                                                                                                                
+  reports.js           |     9.3 |        0 |       0 |    9.87 | 10-57,62-163,169-213                                                                                                                                                                                                         
+  reviews.js           |    11.6 |        0 |       0 |   11.71 | 11-30,36-134,144-196,206-238,248-273,283-309,319-359                                                                                                                                                                         
+  upload.js            |   63.63 |    85.71 |   57.14 |   64.81 | 18-23,36,47,53-71,86-87,92                                                                                                                                                                                                   
+  webhooks.js          |   10.95 |        4 |       0 |   10.95 | 10-13,23-178                                                                                                                                                                                                                 
+  wishlist.js          |   62.65 |       50 |   53.84 |   62.19 | 37-38,112-113,133,153-154,182-183,196-213,226-260                                                                                                                                                                            
+ utils                 |    5.13 |     3.48 |       5 |    5.17 |                                                                                                                                                                                                                              
+  adminNotification.js |    7.31 |        0 |       0 |    7.31 | 10-208                                                                                                                                                                                                                       
+  auditLogger.js       |   52.94 |    46.66 |      50 |   52.94 | 30,53-77                                                                                                                                                                                                                     
+  emailDiagnostics.js  |       0 |        0 |       0 |       0 | 6-498                                                                                                                                                                                                                        
+  inventoryManager.js  |    4.91 |        0 |       0 |    4.91 | 9-272                                                                                                                                                                                                                        
+-----------------------|---------|----------|---------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Jest: "global" coverage threshold for statements (80%) not met: 21.74%
+Jest: "global" coverage threshold for branches (70%) not met: 12%
+Jest: "global" coverage threshold for lines (80%) not met: 21.91%
+Jest: "global" coverage threshold for functions (75%) not met: 11.29%
+Test Suites: 4 failed, 4 passed, 8 total
+Tests:       36 failed, 105 passed, 141 total
+Snapshots:   0 total
+Time:        19.844 s, estimated 21 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after 
+all tests finished?

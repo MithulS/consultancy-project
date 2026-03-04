@@ -138,7 +138,7 @@ router.post('/',
               </div>
             </div>
             <div class="footer">
-              <p>This email was automatically generated from the HomeHardware contact form.</p>
+              <p>This email was automatically generated from the Sri Amman Traders contact form.</p>
             </div>
           </div>
         </body>
@@ -150,7 +150,7 @@ router.post('/',
       if (transporter) {
         try {
           await transporter.sendMail({
-            from: `"HomeHardware Contact Form" <${process.env.EMAIL_USER}>`,
+            from: `"Sri Amman Traders Contact Form" <${process.env.EMAIL_USER}>`,
             to: process.env.EMAIL_USER, // Admin email
             replyTo: email, // User's email for easy reply
             subject: `[Contact Form] ${inquiryTypeLabels[inquiryType] || 'Inquiry'}: ${subject}`,
@@ -183,20 +183,20 @@ router.post('/',
                 </div>
                 <div class="content">
                   <p>Dear ${name},</p>
-                  <p>Thank you for reaching out to HomeHardware. We have received your inquiry and our team will review it shortly.</p>
+                  <p>Thank you for reaching out to Sri Amman Traders. We have received your inquiry and our team will review it shortly.</p>
                   <p><strong>Your message:</strong></p>
                   <p style="background-color: #f9f9f9; padding: 15px; border-left: 3px solid #0B74FF;">
                     ${message.replace(/\n/g, '<br>')}
                   </p>
-                  <p>We typically respond within 24 hours during business hours (Monday-Friday, 8:00 AM - 6:00 PM EST).</p>
+                  <p>We typically respond within 24 hours during business hours (Monday-Friday, 8:00 AM - 6:00 PM IST).</p>
                   <p>If you need immediate assistance, please call us at <a href="tel:+917904212501">+91 7904212501</a>.</p>
                   <p>Best regards,<br>
-                  <strong>HomeHardware Support Team</strong></p>
+                  <strong>Sri Amman Traders Support Team</strong></p>
                 </div>
                 <div class="footer">
-                  <p>HomeHardware - Professional Commercial Door Hardware Solutions<br>
-                  123 Hardware Street, New York, NY 10001<br>
-                  Phone: +91 7904212501 | Email: info@homehardware.com</p>
+                  <p>Sri Amman Traders - Genuine Branded Hardware, Electrical, Plumbing & Paints<br>
+                  Chinnasalem Main Road, Kallakurichi, Tamil Nadu 606213<br>
+                  Phone: +91 7904212501 | Email: support@sriammantraders.com</p>
                 </div>
               </div>
             </body>
@@ -204,9 +204,9 @@ router.post('/',
           `;
 
           await transporter.sendMail({
-            from: `"HomeHardware Support" <${process.env.EMAIL_USER}>`,
+            from: `"Sri Amman Traders Support" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: 'Thank you for contacting HomeHardware',
+            subject: 'Thank you for contacting Sri Amman Traders',
             html: autoReplyHtml
           });
           console.log('✅ Auto-reply sent to customer');
@@ -249,21 +249,21 @@ router.get('/info', (req, res) => {
     success: true,
     data: {
       phone: '+91 7904212501',
-      email: 'info@homehardware.com',
+      email: 'support@sriammantraders.com',
       address: {
-        street: '123 Hardware Street',
-        city: 'New York',
-        state: 'NY',
-        zip: '10001',
-        country: 'United States'
+        street: 'Chinnasalem Main Road',
+        city: 'Kallakurichi',
+        state: 'Tamil Nadu',
+        zip: '606213',
+        country: 'India'
       },
       businessHours: {
-        monday: '8:00 AM - 6:00 PM EST',
-        tuesday: '8:00 AM - 6:00 PM EST',
-        wednesday: '8:00 AM - 6:00 PM EST',
-        thursday: '8:00 AM - 6:00 PM EST',
-        friday: '8:00 AM - 6:00 PM EST',
-        saturday: '9:00 AM - 4:00 PM EST',
+        monday: '8:00 AM - 6:00 PM IST',
+        tuesday: '8:00 AM - 6:00 PM IST',
+        wednesday: '8:00 AM - 6:00 PM IST',
+        thursday: '8:00 AM - 6:00 PM IST',
+        friday: '8:00 AM - 6:00 PM IST',
+        saturday: '9:00 AM - 4:00 PM IST',
         sunday: 'Closed'
       }
     }

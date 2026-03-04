@@ -12,7 +12,7 @@ export default function CommercialHeroBanner() {
   const styles = {
     heroSection: {
       position: 'relative',
-      height: '600px',
+      minHeight: 'clamp(440px, 65vh, 680px)',
       background: 'var(--gradient-navy-hero)',
       overflow: 'hidden',
       display: 'flex',
@@ -61,7 +61,7 @@ export default function CommercialHeroBanner() {
       boxShadow: 'var(--shadow-sm)'
     },
     heroTitle: {
-      fontSize: '56px',
+      fontSize: 'clamp(28px, 5vw, 56px)',
       fontWeight: 800,
       lineHeight: 1.1,
       marginBottom: '16px',
@@ -71,7 +71,7 @@ export default function CommercialHeroBanner() {
       containIntrinsicSize: '56px'
     },
     heroSubtitle: {
-      fontSize: '48px',
+      fontSize: 'clamp(22px, 4vw, 48px)',
       fontWeight: 700,
       lineHeight: 1.1,
       willChange: 'opacity',
@@ -79,7 +79,7 @@ export default function CommercialHeroBanner() {
       color: '#E5E7EB'
     },
     heroDescription: {
-      fontSize: '18px',
+      fontSize: 'clamp(15px, 2vw, 18px)',
       lineHeight: 1.6,
       marginBottom: '32px',
       color: '#D1D5DB',

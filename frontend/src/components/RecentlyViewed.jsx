@@ -27,7 +27,7 @@ export const addToRecentlyViewed = (product) => {
       name: product.name,
       price: product.price,
       originalPrice: product.originalPrice,
-      image: product.image,
+      imageUrl: product.imageUrl || product.image,
       rating: product.rating || 0,
       reviewCount: product.reviewCount || 0,
       viewedAt: new Date().toISOString()
@@ -68,10 +68,15 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
   const loadRecentProducts = () => {
     try {
       const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      // Purge stale entries that were saved without an imageUrl (pre-fix data)
+      const valid = recent.filter(p => p.imageUrl || p.image);
+      if (valid.length !== recent.length) {
+        localStorage.setItem('recentlyViewed', JSON.stringify(valid));
+      }
       // Filter out current product if viewing product detail
       const filtered = currentProductId
-        ? recent.filter(p => p._id !== currentProductId)
-        : recent;
+        ? valid.filter(p => p._id !== currentProductId)
+        : valid;
       setRecentProducts(filtered);
     } catch (error) {
       console.error('Error loading recently viewed:', error);
@@ -310,10 +315,14 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
               >
                 <div style={styles.imageContainer}>
                   <img
-                    src={getImageUrl(product.image)}
+                    src={getImageUrl(product.imageUrl || product.image)}
                     alt={product.name}
                     style={styles.productImage}
                     loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://placehold.co/200x200?text=No+Image';
+                    }}
                   />
                   <div style={styles.recentBadge}>
                     {getTimeAgo(product.viewedAt)}
@@ -323,10 +332,10 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
                   {product.name}
                 </div>
                 <div style={styles.priceRow}>
-                  <span style={styles.price}>${product.price.toFixed(2)}</span>
+                  <span style={styles.price}>₹{product.price.toFixed(2)}</span>
                   {product.originalPrice && product.originalPrice > product.price && (
                     <span style={styles.originalPrice}>
-                      ${product.originalPrice.toFixed(2)}
+                      ₹{product.originalPrice.toFixed(2)}
                     </span>
                   )}
                 </div>

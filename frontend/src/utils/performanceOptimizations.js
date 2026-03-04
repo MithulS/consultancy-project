@@ -250,27 +250,29 @@ export function measureTTFB() {
  * Monitor all Core Web Vitals and send to analytics
  */
 export function monitorCoreWebVitals(analyticsCallback) {
+  const isDev = import.meta.env.DEV;
+
   // Measure LCP
   measureLCP((data) => {
-    console.log('✅ LCP:', data);
+    if (isDev) console.log('✅ LCP:', data);
     analyticsCallback?.('core_web_vital', data);
   });
 
   // Measure INP
   measureINP((data) => {
-    console.log('✅ INP:', data);
+    if (isDev) console.log('✅ INP:', data);
     analyticsCallback?.('core_web_vital', data);
   });
 
   // Measure CLS
   measureCLS((data) => {
-    console.log('✅ CLS:', data);
+    if (isDev) console.log('✅ CLS:', data);
     analyticsCallback?.('core_web_vital', data);
   });
 
   // Measure FID
   measureFID((data) => {
-    console.log('✅ FID:', data);
+    if (isDev) console.log('✅ FID:', data);
     analyticsCallback?.('core_web_vital', data);
   });
 
@@ -278,7 +280,7 @@ export function monitorCoreWebVitals(analyticsCallback) {
   window.addEventListener('load', () => {
     const ttfb = measureTTFB();
     if (ttfb) {
-      console.log('✅ TTFB:', ttfb);
+      if (isDev) console.log('✅ TTFB:', ttfb);
       analyticsCallback?.('core_web_vital', ttfb);
     }
   });
@@ -468,23 +470,27 @@ export function initializePerformanceOptimizations(options = {}) {
     monitorCoreWebVitals(options.analyticsCallback);
   }
 
-  // Check performance budget on load
-  window.addEventListener('load', () => {
-    runWhenIdle(() => {
-      const budget = checkPerformanceBudget();
-      if (budget && !budget.passed) {
-        console.warn('⚠️ Performance budget exceeded:', budget.details);
-      }
+  // Check performance budget on load (only in production — dev bundles are unminified)
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      runWhenIdle(() => {
+        const budget = checkPerformanceBudget();
+        if (budget && !budget.passed) {
+          console.warn('⚠️ Performance budget exceeded:', budget.details);
+        }
+      });
     });
-  });
+  }
 
   // Log network conditions
-  if (options.logNetwork) {
+  if (options.logNetwork && import.meta.env.DEV) {
     const network = getNetworkSpeed();
     console.log('📡 Network:', network);
   }
 
-  console.log('✅ Performance optimizations initialized');
+  if (import.meta.env.DEV) {
+    console.log('✅ Performance optimizations initialized');
+  }
 }
 
 export default {

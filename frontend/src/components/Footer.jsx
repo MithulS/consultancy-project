@@ -289,7 +289,7 @@ export default function Footer({ theme = 'dark' }) {
         {/* Bottom Section - Copyright & Legal */}
         <div style={styles.bottomSection}>
           <p style={styles.copyright}>
-            © {new Date().getFullYear()} HomeHardware. All rights reserved.
+            © {new Date().getFullYear()} Sri Amman Traders. All rights reserved.
             Built with ❤️ for exceptional shopping experiences.
           </p>
           <div style={styles.bottomLinks}>

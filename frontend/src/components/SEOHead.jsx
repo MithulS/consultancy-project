@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const SEOHead = ({ 
-  title = 'HomeHardware', 
+  title = 'Sri Amman Traders', 
   description = 'Shop quality hardware, electrical supplies, plumbing, tools, and home improvement products.',
   image = '/og-image.jpg',
   url = '',
@@ -10,7 +10,7 @@ const SEOHead = ({
 }) => {
   useEffect(() => {
     // Update title
-    document.title = `${title} | HomeHardware`;
+    document.title = `${title} | Sri Amman Traders`;
     
     // Update meta tags
     const updateMetaTag = (selector, content) => {
@@ -47,12 +47,12 @@ const SEOHead = ({
         "url": url || window.location.href,
         "brand": {
           "@type": "Brand",
-          "name": product.brand || "HomeHardware"
+          "name": product.brand || "Sri Amman Traders"
         },
         "offers": {
           "@type": "Offer",
           "price": product.price,
-          "priceCurrency": "USD",
+          "priceCurrency": "INR",
           "availability": product.stock > 0 
             ? "https://schema.org/InStock" 
             : "https://schema.org/OutOfStock",

@@ -171,48 +171,48 @@ export default function EnhancedSearchBar({
       flex: 1,
       display: 'flex',
       alignItems: 'center',
-      background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
-      border: '2px solid var(--border-color)',
+      background: 'rgba(0, 0, 0, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.05)',
       borderRadius: '12px',
-      padding: '0 16px',
-      transition: 'all 0.3s ease',
-      boxShadow: 'var(--shadow-sm)'
+      padding: '4px 16px',
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)'
     },
     searchBoxFocused: {
-      borderColor: 'var(--accent-blue-primary)',
-      boxShadow: '0 8px 24px rgba(46, 134, 222, 0.15)'
+      borderColor: '#60a5fa',
+      boxShadow: '0 0 0 3px rgba(96, 165, 250, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+      background: 'rgba(15, 23, 42, 0.8)'
     },
     searchIcon: {
-      fontSize: '20px',
-      color: showSuggestions ? 'var(--accent-blue-primary)' : '#9ca3af',
+      fontSize: '18px',
+      color: showSuggestions ? 'var(--accent-blue-primary)' : '#64748b',
       marginRight: '12px',
-      transition: 'color 0.3s ease'
+      transition: 'color 0.2s ease'
     },
     input: {
       flex: 1,
       border: 'none',
       outline: 'none',
-      padding: '14px 0',
-      fontSize: '15px',
+      padding: '12px 0',
+      fontSize: '14px',
       color: 'var(--text-primary)',
       backgroundColor: 'transparent'
     },
     filterButton: {
-      padding: '12px 20px',
-      backgroundColor: showFilterPanel ? 'var(--accent-blue-primary)' : 'var(--glass-background)',
-      backdropFilter: showFilterPanel ? 'none' : 'var(--glass-blur)',
-      color: showFilterPanel ? '#ffffff' : 'var(--text-primary)',
-      border: '2px solid ' + (showFilterPanel ? 'var(--accent-blue-primary)' : 'var(--border-color)'),
+      padding: '10px 20px',
+      backgroundColor: showFilterPanel ? '#3b82f6' : 'rgba(255, 255, 255, 0.05)',
+      color: '#e2e8f0',
+      border: '1px solid ' + (showFilterPanel ? 'transparent' : 'rgba(255, 255, 255, 0.08)'),
       borderRadius: '12px',
       fontSize: '14px',
-      fontWeight: '600',
+      fontWeight: '500',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
-      transition: 'all 0.3s ease',
-      whiteSpace: 'nowrap'
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      whiteSpace: 'nowrap',
+      boxShadow: showFilterPanel ? '0 4px 15px rgba(59, 130, 246, 0.4)' : 'none'
     },
     suggestionsDropdown: {
       position: 'absolute',

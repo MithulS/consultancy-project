@@ -71,7 +71,7 @@ const ProductDetailPage = ({ onAddToCart, onBuyNow }) => {
     <>
       {product && (
         <SEOHead
-          title={`${product.name} | HomeHardware`}
+          title={`${product.name} | Sri Amman Traders`}
           description={product.description}
           image={product.imageUrl}
           url={`/product/${productId}`}
