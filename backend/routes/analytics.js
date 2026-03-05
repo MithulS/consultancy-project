@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/order');
 const Product = require('../models/product');
+const authMiddleware = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 
 // Get sales analytics summary
-router.get('/sales-summary', verifyAdmin, async (req, res) => {
+router.get('/sales-summary', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate, category, productId } = req.query;
 
@@ -122,7 +123,7 @@ router.get('/sales-summary', verifyAdmin, async (req, res) => {
 });
 
 // Get product-specific analytics
-router.get('/product/:id', verifyAdmin, async (req, res) => {
+router.get('/product/:id', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     const productId = req.params.id;
@@ -199,7 +200,7 @@ router.get('/product/:id', verifyAdmin, async (req, res) => {
 });
 
 // Get sales trends (time-series data)
-router.get('/sales-trends', verifyAdmin, async (req, res) => {
+router.get('/sales-trends', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate, interval = 'daily' } = req.query;
 
@@ -276,7 +277,7 @@ router.get('/sales-trends', verifyAdmin, async (req, res) => {
 });
 
 // Get category-wise sales
-router.get('/category-sales', verifyAdmin, async (req, res) => {
+router.get('/category-sales', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -368,7 +369,7 @@ router.post('/track', async (req, res) => {
 });
 
 // Get analytics summary (admin only)
-router.get('/user-analytics-summary', verifyAdmin, async (req, res) => {
+router.get('/user-analytics-summary', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const summary = {
       totalEvents: analyticsEvents.length,
@@ -393,7 +394,7 @@ router.get('/user-analytics-summary', verifyAdmin, async (req, res) => {
 });
 
 // Get user journey (admin only)
-router.get('/journey/:sessionId', verifyAdmin, async (req, res) => {
+router.get('/journey/:sessionId', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { sessionId } = req.params;
     const journey = analyticsEvents.filter(

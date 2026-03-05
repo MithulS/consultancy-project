@@ -1,30 +1,28 @@
 // server/middleware/auth.js
 const jwt = require('jsonwebtoken');
 
+// Fail fast if JWT_SECRET is not configured
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set!');
+  process.exit(1);
+}
+
 /**
  * Middleware to verify JWT token and protect routes
- * Usage: Add this middleware to any route that requires authentication
- * Example: router.get('/profile', authMiddleware, (req, res) => {...})
  */
 const authMiddleware = (req, res, next) => {
   try {
-    // Get token from header
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ msg: 'No token, authorization denied' });
     }
 
-    // Extract token (format: "Bearer TOKEN")
     const token = authHeader.split(' ')[1];
-
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Add user info to request object
     req.user = decoded;
-
-    // Continue to the next middleware or route handler
+    req.userId = decoded.userId; // Consistent access via req.userId
     next();
   } catch (err) {
     console.error('Auth middleware error:', err.message);
@@ -39,37 +37,21 @@ const authMiddleware = (req, res, next) => {
 
 /**
  * Middleware to verify admin access
- * Checks if the token has isAdmin flag set to true
+ * Must be used AFTER authMiddleware: [authMiddleware, adminMiddleware]
  */
 const adminMiddleware = (req, res, next) => {
-  try {
-    // First verify the token (assumes authMiddleware was called first)
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Check if user is admin
-    if (!decoded.isAdmin) {
-      return res.status(403).json({
-        msg: 'Access denied. Admin privileges required.'
-      });
-    }
-
-    req.user = decoded;
-    req.userId = decoded.userId;
-    next();
-  } catch (err) {
-    console.error('Admin middleware error:', err.message);
-    if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({ msg: 'Token has expired' });
-    }
-    return res.status(401).json({ msg: 'Token is not valid' });
+  // If authMiddleware was already called, req.user is populated
+  if (!req.user) {
+    return res.status(401).json({ msg: 'No token, authorization denied' });
   }
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({
+      msg: 'Access denied. Admin privileges required.'
+    });
+  }
+
+  next();
 };
 
 module.exports = authMiddleware;

@@ -4,6 +4,14 @@ const router = express.Router();
 const { verifyToken } = require('../middleware/auth');
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
+const rateLimit = require('express-rate-limit');
+
+// Rate limiter for public marketing endpoints
+const marketingLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // 5 requests per hour per IP
+  message: { success: false, msg: 'Too many requests, please try again later.' }
+});
 
 // Email transporter
 const transporter = nodemailer.createTransport({
@@ -59,7 +67,7 @@ router.post('/save-cart', verifyToken, async (req, res) => {
  * Exit intent popup signup
  * POST /api/marketing/exit-intent-signup
  */
-router.post('/exit-intent-signup', async (req, res) => {
+router.post('/exit-intent-signup', marketingLimiter, async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -144,7 +152,7 @@ router.post('/exit-intent-signup', async (req, res) => {
  * Newsletter signup
  * POST /api/marketing/newsletter-signup
  */
-router.post('/newsletter-signup', async (req, res) => {
+router.post('/newsletter-signup', marketingLimiter, async (req, res) => {
   try {
     const { email, name } = req.body;
 

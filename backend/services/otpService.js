@@ -5,6 +5,7 @@
  */
 
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { logAuditEvent } = require('../utils/auditLogger');
 
@@ -18,9 +19,23 @@ const OTP_CONFIG = {
   EMAIL_TIMEOUT: 30000, // 30 seconds
 };
 
+// HTML escape helper to prevent XSS in email templates
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Email Templates
 const EMAIL_TEMPLATES = {
-  verification: (name, otp) => ({
+  verification: (name, otp) => {
+    const safeName = escapeHtml(name);
+    const safeOtp = escapeHtml(otp);
+    return {
     subject: 'Your Verification Code',
     html: `
       <!DOCTYPE html>
@@ -50,12 +65,12 @@ const EMAIL_TEMPLATES = {
             <h1>✉️ Email Verification</h1>
           </div>
           <div class="content">
-            <p>Hi <strong>${name || 'there'}</strong>,</p>
+            <p>Hi <strong>${safeName || 'there'}</strong>,</p>
             <p>Thank you for registering! To complete your registration, please verify your email address using the code below:</p>
             
             <div class="otp-box">
               <p style="margin: 0; font-size: 14px; color: #6c757d;">Your verification code is:</p>
-              <div class="otp-code">${otp}</div>
+              <div class="otp-code">${safeOtp}</div>
               <p style="margin: 0; font-size: 12px; color: #6c757d; margin-top: 10px;">Enter this code in the verification form</p>
             </div>
 
@@ -80,10 +95,14 @@ const EMAIL_TEMPLATES = {
       </body>
       </html>
     `,
-    text: `Hi ${name || 'there'},\n\nYour verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`
-  }),
+    text: `Hi ${safeName || 'there'},\n\nYour verification code is: ${safeOtp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`
+  });
+  },
 
-  passwordReset: (name, resetLink) => ({
+  passwordReset: (name, resetLink) => {
+    const safeName = escapeHtml(name);
+    const safeLink = encodeURI(resetLink);
+    return {
     subject: 'Password Reset Request',
     html: `
       <!DOCTYPE html>
@@ -105,23 +124,24 @@ const EMAIL_TEMPLATES = {
             <h1>🔐 Password Reset</h1>
           </div>
           <div class="content">
-            <p>Hi ${name},</p>
+            <p>Hi ${safeName},</p>
             <p>We received a request to reset your password. Click the button below to create a new password:</p>
             <div style="text-align: center;">
-              <a href="${resetLink}" class="btn">Reset Password</a>
+              <a href="${safeLink}" class="btn">Reset Password</a>
             </div>
             <div class="warning">
               ⚠️ This link will expire in 1 hour. If you didn't request a password reset, please ignore this email or contact support if you have concerns.
             </div>
             <p>If the button doesn't work, copy and paste this link into your browser:<br>
-            <a href="${resetLink}">${resetLink}</a></p>
+            <a href="${safeLink}">${safeLink}</a></p>
           </div>
         </div>
       </body>
       </html>
     `,
-    text: `Hi ${name},\n\nYou requested a password reset. Click this link: ${resetLink}\n\nThis link expires in 1 hour.`
-  })
+    text: `Hi ${safeName},\n\nYou requested a password reset. Click this link: ${safeLink}\n\nThis link expires in 1 hour.`
+  });
+  }
 };
 
 /**
@@ -266,7 +286,7 @@ class OTPService {
    * Generate a secure random OTP
    */
   static generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    return crypto.randomInt(100000, 999999).toString();
   }
 
   /**
@@ -405,7 +425,13 @@ class OTPService {
         text: template.text
       };
 
-      const result = await transporter.sendMail(mailOptions);
+      const result = await Promise.race([
+        transporter.sendMail(mailOptions),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email send timeout')), OTP_CONFIG.EMAIL_TIMEOUT)
+        )
+      ]);
+
       console.log(`✅ Password reset email sent to ${email}`);
 
       if (req) {
@@ -495,22 +521,28 @@ class OTPService {
    * Handle failed OTP attempt
    */
   static async handleFailedAttempt(user) {
-    user.otpAttempts = (user.otpAttempts || 0) + 1;
+    // Use atomic $inc to avoid race conditions on concurrent attempts
+    const updated = await user.constructor.findOneAndUpdate(
+      { _id: user._id },
+      { $inc: { otpAttempts: 1 } },
+      { new: true }
+    );
     
     // Lock account after max attempts
-    if (user.otpAttempts >= OTP_CONFIG.MAX_ATTEMPTS) {
-      user.otpLockedUntil = new Date(Date.now() + OTP_CONFIG.LOCKOUT_DURATION_MS);
-      await user.save();
+    if (updated.otpAttempts >= OTP_CONFIG.MAX_ATTEMPTS) {
+      await user.constructor.findOneAndUpdate(
+        { _id: user._id },
+        { $set: { otpLockedUntil: new Date(Date.now() + OTP_CONFIG.LOCKOUT_DURATION_MS) } }
+      );
       
       return {
         locked: true,
         message: 'Too many failed attempts. Account locked for 15 minutes.',
-        lockoutUntil: user.otpLockedUntil
+        lockoutUntil: new Date(Date.now() + OTP_CONFIG.LOCKOUT_DURATION_MS)
       };
     }
     
-    await user.save();
-    const attemptsRemaining = OTP_CONFIG.MAX_ATTEMPTS - user.otpAttempts;
+    const attemptsRemaining = OTP_CONFIG.MAX_ATTEMPTS - updated.otpAttempts;
     
     return {
       locked: false,

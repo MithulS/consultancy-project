@@ -9,6 +9,7 @@ const router    = express.Router();
 const sharp     = require('sharp');
 const mongoose  = require('mongoose');
 const { upload }      = require('../config/upload');
+const authMiddleware  = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 const { getBucket }   = require('../config/gridfs');
 
@@ -24,7 +25,7 @@ function saveToGridFS(buffer, filename, mimetype) {
   });
 }
 
-router.post('/image', verifyAdmin, (req, res) => {
+router.post('/image', authMiddleware, verifyAdmin, (req, res) => {
   upload.single('image')(req, res, async (err) => {
     try {
       if (err) {
@@ -73,11 +74,11 @@ router.post('/image', verifyAdmin, (req, res) => {
   });
 });
 
-router.delete('/image/:dir/:file', verifyAdmin, (_req, res) => {
+router.delete('/image/:dir/:file', authMiddleware, verifyAdmin, (_req, res) => {
   res.status(400).json({ success: false, msg: 'Invalid image id' });
 });
 
-router.delete('/image/:id', verifyAdmin, async (req, res) => {
+router.delete('/image/:id', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id))

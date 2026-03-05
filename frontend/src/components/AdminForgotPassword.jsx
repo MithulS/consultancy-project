@@ -382,6 +382,7 @@ export default function AdminForgotPassword() {
       outline: 'none',
       transition: 'all 0.3s ease',
       color: '#0f172a',
+      backgroundColor: '#ffffff',
       fontWeight: '500',
       boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
     },
@@ -411,7 +412,9 @@ export default function AdminForgotPassword() {
       outline: 'none',
       transition: 'all 0.3s ease',
       textAlign: 'center',
-      fontWeight: '600'
+      fontWeight: '600',
+      backgroundColor: '#ffffff',
+      color: '#0f172a'
     },
     refreshBtn: {
       padding: '14px',

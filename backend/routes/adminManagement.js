@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const authMiddleware = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 
 /**
@@ -10,7 +11,7 @@ const { verifyAdmin } = require('../middleware/auth');
  * @desc    Update admin user credentials (email, password, username)
  * @access  Admin only - requires admin token
  */
-router.put('/update-credentials', verifyAdmin, async (req, res) => {
+router.put('/update-credentials', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     let { currentPassword, newEmail, newPassword, newUsername, confirmPassword, newPhoneNumber } = req.body;
     const adminId = req.userId; // From verifyAdmin middleware
@@ -256,7 +257,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
       updateFields.phoneNumber = newPhoneNumber;
     }
 
-    // Hash and update password if provided
+    // Update password if provided (model pre-save hook will hash it)
     if (newPassword) {
       updateFields.password = newPassword;
     }
@@ -302,7 +303,7 @@ router.put('/update-credentials', verifyAdmin, async (req, res) => {
  * @desc    Get current admin profile details
  * @access  Admin only
  */
-router.get('/profile', verifyAdmin, async (req, res) => {
+router.get('/profile', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const admin = await User.findById(req.userId).select('-password -otp -otpExpiresAt -resetPasswordToken');
 

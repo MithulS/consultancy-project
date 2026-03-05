@@ -35,7 +35,7 @@ async function updateProductRating(productId) {
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { productId, orderId, rating, comment, images } = req.body;
-    const userId = req.userId;
+    const userId = req.user.userId;
 
     // Validate required fields
     if (!productId || !orderId || !rating) {
@@ -143,7 +143,7 @@ router.post('/', verifyToken, async (req, res) => {
 router.put('/:id', verifyToken, async (req, res) => {
   try {
     const { rating, comment, images } = req.body;
-    const userId = req.userId;
+    const userId = req.user.userId;
 
     const review = await Review.findById(req.params.id);
 
@@ -204,7 +204,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 // Delete a review (only the author can delete)
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
 
     const review = await Review.findById(req.params.id);
 
@@ -248,13 +248,14 @@ router.get('/product/:productId', async (req, res) => {
   try {
     const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 50);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
     
     const reviews = await Review.find({ product: req.params.productId })
       .populate('user', 'name username')
       .sort(sort)
       .skip(skip)
-      .limit(Number(limit));
+      .limit(safeLimit);
 
     const total = await Review.countDocuments({ product: req.params.productId });
 
@@ -281,16 +282,17 @@ router.get('/product/:productId', async (req, res) => {
 // Get user's own reviews (requires authentication)
 router.get('/my-reviews', verifyToken, async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
     const { page = 1, limit = 10 } = req.query;
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 50);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const reviews = await Review.find({ user: userId })
       .populate('product', 'name imageUrl price')
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit));
+      .limit(safeLimit);
 
     const total = await Review.countDocuments({ user: userId });
 
@@ -317,7 +319,7 @@ router.get('/my-reviews', verifyToken, async (req, res) => {
 // Check if user can review a product (requires authentication)
 router.get('/can-review/:productId', verifyToken, async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
     const productId = req.params.productId;
 
     // Check if already reviewed

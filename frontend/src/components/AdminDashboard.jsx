@@ -1,5 +1,6 @@
 // Admin Dashboard - Product Management Interface
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import DOMPurify from 'dompurify';
 import ProductReports from './ProductReports';
 import { PRODUCT_CATEGORIES, CATEGORY_CONFIG, generateAdminAltText } from '../utils/constants';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -48,7 +49,14 @@ export default function AdminDashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [stats, setStats] = useState({ total: 0, inStock: 0, outOfStock: 0, totalValue: 0 });
+  // Stats computed inline to avoid extra render causing CLS
+  const stats = useMemo(() => {
+    const total = products.length;
+    const inStock = products.filter(p => p.stock > 0 || p.inStock).length;
+    const outOfStock = total - inStock;
+    const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
+    return { total, inStock, outOfStock, totalValue };
+  }, [products]);
   const [formData, setFormData] = useState({
     name: '', description: '', price: '', originalPrice: '', imageUrl: '', imageAltText: '',
     category: '', brand: '', stock: '', featured: false
@@ -80,19 +88,8 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    calculateStats();
-  }, [products]);
-
-  function calculateStats() {
-    const total = products.length;
-    // Count products where stock > 0 OR inStock is true (fallback)
-    const inStock = products.filter(p => p.stock > 0 || p.inStock).length;
-    const outOfStock = total - inStock;
-    const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
-
-    console.log('📊 Stats calculated:', { total, inStock, outOfStock, totalValue: totalValue.toFixed(2) });
-    setStats({ total, inStock, outOfStock, totalValue });
-  }
+    console.log('📊 Stats calculated:', { total: stats.total, inStock: stats.inStock, outOfStock: stats.outOfStock, totalValue: stats.totalValue.toFixed(2) });
+  }, [stats]);
 
   async function fetchProducts() {
     try {
@@ -271,6 +268,10 @@ export default function AdminDashboard() {
 
     const productData = {
       ...formData,
+      name: DOMPurify.sanitize(formData.name, { ALLOWED_TAGS: [] }),
+      description: DOMPurify.sanitize(formData.description, { ALLOWED_TAGS: [] }),
+      brand: formData.brand ? DOMPurify.sanitize(formData.brand, { ALLOWED_TAGS: [] }) : undefined,
+      imageAltText: formData.imageAltText ? DOMPurify.sanitize(formData.imageAltText, { ALLOWED_TAGS: [] }) : undefined,
       imageUrl: imageUrl,
       price: parseFloat(formData.price),
       originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : undefined,
@@ -403,8 +404,8 @@ export default function AdminDashboard() {
       boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03)',
       border: '1px solid #e2e8f0',
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-      animation: 'scaleIn 0.6s ease-out',
-      position: 'relative'
+      position: 'relative',
+      minHeight: '100px'
     },
     statLabel: {
       fontSize: '14px',
@@ -415,10 +416,9 @@ export default function AdminDashboard() {
     statValue: {
       fontSize: '36px',
       fontWeight: '800',
-      fontSize: '36px',
-      fontWeight: '800',
-      color: 'var(--text-primary)',
-      letterSpacing: '-1px'
+      color: '#0f172a',
+      letterSpacing: '-1px',
+      lineHeight: '1.2'
     },
     content: {
       padding: '0 clamp(16px, 4vw, 40px) 40px',
@@ -638,11 +638,11 @@ export default function AdminDashboard() {
         <div style={styles.header}>
           <h1 style={styles.title}>🛡️ Admin Dashboard</h1>
         </div>
-        <div style={{ ...styles.statsContainer, paddingBottom: 0 }}>
-          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
-          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
-          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
-          <Skeleton type="card" className="stat-card" style={{ height: '160px' }} />
+        <div style={{ ...styles.statsContainer, paddingTop: 'clamp(16px, 3vw, 32px)', paddingLeft: 'clamp(16px, 4vw, 40px)', paddingRight: 'clamp(16px, 4vw, 40px)', paddingBottom: 0, padding: undefined }}>
+          <Skeleton type="text" style={{ height: '100px', borderRadius: '12px' }} />
+          <Skeleton type="text" style={{ height: '100px', borderRadius: '12px' }} />
+          <Skeleton type="text" style={{ height: '100px', borderRadius: '12px' }} />
+          <Skeleton type="text" style={{ height: '100px', borderRadius: '12px' }} />
         </div>
         <div style={styles.content}>
           <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between' }}>
@@ -916,7 +916,10 @@ export default function AdminDashboard() {
                 <textarea
                   style={styles.textarea}
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/<[^>]*>/g, '');
+                    setFormData({ ...formData, description: sanitized });
+                  }}
                   required
                 />
               </div>
@@ -1065,7 +1068,10 @@ export default function AdminDashboard() {
                     type="text"
                     style={styles.input}
                     value={formData.brand}
-                    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                    onChange={(e) => {
+                    const sanitized = e.target.value.replace(/<[^>]*>/g, '');
+                    setFormData({ ...formData, brand: sanitized });
+                  }}
                   />
                 </div>
               </div>
@@ -1081,7 +1087,10 @@ export default function AdminDashboard() {
                   type="text"
                   style={styles.input}
                   value={formData.imageAltText || ''}
-                  onChange={(e) => setFormData({ ...formData, imageAltText: e.target.value })}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/<[^>]*>/g, '');
+                    setFormData({ ...formData, imageAltText: sanitized });
+                  }}
                   placeholder="Auto-generated: Product name, price, brand, stock..."
                   maxLength="125"
                 />

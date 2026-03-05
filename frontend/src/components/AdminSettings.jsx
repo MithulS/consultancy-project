@@ -448,6 +448,7 @@ export default function AdminSettings() {
       transition: 'all 0.3s ease',
       boxSizing: 'border-box',
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      color: '#1e1b4b',
       fontWeight: '500'
     },
     eyeButton: {

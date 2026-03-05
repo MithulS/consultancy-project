@@ -28,6 +28,7 @@ export default function MyOrders() {
 
   async function fetchOrders() {
     try {
+      setError('');
       const token = localStorage.getItem('token');
       if (!token) {
         // Store the intended destination before redirecting
@@ -58,16 +59,23 @@ export default function MyOrders() {
         return;
       }
 
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        setError(errData.msg || `Server error (${res.status}). Please try again.`);
+        return;
+      }
+
       const data = await res.json();
+      console.log('My Orders API response:', { success: data.success, orderCount: data.orders?.length, pagination: data.pagination });
 
       if (data.success) {
-        setOrders(data.orders);
+        setOrders(Array.isArray(data.orders) ? data.orders : []);
       } else {
         setError(data.msg || 'Failed to load orders');
       }
     } catch (err) {
       console.error('Fetch orders error:', err);
-      setError('Failed to load orders');
+      setError('Failed to load orders. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -271,48 +279,90 @@ export default function MyOrders() {
 
         {/* Error Message */}
         {error && (
-          <div className="alert-error" style={{ marginBottom: 'var(--space-6)' }}>
-            ❌ {error}
+          <div style={{
+            marginBottom: '24px',
+            padding: '16px 24px',
+            background: 'rgba(239, 68, 68, 0.15)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '12px',
+            color: '#FCA5A5',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px'
+          }}>
+            <span>❌ {error}</span>
+            <button
+              onClick={() => { setLoading(true); fetchOrders(); }}
+              style={{
+                padding: '8px 16px',
+                background: 'rgba(255,255,255,0.1)',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: '600',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              🔄 Retry
+            </button>
           </div>
         )}
 
         {/* Empty State */}
-        {filteredOrders.length === 0 ? (
-          <div className="card animate-fadeIn" style={{
+        {!error && filteredOrders.length === 0 ? (
+          <div style={{
             textAlign: 'center',
             padding: '64px',
-            background: 'var(--glass-background)',
-            backdropFilter: 'var(--glass-blur)',
-            border: '1px solid var(--border-secondary)',
-            borderRadius: 'var(--border-radius-lg)',
-            boxShadow: 'var(--shadow-sm)'
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.2)'
           }}>
             <div style={{ fontSize: '64px', marginBottom: '16px' }}>📦</div>
-            <h2 style={{ fontSize: '24px', marginBottom: '12px', color: 'var(--text-primary)' }}>
+            <h2 style={{ fontSize: '24px', marginBottom: '12px', color: '#ffffff' }}>
               No orders found
             </h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
+            <p style={{ color: '#94a3b8', marginBottom: '24px' }}>
               {statusFilter === 'all'
                 ? 'You haven\'t placed any orders yet'
                 : `No ${statusFilter} orders`}
             </p>
-            <button
-              className="btn btn-primary btn-lg"
-              onClick={() => window.location.hash = '#home'}
-              style={{
-                padding: '12px 32px',
-                background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px var(--accent-blue-glow)'
-              }}
-            >
-              🛍️ Start Shopping
-            </button>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => { setLoading(true); fetchOrders(); }}
+                style={{
+                  padding: '12px 32px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                🔄 Refresh Orders
+              </button>
+              <button
+                onClick={() => window.location.hash = '#home'}
+                style={{
+                  padding: '12px 32px',
+                  background: 'linear-gradient(135deg, #2e86de 0%, #2472c4 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(46, 134, 222, 0.3)'
+                }}
+              >
+                🛍️ Start Shopping
+              </button>
+            </div>
           </div>
         ) : (
           // Orders List

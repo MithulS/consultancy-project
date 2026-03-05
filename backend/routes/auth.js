@@ -28,15 +28,17 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// DEBUG ROUTE - Remove in production
-router.get('/debug-env', (req, res) => {
-  res.json({
-    NODE_ENV: process.env.NODE_ENV,
-    isDevelopment: process.env.NODE_ENV !== 'production',
-    EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT SET',
-    EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT SET'
+// DEBUG ROUTE - Only available in development
+if (process.env.NODE_ENV !== 'production') {
+  router.get('/debug-env', (req, res) => {
+    res.json({
+      NODE_ENV: process.env.NODE_ENV,
+      isDevelopment: process.env.NODE_ENV !== 'production',
+      EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT SET',
+      EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT SET'
+    });
   });
-});
+}
 
 // verify transporter on startup (non-blocking, with timeout)
 setTimeout(() => {
@@ -51,7 +53,8 @@ setTimeout(() => {
 }, 1000); // Verify after 1 second, don't block startup
 
 function genOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  const crypto = require('crypto');
+  return crypto.randomInt(100000, 1000000).toString();
 }
 
 async function sendOtpEmail(toEmail, name, otpPlain) {
@@ -117,25 +120,27 @@ async function sendOtpEmail(toEmail, name, otpPlain) {
   }
 }
 
-// --------------------- TEST ROUTE (Remove in production) ---------------------
-router.post('/test-otp-display', async (req, res) => {
-  try {
-    const testEmail = 'test@example.com';
-    const testName = 'Test User';
-    const testOTP = genOTP();
-    
-    console.log('\n🧪 TEST ROUTE: Manually triggering OTP display...\n');
-    await sendOtpEmail(testEmail, testName, testOTP);
-    
-    res.json({ 
-      msg: 'OTP display test complete. Check server console for OTP box.',
-      otp: testOTP  // Only for testing
-    });
-  } catch (error) {
-    console.error('Test route error:', error);
-    res.status(500).json({ msg: 'Test failed', error: error.message });
-  }
-});
+// --------------------- TEST ROUTE (Only in development) ---------------------
+if (process.env.NODE_ENV !== 'production') {
+  router.post('/test-otp-display', async (req, res) => {
+    try {
+      const testEmail = 'test@example.com';
+      const testName = 'Test User';
+      const testOTP = genOTP();
+      
+      console.log('\n🧪 TEST ROUTE: Manually triggering OTP display...\n');
+      await sendOtpEmail(testEmail, testName, testOTP);
+      
+      res.json({ 
+        msg: 'OTP display test complete. Check server console for OTP box.',
+        otp: testOTP  // Only for testing
+      });
+    } catch (error) {
+      console.error('Test route error:', error);
+      res.status(500).json({ msg: 'Test failed', error: error.message });
+    }
+  });
+}
 
 // --------------------- Register ---------------------
 router.post('/register', registrationLimiter, async (req, res) => {
@@ -323,7 +328,7 @@ router.post('/resend-otp', resendOtpLimiter, async (req, res) => {
 });
 
 // --------------------- Check Verification Status ---------------------
-router.post('/check-verification', async (req, res) => {
+router.post('/check-verification', authLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ msg: 'Email required' });
@@ -380,7 +385,7 @@ router.post('/login', authLimiter, async (req, res) => {
 });
 
 // --------------------- Forgot Password ---------------------
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', authLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ msg: 'Email is required' });
@@ -392,7 +397,8 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     // Generate reset token
-    const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const crypto = require('crypto');
+    const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenHash = await bcrypt.hash(resetToken, 10);
     const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
@@ -435,7 +441,7 @@ router.post('/forgot-password', async (req, res) => {
 });
 
 // --------------------- Reset Password ---------------------
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', authLimiter, async (req, res) => {
   try {
     const { email, token, newPassword } = req.body;
     if (!email || !token || !newPassword) return res.status(400).json({ msg: 'Missing fields' });
@@ -620,8 +626,6 @@ router.post('/admin-login', authLimiter, async (req, res) => {
     }
 
     console.log('🔑 Comparing password...');
-    console.log('🔍 Debug - password:', password, 'type:', typeof password, 'length:', password?.length);
-    console.log('🔍 Debug - user.password exists:', !!user.password, 'type:', typeof user.password, 'length:', user.password?.length);
     
     // Validate inputs before bcrypt
     if (!password || typeof password !== 'string' || password.length === 0) {
@@ -827,12 +831,16 @@ router.get('/google/callback', asyncHandler(async (req, res) => {
       console.log(`✅ New user created via Google: ${user.email}`);
     } else {
       // Update existing user with cleaned name from email
-      const cleanedName = extractNameFromEmail(googleUser.email);
-      user.name = cleanedName;
-      
       // Update existing user with Google info if not already set
       if (!user.googleId) {
         user.googleId = googleUser.id;
+      }
+      // Only update name if it was never manually set
+      if (!user.name || user.name === extractNameFromEmail(googleUser.email)) {
+        const displayName = googleUser.name && googleUser.name !== 'User'
+          ? googleUser.name
+          : extractNameFromEmail(googleUser.email);
+        user.name = displayName;
       }
       if (!user.profilePicture && googleUser.picture) {
         user.profilePicture = googleUser.picture;

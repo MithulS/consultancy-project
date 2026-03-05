@@ -41,7 +41,6 @@ const validateRegistration = [
     .isLength({ max: 255 }).withMessage('Email too long'),
   
   body('password')
-    .trim()
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
@@ -59,7 +58,6 @@ const validateLogin = [
     .normalizeEmail(),
   
   body('password')
-    .trim()
     .notEmpty().withMessage('Password is required'),
   
   validate
@@ -85,7 +83,6 @@ const validateOTP = [
 // Admin credential update validation
 const validateCredentialUpdate = [
   body('currentPassword')
-    .trim()
     .notEmpty().withMessage('Current password is required'),
   
   body('newEmail')
@@ -104,14 +101,12 @@ const validateCredentialUpdate = [
   
   body('newPassword')
     .optional({ checkFalsy: true })
-    .trim()
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
     .withMessage('Password must contain uppercase, lowercase, number, and special character'),
   
   body('confirmPassword')
     .optional({ checkFalsy: true })
-    .trim()
     .custom((value, { req }) => {
       if (req.body.newPassword && value !== req.body.newPassword) {
         throw new Error('Passwords do not match');
@@ -133,7 +128,8 @@ const validateProduct = [
   body('description')
     .trim()
     .notEmpty().withMessage('Description is required')
-    .isLength({ min: 10, max: 5000 }).withMessage('Description must be 10-5000 characters'),
+    .isLength({ min: 10, max: 5000 }).withMessage('Description must be 10-5000 characters')
+    .escape(),
   
   body('price')
     .notEmpty().withMessage('Price is required')
@@ -197,7 +193,6 @@ const validatePasswordResetConfirm = [
     .isLength({ min: 6, max: 6 }).withMessage('Token must be 6 characters'),
   
   body('newPassword')
-    .trim()
     .notEmpty().withMessage('New password is required')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)

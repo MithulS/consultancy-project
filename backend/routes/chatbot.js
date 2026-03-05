@@ -407,7 +407,7 @@ router.post('/end', [
  */
 router.get('/admin/config', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Admin access required.'
@@ -444,7 +444,7 @@ router.get('/admin/config', auth, async (req, res) => {
  */
 router.put('/admin/config', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Admin access required.'
@@ -460,8 +460,13 @@ router.put('/admin/config', auth, async (req, res) => {
       });
     }
 
-    // Update config fields
-    Object.assign(config, req.body);
+    // Update config fields (whitelist allowed fields)
+    const allowedFields = ['intents', 'responses', 'settings', 'greetings', 'fallbackResponses', 'businessInfo'];
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        config[field] = req.body[field];
+      }
+    }
     config.lastModifiedBy = req.user.userId;
     await config.save();
 
@@ -490,7 +495,7 @@ router.put('/admin/config', auth, async (req, res) => {
  */
 router.get('/admin/analytics', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Admin access required.'
@@ -532,7 +537,7 @@ router.get('/admin/analytics', auth, async (req, res) => {
  */
 router.get('/admin/conversations', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Admin access required.'
@@ -581,15 +586,14 @@ router.get('/admin/conversations', auth, async (req, res) => {
  */
 router.get('/admin/escalated', auth, async (req, res) => {
   try {
-    if (!['admin', 'agent'].includes(req.user.role)) {
+    if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
-        message: 'Agent or admin access required.'
+        message: 'Admin access required.'
       });
     }
 
-    const agentId = req.user.role === 'agent' ? req.user.userId : null;
-    const escalated = await Conversation.getEscalatedConversations(agentId);
+    const escalated = await Conversation.getEscalatedConversations(null);
 
     res.json({
       success: true,

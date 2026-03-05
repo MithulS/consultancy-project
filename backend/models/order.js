@@ -7,9 +7,9 @@ const orderItemSchema = new mongoose.Schema({
     ref: 'Product',
     required: true
   },
-  name: String,
+  name: { type: String, required: true },
   imageUrl: String,
-  price: Number,
+  price: { type: Number, required: true, min: 0 },
   quantity: {
     type: Number,
     required: true,
@@ -35,10 +35,10 @@ const orderSchema = new mongoose.Schema({
     default: 'pending'
   },
   shippingAddress: {
-    address: String,
-    city: String,
-    postalCode: String,
-    country: String
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    country: { type: String, required: true }
   },
   paymentMethod: {
     type: String,

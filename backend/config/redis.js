@@ -69,11 +69,13 @@ const cacheMiddleware = (duration = 300) => {
       // Store original res.json function
       const originalJson = res.json.bind(res);
       
-      // Override res.json to cache the response
+      // Override res.json to cache the response (only 2xx responses)
       res.json = (data) => {
-        // Cache the response
-        client.setEx(key, duration, JSON.stringify(data))
-          .catch(err => console.error('Cache set error:', err));
+        // Only cache successful responses
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          client.setEx(key, duration, JSON.stringify(data))
+            .catch(err => console.error('Cache set error:', err));
+        }
         
         // Send response normally
         return originalJson(data);
@@ -87,20 +89,22 @@ const cacheMiddleware = (duration = 300) => {
   };
 };
 
-// Clear cache by pattern
+// Clear cache by pattern (uses SCAN instead of KEYS to avoid blocking Redis)
 const clearCache = async (pattern = '*') => {
   if (!isConnected || !client) {
     return false;
   }
 
   try {
-    const keys = await client.keys(pattern);
-    if (keys.length > 0) {
-      await client.del(keys);
-      console.log(`🗑️  Cleared ${keys.length} cache keys matching: ${pattern}`);
-      return true;
+    let deletedCount = 0;
+    for await (const key of client.scanIterator({ MATCH: pattern, COUNT: 100 })) {
+      await client.del(key);
+      deletedCount++;
     }
-    return false;
+    if (deletedCount > 0) {
+      console.log(`🗑️  Cleared ${deletedCount} cache keys matching: ${pattern}`);
+    }
+    return deletedCount > 0;
   } catch (error) {
     console.error('Clear cache error:', error);
     return false;

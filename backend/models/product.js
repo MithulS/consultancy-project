@@ -108,8 +108,14 @@ productSchema.pre('save', function() {
 // Also handle findOneAndUpdate scenarios
 productSchema.pre('findOneAndUpdate', function() {
   const update = this.getUpdate();
+  // Handle direct update
   if (update.stock !== undefined) {
     update.inStock = update.stock > 0;
+  }
+  // Handle $set operator
+  if (update.$set && update.$set.stock !== undefined) {
+    if (!update.$set) update.$set = {};
+    update.$set.inStock = update.$set.stock > 0;
   }
 });
 

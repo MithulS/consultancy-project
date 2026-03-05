@@ -82,6 +82,12 @@ router.post('/', verifyToken, async (req, res) => {
       });
     }
 
+    // Generate unique tracking number
+    const prefix = 'TRK';
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const trackingNumber = `${prefix}${timestamp}${random}`;
+
     // Create order first
     const order = new Order({
       user: userId,
@@ -91,7 +97,15 @@ router.post('/', verifyToken, async (req, res) => {
       paymentMethod: paymentMethod || 'cod',
       paymentStatus: paymentMethod === 'cod' ? 'pending' : 'completed',
       stockReserved: true,
-      stockDeducted: false
+      stockDeducted: false,
+      trackingNumber,
+      trackingHistory: [{
+        status: 'pending',
+        location: 'Order System',
+        description: 'Order placed successfully',
+        timestamp: new Date(),
+        updatedBy: userId
+      }]
     });
 
     await order.save();
@@ -139,12 +153,13 @@ router.get('/my-orders', verifyToken, async (req, res) => {
     const userId = req.user.userId;
     const { page = 1, limit = 10 } = req.query;
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 50);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const orders = await Order.find({ user: userId })
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .populate('items.product', 'name imageUrl');
 
     const total = await Order.countDocuments({ user: userId });
@@ -206,7 +221,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 });
 
 // Get all orders (admin only)
-router.get('/', verifyAdmin, async (req, res) => {
+router.get('/', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;
 
@@ -215,12 +230,13 @@ router.get('/', verifyAdmin, async (req, res) => {
       query.status = status;
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const orders = await Order.find(query)
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .populate('user', 'name email username')
       .populate('items.product', 'name imageUrl');
 
@@ -247,7 +263,7 @@ router.get('/', verifyAdmin, async (req, res) => {
 });
 
 // Update order status (admin only) - WITH INVENTORY MANAGEMENT
-router.put('/:id/status', verifyAdmin, async (req, res) => {
+router.put('/:id/status', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { status, cancelReason } = req.body;
     const adminUserId = req.user.userId;
@@ -407,7 +423,7 @@ router.put('/:id/cancel', verifyToken, async (req, res) => {
 });
 
 // Get inventory statistics (admin only)
-router.get('/admin/inventory-stats', verifyAdmin, async (req, res) => {
+router.get('/admin/inventory-stats', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { productId } = req.query;
     
@@ -436,7 +452,7 @@ router.get('/admin/inventory-stats', verifyAdmin, async (req, res) => {
 });
 
 // Get order history with inventory impact (admin only)
-router.get('/admin/order-history', verifyAdmin, async (req, res) => {
+router.get('/admin/order-history', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate, page = 1, limit = 50 } = req.query;
 
@@ -447,12 +463,13 @@ router.get('/admin/order-history', verifyAdmin, async (req, res) => {
       if (endDate) query.createdAt.$lte = new Date(endDate);
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 50, 1), 200);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const orders = await Order.find(query)
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .populate('user', 'name email')
       .populate('items.product', 'name stock');
 
@@ -507,7 +524,7 @@ router.get('/:id/tracking', verifyToken, async (req, res) => {
     }
 
     // Only allow user to view their own orders (unless admin)
-    if (order.user._id.toString() !== req.user.userId && req.user.role !== 'admin') {
+    if (order.user._id.toString() !== req.user.userId && !req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         msg: 'Access denied'
@@ -546,7 +563,7 @@ router.get('/:id/tracking', verifyToken, async (req, res) => {
 });
 
 // Update order tracking status (Admin only)
-router.post('/:id/tracking/update', verifyAdmin, async (req, res) => {
+router.post('/:id/tracking/update', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { status, location, description, estimatedDelivery, courierPartner, trackingNumber } = req.body;
 
@@ -623,7 +640,7 @@ router.post('/:id/tracking/update', verifyAdmin, async (req, res) => {
 });
 
 // Generate tracking number for order (Admin only)
-router.post('/:id/tracking/generate', verifyAdmin, async (req, res) => {
+router.post('/:id/tracking/generate', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
 
@@ -675,17 +692,28 @@ router.post('/:id/tracking/generate', verifyAdmin, async (req, res) => {
   }
 });
 
-// Track order by tracking number (Public - no auth required)
+// Track order by tracking number or order ID (Public - no auth required)
 router.get('/public/track/:trackingNumber', async (req, res) => {
   try {
-    const order = await Order.findOne({ trackingNumber: req.params.trackingNumber })
+    const searchValue = req.params.trackingNumber.trim();
+    let order = null;
+
+    // First try to find by tracking number
+    order = await Order.findOne({ trackingNumber: searchValue })
       .populate('items.product', 'name imageUrl')
       .select('-user -paymentIntentId');
+
+    // If not found by tracking number, try by order ID (24-char hex string)
+    if (!order && /^[0-9a-fA-F]{24}$/.test(searchValue)) {
+      order = await Order.findById(searchValue)
+        .populate('items.product', 'name imageUrl')
+        .select('-user -paymentIntentId');
+    }
 
     if (!order) {
       return res.status(404).json({
         success: false,
-        msg: 'Invalid tracking number'
+        msg: 'Order not found. Please enter a valid tracking number or order ID.'
       });
     }
 
@@ -718,7 +746,7 @@ router.get('/public/track/:trackingNumber', async (req, res) => {
 });
 
 // Bulk update tracking for multiple orders (Admin only)
-router.post('/tracking/bulk-update', verifyAdmin, async (req, res) => {
+router.post('/tracking/bulk-update', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { orderIds, status, location, description } = req.body;
 

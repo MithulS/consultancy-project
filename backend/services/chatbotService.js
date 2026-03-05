@@ -10,6 +10,9 @@ class ChatbotService {
     this.config = null;
     this.conversationContexts = new Map(); // In-memory context cache
     this.responseCache = new Map(); // Cache for common responses
+    this.responseCacheTimers = new Map(); // Track timers for cleanup
+    this.MAX_CONTEXTS = 10000;
+    this.MAX_CACHE_SIZE = 5000;
   }
 
   /**
@@ -37,7 +40,10 @@ class ChatbotService {
       const cachedResponse = this.checkResponseCache(processedMessage, language);
       if (cachedResponse) {
         logger.info(`Cache hit for message: ${processedMessage.substring(0, 50)}`);
-        return cachedResponse;
+        return {
+          ...cachedResponse,
+          metadata: { ...cachedResponse.metadata, cached: true }
+        };
       }
 
       // Step 4: Analyze sentiment
@@ -81,15 +87,10 @@ class ChatbotService {
         await this.executeActions(intent.actions, entities, context);
       }
 
-      // Step 12: Cache response if applicable
-      if (intent.priority > 5) {
-        this.cacheResponse(processedMessage, language, response);
-      }
-
       const processingTime = Date.now() - startTime;
       logger.info(`Message processed in ${processingTime}ms`);
 
-      return {
+      const fullResponse = {
         response: response.text,
         intent: intent.name,
         entities,
@@ -102,6 +103,13 @@ class ChatbotService {
           cached: false
         }
       };
+
+      // Step 12: Cache response if applicable
+      if (intent.priority > 5) {
+        this.cacheResponse(processedMessage, language, fullResponse);
+      }
+
+      return fullResponse;
 
     } catch (error) {
       logger.error('Error processing message:', error);
@@ -258,14 +266,14 @@ class ChatbotService {
       return entities;
     }
 
-    // Order ID pattern
-    const orderIdMatch = text.match(/\b[A-Z0-9]{10,15}\b/);
+    // Order ID pattern (case-insensitive since text is pre-lowered)
+    const orderIdMatch = text.match(/\b[a-z0-9]{10,15}\b/i);
     if (orderIdMatch) {
-      entities.orderId = orderIdMatch[0];
+      entities.orderId = orderIdMatch[0].toUpperCase();
     }
 
-    // Email pattern
-    const emailMatch = text.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
+    // Email pattern (case-insensitive)
+    const emailMatch = text.match(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/i);
     if (emailMatch) {
       entities.email = emailMatch[0];
     }
@@ -282,8 +290,8 @@ class ChatbotService {
       entities.price = priceMatch[0];
     }
 
-    // Product mentions (extract capitalized words)
-    const productMatches = text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g);
+    // Product mentions (multi-word tokens - since text is lowered, use word boundaries)
+    const productMatches = text.match(/\b[a-z]+(?:\s+[a-z]+){1,4}\b/gi);
     if (productMatches) {
       entities.products = productMatches;
     }
@@ -303,6 +311,12 @@ class ChatbotService {
   getConversationContext(conversationId, sessionContext = {}) {
     if (this.conversationContexts.has(conversationId)) {
       return this.conversationContexts.get(conversationId);
+    }
+
+    // Evict oldest contexts if at capacity
+    if (this.conversationContexts.size >= this.MAX_CONTEXTS) {
+      const oldestKey = this.conversationContexts.keys().next().value;
+      this.conversationContexts.delete(oldestKey);
     }
 
     const context = {
@@ -520,12 +534,30 @@ class ChatbotService {
    */
   cacheResponse(message, language, response, ttl = 300000) {
     const cacheKey = `${language}:${message}`;
+
+    // Evict oldest cache entries if at capacity
+    if (this.responseCache.size >= this.MAX_CACHE_SIZE && !this.responseCache.has(cacheKey)) {
+      const oldestKey = this.responseCache.keys().next().value;
+      const oldTimer = this.responseCacheTimers.get(oldestKey);
+      if (oldTimer) clearTimeout(oldTimer);
+      this.responseCacheTimers.delete(oldestKey);
+      this.responseCache.delete(oldestKey);
+    }
+
+    // Clear existing timer for this key if overwriting
+    const existingTimer = this.responseCacheTimers.get(cacheKey);
+    if (existingTimer) clearTimeout(existingTimer);
+
     this.responseCache.set(cacheKey, response);
 
     // Auto-expire after TTL
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       this.responseCache.delete(cacheKey);
+      this.responseCacheTimers.delete(cacheKey);
     }, ttl);
+    // Prevent timer from keeping process alive
+    if (timer.unref) timer.unref();
+    this.responseCacheTimers.set(cacheKey, timer);
   }
 
   /**

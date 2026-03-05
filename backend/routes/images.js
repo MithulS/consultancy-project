@@ -35,11 +35,20 @@ router.get('/:id', async (req, res) => {
     }
     const file = files[0];
 
+    // ETag for conditional requests (avoids re-streaming unchanged images)
+    const etag = `"${file._id.toString()}-${file.length}"`;
+    if (req.headers['if-none-match'] === etag) {
+      return res.status(304).end();
+    }
+
     // Cache for 30 days in browsers / intermediate caches
     res.set('Content-Type',  file.contentType || 'image/jpeg');
     res.set('Content-Length', file.length);
     res.set('Cache-Control',  'public, max-age=2592000, immutable');
     res.set('Last-Modified',  file.uploadDate.toUTCString());
+    res.set('ETag', etag);
+    // Prevent compression middleware from buffering image streams
+    res.set('x-no-compression', 'true');
 
     // Stream from GridFS → response
     const downloadStream = bucket.openDownloadStream(fileId);

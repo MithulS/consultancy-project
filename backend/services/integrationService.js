@@ -22,12 +22,19 @@ class IntegrationService {
     try {
       logger.info(`Tracking order: ${orderId}`);
 
-      const order = await Order.findOne({ 
+      const query = { 
         $or: [
           { orderId: orderId },
           { _id: orderId }
         ]
-      }).populate('items.product');
+      };
+
+      // Enforce ownership if userId provided
+      if (userId) {
+        query.user = userId;
+      }
+
+      const order = await Order.findOne(query).populate('items.product');
 
       if (!order) {
         return {
@@ -84,31 +91,37 @@ class IntegrationService {
     try {
       logger.info(`Cancelling order: ${orderId}`);
 
-      const order = await Order.findOne({ 
-        orderId: orderId,
-        userId: userId
-      });
+      // Use atomic findOneAndUpdate to avoid TOCTOU race
+      const order = await Order.findOneAndUpdate(
+        { 
+          _id: orderId,
+          user: userId,
+          status: { $nin: ['shipped', 'delivered', 'cancelled'] }
+        },
+        {
+          $set: {
+            status: 'cancelled',
+            cancellationReason: reason,
+            cancelledAt: new Date()
+          }
+        },
+        { new: true }
+      );
 
       if (!order) {
+        // Determine whether not found or wrong status
+        const existingOrder = await Order.findOne({ _id: orderId, user: userId });
+        if (!existingOrder) {
+          return {
+            success: false,
+            message: "Order not found or you don't have permission to cancel it."
+          };
+        }
         return {
           success: false,
-          message: "Order not found or you don't have permission to cancel it."
+          message: `This order cannot be cancelled as it's already ${existingOrder.status}. Would you like to initiate a return instead?`
         };
       }
-
-      // Check if order can be cancelled
-      if (['shipped', 'delivered', 'cancelled'].includes(order.status)) {
-        return {
-          success: false,
-          message: `This order cannot be cancelled as it's already ${order.status}. Would you like to initiate a return instead?`
-        };
-      }
-
-      // Cancel the order
-      order.status = 'cancelled';
-      order.cancellationReason = reason;
-      order.cancelledAt = new Date();
-      await order.save();
 
       // Restore inventory
       for (const item of order.items) {
@@ -142,8 +155,8 @@ class IntegrationService {
       logger.info(`Modifying address for order: ${orderId}`);
 
       const order = await Order.findOne({ 
-        orderId: orderId,
-        userId: userId
+        _id: orderId,
+        user: userId
       });
 
       if (!order) {
@@ -183,7 +196,7 @@ class IntegrationService {
 
   async getOrderHistory(userId, limit = 10) {
     try {
-      const orders = await Order.find({ userId })
+      const orders = await Order.find({ user: userId })
         .sort({ createdAt: -1 })
         .limit(limit)
         .populate('items.product');
@@ -258,11 +271,14 @@ class IntegrationService {
     try {
       logger.info(`Searching products: ${query}`);
 
+      // Escape regex special characters to prevent ReDoS
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
       const searchQuery = {
         $or: [
-          { name: { $regex: query, $options: 'i' } },
-          { description: { $regex: query, $options: 'i' } },
-          { category: { $regex: query, $options: 'i' } }
+          { name: { $regex: escapedQuery, $options: 'i' } },
+          { description: { $regex: escapedQuery, $options: 'i' } },
+          { category: { $regex: escapedQuery, $options: 'i' } }
         ]
       };
 
@@ -360,7 +376,7 @@ class IntegrationService {
       }
 
       // Get order statistics
-      const orders = await Order.find({ userId });
+      const orders = await Order.find({ user: userId });
       const totalSpent = orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
       // Determine customer segment
@@ -399,6 +415,13 @@ class IntegrationService {
         { new: true }
       );
 
+      if (!user) {
+        return {
+          success: false,
+          message: "User not found."
+        };
+      }
+
       return {
         success: true,
         message: "Your preferences have been updated!",
@@ -420,7 +443,7 @@ class IntegrationService {
 
   async getPaymentStatus(orderId) {
     try {
-      const order = await Order.findOne({ orderId });
+      const order = await Order.findOne({ _id: orderId });
 
       if (!order) {
         return {
@@ -449,16 +472,22 @@ class IntegrationService {
     }
   }
 
-  async initiateRefund(orderId, amount, reason) {
+  async initiateRefund(orderId, amount, reason, userId = null) {
     try {
       logger.info(`Initiating refund for order: ${orderId}`);
 
-      const order = await Order.findOne({ orderId });
+      const query = { _id: orderId };
+      // Enforce ownership if userId provided
+      if (userId) {
+        query.user = userId;
+      }
+
+      const order = await Order.findOne(query);
 
       if (!order) {
         return {
           success: false,
-          message: "Order not found."
+          message: "Order not found or you don't have permission."
         };
       }
 
@@ -466,6 +495,14 @@ class IntegrationService {
         return {
           success: false,
           message: "This order has already been refunded."
+        };
+      }
+
+      // Validate refund amount
+      if (!amount || amount <= 0 || amount > order.totalAmount) {
+        return {
+          success: false,
+          message: `Refund amount must be between $0.01 and $${order.totalAmount}.`
         };
       }
 

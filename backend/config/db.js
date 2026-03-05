@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 5000;
+let listenersRegistered = false;
 
 const connectDB = async (retryCount = 0) => {
   try {
@@ -13,15 +14,19 @@ const connectDB = async (retryCount = 0) => {
     });
     console.log(`✅ MongoDB connected: ${conn.connection.host} / ${conn.connection.name}`);
 
-    // Handle disconnect events and auto-reconnect
-    mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️  MongoDB disconnected. Attempting to reconnect...');
-      setTimeout(() => connectDB(), RETRY_DELAY_MS);
-    });
+    // Register event listeners only once to prevent accumulation
+    if (!listenersRegistered) {
+      listenersRegistered = true;
 
-    mongoose.connection.on('error', (err) => {
-      console.error('❌ MongoDB connection error:', err.message);
-    });
+      mongoose.connection.on('disconnected', () => {
+        console.warn('⚠️  MongoDB disconnected. Attempting to reconnect...');
+        setTimeout(() => connectDB(), RETRY_DELAY_MS);
+      });
+
+      mongoose.connection.on('error', (err) => {
+        console.error('❌ MongoDB connection error:', err.message);
+      });
+    }
 
   } catch (err) {
     console.error(`❌ MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`, err.message);

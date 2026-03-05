@@ -36,7 +36,8 @@ const ExitIntentPopup = () => {
     // Track the event
     if (window.gtag) {
       window.gtag('event', 'exit_intent_signup', {
-        email: email
+        event_category: 'engagement',
+        event_label: 'exit_popup'
       });
     }
 

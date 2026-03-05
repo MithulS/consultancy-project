@@ -31,11 +31,11 @@ const createTransporter = () => {
  */
 router.post('/',
   [
-    body('name').trim().notEmpty().withMessage('Name is required'),
+    body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }).withMessage('Name too long'),
     body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
-    body('phone').trim().notEmpty().withMessage('Phone number is required'),
-    body('subject').trim().notEmpty().withMessage('Subject is required'),
-    body('message').trim().isLength({ min: 10 }).withMessage('Message must be at least 10 characters'),
+    body('phone').trim().notEmpty().withMessage('Phone number is required').isLength({ max: 20 }).withMessage('Phone number too long'),
+    body('subject').trim().notEmpty().withMessage('Subject is required').isLength({ max: 200 }).withMessage('Subject too long'),
+    body('message').trim().isLength({ min: 10, max: 5000 }).withMessage('Message must be 10-5000 characters'),
     body('inquiryType').optional().isIn([
       'general', 'product', 'quote', 'support', 'bulk', 'partnership'
     ]).withMessage('Invalid inquiry type')
@@ -53,6 +53,24 @@ router.post('/',
       }
 
       const { name, email, phone, company, subject, message, inquiryType } = req.body;
+
+      // HTML-encode user input to prevent XSS in email templates
+      const escapeHtml = (str) => {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      };
+
+      const safeName = escapeHtml(name);
+      const safeEmail = escapeHtml(email);
+      const safePhone = escapeHtml(phone);
+      const safeCompany = escapeHtml(company);
+      const safeSubject = escapeHtml(subject);
+      const safeMessage = escapeHtml(message);
 
       // Get client IP for logging
       const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -104,29 +122,29 @@ router.post('/',
               </div>
               <div class="field">
                 <div class="label">Name:</div>
-                <div class="value">${name}</div>
+                <div class="value">${safeName}</div>
               </div>
               <div class="field">
                 <div class="label">Email:</div>
-                <div class="value"><a href="mailto:${email}">${email}</a></div>
+                <div class="value"><a href="mailto:${safeEmail}">${safeEmail}</a></div>
               </div>
               <div class="field">
                 <div class="label">Phone:</div>
-                <div class="value"><a href="tel:${phone}">${phone}</a></div>
+                <div class="value"><a href="tel:${safePhone}">${safePhone}</a></div>
               </div>
               ${company ? `
               <div class="field">
                 <div class="label">Company:</div>
-                <div class="value">${company}</div>
+                <div class="value">${safeCompany}</div>
               </div>
               ` : ''}
               <div class="field">
                 <div class="label">Subject:</div>
-                <div class="value">${subject}</div>
+                <div class="value">${safeSubject}</div>
               </div>
               <div class="field">
                 <div class="label">Message:</div>
-                <div class="value">${message.replace(/\n/g, '<br>')}</div>
+                <div class="value">${safeMessage.replace(/\n/g, '<br>')}</div>
               </div>
               <div class="field">
                 <div class="label">Submitted:</div>

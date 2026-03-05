@@ -728,6 +728,8 @@ const styles = {
     border: '2px solid #e5e7eb',
     borderRadius: '8px',
     outline: 'none',
-    transition: 'border-color 0.2s'
+    transition: 'border-color 0.2s',
+    backgroundColor: '#ffffff',
+    color: '#1f2937'
   }
 };

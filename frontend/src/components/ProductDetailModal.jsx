@@ -108,7 +108,7 @@ const ProductDetailModal = ({
     } finally {
       setLoading(false);
     }
-  }, [productId, initialProduct, product]);
+  }, [productId, initialProduct]);
 
   // Fetch data when modal opens
   useEffect(() => {
@@ -233,21 +233,24 @@ const ProductDetailModal = ({
           align-items: center;
           justify-content: center;
           z-index: 10000;
-          padding: 20px;
+          padding: 10px;
           animation: fadeIn 0.3s ease;
-          overflow-y: auto;
+          overflow: hidden;
         }
 
         .product-detail-modal {
           background: white;
-          border-radius: 24px;
+          border-radius: 20px;
           max-width: 1200px;
           width: 100%;
-          max-height: 95vh;
-          overflow: auto;
+          height: 96vh;
+          max-height: 96vh;
+          overflow: hidden;
           position: relative;
           animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+          display: flex;
+          flex-direction: column;
         }
 
         @keyframes fadeIn {
@@ -268,10 +271,10 @@ const ProductDetailModal = ({
 
         .modal-close-btn {
           position: absolute;
-          top: 20px;
-          right: 20px;
-          width: 48px;
-          height: 48px;
+          top: 12px;
+          right: 12px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(10px);
@@ -281,7 +284,7 @@ const ProductDetailModal = ({
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 24px;
+          font-size: 20px;
           z-index: 100;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -302,24 +305,29 @@ const ProductDetailModal = ({
         .modal-content {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 48px;
-          padding: 48px;
+          gap: 24px;
+          padding: 24px 32px;
+          flex: 1;
+          min-height: 0;
+          overflow: hidden;
         }
 
         .image-gallery-section {
           display: flex;
           flex-direction: column;
-          gap: 16px;
-          position: sticky;
-          top: 24px;
-          height: fit-content;
+          gap: 10px;
+          height: 100%;
+          min-height: 0;
+          justify-content: center;
         }
 
         .main-image-container {
           position: relative;
           width: 100%;
-          height: 500px;
-          border-radius: 20px;
+          flex: 1;
+          min-height: 0;
+          max-height: 55vh;
+          border-radius: 16px;
           overflow: hidden;
           background: #f9fafb;
           cursor: zoom-in;
@@ -350,12 +358,12 @@ const ProductDetailModal = ({
         }
 
         .thumbnail {
-          width: 80px;
-          height: 80px;
-          border-radius: 12px;
+          width: 56px;
+          height: 56px;
+          border-radius: 10px;
           overflow: hidden;
           cursor: pointer;
-          border: 3px solid transparent;
+          border: 2px solid transparent;
           transition: all 0.3s ease;
           flex-shrink: 0;
         }
@@ -379,19 +387,28 @@ const ProductDetailModal = ({
         .product-info-section {
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 8px;
+          overflow-y: auto;
+          min-height: 0;
+          padding-right: 8px;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .product-info-section::-webkit-scrollbar {
+          display: none;
         }
 
         .product-badges {
           display: flex;
-          gap: 8px;
+          gap: 6px;
           flex-wrap: wrap;
         }
 
         .badge {
-          padding: 6px 14px;
-          border-radius: 20px;
-          font-size: 13px;
+          padding: 4px 10px;
+          border-radius: 16px;
+          font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.3px;
         }
@@ -415,15 +432,16 @@ const ProductDetailModal = ({
         }
 
         .product-category {
-          font-size: 13px;
+          font-size: 11px;
           color: #6b7280;
           text-transform: uppercase;
           font-weight: 600;
           letter-spacing: 1px;
+          margin: 0;
         }
 
         .product-title {
-          font-size: 36px;
+          font-size: 24px;
           font-weight: 800;
           color: #111827;
           line-height: 1.2;
@@ -433,8 +451,8 @@ const ProductDetailModal = ({
         .product-rating-section {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 12px 0;
+          gap: 12px;
+          padding: 6px 0;
           border-bottom: 1px solid #e5e7eb;
         }
 
@@ -446,19 +464,19 @@ const ProductDetailModal = ({
         .price-section {
           display: flex;
           align-items: baseline;
-          gap: 16px;
-          padding: 16px 0;
+          gap: 12px;
+          padding: 6px 0;
         }
 
         .current-price {
-          font-size: 42px;
+          font-size: 30px;
           font-weight: 900;
           color: #111827;
           letter-spacing: -1px;
         }
 
         .original-price {
-          font-size: 24px;
+          font-size: 18px;
           color: #9ca3af;
           text-decoration: line-through;
         }
@@ -466,11 +484,12 @@ const ProductDetailModal = ({
         .stock-badge {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 12px 20px;
-          border-radius: 12px;
-          font-size: 15px;
+          gap: 6px;
+          padding: 8px 14px;
+          border-radius: 10px;
+          font-size: 13px;
           font-weight: 700;
+          width: fit-content;
         }
 
         .stock-badge.in-stock {
@@ -495,8 +514,8 @@ const ProductDetailModal = ({
         .quantity-selector {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 16px 0;
+          gap: 12px;
+          padding: 6px 0;
         }
 
         .quantity-label {
@@ -513,12 +532,12 @@ const ProductDetailModal = ({
         }
 
         .quantity-btn {
-          width: 44px;
-          height: 44px;
+          width: 36px;
+          height: 36px;
           border: none;
           background: white;
           cursor: pointer;
-          font-size: 20px;
+          font-size: 18px;
           font-weight: 700;
           color: #6b7280;
           transition: all 0.3s ease;
@@ -535,34 +554,34 @@ const ProductDetailModal = ({
         }
 
         .quantity-display {
-          width: 60px;
+          width: 48px;
           text-align: center;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 700;
           border-left: 2px solid #e5e7eb;
           border-right: 2px solid #e5e7eb;
-          padding: 0 16px;
+          padding: 0 12px;
         }
 
         .action-buttons {
           display: flex;
-          gap: 16px;
-          padding: 24px 0;
+          gap: 12px;
+          padding: 10px 0;
         }
 
         .action-btn {
           flex: 1;
-          padding: 18px 32px;
-          border-radius: 14px;
+          padding: 12px 20px;
+          border-radius: 12px;
           border: none;
-          font-size: 17px;
+          font-size: 15px;
           font-weight: 700;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
+          gap: 8px;
         }
 
         .action-btn:disabled {
@@ -597,23 +616,24 @@ const ProductDetailModal = ({
 
         .tabs-container {
           border-top: 2px solid #e5e7eb;
-          padding-top: 24px;
+          padding-top: 10px;
+          margin-top: 4px;
         }
 
         .tabs-header {
           display: flex;
-          gap: 8px;
+          gap: 4px;
           border-bottom: 2px solid #e5e7eb;
-          margin-bottom: 24px;
+          margin-bottom: 10px;
         }
 
         .tab-btn {
-          padding: 14px 24px;
+          padding: 8px 16px;
           background: none;
           border: none;
           border-bottom: 3px solid transparent;
           color: #6b7280;
-          font-size: 16px;
+          font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -636,8 +656,8 @@ const ProductDetailModal = ({
 
         .description-content {
           color: #4b5563;
-          line-height: 1.8;
-          font-size: 16px;
+          line-height: 1.6;
+          font-size: 13px;
         }
 
         .specifications-grid {
@@ -647,12 +667,13 @@ const ProductDetailModal = ({
 
         .spec-row {
           display: grid;
-          grid-template-columns: 200px 1fr;
-          gap: 24px;
-          padding: 16px;
+          grid-template-columns: 150px 1fr;
+          gap: 16px;
+          padding: 10px 14px;
           background: #f9fafb;
-          border-radius: 12px;
+          border-radius: 10px;
           border: 1px solid #e5e7eb;
+          font-size: 13px;
         }
 
         .spec-label {
@@ -671,10 +692,11 @@ const ProductDetailModal = ({
         }
 
         .review-card {
-          padding: 20px;
+          padding: 12px;
           background: #f9fafb;
-          border-radius: 16px;
+          border-radius: 12px;
           border: 1px solid #e5e7eb;
+          font-size: 13px;
         }
 
         .review-header {
@@ -810,7 +832,8 @@ const ProductDetailModal = ({
         @media (max-width: 1024px) {
           .modal-content {
             grid-template-columns: 1fr;
-            gap: 32px;
+            gap: 16px;
+            overflow-y: auto;
           }
 
           .image-gallery-section {
@@ -818,31 +841,28 @@ const ProductDetailModal = ({
           }
 
           .main-image-container {
-            height: 400px;
-          }
-
-          .related-products-grid {
-            grid-template-columns: repeat(2, 1fr);
+            max-height: 35vh;
           }
         }
 
         @media (max-width: 768px) {
           .product-detail-modal {
-            border-radius: 20px 20px 0 0;
+            border-radius: 16px 16px 0 0;
+            height: 100vh;
             max-height: 100vh;
           }
 
           .modal-content {
-            padding: 24px;
-            gap: 24px;
+            padding: 16px;
+            gap: 12px;
           }
 
           .product-title {
-            font-size: 28px;
+            font-size: 20px;
           }
 
           .current-price {
-            font-size: 32px;
+            font-size: 24px;
           }
 
           .action-buttons {
@@ -851,15 +871,11 @@ const ProductDetailModal = ({
 
           .spec-row {
             grid-template-columns: 1fr;
-            gap: 8px;
-          }
-
-          .related-products-grid {
-            grid-template-columns: 1fr;
+            gap: 6px;
           }
 
           .main-image-container {
-            height: 300px;
+            max-height: 30vh;
           }
         }
 
@@ -1172,41 +1188,7 @@ const ProductDetailModal = ({
                 </div>
               </div>
 
-              {/* Related Products */}
-              {relatedProducts.length > 0 && (
-                <div className="related-products" style={{ padding: '0 48px 48px' }}>
-                  <h2 className="related-products-title">You May Also Like</h2>
-                  <div className="related-products-grid">
-                    {relatedProducts.map((relatedProduct) => (
-                      <div
-                        key={relatedProduct._id}
-                        className="related-product-card"
-                        onClick={() => {
-                          setProduct(relatedProduct);
-                          setSelectedImage(0);
-                          setActiveTab('description');
-                          setQuantity(1);
-                          fetchProductDetails();
-                        }}
-                        role="button"
-                        tabIndex={0}
-                      >
-                        <img
-                          src={getImageUrl(relatedProduct.imageUrl)}
-                          alt={relatedProduct.name}
-                          className="related-product-image"
-                        />
-                        <div className="related-product-info">
-                          <p className="related-product-name">{relatedProduct.name}</p>
-                          <p className="related-product-price">
-                            ${relatedProduct.price.toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* Related Products - hidden to keep single page layout */}
             </>
           ) : null}
         </div>

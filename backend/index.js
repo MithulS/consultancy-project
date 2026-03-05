@@ -2,19 +2,29 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
+const helmet = require('helmet');
 const connectDB = require('./config/db');
 
 const app = express();
-connectDB();
+
+// Trust first proxy (needed for rate limiting behind reverse proxy)
+app.set('trust proxy', 1);
+
+// Connect to DB before accepting requests
+(async () => {
+  await connectDB();
+})();
 
 // CORS Configuration - Development-friendly
 const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://127.0.0.1:5173',
-  'http://127.0.0.1:5174',
-  'http://127.0.0.1:5175',
+  ...(process.env.NODE_ENV !== 'production' ? [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
+    'http://127.0.0.1:5175',
+  ] : []),
   process.env.CLIENT_URL
 ].filter(Boolean);
 
@@ -25,15 +35,35 @@ app.use(cors({
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
+    } else if (process.env.NODE_ENV !== 'production') {
+      console.warn('⚠️  CORS allowing unrecognized origin in dev:', origin);
+      callback(null, true);
     } else {
       console.warn('⚠️  CORS blocked origin:', origin);
-      console.warn('   Allowed origins:', allowedOrigins.join(', '));
-      callback(null, true); // Allow anyway in development
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Security headers (CSP, X-Content-Type-Options, X-Frame-Options, etc.)
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", ...allowedOrigins],
+      fontSrc: ["'self'", "https:", "data:"],
+      objectSrc: ["'none'"],
+      frameSrc: ["'none'"],
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Allow cross-origin resources (images, CDN)
+  crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow images to be loaded cross-origin
 }));
 
 // Enable gzip compression for all responses
@@ -47,7 +77,7 @@ app.use(compression({
   level: 6 // Balance between compression and speed
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -70,8 +100,11 @@ app.use((req, res, next) => {
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
     if (req.body && Object.keys(req.body).length > 0) {
+      const sensitiveFields = ['password', 'newPassword', 'currentPassword', 'confirmPassword', 'otp', 'token', 'creditCard', 'cvv', 'cardNumber'];
       const sanitizedBody = { ...req.body };
-      if (sanitizedBody.password) sanitizedBody.password = '***HIDDEN***';
+      for (const field of sensitiveFields) {
+        if (sanitizedBody[field]) sanitizedBody[field] = '***HIDDEN***';
+      }
       console.log('📦 Request body:', sanitizedBody);
     }
     next();
@@ -100,15 +133,18 @@ app.use('/api', (req, res, next) => {
 // Health check endpoints
 app.get('/health', (req, res) => {
   const mongoose = require('mongoose');
-  res.json({
+  const healthData = {
     status: 'OK',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    email: process.env.EMAIL_USER ? 'configured' : 'not configured',
-    port: PORT
-  });
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  };
+  // Only expose details in non-production
+  if (process.env.NODE_ENV !== 'production') {
+    healthData.uptime = process.uptime();
+    healthData.environment = process.env.NODE_ENV || 'development';
+    healthData.email = process.env.EMAIL_USER ? 'configured' : 'not configured';
+  }
+  res.json(healthData);
 });
 
 app.get('/api/health', (req, res) => {
@@ -144,14 +180,9 @@ app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/contact', require('./routes/contact'));
 
-// Error handling middleware
+// Error handling middleware — delegates to the global handler below
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err);
-  res.status(err.status || 500).json({
-    success: false,
-    msg: err.message || 'Internal server error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
+  next(err);
 });
 
 // Initialize Redis (optional - will continue without it if not available)
@@ -176,39 +207,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use((req, res) => {
   res.status(404).json({ 
     error: 'Not Found',
-    message: `Cannot ${req.method} ${req.path}`,
-    availableEndpoints: [
-      'GET /health',
-      'GET /api/health',
-      'POST /api/auth/register',
-      'POST /api/auth/verify-otp',
-      'POST /api/auth/login',
-      'POST /api/auth/admin-login (requires admin key)',
-      'POST /api/auth/resend-otp',
-      'GET /api/products',
-      'GET /api/products/:id',
-      'POST /api/products (admin required)',
-      'PUT /api/products/:id (admin required)',
-      'DELETE /api/products/:id (admin required)',
-      'POST /api/orders (auth required)',
-      'GET /api/orders/my-orders (auth required)',
-      'GET /api/orders/:id (auth required)',
-      'GET /api/orders (admin required)',
-      'PUT /api/orders/:id/status (admin required)',
-      'GET /api/reviews/product/:productId',
-      'POST /api/reviews (auth required, verified purchase only)',
-      'PUT /api/reviews/:id (auth required, own review)',
-      'DELETE /api/reviews/:id (auth required, own review)',
-      'GET /api/reviews/my-reviews (auth required)',
-      'GET /api/reviews/can-review/:productId (auth required)',
-      'GET /api/inventory/logs/:productId (admin required)',
-      'GET /api/inventory/logs (admin required)',
-      'GET /api/inventory/stats (admin required)',
-      'GET /api/inventory/alerts/low-stock (admin required)',
-      'GET /api/inventory/alerts/out-of-stock (admin required)',
-      'POST /api/inventory/adjust (admin required)',
-      'GET /api/inventory/report (admin required)'
-    ]
+    message: `Cannot ${req.method} ${req.path}`
   });
 });
 
@@ -251,7 +250,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log('\n' + '='.repeat(60));
   console.log('🚀 Server Started Successfully!');
   console.log('='.repeat(60));
@@ -263,3 +262,28 @@ app.listen(PORT, () => {
   console.log(`🔌 Allowed Origins:  ${allowedOrigins.join(', ')}`);
   console.log('='.repeat(60) + '\n');
 });
+
+// Graceful shutdown
+const gracefulShutdown = (signal) => {
+  console.log(`\nℹ️  ${signal} received. Shutting down gracefully...`);
+  server.close(() => {
+    console.log('✅ HTTP server closed.');
+    // Close database connections
+    const mongoose = require('mongoose');
+    mongoose.connection.close(false).then(() => {
+      console.log('✅ MongoDB connection closed.');
+      process.exit(0);
+    }).catch(() => {
+      process.exit(1);
+    });
+  });
+
+  // Force shutdown after 10s
+  setTimeout(() => {
+    console.error('❌ Forced shutdown after timeout.');
+    process.exit(1);
+  }, 10000);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));

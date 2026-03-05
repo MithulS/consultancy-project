@@ -255,6 +255,7 @@ export default function AdminResetPassword() {
       outline: 'none',
       transition: 'all 0.3s ease',
       color: '#0f172a',
+      backgroundColor: '#ffffff',
       fontWeight: '500',
       boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)',
       width: '100%',

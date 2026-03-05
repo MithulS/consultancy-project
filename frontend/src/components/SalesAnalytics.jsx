@@ -156,8 +156,7 @@ export default function SalesAnalytics() {
       padding: '32px 40px',
       marginBottom: '28px',
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
-      animation: 'fadeIn 0.6s ease-out'
+      border: '1px solid rgba(255, 255, 255, 0.08)'
     },
     title: {
       fontSize: '36px',
@@ -258,7 +257,6 @@ export default function SalesAnalytics() {
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       border: '1px solid rgba(255, 255, 255, 0.08)',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      animation: 'fadeIn 0.6s ease-out',
       position: 'relative',
       overflow: 'hidden'
     },
@@ -278,8 +276,7 @@ export default function SalesAnalytics() {
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       marginBottom: '8px',
-      letterSpacing: '-1px',
-      animation: 'countUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      letterSpacing: '-1px'
     },
     statSubtext: {
       fontSize: '13px',
@@ -297,7 +294,10 @@ export default function SalesAnalytics() {
       fontWeight: '600',
       color: '#94a3b8',
       background: 'rgba(30, 41, 59, 0.4)',
-      border: '1px solid transparent',
+      borderTop: '1px solid transparent',
+      borderLeft: '1px solid transparent',
+      borderRight: '1px solid transparent',
+      borderBottom: '1px solid transparent',
       borderRadius: '12px 12px 0 0',
       cursor: 'pointer',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -313,7 +313,7 @@ export default function SalesAnalytics() {
       borderRight: '1px solid rgba(255, 255, 255, 0.1)',
       borderBottom: '2px solid rgba(30, 41, 59, 0.9)',
       fontWeight: '700',
-      transform: 'translateY(1px)' // cover the border line smoothly
+      transform: 'translateY(1px)'
     },
     chartCard: {
       background: 'rgba(30, 41, 59, 0.7)',
@@ -323,7 +323,7 @@ export default function SalesAnalytics() {
       marginBottom: '28px',
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       border: '1px solid rgba(255, 255, 255, 0.08)',
-      animation: 'fadeIn 0.6s ease-out 0.2s backwards'
+      minHeight: '460px'
     },
     chartTitle: {
       fontSize: '18px',
@@ -422,43 +422,17 @@ export default function SalesAnalytics() {
     }
   };
 
-  if (loading && !summary) {
-    return (
-      <div style={styles.container}>
-        <div style={{
-          ...styles.loading,
-          background: 'rgba(30, 41, 59, 0.7)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '20px',
-          padding: '60px 40px',
-          margin: '100px auto',
-          maxWidth: '400px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-          border: '1px solid rgba(255, 255, 255, 0.08)'
-        }}>
-          <div style={{
-            fontSize: '64px',
-            marginBottom: '24px',
-            animation: 'pulse 1.5s ease-in-out infinite'
-          }}>📊</div>
-          <div style={{
-            fontSize: '18px',
-            fontWeight: '600',
-            color: '#60a5fa',
-            letterSpacing: '0.5px'
-          }}>Loading analytics data...</div>
-          <div style={{
-            width: '80px',
-            height: '4px',
-            background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
-            borderRadius: '2px',
-            margin: '24px auto 0',
-            animation: 'shimmer 2s infinite'
-          }}></div>
-        </div>
-      </div>
-    );
-  }
+  const skeletonBlock = (height, width = '100%') => ({
+    height,
+    width,
+    background: 'linear-gradient(90deg, rgba(30, 41, 59, 0.7) 25%, rgba(51, 65, 85, 0.5) 50%, rgba(30, 41, 59, 0.7) 75%)',
+    backgroundSize: '200% 100%',
+    animation: 'shimmer 1.5s infinite',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.05)'
+  });
+
+
 
   return (
     <div style={styles.container}>
@@ -467,11 +441,13 @@ export default function SalesAnalytics() {
         <p style={styles.subtitle}>Comprehensive product sales analysis and insights</p>
       </div>
 
-      {error && (
-        <div style={styles.error}>
-          ❌ {error}
-        </div>
-      )}
+      <div style={{ minHeight: error ? 'auto' : 0 }}>
+        {error && (
+          <div style={styles.error}>
+            ❌ {error}
+          </div>
+        )}
+      </div>
 
       <div style={styles.filtersCard}>
         <div style={styles.filtersGrid}>
@@ -534,9 +510,9 @@ export default function SalesAnalytics() {
                 e.target.style.transform = 'scale(1)';
               }}
             >
-              <option value="daily" style={{ background: '#1e293b' }}>📅 Daily</option>
-              <option value="weekly" style={{ background: '#1e293b' }}>📆 Weekly</option>
-              <option value="monthly" style={{ background: '#1e293b' }}>🗓️ Monthly</option>
+              <option value="daily" style={{ background: '#1e293b', color: '#f8fafc' }}>📅 Daily</option>
+              <option value="weekly" style={{ background: '#1e293b', color: '#f8fafc' }}>📆 Weekly</option>
+              <option value="monthly" style={{ background: '#1e293b', color: '#f8fafc' }}>🗓️ Monthly</option>
             </select>
           </div>
 
@@ -557,8 +533,8 @@ export default function SalesAnalytics() {
         </div>
       </div>
 
-      {summary && (
-        <div aria-live="polite" aria-atomic="true">
+      <div aria-live="polite" aria-atomic="true">
+        {summary ? (<>
           <div style={styles.statsGrid}>
             <div
               style={styles.statCard}
@@ -707,9 +683,9 @@ export default function SalesAnalytics() {
                   </div>
                 </div>
 
-                <div style={{ height: 380, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                  <h4 style={{ color: '#cbd5e1', marginBottom: '8px', fontWeight: '600', fontSize: '15px' }}>Orders by Status</h4>
-                  <ResponsiveContainer width="100%" height="100%">
+                <div style={{ height: 380, width: '100%', minWidth: 0, background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <h4 style={{ color: '#cbd5e1', marginBottom: '8px', fontWeight: '600', fontSize: '15px', textAlign: 'center' }}>Orders by Status</h4>
+                  <ResponsiveContainer width="99%" height={300}>
                     <PieChart>
                       <Pie
                         data={Object.entries(summary.salesByStatus).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }))}
@@ -740,8 +716,8 @@ export default function SalesAnalytics() {
           {activeTab === 'trends' && trends.length > 0 && (
             <div style={styles.chartCard}>
               <h3 style={styles.chartTitle}>Sales Trends ({filters.interval})</h3>
-              <div style={{ height: 400, width: '100%', marginTop: '24px' }}>
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ marginTop: '24px' }}>
+                <ResponsiveContainer width="99%" height={400}>
                   <AreaChart data={trends} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
@@ -769,8 +745,8 @@ export default function SalesAnalytics() {
             <div style={styles.chartCard}>
               <h3 style={styles.chartTitle}>Top Selling Products</h3>
 
-              <div style={{ height: 400, width: '100%', marginBottom: '40px' }}>
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ marginBottom: '40px' }}>
+                <ResponsiveContainer width="99%" height={400}>
                   <BarChart
                     data={[...summary.topProducts].slice(0, 10).sort((a, b) => a.revenue - b.revenue)}
                     layout="vertical"
@@ -854,8 +830,8 @@ export default function SalesAnalytics() {
               <h3 style={styles.chartTitle}>Sales by Category</h3>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', marginBottom: '40px', alignItems: 'center' }}>
-                <div style={{ height: 350, width: '100%', background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <ResponsiveContainer width="100%" height="100%">
+                <div style={{ height: 350, width: '100%', minWidth: 0, background: 'rgba(15, 23, 42, 0.4)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <ResponsiveContainer width="99%" height={280}>
                     <PieChart>
                       <Pie
                         data={categorySales}
@@ -949,8 +925,30 @@ export default function SalesAnalytics() {
               </div>
             </div>
           )}
-        </div>
-      )}
+          </>
+        ) : (
+          <>
+            <div style={styles.statsGrid}>
+              {[0, 1, 2, 3].map(i => (
+                <div key={i} style={styles.statCard}>
+                  <div style={skeletonBlock(14, '100px')} />
+                  <div style={{ ...skeletonBlock(32, '140px'), marginTop: '16px' }} />
+                  <div style={{ ...skeletonBlock(12, '80px'), marginTop: '12px' }} />
+                </div>
+              ))}
+            </div>
+            <div style={styles.tabs}>
+              {[80, 100, 100, 90].map((w, i) => (
+                <div key={i} style={skeletonBlock(44, `${w}px`)} />
+              ))}
+            </div>
+            <div style={{ ...styles.chartCard, minHeight: '460px' }}>
+              <div style={skeletonBlock(24, '240px')} />
+              <div style={{ ...skeletonBlock(380), marginTop: '24px' }} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

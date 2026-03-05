@@ -27,8 +27,9 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-      padding: '20px',
-      animation: 'fadeIn 0.3s ease'
+      padding: '10px',
+      animation: 'fadeIn 0.3s ease',
+      overflow: 'hidden'
     },
     modal: {
       background: 'var(--glass-background)',
@@ -36,11 +37,14 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       borderRadius: '16px',
       maxWidth: '900px',
       width: '100%',
-      maxHeight: '90vh',
-      overflow: 'auto',
+      height: '96vh',
+      maxHeight: '96vh',
+      overflow: 'hidden',
       position: 'relative',
       animation: 'slideUp 0.3s ease',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      display: 'flex',
+      flexDirection: 'column'
     },
     closeButton: {
       position: 'absolute',
@@ -64,23 +68,35 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     content: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '40px',
-      padding: '40px'
+      gap: '24px',
+      padding: '24px 32px',
+      flex: 1,
+      minHeight: 0,
+      overflow: 'hidden'
     },
     imageSection: {
-      position: 'relative'
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 0,
+      height: '100%'
     },
     image: {
       width: '100%',
-      height: '400px',
-      objectFit: 'cover',
+      height: '100%',
+      maxHeight: '100%',
+      objectFit: 'contain',
       borderRadius: '12px',
       background: 'rgba(255, 255, 255, 0.05)'
     },
     detailsSection: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px'
+      gap: '10px',
+      minHeight: 0,
+      overflow: 'hidden',
+      justifyContent: 'center'
     },
     category: {
       fontSize: '12px',
@@ -90,29 +106,35 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       letterSpacing: '0.5px'
     },
     title: {
-      fontSize: '28px',
+      fontSize: '22px',
       fontWeight: '700',
       color: 'var(--text-primary)',
-      lineHeight: '1.3'
+      lineHeight: '1.2',
+      margin: 0
     },
     description: {
-      fontSize: '15px',
+      fontSize: '13px',
       color: '#6b7280',
-      lineHeight: '1.6'
+      lineHeight: '1.5',
+      display: '-webkit-box',
+      WebkitLineClamp: 3,
+      WebkitBoxOrient: 'vertical',
+      overflow: 'hidden',
+      margin: 0
     },
     priceSection: {
       display: 'flex',
       alignItems: 'baseline',
-      gap: '12px',
-      marginTop: '8px'
+      gap: '10px',
+      marginTop: '2px'
     },
     currentPrice: {
-      fontSize: '32px',
+      fontSize: '26px',
       fontWeight: '800',
       color: 'var(--text-primary)'
     },
     originalPrice: {
-      fontSize: '20px',
+      fontSize: '16px',
       color: '#9ca3af',
       textDecoration: 'line-through'
     },
@@ -125,12 +147,13 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       fontWeight: '700'
     },
     stockInfo: {
-      padding: '12px 16px',
+      padding: '8px 14px',
       borderRadius: '8px',
-      fontSize: '14px',
+      fontSize: '13px',
       fontWeight: '600',
       display: 'inline-block',
-      marginTop: '8px'
+      marginTop: '2px',
+      width: 'fit-content'
     },
     inStock: {
       background: 'rgba(16, 185, 129, 0.1)',
@@ -145,13 +168,13 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       color: 'var(--accent-red-primary)'
     },
     features: {
-      marginTop: '16px'
+      marginTop: '4px'
     },
     featureTitle: {
-      fontSize: '16px',
+      fontSize: '14px',
       fontWeight: '600',
       color: 'var(--text-primary)',
-      marginBottom: '12px'
+      marginBottom: '6px'
     },
     featureList: {
       listStyle: 'none',
@@ -159,9 +182,9 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
       margin: 0
     },
     featureItem: {
-      fontSize: '14px',
+      fontSize: '13px',
       color: 'var(--text-secondary)',
-      padding: '8px 0',
+      padding: '5px 0',
       borderBottom: '1px solid var(--border-color)',
       display: 'flex',
       alignItems: 'center',
@@ -170,14 +193,14 @@ const ProductQuickView = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) =
     actions: {
       display: 'flex',
       gap: '12px',
-      marginTop: '24px'
+      marginTop: '8px'
     },
     button: {
       flex: 1,
-      padding: '16px 24px',
+      padding: '12px 20px',
       borderRadius: '10px',
       border: 'none',
-      fontSize: '16px',
+      fontSize: '15px',
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s ease'

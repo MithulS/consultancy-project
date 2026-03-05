@@ -1,6 +1,7 @@
 // Admin Contact & Notification Routes
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 const {
   getAdminContacts,
@@ -14,7 +15,7 @@ const {
  * @desc    Get all admin contacts with phone numbers
  * @access  Admin only
  */
-router.get('/admin-contacts', verifyAdmin, async (req, res) => {
+router.get('/admin-contacts', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const admins = await getAdminContacts();
     
@@ -44,7 +45,7 @@ router.get('/admin-contacts', verifyAdmin, async (req, res) => {
  * @desc    Get primary admin contact information
  * @access  Admin only
  */
-router.get('/primary-admin', verifyAdmin, async (req, res) => {
+router.get('/primary-admin', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const admin = await getPrimaryAdminContact();
     
@@ -77,7 +78,7 @@ router.get('/primary-admin', verifyAdmin, async (req, res) => {
  * @desc    Check if product is out of stock and get admin notification
  * @access  Admin only
  */
-router.get('/out-of-stock/:productId', verifyAdmin, async (req, res) => {
+router.get('/out-of-stock/:productId', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId } = req.params;
     
@@ -117,7 +118,7 @@ router.get('/out-of-stock/:productId', verifyAdmin, async (req, res) => {
  * @desc    Get all out-of-stock products with admin notification
  * @access  Admin only
  */
-router.get('/out-of-stock-all', verifyAdmin, async (req, res) => {
+router.get('/out-of-stock-all', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const result = await getAllOutOfStockNotifications();
     
@@ -146,7 +147,7 @@ router.get('/out-of-stock-all', verifyAdmin, async (req, res) => {
  * @desc    Test notification system for a specific product
  * @access  Admin only
  */
-router.post('/test-notification/:productId', verifyAdmin, async (req, res) => {
+router.post('/test-notification/:productId', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId } = req.params;
     

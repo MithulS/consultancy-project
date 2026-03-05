@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
 const Order = require('../models/order');
+const authMiddleware = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 
 // Helper function to convert array of objects to CSV
@@ -49,6 +50,7 @@ function getDateRange(rangeType, startDate, endDate) {
       // Set end date to end of day
       end.setHours(23, 59, 59, 999);
       break;
+    case 'all':
     default:
       start = new Date(0);
       end = now;
@@ -58,7 +60,7 @@ function getDateRange(rangeType, startDate, endDate) {
 }
 
 // GET /api/admin/reports/products - Generate product report
-router.get('/products', verifyAdmin, async (req, res) => {
+router.get('/products', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId, dateRange, startDate, endDate } = req.query;
     
@@ -83,7 +85,7 @@ router.get('/products', verifyAdmin, async (req, res) => {
     for (const product of products) {
       // Get orders for this product within date range
       const orders = await Order.find({
-        'items.productId': product._id,
+        'items.product': product._id,
         createdAt: { $gte: start, $lte: end }
       }).lean();
       
@@ -93,7 +95,10 @@ router.get('/products', verifyAdmin, async (req, res) => {
       let orderCount = orders.length;
       
       orders.forEach(order => {
-        const item = order.items.find(i => i.productId.toString() === product._id.toString());
+        const item = order.items.find(i => 
+          (i.product && i.product.toString() === product._id.toString()) ||
+          (i.productId && i.productId.toString() === product._id.toString())
+        );
         if (item) {
           totalQuantitySold += item.quantity;
           totalRevenue += item.price * item.quantity;
@@ -165,7 +170,7 @@ router.get('/products', verifyAdmin, async (req, res) => {
 });
 
 // GET /api/admin/reports/summary - Get quick summary stats
-router.get('/summary', verifyAdmin, async (req, res) => {
+router.get('/summary', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { dateRange, startDate, endDate } = req.query;
     const { start, end } = getDateRange(dateRange, startDate, endDate);

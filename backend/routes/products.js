@@ -34,15 +34,17 @@ router.get('/', async (req, res) => {
     // Handle search with intelligent query selection
     let useRegexSearch = false;
     if (search) {
+      // Escape special regex characters to prevent ReDoS
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       // Force regex for short queries (MongoDB text index requires 3+ chars)
       if (search.length < 3) {
         console.log(`🔍 Short query "${search}" (${search.length} chars) - using regex`);
         useRegexSearch = true;
         query.$or = [
-          { name: { $regex: search, $options: 'i' } },
-          { description: { $regex: search, $options: 'i' } },
-          { brand: { $regex: search, $options: 'i' } },
-          { tags: { $regex: search, $options: 'i' } }
+          { name: { $regex: escapedSearch, $options: 'i' } },
+          { description: { $regex: escapedSearch, $options: 'i' } },
+          { brand: { $regex: escapedSearch, $options: 'i' } },
+          { tags: { $regex: escapedSearch, $options: 'i' } }
         ];
       } else {
         // Try text search first (uses text index for better performance)
@@ -56,11 +58,12 @@ router.get('/', async (req, res) => {
     }
 
     // Execute query with pagination
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 12, 1), 100);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
     let products = await Product.find(query)
       .sort(sort)
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .select('-__v');
 
     let total = await Product.countDocuments(query);
@@ -69,13 +72,15 @@ router.get('/', async (req, res) => {
     if (search && products.length === 0 && !useRegexSearch) {
       console.log(`⚠️ Text search returned 0 results, trying regex fallback...`);
       
+      // Escape special regex characters to prevent ReDoS
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       // Remove text search and use regex instead
       delete query.$text;
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { brand: { $regex: search, $options: 'i' } },
-        { tags: { $regex: search, $options: 'i' } }
+        { name: { $regex: escapedSearch, $options: 'i' } },
+        { description: { $regex: escapedSearch, $options: 'i' } },
+        { brand: { $regex: escapedSearch, $options: 'i' } },
+        { tags: { $regex: escapedSearch, $options: 'i' } }
       ];
       
       products = await Product.find(query)
@@ -125,7 +130,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create product (admin only - requires admin token)
-router.post('/', verifyAdmin, async (req, res) => {
+router.post('/', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const {
       name,
@@ -186,7 +191,7 @@ router.post('/', verifyAdmin, async (req, res) => {
 });
 
 // Update product (admin only - requires admin token)
-router.put('/:id', verifyAdmin, async (req, res) => {
+router.put('/:id', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const updates = req.body;
     
@@ -228,7 +233,7 @@ router.put('/:id', verifyAdmin, async (req, res) => {
 });
 
 // Delete product (admin only - requires admin token)
-router.delete('/:id', verifyAdmin, async (req, res) => {
+router.delete('/:id', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 

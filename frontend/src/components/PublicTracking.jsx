@@ -14,7 +14,7 @@ export default function PublicTracking() {
     e.preventDefault();
 
     if (!trackingNumber.trim()) {
-      setError('Please enter a tracking number');
+      setError('Please enter a tracking number or order ID');
       return;
     }
 
@@ -110,13 +110,13 @@ export default function PublicTracking() {
       <nav style={styles.nav}>
         <h1
           style={styles.logo}
-          onClick={() => window.location.hash = '#dashboard'}
+          onClick={() => window.location.hash = '#home'}
         >
-          🛒 ElectroStore
+          🏪 Sri Amman Traders
         </h1>
         <button
           className="btn btn-ghost"
-          onClick={() => window.location.hash = '#dashboard'}
+          onClick={() => window.location.hash = '#home'}
         >
           🏠 Home
         </button>
@@ -131,7 +131,7 @@ export default function PublicTracking() {
               Track Your Order
             </h1>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '16px' }}>
-              Enter your tracking number to see real-time updates
+              Enter your tracking number or order ID to see real-time updates
             </p>
 
             <form onSubmit={handleTrack} style={styles.form}>
@@ -140,7 +140,7 @@ export default function PublicTracking() {
                   type="text"
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="Enter tracking number (e.g., TRK123456)"
+                  placeholder="Enter tracking number or order ID"
                   style={styles.input}
                   disabled={loading}
                 />

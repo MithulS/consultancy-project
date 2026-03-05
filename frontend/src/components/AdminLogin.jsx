@@ -105,7 +105,7 @@ export default function AdminLogin() {
       setMsg(errorMessage);
       
       // Track failed attempts only for credential errors
-      if (!err.message.includes('fetch') && !err.message.includes('timeout') && !err.name === 'AbortError') {
+      if (!err.message.includes('fetch') && !err.message.includes('timeout') && err.name !== 'AbortError') {
         const newAttempts = loginAttempts + 1;
         setLoginAttempts(newAttempts);
         

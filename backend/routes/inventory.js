@@ -1,6 +1,7 @@
 // Inventory management routes (admin only)
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/auth');
 const { verifyAdmin } = require('../middleware/auth');
 const InventoryLog = require('../models/inventoryLog');
 const Product = require('../models/product');
@@ -12,7 +13,7 @@ const {
 } = require('../utils/inventoryManager');
 
 // Get inventory logs for a specific product
-router.get('/logs/:productId', verifyAdmin, async (req, res) => {
+router.get('/logs/:productId', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId } = req.params;
     const { page = 1, limit = 50, action } = req.query;
@@ -22,12 +23,13 @@ router.get('/logs/:productId', verifyAdmin, async (req, res) => {
       query.action = action;
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 50, 1), 200);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const logs = await InventoryLog.find(query)
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .populate('product', 'name imageUrl')
       .populate('order', 'status totalAmount')
       .populate('performedBy', 'name email username');
@@ -63,7 +65,7 @@ router.get('/logs/:productId', verifyAdmin, async (req, res) => {
 });
 
 // Get all inventory logs (with filters)
-router.get('/logs', verifyAdmin, async (req, res) => {
+router.get('/logs', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 100, action, startDate, endDate } = req.query;
 
@@ -77,12 +79,13 @@ router.get('/logs', verifyAdmin, async (req, res) => {
       if (endDate) query.createdAt.$lte = new Date(endDate);
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safeLimit = Math.min(Math.max(Number(limit) || 100, 1), 200);
+    const skip = (Math.max(Number(page) || 1, 1) - 1) * safeLimit;
 
     const logs = await InventoryLog.find(query)
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit))
+      .limit(safeLimit)
       .populate('product', 'name imageUrl stock')
       .populate('order', 'status')
       .populate('performedBy', 'name email');
@@ -110,7 +113,7 @@ router.get('/logs', verifyAdmin, async (req, res) => {
 });
 
 // Get comprehensive inventory statistics
-router.get('/stats', verifyAdmin, async (req, res) => {
+router.get('/stats', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId } = req.query;
     
@@ -147,7 +150,7 @@ router.get('/stats', verifyAdmin, async (req, res) => {
 });
 
 // Get low stock alerts
-router.get('/alerts/low-stock', verifyAdmin, async (req, res) => {
+router.get('/alerts/low-stock', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { threshold = 10 } = req.query;
     
@@ -170,7 +173,7 @@ router.get('/alerts/low-stock', verifyAdmin, async (req, res) => {
 });
 
 // Get out of stock products
-router.get('/alerts/out-of-stock', verifyAdmin, async (req, res) => {
+router.get('/alerts/out-of-stock', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const products = await getOutOfStockProducts();
 
@@ -189,8 +192,8 @@ router.get('/alerts/out-of-stock', verifyAdmin, async (req, res) => {
   }
 });
 
-// Manual stock adjustment (admin only)
-router.post('/adjust', verifyAdmin, async (req, res) => {
+// Manual stock adjustment (admin only) - uses atomic $inc for concurrency safety
+router.post('/adjust', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { productId, quantityChange, reason } = req.body;
     const adminUserId = req.userId;
@@ -209,35 +212,46 @@ router.post('/adjust', verifyAdmin, async (req, res) => {
       });
     }
 
-    const product = await Product.findById(productId);
+    const numChange = Number(quantityChange);
+
+    // Use atomic findOneAndUpdate with $inc to prevent race conditions
+    const product = await Product.findOneAndUpdate(
+      { 
+        _id: productId,
+        // Prevent stock going negative
+        ...(numChange < 0 ? { stock: { $gte: Math.abs(numChange) } } : {})
+      },
+      { $inc: { stock: numChange } },
+      { new: true }
+    );
 
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        msg: 'Product not found'
-      });
-    }
-
-    const stockBefore = product.stock;
-    const newStock = stockBefore + Number(quantityChange);
-
-    if (newStock < 0) {
+      // Check if product exists at all
+      const exists = await Product.findById(productId);
+      if (!exists) {
+        return res.status(404).json({
+          success: false,
+          msg: 'Product not found'
+        });
+      }
       return res.status(400).json({
         success: false,
-        msg: 'Stock cannot be negative'
+        msg: 'Insufficient stock for this adjustment'
       });
     }
 
-    // Update product stock
-    product.stock = newStock;
+    const stockBefore = product.stock - numChange;
+    const newStock = product.stock;
+
+    // Update inStock flag
     product.inStock = newStock > 0;
     await product.save();
 
     // Log the adjustment
     await logInventoryChange({
       product: productId,
-      action: quantityChange > 0 ? 'stock_added' : 'stock_removed',
-      quantityChange: Number(quantityChange),
+      action: numChange > 0 ? 'stock_added' : 'stock_removed',
+      quantityChange: numChange,
       stockBefore,
       stockAfter: newStock,
       performedBy: adminUserId,
@@ -255,7 +269,7 @@ router.post('/adjust', verifyAdmin, async (req, res) => {
         name: product.name,
         stockBefore,
         stockAfter: newStock,
-        change: Number(quantityChange)
+        change: numChange
       }
     });
   } catch (err) {
@@ -269,7 +283,7 @@ router.post('/adjust', verifyAdmin, async (req, res) => {
 });
 
 // Get inventory summary report
-router.get('/report', verifyAdmin, async (req, res) => {
+router.get('/report', authMiddleware, verifyAdmin, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 

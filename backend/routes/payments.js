@@ -174,6 +174,14 @@ router.post('/confirm', verifyToken, async (req, res) => {
       });
     }
 
+    // Verify order belongs to the authenticated user
+    if (order.user.toString() !== req.user.userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        msg: 'Not authorized to update this order'
+      });
+    }
+
     order.paymentStatus = 'completed';
     order.status = 'processing';
     await order.save();

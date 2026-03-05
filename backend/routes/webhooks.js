@@ -85,7 +85,7 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
 async function handlePaymentSuccess(paymentIntent) {
   try {
     const order = await Order.findOne({
-      stripePaymentIntentId: paymentIntent.id
+      paymentIntentId: paymentIntent.id
     });
 
     if (order) {
@@ -123,7 +123,7 @@ async function handlePaymentSuccess(paymentIntent) {
 async function handlePaymentFailure(paymentIntent) {
   try {
     const order = await Order.findOne({
-      stripePaymentIntentId: paymentIntent.id
+      paymentIntentId: paymentIntent.id
     });
 
     if (order) {
@@ -148,8 +148,9 @@ async function handlePaymentFailure(paymentIntent) {
  */
 async function handleRefund(charge) {
   try {
+    // Try to find order by payment intent from the charge
     const order = await Order.findOne({
-      stripeChargeId: charge.id
+      paymentIntentId: charge.payment_intent
     });
 
     if (order) {
