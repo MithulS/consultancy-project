@@ -1,6 +1,7 @@
 // Checkout Component
 import React, { useState, useEffect } from 'react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return 'https://placehold.co/60x60?text=No+Image';
@@ -25,7 +26,7 @@ export default function Checkout() {
     postalCode: '',
     phone: '',
     country: 'India',
-    paymentMethod: 'cod'
+    paymentMethod: 'razorpay'
   });
 
   useEffect(() => {
@@ -69,7 +70,13 @@ export default function Checkout() {
         return;
       }
 
-      // Prepare order data
+      // If payment method is Razorpay, use Razorpay checkout flow
+      if (formData.paymentMethod === 'razorpay') {
+        await handleRazorpayPayment(token);
+        return;
+      }
+
+      // For COD and other methods, use the regular order flow
       const orderData = {
         items: cart.map(item => ({
           productId: item._id,
@@ -99,10 +106,8 @@ export default function Checkout() {
       if (!res.ok) {
         console.error('Order failed - Status:', res.status);
         console.error('Order failed - Response:', data);
-        console.error('Order data sent:', orderData);
         setError(data.msg || data.error || 'Failed to place order. Please try again.');
 
-        // Handle stock availability errors
         if (data.unavailableItems) {
           const unavailableList = data.unavailableItems
             .map(item => `${item.product}: requested ${item.requested}, available ${item.available}`)
@@ -115,13 +120,11 @@ export default function Checkout() {
       if (data.success) {
         setSuccess(true);
         setOrderId(data.order._id);
-        // Clear cart
         localStorage.removeItem('cart');
         setCart([]);
       } else {
         setError(data.msg || 'Failed to place order');
 
-        // Handle stock availability errors
         if (data.unavailableItems) {
           const unavailableList = data.unavailableItems
             .map(item => `${item.product}: requested ${item.requested}, available ${item.available}`)
@@ -133,6 +136,127 @@ export default function Checkout() {
       console.error('Checkout error:', err);
       setError('Failed to place order. Please try again.');
     } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleRazorpayPayment(token) {
+    try {
+      // Step 1: Create Razorpay order on backend
+      const createRes = await fetch(`${API}/api/payments/razorpay/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          items: cart.map(item => ({
+            productId: item._id,
+            quantity: item.quantity
+          })),
+          shippingAddress: {
+            address: formData.address,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            phone: formData.phone,
+            country: formData.country
+          }
+        })
+      });
+
+      const createData = await createRes.json();
+
+      if (!createRes.ok) {
+        setError(createData.msg || 'Failed to initiate payment');
+        if (createData.unavailableItems) {
+          const unavailableList = createData.unavailableItems
+            .map(item => `${item.product}: requested ${item.requested}, available ${item.available}`)
+            .join(', ');
+          setError(`Some items are unavailable: ${unavailableList}`);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Step 2: Open Razorpay checkout
+      const keyId = createData.key || RAZORPAY_KEY_ID;
+      if (!keyId) {
+        setError('Razorpay is not configured. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
+      if (!window.Razorpay) {
+        setError('Payment gateway failed to load. Please refresh and try again.');
+        setLoading(false);
+        return;
+      }
+
+      const options = {
+        key: keyId,
+        amount: createData.razorpayOrder.amount,
+        currency: createData.razorpayOrder.currency,
+        name: 'Sri Amman Traders',
+        description: `Order Payment - ${cart.length} item(s)`,
+        order_id: createData.razorpayOrder.id,
+        handler: async function (response) {
+          // Step 3: Verify payment on backend
+          try {
+            const verifyRes = await fetch(`${API}/api/payments/razorpay/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderId: createData.orderId
+              })
+            });
+
+            const verifyData = await verifyRes.json();
+
+            if (verifyRes.ok && verifyData.success) {
+              setSuccess(true);
+              setOrderId(verifyData.order._id);
+              localStorage.removeItem('cart');
+              setCart([]);
+            } else {
+              setError(verifyData.msg || 'Payment verification failed. Contact support with your order ID.');
+            }
+          } catch (verifyErr) {
+            console.error('Payment verification error:', verifyErr);
+            setError('Payment verification failed. If amount was deducted, please contact support.');
+          }
+          setLoading(false);
+        },
+        prefill: {
+          contact: formData.phone
+        },
+        theme: {
+          color: '#2E86DE'
+        },
+        modal: {
+          ondismiss: function () {
+            setError('Payment was cancelled. You can try again.');
+            setLoading(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on('payment.failed', function (response) {
+        setError(`Payment failed: ${response.error.description || 'Please try again.'}`);
+        setLoading(false);
+      });
+
+      rzp.open();
+    } catch (err) {
+      console.error('Razorpay payment error:', err);
+      setError('Failed to initiate payment. Please try again.');
       setLoading(false);
     }
   }
@@ -487,8 +611,8 @@ export default function Checkout() {
                     onChange={handleChange}
                     style={styles.select}
                   >
+                    <option value="razorpay" style={{ background: 'var(--navy-dark)', color: 'var(--text-primary)' }}>Pay Online (Razorpay - UPI, Cards, NetBanking)</option>
                     <option value="cod" style={{ background: 'var(--navy-dark)', color: 'var(--text-primary)' }}>Cash on Delivery</option>
-                    <option value="gpay" style={{ background: 'var(--navy-dark)', color: 'var(--text-primary)' }}>Google Pay</option>
                   </select>
                 </div>
               </div>

@@ -42,7 +42,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['card', 'upi', 'cod', 'netbanking'],
+    enum: ['card', 'upi', 'cod', 'netbanking', 'razorpay'],
     default: 'cod'
   },
   paymentStatus: {
@@ -52,6 +52,16 @@ const orderSchema = new mongoose.Schema({
   },
   paymentIntentId: {
     type: String // Stripe payment intent ID
+  },
+  // Razorpay payment fields
+  razorpayOrderId: {
+    type: String
+  },
+  razorpayPaymentId: {
+    type: String
+  },
+  razorpaySignature: {
+    type: String
   },
   stockReserved: {
     type: Boolean,

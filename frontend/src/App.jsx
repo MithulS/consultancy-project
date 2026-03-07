@@ -67,7 +67,7 @@ export default function App() {
           console.log(`📊 ${metric}:`, data);
         }
         if (import.meta.env.PROD) {
-          analytics.event('web_vitals', {
+          analytics.track('web_vitals', {
             metric_name: metric,
             metric_value: data.value,
             metric_rating: data.rating

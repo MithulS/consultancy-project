@@ -53,13 +53,13 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://checkout.razorpay.com"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", ...allowedOrigins],
+      connectSrc: ["'self'", "https://api.razorpay.com", ...allowedOrigins],
       fontSrc: ["'self'", "https:", "data:"],
       objectSrc: ["'none'"],
-      frameSrc: ["'none'"],
+      frameSrc: ["'self'", "https://api.razorpay.com", "https://checkout.razorpay.com"],
     }
   },
   crossOriginEmbedderPolicy: false, // Allow cross-origin resources (images, CDN)
