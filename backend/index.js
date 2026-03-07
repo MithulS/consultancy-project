@@ -16,6 +16,7 @@ app.set('trust proxy', 1);
 })();
 
 // CORS Configuration - Development-friendly
+// CLIENT_URL supports comma-separated values, e.g. "https://a.vercel.app,https://b.vercel.app"
 const allowedOrigins = [
   ...(process.env.NODE_ENV !== 'production' ? [
     'http://localhost:5173',
@@ -25,7 +26,7 @@ const allowedOrigins = [
     'http://127.0.0.1:5174',
     'http://127.0.0.1:5175',
   ] : []),
-  process.env.CLIENT_URL
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(u => u.trim()) : []),
 ].filter(Boolean);
 
 app.use(cors({
