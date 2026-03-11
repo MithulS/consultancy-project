@@ -13,19 +13,18 @@ const getImageUrl = (imageUrl) => {
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const FREE_SHIPPING_THRESHOLD = 999;
 
+  const loadCart = () => {
+    const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    setCart(savedCart);
+  };
+
   useEffect(() => {
     loadCart();
   }, []);
-
-  function loadCart() {
-    const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    setCart(savedCart);
-  }
 
   function updateQuantity(productId, newQuantity) {
     if (newQuantity < 1) return;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CommercialHardwareHeader from './CommercialHardwareHeader';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -95,13 +95,8 @@ export default function ContactPage() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -162,9 +157,9 @@ export default function ContactPage() {
       <style>
         {`
           .contact-page-wrapper {
-            background-color: transparent;
+            background-color: #0f172a;
             min-height: 100vh;
-            color: var(--text-primary);
+            color: var(--text-primary, #e2e8f0);
             padding-bottom: 80px;
           }
           
@@ -217,11 +212,11 @@ export default function ContactPage() {
           }
           
           .contact-form-card {
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(30, 41, 59, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
             border-radius: 20px;
             padding: 40px;
             position: relative;
@@ -263,12 +258,22 @@ export default function ContactPage() {
           
           .input-icon-container {
             position: absolute;
-            left: 16px;
-            top: 42px;
-            color: #64748b;
+            left: 14px;
+            top: 40px;
+            color: #94a3b8;
             transition: all 0.3s ease;
             pointer-events: none;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+          }
+          
+          .input-icon-container svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
           }
           
           .textarea-icon-container {
@@ -279,9 +284,9 @@ export default function ContactPage() {
             width: 100%;
             padding: 14px 16px 14px 44px;
             font-size: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background-color: rgba(15, 23, 42, 0.6);
-            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #1e293b;
+            color: var(--text-primary, #e2e8f0);
             border-radius: 12px;
             outline: none;
             transition: all 0.3s ease;
@@ -295,9 +300,14 @@ export default function ContactPage() {
             resize: vertical;
           }
           
+          .contact-input::placeholder {
+            color: #94a3b8;
+            opacity: 1;
+          }
+
           .contact-input:focus {
             border-color: var(--accent-blue-primary, #3b82f6);
-            background-color: rgba(30, 41, 59, 0.8);
+            background-color: #334155;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
           }
           
@@ -312,6 +322,24 @@ export default function ContactPage() {
           .contact-input.error ~ .input-icon-container {
             color: var(--accent-red-primary, #ef4444);
           }
+
+          .contact-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            cursor: pointer;
+            padding-right: 44px;
+          }
+
+          .contact-select option {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 8px;
+          }
           
           .error-text {
             color: var(--accent-red-primary, #ef4444);
@@ -320,6 +348,12 @@ export default function ContactPage() {
             display: flex;
             align-items: center;
             gap: 6px;
+          }
+
+          .error-text svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
           }
           
           .contact-submit-btn {
@@ -358,13 +392,13 @@ export default function ContactPage() {
           }
           
           .info-card {
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(30, 41, 59, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
             height: fit-content;
           }
           
@@ -373,8 +407,8 @@ export default function ContactPage() {
             align-items: flex-start;
             gap: 16px;
             padding: 24px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
@@ -507,70 +541,78 @@ export default function ContactPage() {
               Send Us a Message
             </h2>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="contact-input-wrapper">
-                <label className="contact-label">Full Name <span className="contact-required">*</span></label>
+                <label htmlFor="contact-name" className="contact-label">Full Name <span className="contact-required">*</span></label>
                 <input
+                  id="contact-name"
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   className={`contact-input ${errors.name ? 'error' : ''}`}
                   placeholder="John Doe"
+                  autoComplete="name"
                 />
                 <div className="input-icon-container"><Icons.User /></div>
                 {errors.name && <span className="error-text"><Icons.AlertCircle /> {errors.name}</span>}
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Email Address <span className="contact-required">*</span></label>
+                <label htmlFor="contact-email" className="contact-label">Email Address <span className="contact-required">*</span></label>
                 <input
+                  id="contact-email"
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   className={`contact-input ${errors.email ? 'error' : ''}`}
                   placeholder="john@company.com"
+                  autoComplete="email"
                 />
                 <div className="input-icon-container"><Icons.Mail /></div>
                 {errors.email && <span className="error-text"><Icons.AlertCircle /> {errors.email}</span>}
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Phone Number <span className="contact-required">*</span></label>
+                <label htmlFor="contact-phone" className="contact-label">Phone Number <span className="contact-required">*</span></label>
                 <input
+                  id="contact-phone"
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   className={`contact-input ${errors.phone ? 'error' : ''}`}
                   placeholder="+1 (555) 123-4567"
+                  autoComplete="tel"
                 />
                 <div className="input-icon-container"><Icons.Phone /></div>
                 {errors.phone && <span className="error-text"><Icons.AlertCircle /> {errors.phone}</span>}
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Company Name</label>
+                <label htmlFor="contact-company" className="contact-label">Company Name</label>
                 <input
+                  id="contact-company"
                   type="text"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
                   className="contact-input"
                   placeholder="Your Company Name"
+                  autoComplete="organization"
                 />
                 <div className="input-icon-container"><Icons.Building /></div>
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Inquiry Type</label>
+                <label htmlFor="contact-inquiry" className="contact-label">Inquiry Type</label>
                 <select
+                  id="contact-inquiry"
                   name="inquiryType"
                   value={formData.inquiryType}
                   onChange={handleChange}
-                  className="contact-input"
-                  style={{ paddingLeft: '44px' }}
+                  className="contact-input contact-select"
                 >
                   <option value="general">General Inquiry</option>
                   <option value="product">Product Information</option>
@@ -583,8 +625,9 @@ export default function ContactPage() {
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Subject <span className="contact-required">*</span></label>
+                <label htmlFor="contact-subject" className="contact-label">Subject <span className="contact-required">*</span></label>
                 <input
+                  id="contact-subject"
                   type="text"
                   name="subject"
                   value={formData.subject}
@@ -597,13 +640,15 @@ export default function ContactPage() {
               </div>
 
               <div className="contact-input-wrapper">
-                <label className="contact-label">Message <span className="contact-required">*</span></label>
+                <label htmlFor="contact-message" className="contact-label">Message <span className="contact-required">*</span></label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   className={`contact-input contact-textarea ${errors.message ? 'error' : ''}`}
                   placeholder="Please provide details about your inquiry..."
+                  rows={5}
                 />
                 <div className="input-icon-container textarea-icon-container"><Icons.Message /></div>
                 {errors.message && <span className="error-text"><Icons.AlertCircle /> {errors.message}</span>}

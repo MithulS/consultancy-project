@@ -5,11 +5,7 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  useEffect(() => {
-    generateBreadcrumbs(currentPage);
-  }, [currentPage]);
-
-  function generateBreadcrumbs(page) {
+  const generateBreadcrumbs = (page) => {
     const breadcrumbMap = {
       'dashboard': [{ label: 'Home', path: '#home' }],
       'cart': [{ label: 'Home', path: '#home' }, { label: 'Cart', path: '#cart' }],
@@ -20,7 +16,11 @@ export default function Navigation({ currentPage, userName, isAdmin }) {
       'sales-analytics': [{ label: 'Admin Home', path: '#admin-dashboard' }, { label: 'Analytics', path: '#sales-analytics' }]
     };
     setBreadcrumbs(breadcrumbMap[page] || []);
-  }
+  };
+
+  useEffect(() => {
+    generateBreadcrumbs(currentPage);
+  }, [currentPage]);
 
   function logout() {
     // Clear cart so it doesn't persist to the next user on shared devices

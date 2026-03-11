@@ -277,12 +277,7 @@
 <a name='L212'></a><a href='#L212'>212</a>
 <a name='L213'></a><a href='#L213'>213</a>
 <a name='L214'></a><a href='#L214'>214</a>
-<a name='L215'></a><a href='#L215'>215</a>
-<a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a>
-<a name='L218'></a><a href='#L218'>218</a>
-<a name='L219'></a><a href='#L219'>219</a>
-<a name='L220'></a><a href='#L220'>220</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L215'></a><a href='#L215'>215</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,9 +329,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -368,9 +361,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -454,15 +444,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -476,6 +457,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -544,7 +534,6 @@ const validateRegistration = <span class="cstat-no" title="statement not covered
     .isLength({ max: 255 }).withMessage('Email too long'),
   
   body('password')
-    .trim()
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]/)
@@ -562,7 +551,6 @@ const validateLogin = <span class="cstat-no" title="statement not covered" >[</s
     .normalizeEmail(),
   
   body('password')
-    .trim()
     .notEmpty().withMessage('Password is required'),
   
   validate
@@ -588,7 +576,6 @@ const validateOTP = <span class="cstat-no" title="statement not covered" >[</spa
 // Admin credential update validation
 const validateCredentialUpdate = <span class="cstat-no" title="statement not covered" >[</span>
   body('currentPassword')
-    .trim()
     .notEmpty().withMessage('Current password is required'),
   
   body('newEmail')
@@ -607,14 +594,12 @@ const validateCredentialUpdate = <span class="cstat-no" title="statement not cov
   
   body('newPassword')
     .optional({ checkFalsy: true })
-    .trim()
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]/)
     .withMessage('Password must contain uppercase, lowercase, number, and special character'),
   
   body('confirmPassword')
     .optional({ checkFalsy: true })
-    .trim()
     .custom(<span class="fstat-no" title="function not covered" >(v</span>alue, { req }) =&gt; {
 <span class="cstat-no" title="statement not covered" >      if (req.body.newPassword &amp;&amp; value !== req.body.newPassword) {</span>
 <span class="cstat-no" title="statement not covered" >        throw new Error('Passwords do not match');</span>
@@ -636,7 +621,8 @@ const validateProduct = <span class="cstat-no" title="statement not covered" >[<
   body('description')
     .trim()
     .notEmpty().withMessage('Description is required')
-    .isLength({ min: 10, max: 5000 }).withMessage('Description must be 10-5000 characters'),
+    .isLength({ min: 10, max: 5000 }).withMessage('Description must be 10-5000 characters')
+    .escape(),
   
   body('price')
     .notEmpty().withMessage('Price is required')
@@ -700,7 +686,6 @@ const validatePasswordResetConfirm = <span class="cstat-no" title="statement not
     .isLength({ min: 6, max: 6 }).withMessage('Token must be 6 characters'),
   
   body('newPassword')
-    .trim()
     .notEmpty().withMessage('New password is required')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]/)
@@ -727,7 +712,7 @@ const validatePasswordResetConfirm = <span class="cstat-no" title="statement not
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-28T06:53:52.501Z
+                at 2026-03-09T09:14:57.476Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -51,7 +51,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [focusedField, setFocusedField] = useState('');
+  const [, setFocusedField] = useState('');
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -178,20 +178,6 @@ export default function Register() {
       sessionStorage.removeItem('oauth_callback_processed');
     }
   }, []);
-
-  const getStrengthColor = () => {
-    if (!passwordStrength) return '#e2e8f0';
-    if (passwordStrength === 'strong') return '#48bb78';
-    if (passwordStrength === 'medium') return '#ed8936';
-    return '#f56565';
-  };
-
-  const getStrengthWidth = () => {
-    if (!passwordStrength) return '0%';
-    if (passwordStrength === 'strong') return '100%';
-    if (passwordStrength === 'medium') return '66%';
-    return '33%';
-  };
 
   async function submit(e) {
     e.preventDefault();
@@ -442,7 +428,6 @@ export default function Register() {
       padding: '16px',
       fontSize: '16px',
       fontWeight: '600',
-      color: 'white',
       color: 'white',
       background: 'var(--gradient-cta)',
       border: 'none',

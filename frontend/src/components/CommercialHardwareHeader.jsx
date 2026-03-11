@@ -40,7 +40,16 @@ export default function CommercialHardwareHeader() {
         setCartCount(c.reduce((s, i) => s + (i.quantity || 0), 0));
       } catch { setCartCount(0); }
     };
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    let scrollTicking = false;
+    const handleScroll = () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 10);
+          scrollTicking = false;
+        });
+      }
+    };
     const handleClickOutside = (e) => {
       if (accountMenuRef.current && !accountMenuRef.current.contains(e.target))
         setShowAccountMenu(false);
@@ -153,8 +162,7 @@ export default function CommercialHardwareHeader() {
 
       {/* ── Main Header ── */}
       <header className="sat-header" style={{
-        background: isScrolled ? 'rgba(10,18,36,0.96)' : 'linear-gradient(180deg, #0D1629 0%, #0F1E38 100%)',
-        backdropFilter: 'blur(16px)',
+        background: isScrolled ? 'rgba(10,18,36,0.98)' : 'linear-gradient(180deg, #0D1629 0%, #0F1E38 100%)',
         borderBottom: '1px solid rgba(255,255,255,.07)',
         position: 'sticky', top: 0, zIndex: 1000,
         boxShadow: isScrolled ? '0 4px 24px rgba(0,0,0,.55)' : 'none',

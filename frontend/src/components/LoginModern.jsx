@@ -57,7 +57,6 @@ export default function Login() {
   // Check for messages from other pages (OTP verification)
   useEffect(() => {
     const loginMessage = sessionStorage.getItem('loginMessage');
-    const messageType = sessionStorage.getItem('loginMessageType');
 
     if (loginMessage) {
       setMsg(loginMessage);

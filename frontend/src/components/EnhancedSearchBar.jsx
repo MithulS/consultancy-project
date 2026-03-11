@@ -156,7 +156,6 @@ export default function EnhancedSearchBar({
     container: {
       position: 'relative',
       width: '100%',
-      width: '100%',
       maxWidth: showSuggestions ? '800px' : '600px',
       margin: '0 auto',
       transition: 'max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'

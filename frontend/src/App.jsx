@@ -14,7 +14,7 @@ import SmoothScrollProvider from './components/SmoothScrollProvider';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [authKey, setAuthKey] = useState(Date.now()); // Force remount on auth change
+  const [authKey, setAuthKey] = useState(() => Date.now()); // Force remount on auth change
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Loading...');
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -28,7 +28,7 @@ export default function App() {
     });
 
     // Listen for login events to force component remount
-    const handleUserLogin = (event) => {
+    const handleUserLogin = () => {
       if (import.meta.env.DEV) {
         console.log('🔐 Login: Remounting dashboard');
       }

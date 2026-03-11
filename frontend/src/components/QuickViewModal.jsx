@@ -12,7 +12,6 @@ import { getImageUrl } from '../utils/imageHandling';
 
 const QuickViewModal = ({ product, isOpen, onClose, onAddToCart, onBuyNow }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
 
   if (!isOpen || !product) return null;
 

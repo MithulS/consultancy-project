@@ -43,6 +43,7 @@ const ChatWidget = () => {
   // Auto-scroll to bottom
   useEffect(() => {
     scrollToBottom();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   // Focus input when opened

@@ -23,8 +23,8 @@ const ProductDetailPage = ({ onAddToCart, onBuyNow }) => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState(null);
 
   useEffect(() => {
     const loadProduct = async () => {

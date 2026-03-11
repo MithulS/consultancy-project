@@ -52,7 +52,7 @@ if (!document.querySelector('[data-analytics-styles]')) {
 }
 
 export default function SalesAnalytics() {
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [summary, setSummary] = useState(null);
   const [trends, setTrends] = useState([]);
@@ -69,6 +69,7 @@ export default function SalesAnalytics() {
 
   useEffect(() => {
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   async function fetchAnalytics() {

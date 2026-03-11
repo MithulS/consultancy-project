@@ -2,7 +2,7 @@
  * Cart Logic Tests – 30 Test Cases
  * Tests the pure cart calculation logic extracted from Dashboard.jsx
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // ─── Pure Cart Logic (mirrors Dashboard.jsx implementation) ──────────────────
 
@@ -105,14 +105,14 @@ describe('Cart Logic Unit Tests', () => {
 
     it('TC-CL09: explicit quantity arg takes priority over product.quantity', () => {
       const productWithQty = makeProduct({ _id: 'p1', quantity: 2 });
-      const qty = 5 || productWithQty.quantity || 1; // 5 is truthy, wins
+      const qty = 5 || productWithQty.quantity || 1; // eslint-disable-line no-constant-binary-expression
       const cart = addToCartLogic([], productWithQty, qty);
       expect(cart[0].quantity).toBe(5);
     });
 
     it('TC-CL10: quantity defaults to 1 when both args are undefined/null', () => {
       const product = makeProduct({ _id: 'p1' });
-      const qty = undefined || undefined || 1;
+      const qty = undefined || undefined || 1; // eslint-disable-line no-constant-binary-expression
       const cart = addToCartLogic([], product, qty);
       expect(cart[0].quantity).toBe(1);
     });

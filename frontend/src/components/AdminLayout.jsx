@@ -6,7 +6,6 @@ export default function AdminLayout({ children, currentPage }) {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
-        setAdminUser(user);
 
         // Auto-collapse on smaller screens
         const handleResize = () => {
@@ -18,6 +17,7 @@ export default function AdminLayout({ children, currentPage }) {
         };
 
         handleResize(); // Initial check
+        setAdminUser(user);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);

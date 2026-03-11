@@ -400,7 +400,6 @@ export function checkPerformanceBudget() {
   };
 
   const resources = performance.getEntriesByType('resource');
-  const navigation = performance.getEntriesByType('navigation')[0];
 
   let totalJS = 0;
   let totalCSS = 0;

@@ -31,16 +31,11 @@ export default function Profile() {
     wishlistItems: 0
   });
 
-  useEffect(() => {
-    fetchProfile();
-    fetchStats();
-  }, []);
-
-  async function fetchProfile() {
+  const fetchProfile = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       sessionStorage.setItem('redirectAfterLogin', '#profile');
-      window.location.hash = '#login';
+      setTimeout(() => { window.location.hash = '#login'; }, 0);
       return;
     }
 
@@ -70,14 +65,15 @@ export default function Profile() {
         });
       }
       setLoading(false);
-    } catch (err) {
+    } catch {
       showToast('Failed to load profile', 'error');
       setLoading(false);
     }
-  }
+  };
 
-  async function fetchStats() {
+  const fetchStats = async () => {
     const token = localStorage.getItem('token');
+
     try {
       const [ordersRes, wishlistRes] = await Promise.all([
         fetch(`${API}/api/orders/my-orders`, {
@@ -108,10 +104,15 @@ export default function Profile() {
           wishlistItems: wishlistData.success ? (wishlistData.wishlist?.items?.length || 0) : 0
         });
       }
-    } catch (err) {
-      console.error('Failed to fetch stats:', err);
+    } catch (fetchErr) {
+      console.error('Failed to fetch stats:', fetchErr);
     }
-  }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchStats();
+  }, []);
 
   function handleChange(e) {
     setFormData({
@@ -150,7 +151,7 @@ export default function Profile() {
       } else {
         showToast(data.msg || 'Failed to update profile', 'error');
       }
-    } catch (err) {
+    } catch {
       showToast('Failed to update profile', 'error');
     }
   }
@@ -196,7 +197,7 @@ export default function Profile() {
       } else {
         showToast(data.msg || 'Failed to change password', 'error');
       }
-    } catch (err) {
+    } catch {
       showToast('Failed to change password', 'error');
     }
   }

@@ -14,6 +14,7 @@ export function LazyImage({ src, alt, style, className, placeholder = '' }) {
     let observer;
     
     if (imgRef.current) {
+      const currentRef = imgRef.current;
       observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -41,12 +42,12 @@ export function LazyImage({ src, alt, style, className, placeholder = '' }) {
         }
       );
 
-      observer.observe(imgRef.current);
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (observer && imgRef.current) {
-        observer.unobserve(imgRef.current);
+      if (observer && currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [src]);
@@ -102,6 +103,7 @@ export function useLazyLoad(options = {}) {
         observer.disconnect();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return [elementRef, isVisible];

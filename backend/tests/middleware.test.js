@@ -130,6 +130,8 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
+      // verifyAdmin expects req.user to be populated by verifyToken first
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(next).toHaveBeenCalledTimes(1);
@@ -141,6 +143,7 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(403);
@@ -153,6 +156,7 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(403);
@@ -174,7 +178,11 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
-      verifyAdmin(req, res, next);
+      verifyToken(req, res, () => {});
+      // verifyToken should have returned 401 for expired token, req.user not set
+      if (!req.user) {
+        verifyAdmin(req, res, next);
+      }
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(next).not.toHaveBeenCalled();
@@ -186,7 +194,10 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
-      verifyAdmin(req, res, next);
+      verifyToken(req, res, () => {});
+      if (!req.user) {
+        verifyAdmin(req, res, next);
+      }
 
       expect(res.status).toHaveBeenCalledWith(401);
     });
@@ -197,6 +208,7 @@ describe('Auth Middleware', () => {
       const res = makeRes();
       const next = jest.fn();
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(req.user).toMatchObject({ userId: 'superAdmin', isAdmin: true });

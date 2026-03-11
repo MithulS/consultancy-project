@@ -28,13 +28,13 @@ export default defineConfig({
     }
   },
   build: {
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'vendor';
-          }
+        manualChunks: {
+          'vendor': ['react', 'react-dom'],
+          'charts': ['recharts'],
+          'pdf': ['jspdf', 'jspdf-autotable'],
         }
       }
     }

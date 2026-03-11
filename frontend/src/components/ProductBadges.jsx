@@ -5,14 +5,7 @@
 
 import React from 'react';
 
-const ProductBadges = ({
-  isNew = false,
-  isFeatured = false,
-  discount = 0,
-  stock = 0,
-  isBestSeller = false,
-  freeShipping = false
-}) => {
+const ProductBadges = () => {
   return null;
 };
 

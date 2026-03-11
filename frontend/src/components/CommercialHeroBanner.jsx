@@ -4,7 +4,7 @@
  * Features: Hero section, brand highlights, CTAs, benefits panel
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import ParticleBackground from './ParticleBackground';
 
 export default function CommercialHeroBanner() {

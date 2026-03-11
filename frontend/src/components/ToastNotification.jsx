@@ -1,7 +1,6 @@
 // Toast Notification System for User Feedback
 import React, { useState, useEffect } from 'react';
 
-let toastQueue = [];
 let showToastCallback = null;
 
 export function showToast(message, type = 'info', duration = 3000) {

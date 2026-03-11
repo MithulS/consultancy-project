@@ -1,0 +1,405 @@
+﻿  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '309369',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 309369                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:196:15)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - duplicate@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com verified
+
+      at log (routes/auth.js:282:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] ACCOUNT_LOCKED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com logged in
+
+      at log (routes/auth.js:386:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - nonexistent@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - unverified@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '183863',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 183863                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] OTP_RESEND - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Resent OTP to test@example.com
+
+      at log (routes/auth.js:322:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'audit@example.com',
+      name: 'Test User',
+      otpPlain: '707352',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: audit@example.com                                            Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 707352                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user audit@example.com - OTP sent
+
+      at log (routes/auth.js:196:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+node.exe : PASS tests/auth.test.js (7.063 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS tests/auth.test.js (7.063 s) 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Authentication API Tests
+    POST /api/auth/register
+      ΓêÜ should register a new user with valid data (608 ms)
+      ΓêÜ should reject registration with missing fields (18 ms)
+      ΓêÜ should reject registration with duplicate email (127 ms)
+      ΓêÜ should reject registration with duplicate username (127 ms)
+    POST /api/auth/verify-otp
+      ΓêÜ should verify OTP with correct code (328 ms)
+      ΓêÜ should reject invalid OTP and track attempts (315 ms)
+      ΓêÜ should lock account after 5 failed attempts (819 ms)
+      ΓêÜ should reject expired OTP (228 ms)
+    POST /api/auth/login
+      ΓêÜ should login with valid credentials (220 ms)
+      ΓêÜ should reject login with incorrect password (225 ms)
+      ΓêÜ should reject login for non-existent user (131 ms)
+      ΓêÜ should reject login for unverified user (311 ms)
+    POST /api/auth/resend-otp
+      ΓêÜ should reset attempts and lock when resending OTP (231 ms)
+      ΓêÜ should reject resend for verified user (121 ms)
+    Audit Logging
+      ΓêÜ should log successful registration (347 ms)
+      ΓêÜ should log failed login attempts (19 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        7.151 s, estimated 14 s
+Ran all test suites matching tests/auth.test.js.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect 
+async operations that kept running after all tests finished?
+

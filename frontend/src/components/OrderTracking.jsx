@@ -31,6 +31,7 @@ export default function OrderTracking({ orderId, onClose }) {
     return () => {
       if (interval) clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, autoRefresh]);
 
   async function fetchTracking(silent = false) {

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { colors, gradients, shadows, radius, transitions, commonStyles, createButtonStyle, createCardHoverHandlers } from '../utils/theme';
+import { colors, gradients, shadows, radius, commonStyles, createButtonStyle, createCardHoverHandlers } from '../utils/theme';
 
 // ============================================
 // BUTTON COMPONENTS

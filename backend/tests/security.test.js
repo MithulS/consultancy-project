@@ -3,19 +3,22 @@ const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+
+// Set test environment variables BEFORE loading routes
+process.env.JWT_SECRET = 'test-secret-key-12345';
+process.env.EMAIL_USER = 'test@example.com';
+process.env.EMAIL_PASS = 'test-password';
+
 const authRouter = require('../routes/auth');
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const { enableRateLimiting, disableRateLimiting, resetAllLimiters } = require('../middleware/rateLimiter');
 
 const app = express();
 app.use(express.json());
 app.use('/api/auth', authRouter);
 
 let mongoServer;
-
-process.env.JWT_SECRET = 'test-secret-key-12345';
-process.env.EMAIL_USER = 'test@example.com';
-process.env.EMAIL_PASS = 'test-password';
-process.env.NODE_ENV = 'development';
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -178,51 +181,49 @@ describe('Security Test Suite', () => {
   });
 
   describe('Rate Limiting', () => {
+    beforeAll(() => enableRateLimiting());
+    afterAll(() => disableRateLimiting());
+    afterEach(async () => { await resetAllLimiters(); });
+
     it('should enforce rate limits on registration endpoint', async () => {
-      const requests = [];
+      const results = [];
 
-      // Make 20 registration attempts
+      // Make 20 registration attempts sequentially
       for (let i = 0; i < 20; i++) {
-        requests.push(
-          request(app)
-            .post('/api/auth/register')
-            .send({
-              username: `user${i}`,
-              name: 'Test User',
-              email: `test${i}@example.com`,
-              password: 'Test@1234'
-            })
-        );
+        const res = await request(app)
+          .post('/api/auth/register')
+          .send({
+            username: `user${i}`,
+            name: 'Test User',
+            email: `test${i}@example.com`,
+            password: 'Test@1234'
+          });
+        results.push(res);
       }
-
-      const results = await Promise.all(requests);
 
       // Some requests should be rate limited (429 status)
       const rateLimited = results.filter(r => r.status === 429);
       expect(rateLimited.length).toBeGreaterThan(0);
-    }, 15000); // Increase timeout for this test
+    }, 30000); // Increase timeout for this test
 
     it('should enforce rate limits on login endpoint', async () => {
-      const requests = [];
+      const results = [];
 
-      // Make 20 login attempts
+      // Make 20 login attempts sequentially
       for (let i = 0; i < 20; i++) {
-        requests.push(
-          request(app)
-            .post('/api/auth/login')
-            .send({
-              email: 'test@example.com',
-              password: 'Test@1234'
-            })
-        );
+        const res = await request(app)
+          .post('/api/auth/login')
+          .send({
+            email: 'test@example.com',
+            password: 'Test@1234'
+          });
+        results.push(res);
       }
-
-      const results = await Promise.all(requests);
 
       // Some requests should be rate limited
       const rateLimited = results.filter(r => r.status === 429);
       expect(rateLimited.length).toBeGreaterThan(0);
-    }, 15000);
+    }, 30000);
 
     it('should enforce rate limits on OTP verification', async () => {
       // Create a test user first
@@ -302,7 +303,7 @@ describe('Security Test Suite', () => {
         });
 
       if (res.status === 201) {
-        const user = await User.findOne({ email: 'test@example.com' });
+        const user = await User.findOne({ email: 'test@example.com' }).select('+password');
 
         // Password should be hashed, not plain text
         expect(user.password).not.toBe(plainPassword);
@@ -463,7 +464,7 @@ describe('Security Test Suite', () => {
       if (res.status === 200) {
         // Password should not be in response
         expect(res.body.user.password).toBeUndefined();
-        expect(JSON.stringify(res.body)).not.toContain(hashedPassword);
+        expect(JSON.stringify(res.body)).not.toContain('$2');
       }
     });
   });

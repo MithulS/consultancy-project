@@ -362,7 +362,8 @@ describe('AdminDashboard Component', () => {
       render(<AdminDashboard />);
 
       await waitFor(() => {
-        expect(screen.getByText(/₹999/i)).toBeInTheDocument();
+        const priceElements = screen.getAllByText(/₹999/i);
+        expect(priceElements.length).toBeGreaterThan(0);
       });
     });
   });

@@ -1,0 +1,2537 @@
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:16:9)
+
+  console.warn
+    ⚠️  Stripe: STRIPE_SECRET_KEY not found in .env file
+
+    [0m [90m 16 |[39m     stripe [33m=[39m require([32m'stripe'[39m)(process[33m.[39menv[33m.[39m[33mSTRIPE_SECRET_KEY[39m)[33m;[39m
+     [90m 17 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 18 |[39m     console[33m.[39mwarn([32m'⚠️  Stripe: STRIPE_SECRET_KEY not found in .env file'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 19 |[39m   }
+     [90m 20 |[39m } [36mcatch[39m (error) {
+     [90m 21 |[39m   console[33m.[39merror([32m'❌ Stripe initialization error:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m[0m
+
+      at Object.warn (routes/payments.js:18:13)
+      at Object.require (index.js:174:26)
+      at Object.require (tests/reviews.test.js:5:13)
+
+  console.log
+    ✅ Razorpay initialized successfully
+
+      at Object.log (routes/payments.js:33:13)
+
+  console.log
+    
+    ============================================================
+
+      at Server.log (index.js:256:11)
+
+  console.log
+    🚀 Server Started Successfully!
+
+      at Server.log (index.js:257:11)
+
+  console.log
+    ============================================================
+
+      at Server.log (index.js:258:11)
+
+  console.log
+    📍 Local:            http://localhost:5000
+
+      at Server.log (index.js:259:11)
+
+  console.log
+    📍 Health Check:     http://localhost:5000/health
+
+      at Server.log (index.js:260:11)
+
+  console.log
+    📍 API Health:       http://localhost:5000/api/health
+
+      at Server.log (index.js:261:11)
+
+  console.log
+    🌐 Environment:      test
+
+      at Server.log (index.js:262:11)
+
+  console.log
+    📧 Email:            mithuld321@gmail.com
+
+      at Server.log (index.js:263:11)
+
+  console.log
+    🔌 Allowed Origins:  https://sakthi-swart.vercel.app, http://localhost:5173, http://localhost:5174, http://localhost:5175, http://127.0.0.1:5173, http://127.0.0.1:5174, http://127.0.0.1:5175, http://localhost:5173
+
+      at Server.log (index.js:264:11)
+
+  console.log
+    ============================================================
+
+      at Server.log (index.js:265:11)
+
+  console.error
+    ❌ MongoDB connection failed (attempt 1/5): bad auth : authentication failed
+
+    [0m [90m 30 |[39m
+     [90m 31 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m     console[33m.[39merror([32m`❌ MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 33 |[39m
+     [90m 34 |[39m     [36mif[39m (err[33m.[39mmessage [33m&&[39m err[33m.[39mmessage[33m.[39mincludes([32m'IP'[39m)) {
+     [90m 35 |[39m       console[33m.[39merror([32m'   → Check your MongoDB Atlas IP whitelist (Network Access).'[39m)[33m;[39m[0m
+
+      at error (config/db.js:32:13)
+      at index.js:15:3
+
+  console.log
+       Retrying in 5s...
+
+      at log (config/db.js:42:15)
+
+  console.log
+    ⚠️  Redis not available - continuing without caching
+
+      at log (index.js:196:13)
+
+FAIL tests/reviews.test.js (5.618 s)
+  Review Rating System Tests
+    Rating Calculation Logic
+      × should calculate correct average for multiple reviews (249 ms)
+      √ should handle single review correctly (129 ms)
+      √ should return 0 for product with no reviews (86 ms)
+      √ should round to one decimal place (159 ms)
+    Data Integrity Tests
+      √ should prevent duplicate reviews from same user (87 ms)
+      √ should validate rating is between 1 and 5 (77 ms)
+      √ should require product, user, order, and rating fields (74 ms)
+    Product Rating Update Tests
+      √ should update product rating when review is created (86 ms)
+      √ should update product rating when review is deleted (168 ms)
+      √ should reset rating to 0 when all reviews are deleted (90 ms)
+    Edge Cases
+      √ should handle all 5-star reviews (414 ms)
+      √ should handle all 1-star reviews (417 ms)
+      √ should handle review update changing rating (87 ms)
+    Rating Distribution Tests
+      √ should calculate correct distribution (710 ms)
+
+  ● Review Rating System Tests › Rating Calculation Logic › should calculate correct average for multiple reviews
+
+    MongoServerError: E11000 duplicate key error collection: test.reviews index: product_1_user_1 dup key: { product: ObjectId('69afab04a7280f1f7abdd64f'), user: ObjectId('69afab04a7280f1f7abdd641') }
+
+    [0m [90m 84 |[39m
+     [90m 85 |[39m       [36mfor[39m ([36mconst[39m rating [36mof[39m ratings) {
+    [31m[1m>[22m[39m[90m 86 |[39m         [36mawait[39m [33mReview[39m[33m.[39mcreate({
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 87 |[39m           product[33m:[39m testProduct[33m.[39m_id[33m,[39m
+     [90m 88 |[39m           user[33m:[39m testUser[33m.[39m_id[33m,[39m
+     [90m 89 |[39m           order[33m:[39m testOrder[33m.[39m_id[33m,[39m[0m
+
+      at InsertOneOperation.handleOk (node_modules/mongoose/node_modules/mongodb/src/operations/insert.ts:79:13)
+      at tryOperation (node_modules/mongoose/node_modules/mongodb/src/operations/execute_operation.ts:294:26)
+      at executeOperation (node_modules/mongoose/node_modules/mongodb/src/operations/execute_operation.ts:123:12)
+      at Collection.insertOne (node_modules/mongoose/node_modules/mongodb/src/collection.ts:294:12)
+      at model.$__save (node_modules/mongoose/lib/model.js:400:16)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at model.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (tests/reviews.test.js:86:9)
+
+  console.log
+    🔍 DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '139828',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    █  📧 OTP EMAIL (DEVELOPMENT MODE)                                 █
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    █  To: test@example.com                                             █
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    █  Name: Test User                                                  █
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    █  🔑 OTP CODE: 139828                                                 █
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    █  ⏰ Expires: 10 minutes                                           █
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:188:15)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - duplicate@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 379 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 380 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 381 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 382 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 383 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 384 |[39m   }[0m
+
+      at error (routes/auth.js:381:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 379 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 380 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 381 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 382 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 383 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 384 |[39m   }[0m
+
+      at error (routes/auth.js:381:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - nonexistent@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Login error: Illegal arguments: string, undefined
+
+    [0m [90m 379 |[39m     [36mreturn[39m res[33m.[39mjson({ token[33m,[39m user[33m:[39m { name[33m:[39m user[33m.[39mname[33m,[39m email[33m:[39m user[33m.[39memail } })[33m;[39m
+     [90m 380 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 381 |[39m     console[33m.[39merror([32m'Login error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 382 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'LOGIN_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 383 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 384 |[39m   }[0m
+
+      at error (routes/auth.js:381:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - unverified@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    🔍 DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '462797',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    █  📧 OTP EMAIL (DEVELOPMENT MODE)                                 █
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    █  To: test@example.com                                             █
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    █  Name: Test User                                                  █
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    █  🔑 OTP CODE: 462797                                                 █
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    █  ⏰ Expires: 10 minutes                                           █
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] OTP_RESEND - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Resent OTP to test@example.com
+
+      at log (routes/auth.js:314:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+FAIL tests/auth.test.js
+  Authentication API Tests
+    POST /api/auth/register
+      × should register a new user with valid data (289 ms)
+      √ should reject registration with missing fields (8 ms)
+      √ should reject registration with duplicate email (90 ms)
+      × should reject registration with duplicate username (86 ms)
+    POST /api/auth/verify-otp
+      × should verify OTP with correct code (146 ms)
+      × should reject invalid OTP and track attempts (135 ms)
+      × should lock account after 5 failed attempts (168 ms)
+      √ should reject expired OTP (136 ms)
+    POST /api/auth/login
+      × should login with valid credentials (85 ms)
+      × should reject login with incorrect password (83 ms)
+      √ should reject login for non-existent user (85 ms)
+      × should reject login for unverified user (163 ms)
+    POST /api/auth/resend-otp
+      × should reset attempts and lock when resending OTP (162 ms)
+      √ should reject resend for verified user (76 ms)
+    Audit Logging
+      × should log successful registration (8 ms)
+      √ should log failed login attempts (14 ms)
+
+  ● Authentication API Tests › POST /api/auth/register › should register a new user with valid data
+
+    expect(received).toBeTruthy()
+
+    Received: undefined
+
+    [0m [90m 73 |[39m         expect(user[33m.[39mname)[33m.[39mtoBe(userData[33m.[39mname)[33m;[39m
+     [90m 74 |[39m         expect(user[33m.[39misVerified)[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 75 |[39m         expect(user[33m.[39motp)[33m.[39mtoBeTruthy()[33m;[39m
+     [90m    |[39m                          [31m[1m^[22m[39m
+     [90m 76 |[39m       }
+     [90m 77 |[39m     })[33m;[39m
+     [90m 78 |[39m[0m
+
+      at Object.toBeTruthy (tests/auth.test.js:75:26)
+
+  ● Authentication API Tests › POST /api/auth/register › should reject registration with duplicate username
+
+    expected 400 "Bad Request", got 429 "Too Many Requests"
+
+    [0m [90m 140 |[39m         [33m.[39mpost([32m'/api/auth/register'[39m)
+     [90m 141 |[39m         [33m.[39msend(userData2)
+    [31m[1m>[22m[39m[90m 142 |[39m         [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 143 |[39m
+     [90m 144 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Username already taken'[39m)[33m;[39m
+     [90m 145 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:142:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ● Authentication API Tests › POST /api/auth/verify-otp › should verify OTP with correct code
+
+    expected 200 "OK", got 400 "Bad Request"
+
+    [0m [90m 174 |[39m           otp[33m:[39m testOtp
+     [90m 175 |[39m         })
+    [31m[1m>[22m[39m[90m 176 |[39m         [33m.[39mexpect([35m200[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 177 |[39m
+     [90m 178 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Email verified successfully'[39m)[33m;[39m
+     [90m 179 |[39m[0m
+
+      at Object.expect (tests/auth.test.js:176:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ● Authentication API Tests › POST /api/auth/verify-otp › should reject invalid OTP and track attempts
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Invalid OTP"
+    Received string:    "OTP expired or not set. Please request a new OTP."
+
+    [0m [90m 194 |[39m         [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m 195 |[39m
+    [31m[1m>[22m[39m[90m 196 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoContain([32m'Invalid OTP'[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 197 |[39m       expect(res[33m.[39mbody[33m.[39mattemptsRemaining)[33m.[39mtoBe([35m4[39m)[33m;[39m
+     [90m 198 |[39m
+     [90m 199 |[39m       [90m// Verify attempt was tracked[39m[0m
+
+      at Object.toContain (tests/auth.test.js:196:28)
+
+  ● Authentication API Tests › POST /api/auth/verify-otp › should lock account after 5 failed attempts
+
+    expect(received).toBeTruthy()
+
+    Received: undefined
+
+    [0m [90m 215 |[39m       [90m// Verify account is locked[39m
+     [90m 216 |[39m       [36mconst[39m user [33m=[39m [36mawait[39m [33mUser[39m[33m.[39mfindById(testUser[33m.[39m_id)[33m;[39m
+    [31m[1m>[22m[39m[90m 217 |[39m       expect(user[33m.[39motpLockedUntil)[33m.[39mtoBeTruthy()[33m;[39m
+     [90m     |[39m                                   [31m[1m^[22m[39m
+     [90m 218 |[39m       expect(user[33m.[39motpLockedUntil[33m.[39mgetTime())[33m.[39mtoBeGreaterThan([33mDate[39m[33m.[39mnow())[33m;[39m
+     [90m 219 |[39m
+     [90m 220 |[39m       [90m// Try one more attempt - should be rejected due to lock[39m[0m
+
+      at Object.toBeTruthy (tests/auth.test.js:217:35)
+
+  ● Authentication API Tests › POST /api/auth/login › should login with valid credentials
+
+    expected 200 "OK", got 500 "Internal Server Error"
+
+    [0m [90m 268 |[39m           password[33m:[39m testPassword
+     [90m 269 |[39m         })
+    [31m[1m>[22m[39m[90m 270 |[39m         [33m.[39mexpect([35m200[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 271 |[39m
+     [90m 272 |[39m       expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'token'[39m)[33m;[39m
+     [90m 273 |[39m       expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'user'[39m)[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:270:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ● Authentication API Tests › POST /api/auth/login › should reject login with incorrect password
+
+    expected 400 "Bad Request", got 500 "Internal Server Error"
+
+    [0m [90m 283 |[39m           password[33m:[39m [32m'WrongPassword123'[39m
+     [90m 284 |[39m         })
+    [31m[1m>[22m[39m[90m 285 |[39m         [33m.[39mexpect([35m400[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 286 |[39m
+     [90m 287 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Invalid credentials'[39m)[33m;[39m
+     [90m 288 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:285:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ● Authentication API Tests › POST /api/auth/login › should reject login for unverified user
+
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+
+    [0m [90m 315 |[39m           password[33m:[39m testPassword
+     [90m 316 |[39m         })
+    [31m[1m>[22m[39m[90m 317 |[39m         [33m.[39mexpect([35m403[39m)[33m;[39m
+     [90m     |[39m          [31m[1m^[22m[39m
+     [90m 318 |[39m
+     [90m 319 |[39m       expect(res[33m.[39mbody[33m.[39mmsg)[33m.[39mtoBe([32m'Email not verified'[39m)[33m;[39m
+     [90m 320 |[39m     })[33m;[39m[0m
+
+      at Object.expect (tests/auth.test.js:317:10)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+
+  ● Authentication API Tests › POST /api/auth/resend-otp › should reset attempts and lock when resending OTP
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: undefined
+
+    [0m [90m 344 |[39m       [36mif[39m (res[33m.[39mstatus [33m===[39m [35m200[39m) {
+     [90m 345 |[39m         [36mconst[39m user [33m=[39m [36mawait[39m [33mUser[39m[33m.[39mfindById(testUser[33m.[39m_id)[33m;[39m
+    [31m[1m>[22m[39m[90m 346 |[39m         expect(user[33m.[39motpAttempts)[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 347 |[39m         expect(user[33m.[39motpLockedUntil)[33m.[39mtoBeUndefined()[33m;[39m
+     [90m 348 |[39m       }
+     [90m 349 |[39m     })[33m;[39m[0m
+
+      at Object.toBe (tests/auth.test.js:346:34)
+
+  ● Authentication API Tests › Audit Logging › should log successful registration
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+    [0m [90m 377 |[39m       [90m// Check if audit log was created[39m
+     [90m 378 |[39m       [36mconst[39m logs [33m=[39m [36mawait[39m [33mAuditLog[39m[33m.[39mfind({ email[33m:[39m userData[33m.[39memail })[33m;[39m
+    [31m[1m>[22m[39m[90m 379 |[39m       expect(logs[33m.[39mlength)[33m.[39mtoBeGreaterThan([35m0[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 380 |[39m     })[33m;[39m
+     [90m 381 |[39m
+     [90m 382 |[39m     it([32m'should log failed login attempts'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.toBeGreaterThan (tests/auth.test.js:379:27)
+
+  console.error
+    ❌ MongoDB connection failed (attempt 2/5): bad auth : authentication failed
+
+    [0m [90m 30 |[39m
+     [90m 31 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m     console[33m.[39merror([32m`❌ MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 33 |[39m
+     [90m 34 |[39m     [36mif[39m (err[33m.[39mmessage [33m&&[39m err[33m.[39mmessage[33m.[39mincludes([32m'IP'[39m)) {
+     [90m 35 |[39m       console[33m.[39merror([32m'   → Check your MongoDB Atlas IP whitelist (Network Access).'[39m)[33m;[39m[0m
+
+      at error (config/db.js:32:13)
+      at index.js:15:3
+
+
+  ●  Cannot log after tests are done. Did you forget to wait for something async in your test?
+    Attempted to log "   Retrying in 5s...".
+
+    [0m [90m 40 |[39m
+     [90m 41 |[39m     [36mif[39m (retryCount [33m<[39m [33mMAX_RETRIES[39m [33m-[39m [35m1[39m) {
+    [31m[1m>[22m[39m[90m 42 |[39m       console[33m.[39mlog([32m`   Retrying in ${RETRY_DELAY_MS / 1000}s...`[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 43 |[39m       [36mawait[39m [36mnew[39m [33mPromise[39m((resolve) [33m=>[39m setTimeout(resolve[33m,[39m [33mRETRY_DELAY_MS[39m))[33m;[39m
+     [90m 44 |[39m       [36mreturn[39m connectDB(retryCount [33m+[39m [35m1[39m)[33m;[39m
+     [90m 45 |[39m     }[0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at log (config/db.js:42:15)
+      at index.js:15:3
+
+  console.log
+    🔍 DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: '<script>alert("XSS")</script>',
+      otpPlain: '755136',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    █  📧 OTP EMAIL (DEVELOPMENT MODE)                                 █
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    █  To: test@example.com                                             █
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    █  Name: <script>alert("XSS")</script>                              █
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    █  🔑 OTP CODE: 755136                                                 █
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    █  ⏰ Expires: 10 minutes                                           █
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:188:15)
+
+  console.log
+    🔍 DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '134296',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    █  📧 OTP EMAIL (DEVELOPMENT MODE)                                 █
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    █  To: test@example.com                                             █
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    █  Name: Test User                                                  █
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    █  🔑 OTP CODE: 134296                                                 █
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    █  ⏰ Expires: 10 minutes                                           █
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:188:15)
+
+  console.log
+    🔍 DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773120266821@example.com',
+      name: 'Test<User',
+      otpPlain: '987730',
+      isDevelopment: true,
+      NODE_ENV: 'development'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    █  📧 OTP EMAIL (DEVELOPMENT MODE)                                 █
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    █  To: test1773120266821@example.com                                █
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    █  Name: Test<User                                                  █
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    █  🔑 OTP CODE: 987730                                                 █
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    █  ⏰ Expires: 10 minutes                                           █
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    █                                                                    █
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ██████████████████████████████████████████████████████████████████████
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773120266821@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773120266821@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773120266821@example.com - OTP sent
+
+      at log (routes/auth.js:188:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin'-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR '1'='1 - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - '; DROP TABLE users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR 1=1-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - ' UNION SELECT * FROM users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+FAIL tests/security.test.js
+  Security Test Suite
+    XSS (Cross-Site Scripting) Prevention
+      × should escape HTML in registration name field (254 ms)
+      × should escape HTML in username field (209 ms)
+      × should sanitize special characters in inputs (207 ms)
+    SQL Injection Prevention
+      √ should reject SQL injection in email field (38 ms)
+      × should handle MongoDB injection attempts (6 ms)
+    NoSQL Injection Prevention
+      × should reject object-based email in login (5 ms)
+      × should reject array-based inputs (5 ms)
+    Rate Limiting
+      √ should enforce rate limits on registration endpoint (45 ms)
+      √ should enforce rate limits on login endpoint (41 ms)
+      √ should enforce rate limits on OTP verification (206 ms)
+    Password Security
+      × should enforce strong password requirements (5 ms)
+      √ should hash passwords before storing (5 ms)
+    JWT Token Security
+      √ should sign tokens with secret (69 ms)
+      √ should include expiration in tokens (68 ms)
+    Input Length Limits
+      × should reject excessively long email (5 ms)
+      × should reject excessively long username (5 ms)
+      × should reject excessively long name (5 ms)
+    Account Enumeration Prevention
+      √ should return same error for existing and non-existing users on login (70 ms)
+    Session Security
+      √ should not expose sensitive data in responses (66 ms)
+
+  ● Security Test Suite › XSS (Cross-Site Scripting) Prevention › should escape HTML in registration name field
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<script>alert(\"XSS\")</script>"
+
+    [0m [90m 64 |[39m
+     [90m 65 |[39m           [90m// Name should not contain script tags[39m
+    [31m[1m>[22m[39m[90m 66 |[39m           expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'<script>'[39m)[33m;[39m
+     [90m    |[39m                                 [31m[1m^[22m[39m
+     [90m 67 |[39m           expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'<img'[39m)[33m;[39m
+     [90m 68 |[39m           expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'javascript:'[39m)[33m;[39m
+     [90m 69 |[39m           expect(user[33m.[39mname)[33m.[39mnot[33m.[39mtoContain([32m'onerror='[39m)[33m;[39m[0m
+
+      at Object.toContain (tests/security.test.js:66:33)
+
+  ● Security Test Suite › XSS (Cross-Site Scripting) Prevention › should escape HTML in username field
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<script>alert(1)</script>"
+
+    [0m [90m 86 |[39m       [36mif[39m (res[33m.[39mstatus [33m===[39m [35m201[39m) {
+     [90m 87 |[39m         [36mconst[39m user [33m=[39m [36mawait[39m [33mUser[39m[33m.[39mfindOne({ email[33m:[39m [32m'test@example.com'[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 88 |[39m         expect(user[33m.[39musername)[33m.[39mnot[33m.[39mtoContain([32m'<script>'[39m)[33m;[39m
+     [90m    |[39m                                   [31m[1m^[22m[39m
+     [90m 89 |[39m       }
+     [90m 90 |[39m     })[33m;[39m
+     [90m 91 |[39m[0m
+
+      at Object.toContain (tests/security.test.js:88:35)
+
+  ● Security Test Suite › XSS (Cross-Site Scripting) Prevention › should sanitize special characters in inputs
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: 429
+    Received array: [400, 201]
+
+    [0m [90m 104 |[39m
+     [90m 105 |[39m         [90m// Should either reject or sanitize[39m
+    [31m[1m>[22m[39m[90m 106 |[39m         expect([[35m400[39m[33m,[39m [35m201[39m])[33m.[39mtoContain(res[33m.[39mstatus)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 107 |[39m       }
+     [90m 108 |[39m     })[33m;[39m
+     [90m 109 |[39m   })[33m;[39m[0m
+
+      at Object.toContain (tests/security.test.js:106:28)
+
+  ● Security Test Suite › SQL Injection Prevention › should handle MongoDB injection attempts
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 149 |[39m
+     [90m 150 |[39m         [90m// Should reject non-string inputs[39m
+    [31m[1m>[22m[39m[90m 151 |[39m         expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 152 |[39m       }
+     [90m 153 |[39m     })[33m;[39m
+     [90m 154 |[39m   })[33m;[39m[0m
+
+      at Object.toBe (tests/security.test.js:151:28)
+
+  ● Security Test Suite › NoSQL Injection Prevention › should reject object-based email in login
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 163 |[39m         })[33m;[39m
+     [90m 164 |[39m
+    [31m[1m>[22m[39m[90m 165 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 166 |[39m     })[33m;[39m
+     [90m 167 |[39m
+     [90m 168 |[39m     it([32m'should reject array-based inputs'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.toBe (tests/security.test.js:165:26)
+
+  ● Security Test Suite › NoSQL Injection Prevention › should reject array-based inputs
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 174 |[39m         })[33m;[39m
+     [90m 175 |[39m
+    [31m[1m>[22m[39m[90m 176 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 177 |[39m     })[33m;[39m
+     [90m 178 |[39m   })[33m;[39m
+     [90m 179 |[39m[0m
+
+      at Object.toBe (tests/security.test.js:176:26)
+
+  ● Security Test Suite › Password Security › should enforce strong password requirements
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: 429
+    Received array: [400, 500]
+
+    [0m [90m 286 |[39m
+     [90m 287 |[39m         [90m// Should be rejected[39m
+    [31m[1m>[22m[39m[90m 288 |[39m         expect([[35m400[39m[33m,[39m [35m500[39m])[33m.[39mtoContain(res[33m.[39mstatus)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 289 |[39m       }
+     [90m 290 |[39m     })[33m;[39m
+     [90m 291 |[39m[0m
+
+      at Object.toContain (tests/security.test.js:288:28)
+
+  ● Security Test Suite › Input Length Limits › should reject excessively long email
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 377 |[39m         })[33m;[39m
+     [90m 378 |[39m
+    [31m[1m>[22m[39m[90m 379 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 380 |[39m     })[33m;[39m
+     [90m 381 |[39m
+     [90m 382 |[39m     it([32m'should reject excessively long username'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.toBe (tests/security.test.js:379:26)
+
+  ● Security Test Suite › Input Length Limits › should reject excessively long username
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 392 |[39m         })[33m;[39m
+     [90m 393 |[39m
+    [31m[1m>[22m[39m[90m 394 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 395 |[39m     })[33m;[39m
+     [90m 396 |[39m
+     [90m 397 |[39m     it([32m'should reject excessively long name'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.toBe (tests/security.test.js:394:26)
+
+  ● Security Test Suite › Input Length Limits › should reject excessively long name
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 429
+
+    [0m [90m 407 |[39m         })[33m;[39m
+     [90m 408 |[39m
+    [31m[1m>[22m[39m[90m 409 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 410 |[39m     })[33m;[39m
+     [90m 411 |[39m   })[33m;[39m
+     [90m 412 |[39m[0m
+
+      at Object.toBe (tests/security.test.js:409:26)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:48:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:66:7)
+
+FAIL tests/middleware/auth.test.js
+  Authentication Middleware Tests
+    verifyToken middleware
+      √ should reject requests without authorization header (2 ms)
+      √ should reject requests with malformed authorization header (1 ms)
+      √ should reject requests with invalid token (5 ms)
+      √ should reject requests with expired token (6 ms)
+      √ should accept requests with valid token (1 ms)
+      √ should handle case-insensitive Bearer prefix (1 ms)
+    verifyAdmin middleware
+      √ should reject requests without token (1 ms)
+      × should reject requests from non-admin users (1 ms)
+      × should reject requests without isAdmin flag (1 ms)
+      × should accept requests from admin users (1 ms)
+      × should set both user and userId on request (1 ms)
+      √ should reject expired admin tokens (1 ms)
+    Token Security
+      √ should reject token signed with different secret (1 ms)
+      √ should reject tampered tokens (1 ms)
+
+  ● Authentication Middleware Tests › verifyAdmin middleware › should reject requests from non-admin users
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 403
+    Received: 401
+
+    Number of calls: 1
+
+    [0m [90m 142 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 143 |[39m
+    [31m[1m>[22m[39m[90m 144 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoHaveBeenCalledWith([35m403[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 145 |[39m       expect(res[33m.[39mjson)[33m.[39mtoHaveBeenCalledWith(
+     [90m 146 |[39m         expect[33m.[39mobjectContaining({ msg[33m:[39m expect[33m.[39mstringContaining([32m'Admin'[39m) })
+     [90m 147 |[39m       )[33m;[39m[0m
+
+      at Object.toHaveBeenCalledWith (tests/middleware/auth.test.js:144:26)
+
+  ● Authentication Middleware Tests › verifyAdmin middleware › should reject requests without isAdmin flag
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 403
+    Received: 401
+
+    Number of calls: 1
+
+    [0m [90m 160 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 161 |[39m
+    [31m[1m>[22m[39m[90m 162 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoHaveBeenCalledWith([35m403[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 163 |[39m       expect(res[33m.[39mjson)[33m.[39mtoHaveBeenCalledWith(
+     [90m 164 |[39m         expect[33m.[39mobjectContaining({ msg[33m:[39m expect[33m.[39mstringContaining([32m'Admin'[39m) })
+     [90m 165 |[39m       )[33m;[39m[0m
+
+      at Object.toHaveBeenCalledWith (tests/middleware/auth.test.js:162:26)
+
+  ● Authentication Middleware Tests › verifyAdmin middleware › should accept requests from admin users
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+    [0m [90m 178 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 179 |[39m
+    [31m[1m>[22m[39m[90m 180 |[39m       expect(req[33m.[39muser)[33m.[39mtoBeDefined()[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 181 |[39m       expect(req[33m.[39muser[33m.[39misAdmin)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 182 |[39m       expect(req[33m.[39muserId)[33m.[39mtoBe([32m'123'[39m)[33m;[39m
+     [90m 183 |[39m       expect(next)[33m.[39mtoHaveBeenCalled()[33m;[39m[0m
+
+      at Object.toBeDefined (tests/middleware/auth.test.js:180:24)
+
+  ● Authentication Middleware Tests › verifyAdmin middleware › should set both user and userId on request
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+    [0m [90m 196 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 197 |[39m
+    [31m[1m>[22m[39m[90m 198 |[39m       expect(req[33m.[39muser)[33m.[39mtoBeDefined()[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 199 |[39m       expect(req[33m.[39muserId)[33m.[39mtoBe([32m'admin123'[39m)[33m;[39m
+     [90m 200 |[39m       expect(req[33m.[39muser[33m.[39muserId)[33m.[39mtoBe([32m'admin123'[39m)[33m;[39m
+     [90m 201 |[39m     })[33m;[39m[0m
+
+      at Object.toBeDefined (tests/middleware/auth.test.js:198:24)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:70:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:83:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:96:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:118:7)
+
+FAIL tests/middleware.test.js
+  Auth Middleware
+    verifyToken
+      √ TC-M01: allows request with valid token (2 ms)
+      √ TC-M02: rejects request with no Authorization header (1 ms)
+      √ TC-M03: rejects token that does not start with Bearer (1 ms)
+      √ TC-M04: rejects expired token (4 ms)
+      √ TC-M05: rejects token signed with wrong secret (2 ms)
+      √ TC-M06: rejects tampered token payload (2 ms)
+      √ TC-M07: attaches decoded user data to req.user (1 ms)
+      √ TC-M08: rejects completely malformed token string (2 ms)
+    verifyAdmin
+      × TC-M09: allows admin with isAdmin:true in token (1 ms)
+      × TC-M10: rejects regular user (isAdmin:false) (1 ms)
+      × TC-M11: rejects token missing isAdmin field (1 ms)
+      √ TC-M12: rejects request with no token (1 ms)
+      √ TC-M13: rejects expired admin token
+      √ TC-M14: rejects admin token signed with wrong secret (1 ms)
+      × TC-M15: attaches decoded user info to req.user on success
+
+  ● Auth Middleware › verifyAdmin › TC-M09: allows admin with isAdmin:true in token
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+    [0m [90m 133 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 134 |[39m
+    [31m[1m>[22m[39m[90m 135 |[39m       expect(next)[33m.[39mtoHaveBeenCalledTimes([35m1[39m)[33m;[39m
+     [90m     |[39m                    [31m[1m^[22m[39m
+     [90m 136 |[39m     })[33m;[39m
+     [90m 137 |[39m
+     [90m 138 |[39m     it([32m'TC-M10: rejects regular user (isAdmin:false)'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.toHaveBeenCalledTimes (tests/middleware.test.js:135:20)
+
+  ● Auth Middleware › verifyAdmin › TC-M10: rejects regular user (isAdmin:false)
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 403
+    Received: 401
+
+    Number of calls: 1
+
+    [0m [90m 144 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 145 |[39m
+    [31m[1m>[22m[39m[90m 146 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoHaveBeenCalledWith([35m403[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 147 |[39m       expect(next)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m 148 |[39m     })[33m;[39m
+     [90m 149 |[39m[0m
+
+      at Object.toHaveBeenCalledWith (tests/middleware.test.js:146:26)
+
+  ● Auth Middleware › verifyAdmin › TC-M11: rejects token missing isAdmin field
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 403
+    Received: 401
+
+    Number of calls: 1
+
+    [0m [90m 156 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 157 |[39m
+    [31m[1m>[22m[39m[90m 158 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoHaveBeenCalledWith([35m403[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 159 |[39m     })[33m;[39m
+     [90m 160 |[39m
+     [90m 161 |[39m     it([32m'TC-M12: rejects request with no token'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.toHaveBeenCalledWith (tests/middleware.test.js:158:26)
+
+  ● Auth Middleware › verifyAdmin › TC-M15: attaches decoded user info to req.user on success
+
+    expect(received).toMatchObject(expected)
+
+    Matcher error: received value must be a non-null object
+
+    Received has value: undefined
+
+    [0m [90m 200 |[39m       verifyAdmin(req[33m,[39m res[33m,[39m next)[33m;[39m
+     [90m 201 |[39m
+    [31m[1m>[22m[39m[90m 202 |[39m       expect(req[33m.[39muser)[33m.[39mtoMatchObject({ userId[33m:[39m [32m'superAdmin'[39m[33m,[39m isAdmin[33m:[39m [36mtrue[39m })[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 203 |[39m     })[33m;[39m
+     [90m 204 |[39m
+     [90m 205 |[39m   })[33m;[39m[0m
+
+      at Object.toMatchObject (tests/middleware.test.js:202:24)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04c4',
+      hasCurrentPassword: false,
+      newEmail: 'new@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04c7',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04ca',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04cd',
+      hasCurrentPassword: true,
+      newEmail: 'notanemail',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04cd',
+      hasCurrentPassword: true,
+      newEmail: '@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04cd',
+      hasCurrentPassword: true,
+      newEmail: 'test@',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04cd',
+      hasCurrentPassword: true,
+      newEmail: 'test@.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04d4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04d4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04d4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04d4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0d7fc699cc730b04db',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04df',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04df',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user@name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04df',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user<name>',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04df',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user/name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04df',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'ab',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04e7',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04eb',
+      hasCurrentPassword: true,
+      newEmail: 'taken@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0e7fc699cc730b04f2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'takenusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0f7fc699cc730b04f9',
+      hasCurrentPassword: true,
+      newEmail: 'admin@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ⏭️ Email unchanged, skipping validation
+
+      at log (routes/adminManagement.js:88:17)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0f7fc699cc730b04fd',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0f7fc699cc730b0504',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0f7fc699cc730b050b',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.error
+    ❌ MongoDB connection failed (attempt 3/5): bad auth : authentication failed
+
+    [0m [90m 30 |[39m
+     [90m 31 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m     console[33m.[39merror([32m`❌ MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 33 |[39m
+     [90m 34 |[39m     [36mif[39m (err[33m.[39mmessage [33m&&[39m err[33m.[39mmessage[33m.[39mincludes([32m'IP'[39m)) {
+     [90m 35 |[39m       console[33m.[39merror([32m'   → Check your MongoDB Atlas IP whitelist (Network Access).'[39m)[33m;[39m[0m
+
+      at error (config/db.js:32:13)
+      at index.js:15:3
+
+
+  ●  Cannot log after tests are done. Did you forget to wait for something async in your test?
+    Attempted to log "   Retrying in 5s...".
+
+    [0m [90m 40 |[39m
+     [90m 41 |[39m     [36mif[39m (retryCount [33m<[39m [33mMAX_RETRIES[39m [33m-[39m [35m1[39m) {
+    [31m[1m>[22m[39m[90m 42 |[39m       console[33m.[39mlog([32m`   Retrying in ${RETRY_DELAY_MS / 1000}s...`[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 43 |[39m       [36mawait[39m [36mnew[39m [33mPromise[39m((resolve) [33m=>[39m setTimeout(resolve[33m,[39m [33mRETRY_DELAY_MS[39m))[33m;[39m
+     [90m 44 |[39m       [36mreturn[39m connectDB(retryCount [33m+[39m [35m1[39m)[33m;[39m
+     [90m 45 |[39m     }[0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at log (config/db.js:42:15)
+      at index.js:15:3
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab0f7fc699cc730b0511',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab107fc699cc730b0519',
+      hasCurrentPassword: true,
+      newEmail: '  trimmed@test.com  ',
+      newUsername: '  trimmeduser  ',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab107fc699cc730b0521',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent0',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab107fc699cc730b0521',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent1',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    🔐 Update credentials request: {
+      adminId: '69afab107fc699cc730b0521',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent2',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+PASS tests/adminManagement.test.js
+  PUT /api/admin/update-credentials
+    Authentication & Authorization
+      √ should reject requests without token (108 ms)
+      √ should reject requests with invalid token (81 ms)
+      √ should reject requests from non-admin users (70 ms)
+      √ should reject requests with expired token (72 ms)
+    Input Validation
+      √ should reject request without current password (72 ms)
+      √ should reject request with empty current password (71 ms)
+      √ should reject request with no fields to update (70 ms)
+      √ should reject invalid email format (335 ms)
+      √ should reject weak passwords (331 ms)
+      √ should reject mismatched password confirmation (131 ms)
+      √ should reject username with invalid characters (404 ms)
+    Password Verification
+      √ should reject incorrect current password (131 ms)
+    Duplicate Prevention
+      √ should reject email already taken by another user (255 ms)
+      √ should reject username already taken by another user (267 ms)
+      √ should allow updating to same email (no change) (157 ms)
+    Successful Updates
+      √ should successfully update email (168 ms)
+      √ should successfully update username (147 ms)
+      √ should successfully update password and hash it (264 ms)
+      √ should successfully update multiple fields at once (270 ms)
+      √ should trim whitespace from inputs (140 ms)
+    Concurrent Updates
+      √ should handle concurrent update attempts (277 ms)
+  GET /api/admin/profile
+    √ should return admin profile with valid token (71 ms)
+    √ should not return password in profile (73 ms)
+    √ should reject requests without admin token (69 ms)
+
+(node:17668) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17668) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+PASS tests/wishlist.test.js
+  Wishlist API
+    GET /api/wishlist
+      √ TC-W01: returns empty wishlist for new user (51 ms)
+      √ TC-W02: requires authentication (13 ms)
+      √ TC-W03: returns count of 0 for empty wishlist (14 ms)
+      √ TC-W04: returns items after adding a product (25 ms)
+    POST /api/wishlist/add
+      √ TC-W05: adds a product to wishlist (25 ms)
+      √ TC-W06: requires authentication (8 ms)
+      √ TC-W07: rejects missing productId (10 ms)
+      √ TC-W08: rejects non-existent product (10 ms)
+      √ TC-W09: rejects duplicate add (product already in wishlist) (15 ms)
+      √ TC-W10: wishlist count increases by 1 after add (25 ms)
+    DELETE /api/wishlist/remove/:productId
+      √ TC-W11: removes a product from wishlist (16 ms)
+      √ TC-W12: requires authentication to remove (8 ms)
+      √ TC-W13: wishlist is empty after removing the only item (21 ms)
+    DELETE /api/wishlist/clear
+      √ TC-W14: clears entire wishlist (15 ms)
+      √ TC-W15: requires authentication to clear (9 ms)
+      √ TC-W16: wishlist count is 0 after clear (19 ms)
+    Wishlist Isolation
+      √ TC-W17: two users have isolated wishlists (23 ms)
+      √ TC-W18: can add multiple different products (42 ms)
+      √ TC-W19: returns success + correct structure from GET (13 ms)
+      √ TC-W20: expired token is rejected (12 ms)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:16:9)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:62:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+  console.log
+    📸 File upload attempt: { filename: 'large.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: File too large
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    📸 File upload attempt: {
+      filename: 'test.pdf',
+      mimetype: 'application/pdf',
+      extension: '.pdf'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .pdf
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    📸 File upload attempt: {
+      filename: 'test.php',
+      mimetype: 'application/x-httpd-php',
+      extension: '.php'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .php
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    📸 File upload attempt: {
+      filename: 'test.exe',
+      mimetype: 'application/x-msdos-program',
+      extension: '.exe'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .exe
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    📸 File upload attempt: {
+      filename: 'test.js',
+      mimetype: 'application/javascript',
+      extension: '.js'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .js
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpeg', mimetype: 'image/jpeg', extension: '.jpeg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.png', mimetype: 'image/png', extension: '.png' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.gif', mimetype: 'image/gif', extension: '.gif' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.webp', mimetype: 'image/webp', extension: '.webp' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'passwd.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'config.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'secret.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: {
+      filename: 'test<script>alert.jpg',
+      mimetype: 'image/jpeg',
+      extension: '.jpg'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Delete error: MongoRuntimeError: File not found for id 69afab1343a66e65648e7e6c
+        at GridFSBucket.delete (D:\consultancy\backend\node_modules\mongoose\node_modules\mongodb\src\gridfs\index.ts:187:13)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at D:\consultancy\backend\routes\upload.js:86:5 {
+      errorLabelSet: Set(0) {}
+    }
+
+    [0m [90m 88 |[39m     res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m msg[33m:[39m [32m'Image deleted successfully'[39m })[33m;[39m
+     [90m 89 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 90 |[39m     console[33m.[39merror([32m'Delete error:'[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 91 |[39m     [36mif[39m (error[33m.[39mmessage [33m&&[39m error[33m.[39mmessage[33m.[39mincludes([32m'File not found'[39m))
+     [90m 92 |[39m       [36mreturn[39m res[33m.[39mstatus([35m404[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Image not found'[39m })[33m;[39m
+     [90m 93 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Failed to delete image'[39m })[33m;[39m[0m
+
+      at error (routes/upload.js:90:13)
+
+  console.log
+    📸 File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+PASS tests/upload.test.js
+  POST /api/upload/image - Image Upload Tests
+    Authentication & Authorization
+      √ should reject upload without token (19 ms)
+      √ should reject upload with invalid token (8 ms)
+      √ should reject upload from non-admin user (7 ms)
+    File Validation
+      √ should reject upload without file (7 ms)
+      √ should reject file larger than 5MB (66 ms)
+      √ should reject invalid file types (32 ms)
+      √ should accept valid image formats (jpg, png, gif, webp) (39 ms)
+    Security Tests
+      √ should reject filename with path traversal attempts (22 ms)
+      √ should sanitize special characters in filenames (7 ms)
+      √ should generate unique filenames for concurrent uploads (30 ms)
+    Image Processing
+      √ should strip EXIF metadata from images (1 ms)
+      √ should optimize and resize large images
+  DELETE /api/upload/image/:filename - Image Deletion Tests
+    Authentication & Authorization
+      √ should reject deletion without token (5 ms)
+      √ should reject deletion from non-admin (5 ms)
+    Security Tests
+      √ should reject path traversal in filename (11 ms)
+      √ should reject deletion of files with directory separators (4 ms)
+    Functionality
+      √ should return 404 for non-existent file (15 ms)
+  Error Handling
+    √ should handle disk full errors gracefully (1 ms)
+    √ should clean up files on processing failure (7 ms)
+
+Test Suites: 5 failed, 3 passed, 8 total
+Tests:       29 failed, 112 passed, 141 total
+Snapshots:   0 total
+Time:        18.141 s, estimated 19 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

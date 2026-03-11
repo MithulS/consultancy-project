@@ -14,7 +14,6 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [showCreateAccount, setShowCreateAccount] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,7 +46,7 @@ export default function GuestCheckout({ cart, onComplete, onCancel }) {
       } else {
         setMessage('❌ ' + data.msg);
       }
-    } catch (err) {
+    } catch {
       setMessage('❌ Checkout failed. Please try again.');
     } finally {
       setLoading(false);

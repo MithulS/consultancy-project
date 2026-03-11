@@ -4,7 +4,7 @@
  * Features: Hover effects, quick actions, accessibility, performance optimization
  */
 
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import OptimizedImage from './OptimizedImage';
 
@@ -14,11 +14,11 @@ import ProductBadges from './ProductBadges';
 import { getImageUrl } from '../utils/imageHandling';
 import { generateProductAltText, CATEGORY_CONFIG } from '../utils/constants';
 
-const EnhancedProductCard = ({
+const EnhancedProductCard = memo(({
   product,
   index,
   onAddToCart,
-  onBuyNow,
+  onBuyNow: _onBuyNow,
   onQuickView,
   onAuthRequired
 }) => {
@@ -47,25 +47,21 @@ const EnhancedProductCard = ({
   };
 
   const discount = calculateDiscount();
-  const stockStatus = getStockStatus();
 
   const styles = {
     card: {
       position: 'relative',
       background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
       borderRadius: '12px',
-      border: isHovered ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--border-color)',
+      border: '1px solid var(--border-color)',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
       cursor: 'pointer',
-      boxShadow: isHovered
-        ? (product.numReviews > 500 ? '0 8px 32px rgba(251, 191, 36, 0.3)' : '0 8px 32px var(--accent-blue-glow)')
-        : '0 4px 12px rgba(0, 0, 0, 0.1)',
-      transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      willChange: 'transform',
     },
     imageContainer: {
       position: 'relative',
@@ -85,8 +81,7 @@ const EnhancedProductCard = ({
       width: '100%',
       height: '100%',
       objectFit: 'cover',
-      transition: 'transform 0.4s ease',
-      transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+      transition: 'transform 0.3s ease',
     },
     wishlistWrapper: {
       position: 'absolute',
@@ -188,7 +183,6 @@ const EnhancedProductCard = ({
       left: '50%',
       transform: 'translateX(-50%)',
       background: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
       color: 'var(--text-primary)',
       border: '1px solid var(--border-color)',
       borderRadius: '8px',
@@ -213,13 +207,6 @@ const EnhancedProductCard = ({
     }
   };
 
-  const handleBuyNow = (e) => {
-    e.stopPropagation();
-    if (product.stock > 0 && onBuyNow) {
-      onBuyNow(product);
-    }
-  };
-
   const handleQuickView = (e) => {
     e.stopPropagation();
     if (onQuickView) {
@@ -228,14 +215,25 @@ const EnhancedProductCard = ({
   };
 
   return (
-    <article
-      className="product-card-enhanced"
-      style={styles.card}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={handleQuickView}
-      aria-label={`${product.name} - ${product.price} rupees`}
-    >
+    <>
+      <style>{`
+        .product-card-enhanced:hover {
+          transform: translateY(-6px) !important;
+          box-shadow: 0 8px 32px rgba(46, 134, 222, 0.3) !important;
+          border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        .product-card-enhanced:hover .product-card-image {
+          transform: scale(1.05);
+        }
+      `}</style>
+      <article
+        className="product-card-enhanced"
+        style={styles.card}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={handleQuickView}
+        aria-label={`${product.name} - ${product.price} rupees`}
+      >
       {/* Image Section */}
       <div style={styles.imageContainer}>
         <div style={styles.imageWrapper}>
@@ -247,6 +245,7 @@ const EnhancedProductCard = ({
             height={400}
             priority={index < 4}
             style={styles.image}
+            className="product-card-image"
           />
         </div>
 
@@ -309,8 +308,11 @@ const EnhancedProductCard = ({
         </div>
       </div>
     </article>
+    </>
   );
-};
+});
+
+EnhancedProductCard.displayName = 'EnhancedProductCard';
 
 EnhancedProductCard.propTypes = {
   product: PropTypes.shape({

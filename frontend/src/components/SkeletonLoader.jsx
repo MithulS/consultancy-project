@@ -119,7 +119,7 @@ export default function SkeletonLoader({ type = 'product', count = 1, variant = 
   return (
     <div style={styles.textSkeleton}>
       {skeletons.map((_, index) => (
-        <div key={index} style={{...styles.skeletonText, width: `${Math.random() * 40 + 60}%`}} className={variant} />
+        <div key={index} style={{...styles.skeletonText, width: `${60 + index * 7 % 40}%`}} className={variant} />
       ))}
     </div>
   );

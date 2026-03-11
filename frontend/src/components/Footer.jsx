@@ -34,7 +34,7 @@ export default function Footer({ theme = 'dark' }) {
       setSubscribeStatus('success');
       setEmail('');
       setTimeout(() => setSubscribeStatus('idle'), 3000);
-    } catch (error) {
+    } catch {
       setSubscribeStatus('error');
       setTimeout(() => setSubscribeStatus('idle'), 3000);
     }

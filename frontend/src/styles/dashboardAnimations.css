@@ -1,5 +1,22 @@
 /* Dashboard UI animations — moved from runtime createElement injection */
 
+/* Performance: GPU-accelerate product cards and use CSS containment */
+.grid-products > * {
+  will-change: transform;
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 260px 420px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

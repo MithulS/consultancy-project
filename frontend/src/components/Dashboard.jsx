@@ -42,7 +42,8 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
+  const [isTransitioning] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -53,10 +54,7 @@ export default function Dashboard() {
   const [pendingProduct, setPendingProduct] = useState(null);
   const [pendingBuyNow, setPendingBuyNow] = useState(false);
   const [firstTimeUser, setFirstTimeUser] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
-  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
   const [showCartDrawer, setShowCartDrawer] = useState(false);
   const [sortBy, setSortBy] = useState('featured');
   const [filters, setFilters] = useState({
@@ -64,7 +62,7 @@ export default function Dashboard() {
     rating: 0,
     inStockOnly: false
   });
-  const [useEnhancedCards, setUseEnhancedCards] = useState(true); // Toggle for enhanced UI
+  const [useEnhancedCards] = useState(true); // Toggle for enhanced UI
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [showQuickView, setShowQuickView] = useState(false);
 
@@ -93,6 +91,7 @@ export default function Dashboard() {
     readUrlParams(); // Run on mount too (covers initial load)
     window.addEventListener('hashchange', readUrlParams);
     return () => window.removeEventListener('hashchange', readUrlParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Extract search query from URL on component mount
@@ -114,6 +113,7 @@ export default function Dashboard() {
         if (import.meta.env.DEV) console.log('📋 Category parameter from URL:', categoryParam);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -149,6 +149,7 @@ export default function Dashboard() {
     } else {
       analytics.track('dashboard_loaded_guest');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ============================================
@@ -316,10 +317,6 @@ export default function Dashboard() {
     setCart(savedCart);
   }
 
-  function getCartItemCount() {
-    return cart.reduce((total, item) => total + item.quantity, 0);
-  }
-
   // Cart interceptor - prompts for login/register on first add to cart
   function addToCart(product, buyNow = false, quantity = 1) {
     const token = localStorage.getItem('token');
@@ -390,11 +387,11 @@ export default function Dashboard() {
   // Wrapper functions for EnhancedProductCard compatibility
   const handleAddToCart = useCallback((product, quantity) => {
     addToCart(product, false, quantity || product.quantity || 1);
-  }, [cart]);
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBuyNow = useCallback((product, quantity) => {
     addToCart(product, true, quantity || product.quantity || 1);
-  }, [cart]);
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // Quick View Handler
   const handleQuickView = useCallback((product) => {
@@ -518,35 +515,12 @@ export default function Dashboard() {
     }
   }
 
-  function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('cart');
-
-    // Dispatch logout event
-    window.dispatchEvent(new CustomEvent('userLoggedOut'));
-
-    // Track logout
-    analytics.track('user_logged_out');
-
-    setUser(null);
-    setCart([]);
-
-    setTimeout(() => {
-      window.location.hash = '#login';
-    }, 100);
-  }
-
   // ============================================
   // OPTIMIZED SEARCH HANDLER with useCallback
   // Prevents function recreation on every render
   // Immediately updates searchTerm (for UI responsiveness)
   // Debouncing happens in useEffect
   // ============================================
-  const handleSearchChange = useCallback((e) => {
-    setSearchTerm(e.target.value);
-  }, []); // No dependencies - function never needs to be recreated
-
   // ============================================
   // OPTIMIZED CATEGORY HANDLER with useCallback
   // ============================================
@@ -749,17 +723,16 @@ export default function Dashboard() {
     },
     productCard: {
       backgroundColor: 'var(--glass-background)',
-      backdropFilter: 'var(--glass-blur)',
       borderRadius: '12px',
       overflow: 'hidden',
       boxShadow: 'var(--shadow-md)',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
       cursor: 'pointer',
       border: '1px solid var(--glass-border)',
-      animation: 'scaleIn 0.5s ease-out backwards',
       display: 'flex',
       flexDirection: 'column',
-      height: '100%'
+      height: '100%',
+      willChange: 'transform',
     },
     productImage: {
       width: '100%',
@@ -880,7 +853,6 @@ export default function Dashboard() {
       padding: '18px 28px',
       borderRadius: '16px',
       boxShadow: '0 8px 32px rgba(16, 185, 129, 0.4)',
-      backdropFilter: 'blur(10px)',
       zIndex: 1000,
       animation: 'slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
       fontWeight: '600',
@@ -1015,6 +987,20 @@ export default function Dashboard() {
           }}
         />
       ) : (
+        <>
+        <style>{`
+          .dashboard-product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            border-color: #d1d5db;
+          }
+          .dashboard-product-card:hover .dashboard-product-img {
+            transform: scale(1.05);
+          }
+          .dashboard-add-btn:hover:not(:disabled) {
+            background-color: #2563eb !important;
+          }
+        `}</style>
         <div className="grid-enhanced grid-products" style={styles.productsGrid}>
           {useEnhancedCards ? (
             // Enhanced Product Cards with modern UI/UX
@@ -1034,22 +1020,12 @@ export default function Dashboard() {
             filteredAndSortedProducts.map((product, index) => (
               <div
                 key={product._id}
+                className="dashboard-product-card"
                 style={{
                   ...styles.productCard,
-                  animationDelay: `${filteredAndSortedProducts.indexOf(product) * 0.05}s`,
                   position: 'relative'
                 }}
                 onClick={() => addToRecentlyViewed(product)}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12)';
-                  e.currentTarget.style.borderColor = '#d1d5db';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-                  e.currentTarget.style.borderColor = '#e5e7eb';
-                }}
               >
                 {/* Wishlist Button */}
                 <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
@@ -1069,10 +1045,9 @@ export default function Dashboard() {
                     height={300}
                     priority={index < 4}
                     style={{
-                      transition: 'transform 0.4s ease'
+                      transition: 'transform 0.3s ease'
                     }}
-                    onMouseOver={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1.1)'}
-                    onMouseOut={(e) => e.currentTarget.querySelector('img').style.transform = 'scale(1)'}
+                    className="dashboard-product-img"
                   />
                 </div>
                 <div style={styles.productInfo}>
@@ -1095,6 +1070,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   <button
+                    className="dashboard-add-btn"
                     style={{
                       ...styles.addToCartBtn,
                       backgroundColor: product.inStock ? '#4285F4' : '#9ca3af',
@@ -1104,16 +1080,6 @@ export default function Dashboard() {
                     onClick={() => product.inStock && addToCart(product)}
                     aria-label={`Add ${product.name} to cart - ₹${product.price}`}
                     aria-disabled={!product.inStock}
-                    onMouseOver={(e) => {
-                      if (product.inStock) {
-                        e.currentTarget.style.backgroundColor = '#2563eb';
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (product.inStock) {
-                        e.currentTarget.style.backgroundColor = '#4285F4';
-                      }
-                    }}
                   >
                     {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                   </button>
@@ -1122,6 +1088,7 @@ export default function Dashboard() {
             ))
           )}
         </div>
+        </>
       )}
 
       {/* Auth Modal - Shows when user tries to add to cart without login */}

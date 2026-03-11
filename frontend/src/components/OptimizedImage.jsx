@@ -20,7 +20,6 @@ export default function OptimizedImage({
   height,
   className = '',
   style = {},
-  sizes = '100vw',
   priority = false,  // Skip lazy loading for above-the-fold images
   objectFit = 'cover'
 }) {

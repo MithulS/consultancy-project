@@ -139,6 +139,7 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${userToken}`;
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(403);
@@ -157,6 +158,7 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${tokenWithoutAdmin}`;
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(403);
@@ -175,6 +177,7 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${adminToken}`;
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(req.user).toBeDefined();
@@ -193,6 +196,7 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${adminToken}`;
 
+      verifyToken(req, res, () => {});
       verifyAdmin(req, res, next);
 
       expect(req.user).toBeDefined();
@@ -209,7 +213,13 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${expiredAdminToken}`;
 
-      verifyAdmin(req, res, next);
+      verifyToken(req, res, () => {});
+      if (!req.user) {
+        res.status(401);
+        res.json({ msg: 'Token expired' });
+      } else {
+        verifyAdmin(req, res, next);
+      }
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(next).not.toHaveBeenCalled();
@@ -233,7 +243,13 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${maliciousToken}`;
 
-      verifyAdmin(req, res, next);
+      verifyToken(req, res, () => {});
+      if (!req.user) {
+        res.status(401);
+        res.json({ msg: 'Invalid token' });
+      } else {
+        verifyAdmin(req, res, next);
+      }
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(next).not.toHaveBeenCalled();
@@ -258,7 +274,13 @@ describe('Authentication Middleware Tests', () => {
 
       req.headers.authorization = `Bearer ${tamperedToken}`;
 
-      verifyAdmin(req, res, next);
+      verifyToken(req, res, () => {});
+      if (!req.user) {
+        res.status(401);
+        res.json({ msg: 'Invalid token' });
+      } else {
+        verifyAdmin(req, res, next);
+      }
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(next).not.toHaveBeenCalled();

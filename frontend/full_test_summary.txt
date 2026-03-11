@@ -1,0 +1,10 @@
+ [32m✓[39m src/tests/validation.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m src/tests/cartLogic.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/tests/checkout.test.js [2m([22m[2m25 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/test/AdminDashboard.test.jsx [2m([22m[2m12 tests[22m[2m)[22m[33m 2189[2mms[22m[39m
+       [33m[2m✓[22m[39m should validate file size [33m 330[2mms[22m[39m
+       [33m[2m✓[22m[39m should sanitize product name input [33m 701[2mms[22m[39m
+ [32m✓[39m src/tests/qaTests.test.js [2m([22m[2m45 tests[22m[2m)[22m[33m 2777[2mms[22m[39m
+       [33m[2m✓[22m[39m should handle fetch errors gracefully [33m 2745[2mms[22m[39m
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m142 passed[39m[22m[90m (142)[39m

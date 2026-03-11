@@ -1,7 +1,7 @@
 /**
  * Checkout Logic Tests – 25 Test Cases
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // ─── Checkout pure logic (mirrors Checkout.jsx) ───────────────────────────
 

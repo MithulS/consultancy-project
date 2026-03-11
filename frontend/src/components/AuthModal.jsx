@@ -14,7 +14,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [showIncentive, setShowIncentive] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState('');
 
@@ -59,7 +58,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
       } else {
         setMessage('❌ ' + data.msg);
       }
-    } catch (err) {
+    } catch {
       setMessage('❌ Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -89,7 +88,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingProdu
       } else {
         setMessage('❌ ' + data.msg);
       }
-    } catch (err) {
+    } catch {
       setMessage('❌ Registration failed. Please try again.');
     } finally {
       setLoading(false);

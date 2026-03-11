@@ -14,6 +14,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   fetchProductById, 
   fetchRelatedProducts,
+  fetchProducts,
   prefetchProduct,
   clearCacheEntry 
 } from '../services/productService';
@@ -188,8 +189,6 @@ export function useProductList(initialFilters = {}) {
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
 
-  const { fetchProducts } = require('../services/productService');
-
   const loadProducts = useCallback(async (resetPage = false) => {
     try {
       setLoading(true);
@@ -211,7 +210,7 @@ export function useProductList(initialFilters = {}) {
     } finally {
       setLoading(false);
     }
-  }, [filters, page]);
+  }, [filters, page, fetchProducts]);
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {
@@ -235,6 +234,7 @@ export function useProductList(initialFilters = {}) {
 
   useEffect(() => {
     loadProducts(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   return {

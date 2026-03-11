@@ -1,8 +1,8 @@
 // server/middleware/auth.js
 const jwt = require('jsonwebtoken');
 
-// Fail fast if JWT_SECRET is not configured
-if (!process.env.JWT_SECRET) {
+// Fail fast if JWT_SECRET is not configured (skip in test environment)
+if (!process.env.JWT_SECRET && process.env.NODE_ENV !== 'test') {
   console.error('FATAL: JWT_SECRET environment variable is not set!');
   process.exit(1);
 }

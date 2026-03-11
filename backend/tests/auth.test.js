@@ -67,7 +67,7 @@ describe('Authentication API Tests', () => {
         expect(res.body).toHaveProperty('email', userData.email);
 
         // Verify user was created in database
-        const user = await User.findOne({ email: userData.email });
+        const user = await User.findOne({ email: userData.email }).select('+otp');
         expect(user).toBeTruthy();
         expect(user.username).toBe(userData.username);
         expect(user.name).toBe(userData.name);
@@ -178,7 +178,7 @@ describe('Authentication API Tests', () => {
       expect(res.body.msg).toBe('Email verified successfully');
 
       // Verify user is now verified
-      const user = await User.findById(testUser._id);
+      const user = await User.findById(testUser._id).select('+otp +otpAttempts');
       expect(user.isVerified).toBe(true);
       expect(user.otp).toBeUndefined();
       expect(user.otpAttempts).toBe(0);
@@ -197,7 +197,7 @@ describe('Authentication API Tests', () => {
       expect(res.body.attemptsRemaining).toBe(4);
 
       // Verify attempt was tracked
-      const user = await User.findById(testUser._id);
+      const user = await User.findById(testUser._id).select('+otpAttempts');
       expect(user.otpAttempts).toBe(1);
     });
 
@@ -213,7 +213,7 @@ describe('Authentication API Tests', () => {
       }
 
       // Verify account is locked
-      const user = await User.findById(testUser._id);
+      const user = await User.findById(testUser._id).select('+otpLockedUntil');
       expect(user.otpLockedUntil).toBeTruthy();
       expect(user.otpLockedUntil.getTime()).toBeGreaterThan(Date.now());
 
@@ -342,7 +342,7 @@ describe('Authentication API Tests', () => {
 
       // Note: Will likely fail to send email in test environment
       if (res.status === 200) {
-        const user = await User.findById(testUser._id);
+        const user = await User.findById(testUser._id).select('+otpAttempts +otpLockedUntil');
         expect(user.otpAttempts).toBe(0);
         expect(user.otpLockedUntil).toBeUndefined();
       }

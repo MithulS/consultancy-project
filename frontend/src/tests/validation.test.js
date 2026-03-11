@@ -75,11 +75,6 @@ function avgRating(reviews) {
 
 // ─── Pagination ──────────────────────────────────────────────────────────────
 
-function paginate(items, page, limit) {
-  const start = (page - 1) * limit;
-  return items.slice(start, start + limit);
-}
-
 // ─── Sample data ─────────────────────────────────────────────────────────────
 
 const sampleProducts = [

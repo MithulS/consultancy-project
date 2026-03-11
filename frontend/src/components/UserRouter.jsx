@@ -60,7 +60,7 @@ export default function UserRouter({ currentPage, authKey }) {
             case 'checkout':
                 content = <Checkout />;
                 break;
-            case 'guest-checkout':
+            case 'guest-checkout': {
                 const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
                 content = (
                     <GuestCheckout
@@ -73,6 +73,7 @@ export default function UserRouter({ currentPage, authKey }) {
                     />
                 );
                 break;
+            }
             case 'my-orders':
             case 'orders':
                 content = <MyOrders />;

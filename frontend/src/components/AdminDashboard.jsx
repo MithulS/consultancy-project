@@ -301,20 +301,9 @@ export default function AdminDashboard() {
       } else {
         showToast('❌ ' + data.msg, 'error');
       }
-    } catch (err) {
+    } catch (_err) {
       showToast('❌ Error saving product', 'error');
     }
-  }
-
-  function logout() {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('isAdmin');
-    localStorage.removeItem('adminUser');
-    window.location.hash = '#secret-admin-login';
-  }
-
-  function goToSettings() {
-    window.location.hash = '#admin-settings';
   }
 
   const styles = {

@@ -55,6 +55,7 @@ export default function CommercialHomePage() {
   const [aboutRef, aboutVisible] = useScrollAnimation();
   const [brandRef, brandVisible] = useScrollAnimation();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchFeaturedProducts(); }, [selectedCategory]);
 
   async function fetchFeaturedProducts() {

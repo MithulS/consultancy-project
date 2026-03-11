@@ -51,20 +51,6 @@ export const clearRecentlyViewed = () => {
 export default function RecentlyViewed({ onProductClick, currentProductId = null }) {
   const [recentProducts, setRecentProducts] = useState([]);
 
-  useEffect(() => {
-    loadRecentProducts();
-
-    // Listen for storage changes from other tabs/windows
-    const handleStorageChange = (e) => {
-      if (e.key === 'recentlyViewed') {
-        loadRecentProducts();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
   const loadRecentProducts = () => {
     try {
       const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
@@ -83,6 +69,20 @@ export default function RecentlyViewed({ onProductClick, currentProductId = null
       setRecentProducts([]);
     }
   };
+
+  useEffect(() => {
+    loadRecentProducts();
+
+    // Listen for storage changes from other tabs/windows
+    const handleStorageChange = (e) => {
+      if (e.key === 'recentlyViewed') {
+        loadRecentProducts();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleClear = () => {
     clearRecentlyViewed();

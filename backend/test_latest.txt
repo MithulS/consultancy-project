@@ -1,0 +1,3752 @@
+﻿  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'alert("XSS")',
+      otpPlain: '796363',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: alert("XSS")                                               Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 796363                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.error
+    Register error: User validation failed: name: Path `name` is required.
+
+    [0m [90m 220 |[39m     }
+     [90m 221 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 222 |[39m     console[33m.[39merror([32m'Register error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 223 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'REGISTER_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 224 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 225 |[39m   }[0m
+
+      at error (routes/auth.js:222:13)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.error
+    Register error: User validation failed: name: Path `name` is required.
+
+    [0m [90m 220 |[39m     }
+     [90m 221 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 222 |[39m     console[33m.[39merror([32m'Register error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 223 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'REGISTER_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 224 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 225 |[39m   }[0m
+
+      at error (routes/auth.js:222:13)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'alert("XSS")',
+      otpPlain: '495556',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: alert("XSS")                                               Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 495556                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.error
+    Register error: User validation failed: name: Path `name` is required.
+
+    [0m [90m 220 |[39m     }
+     [90m 221 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 222 |[39m     console[33m.[39merror([32m'Register error:'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 223 |[39m     [36mawait[39m logAuditEvent({ email[33m:[39m req[33m.[39mbody[33m.[39memail[33m,[39m action[33m:[39m [32m'REGISTER_FAILED'[39m[33m,[39m req[33m,[39m details[33m:[39m err[33m.[39mmessage })[33m;[39m
+     [90m 224 |[39m     [36mreturn[39m res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ msg[33m:[39m [32m'Server error'[39m[33m,[39m error[33m:[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m [33mString[39m(err) })[33m;[39m
+     [90m 225 |[39m   }[0m
+
+      at error (routes/auth.js:222:13)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '616956',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 616956                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122160876@example.com',
+      name: 'Test<User',
+      otpPlain: '161475',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122160876@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test<User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 161475                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122160876@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122160876@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122160876@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122161267@example.com',
+      name: 'Test>User',
+      otpPlain: '968225',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122161267@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test>User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 968225                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122161267@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122161267@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122161267@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122161600@example.com',
+      name: 'Test"User',
+      otpPlain: '351152',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122161600@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test"User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 351152                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122161600@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122161600@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122161600@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122161932@example.com',
+      name: "Test'User",
+      otpPlain: '341525',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122161932@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test'User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 341525                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122161932@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122161932@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122161932@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122162261@example.com',
+      name: 'Test&User',
+      otpPlain: '961526',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122162261@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test&User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 961526                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122162261@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122162261@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122162261@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122162622@example.com',
+      name: 'Test/User',
+      otpPlain: '179362',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122162622@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test/User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 179362                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122162622@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122162622@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122162622@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1773122162955@example.com',
+      name: 'Test\\User',
+      otpPlain: '581635',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1773122162955@example.com                                Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test\User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 581635                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1773122162955@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1773122162955@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1773122162955@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin'-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR '1'='1 - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - '; DROP TABLE users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - admin' OR 1=1-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - ' UNION SELECT * FROM users-- - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test0@example.com',
+      name: 'Test User',
+      otpPlain: '214230',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test0@example.com                                            Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 214230                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test0@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test0@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test0@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test1@example.com',
+      name: 'Test User',
+      otpPlain: '132761',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test1@example.com                                            Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 132761                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test1@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test1@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test1@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test2@example.com',
+      name: 'Test User',
+      otpPlain: '958818',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test2@example.com                                            Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 958818                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test2@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test2@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test2@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '127344',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 127344                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    [AUDIT] LOGIN_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com logged in
+
+      at log (routes/auth.js:403:13)
+
+  console.log
+    [AUDIT] LOGIN_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com logged in
+
+      at log (routes/auth.js:403:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - existing@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - nonexisting@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com logged in
+
+      at log (routes/auth.js:403:13)
+
+node.exe : PASS tests/security.test.js (11.53 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS tests/security.test.js (11.5 
+   3 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Security Test Suite
+    XSS (Cross-Site Scripting) Prevention
+      ΓêÜ should escape HTML in registration name field (1719 ms)
+      ΓêÜ should escape HTML in username field (307 ms)
+      ΓêÜ should sanitize special characters in inputs (2424 ms)
+    SQL Injection Prevention
+      ΓêÜ should reject SQL injection in email field (61 ms)
+      ΓêÜ should handle MongoDB injection attempts (19 ms)
+    NoSQL Injection Prevention
+      ΓêÜ should reject object-based email in login (11 ms)
+      ΓêÜ should reject array-based inputs (7 ms)
+    Rate Limiting
+      ΓêÜ should enforce rate limits on registration endpoint (1151 ms)
+      ΓêÜ should enforce rate limits on login endpoint (138 ms)
+      ΓêÜ should enforce rate limits on OTP verification (1421 ms)
+    Password Security
+      ΓêÜ should enforce strong password requirements (34 ms)
+      ΓêÜ should hash passwords before storing (362 ms)
+    JWT Token Security
+      ΓêÜ should sign tokens with secret (229 ms)
+      ΓêÜ should include expiration in tokens (218 ms)
+    Input Length Limits
+      ΓêÜ should reject excessively long email (6 ms)
+      ΓêÜ should reject excessively long username (7 ms)
+      ΓêÜ should reject excessively long name (6 ms)
+    Account Enumeration Prevention
+      ΓêÜ should return same error for existing and non-existing users on 
+login (227 ms)
+    Session Security
+      ΓêÜ should not expose sensitive data in responses (215 ms)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '519394',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 519394                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user test@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    [AUDIT] REGISTER_FAILED - duplicate@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com verified
+
+      at log (routes/auth.js:298:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] ACCOUNT_LOCKED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_VERIFY_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_SUCCESS - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    User test@example.com logged in
+
+      at log (routes/auth.js:403:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - nonexistent@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - unverified@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'test@example.com',
+      name: 'Test User',
+      otpPlain: '332843',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: test@example.com                                             Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 332843                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] OTP_RESEND - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - test@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Resent OTP to test@example.com
+
+      at log (routes/auth.js:338:15)
+
+  console.log
+    ≡ƒöì DEBUG: sendOtpEmail called with: {
+      toEmail: 'audit@example.com',
+      name: 'Test User',
+      otpPlain: '941318',
+      isDevelopment: true,
+      NODE_ENV: 'test'
+    }
+
+      at log (routes/auth.js:64:11)
+
+  console.log
+    
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:67:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:68:13)
+
+  console.log
+    Γûê  ≡ƒôº OTP EMAIL (DEVELOPMENT MODE)                                 Γûê
+
+      at log (routes/auth.js:69:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:70:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:71:13)
+
+  console.log
+    Γûê  To: audit@example.com                                            Γûê
+
+      at log (routes/auth.js:72:13)
+
+  console.log
+    Γûê  Name: Test User                                                  Γûê
+
+      at log (routes/auth.js:73:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:74:13)
+
+  console.log
+    Γûê  ≡ƒöæ OTP CODE: 941318                                                 Γûê
+
+      at log (routes/auth.js:75:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:76:13)
+
+  console.log
+    Γûê  ΓÅ░ Expires: 10 minutes                                           Γûê
+
+      at log (routes/auth.js:77:13)
+
+  console.log
+    Γûê                                                                    Γûê
+
+      at log (routes/auth.js:78:13)
+
+  console.log
+    ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+      at log (routes/auth.js:79:13)
+
+  console.log
+    [AUDIT] REGISTER_SUCCESS - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    [AUDIT] OTP_SENT - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+  console.log
+    Registered user audit@example.com - OTP sent
+
+      at log (routes/auth.js:212:15)
+
+  console.log
+    [AUDIT] LOGIN_FAILED - audit@example.com - ::ffff:127.0.0.1
+
+      at log (utils/auditLogger.js:28:13)
+
+PASS tests/auth.test.js (5.631 s)
+  Authentication API Tests
+    POST /api/auth/register
+      ΓêÜ should register a new user with valid data (420 ms)
+      ΓêÜ should reject registration with missing fields (11 ms)
+      ΓêÜ should reject registration with duplicate email (134 ms)
+      ΓêÜ should reject registration with duplicate username (128 ms)
+    POST /api/auth/verify-otp
+      ΓêÜ should verify OTP with correct code (342 ms)
+      ΓêÜ should reject invalid OTP and track attempts (341 ms)
+      ΓêÜ should lock account after 5 failed attempts (840 ms)
+      ΓêÜ should reject expired OTP (240 ms)
+    POST /api/auth/login
+      ΓêÜ should login with valid credentials (243 ms)
+      ΓêÜ should reject login with incorrect password (233 ms)
+      ΓêÜ should reject login for non-existent user (129 ms)
+      ΓêÜ should reject login for unverified user (351 ms)
+    POST /api/auth/resend-otp
+      ΓêÜ should reset attempts and lock when resending OTP (242 ms)
+      ΓêÜ should reject resend for verified user (125 ms)
+    Audit Logging
+      ΓêÜ should log successful registration (349 ms)
+      ΓêÜ should log failed login attempts (22 ms)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:16:9)
+
+  console.warn
+    ΓÜá∩╕Å  Stripe: STRIPE_SECRET_KEY not found in .env file
+
+    [0m [90m 16 |[39m     stripe [33m=[39m require([32m'stripe'[39m)(process[33m.[39menv[33m.[39m[33mSTRIPE_SECRET_KEY[39m)[33m;[39m
+     [90m 17 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 18 |[39m     console[33m.[39mwarn([32m'ΓÜá∩╕Å  Stripe: STRIPE_SECRET_KEY not found in .env file'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 19 |[39m   }
+     [90m 20 |[39m } [36mcatch[39m (error) {
+     [90m 21 |[39m   console[33m.[39merror([32m'Γ¥î Stripe initialization error:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m[0m
+
+      at Object.warn (routes/payments.js:18:13)
+      at Object.require (index.js:174:26)
+      at Object.require (tests/reviews.test.js:5:13)
+
+  console.log
+    Γ£à Razorpay initialized successfully
+
+      at Object.log (routes/payments.js:33:13)
+
+  console.log
+    
+    ============================================================
+
+      at Server.log (index.js:256:11)
+
+  console.log
+    ≡ƒÜÇ Server Started Successfully!
+
+      at Server.log (index.js:257:11)
+
+  console.log
+    ============================================================
+
+      at Server.log (index.js:258:11)
+
+  console.log
+    ≡ƒôì Local:            http://localhost:5000
+
+      at Server.log (index.js:259:11)
+
+  console.log
+    ≡ƒôì Health Check:     http://localhost:5000/health
+
+      at Server.log (index.js:260:11)
+
+  console.log
+    ≡ƒôì API Health:       http://localhost:5000/api/health
+
+      at Server.log (index.js:261:11)
+
+  console.log
+    ≡ƒîÉ Environment:      test
+
+      at Server.log (index.js:262:11)
+
+  console.log
+    ≡ƒôº Email:            mithuld321@gmail.com
+
+      at Server.log (index.js:263:11)
+
+  console.log
+    ≡ƒöî Allowed Origins:  https://sakthi-swart.vercel.app, http://localhost:5173, http://localhost:5174, http://localhost:5175, http://127.0.0.1:5173, http://127.0.0.1:5174, http://127.0.0.1:5175, http://localhost:5173
+
+      at Server.log (index.js:264:11)
+
+  console.log
+    ============================================================
+
+      at Server.log (index.js:265:11)
+
+  console.log
+    ΓÜá∩╕Å  Redis not available - continuing without caching
+
+      at log (index.js:196:13)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.error
+    ΓÜá∩╕Å  Mail transporter error (verify): connect ETIMEDOUT 192.178.211.109:465
+
+    [0m [90m 45 |[39m   transporter[33m.[39mverify((err[33m,[39m success) [33m=>[39m {
+     [90m 46 |[39m     [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail transporter error (verify):'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº Email delivery unavailable - using console OTP in development mode'[39m)[33m;[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter ready'[39m)[33m;[39m[0m
+
+      at error (routes/auth.js:47:15)
+      at SMTPConnection.<anonymous> (node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError (node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError (node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "≡ƒôº Email delivery unavailable - using console OTP in 
+development mode".
+
+    [0m [90m 46 |[39m     [36mif[39m (err) {
+     [90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail 
+transporter error (verify):'[39m[33m,[39m err [33m&&[39m 
+err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m 
+err)[33m;[39m
+    [31m[1m>[22m[39m[90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº 
+Email delivery unavailable - using console OTP in development 
+mode'[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter 
+ready'[39m)[33m;[39m
+     [90m 51 |[39m     }[0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at log (routes/auth.js:48:15)
+      at SMTPConnection.<anonymous> 
+(node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.error
+    Γ¥î MongoDB connection failed (attempt 1/5): bad auth : authentication failed
+
+    [0m [90m 30 |[39m
+     [90m 31 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m     console[33m.[39merror([32m`Γ¥î MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 33 |[39m
+     [90m 34 |[39m     [36mif[39m (err[33m.[39mmessage [33m&&[39m err[33m.[39mmessage[33m.[39mincludes([32m'IP'[39m)) {
+     [90m 35 |[39m       console[33m.[39merror([32m'   ΓåÆ Check your MongoDB Atlas IP whitelist (Network Access).'[39m)[33m;[39m[0m
+
+      at error (config/db.js:32:13)
+      at index.js:15:3
+
+  console.log
+       Retrying in 5s...
+
+      at log (config/db.js:42:15)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.error
+    Γ¥î MongoDB connection failed (attempt 2/5): Can't call `openUri()` on an active connection with different connection strings. Make sure you aren't calling `mongoose.connect()` multiple times. See: https://mongoosejs.com/docs/connections.html#multiple_connections
+
+    [0m [90m 30 |[39m
+     [90m 31 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m     console[33m.[39merror([32m`Γ¥î MongoDB connection failed (attempt ${retryCount + 1}/${MAX_RETRIES}):`[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 33 |[39m
+     [90m 34 |[39m     [36mif[39m (err[33m.[39mmessage [33m&&[39m err[33m.[39mmessage[33m.[39mincludes([32m'IP'[39m)) {
+     [90m 35 |[39m       console[33m.[39merror([32m'   ΓåÆ Check your MongoDB Atlas IP whitelist (Network Access).'[39m)[33m;[39m[0m
+
+      at error (config/db.js:32:13)
+      at index.js:15:3
+
+  console.log
+       Retrying in 5s...
+
+      at log (config/db.js:42:15)
+
+PASS tests/reviews.test.js (15.277 s)
+  Review Rating System Tests
+    Rating Calculation Logic
+      ΓêÜ should calculate correct average for multiple reviews (1069 ms)
+      ΓêÜ should handle single review correctly (160 ms)
+      ΓêÜ should return 0 for product with no reviews (134 ms)
+      ΓêÜ should round to one decimal place (271 ms)
+    Data Integrity Tests
+      ΓêÜ should prevent duplicate reviews from same user (163 ms)
+      ΓêÜ should validate rating is between 1 and 5 (138 ms)
+      ΓêÜ should require product, user, order, and rating fields (143 ms)
+    Product Rating Update Tests
+      ΓêÜ should update product rating when review is created (144 ms)
+      ΓêÜ should update product rating when review is deleted (347 ms)
+      ΓêÜ should reset rating to 0 when all reviews are deleted (161 ms)
+    Edge Cases
+      ΓêÜ should handle all 5-star reviews (710 ms)
+      ΓêÜ should handle all 1-star reviews (721 ms)
+      ΓêÜ should handle review update changing rating (146 ms)
+    Rating Distribution Tests
+      ΓêÜ should calculate correct distribution (1190 ms)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f0387',
+      hasCurrentPassword: false,
+      newEmail: 'new@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f038a',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f038d',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f0390',
+      hasCurrentPassword: true,
+      newEmail: 'notanemail',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.error
+    ΓÜá∩╕Å  Mail transporter error (verify): connect ETIMEDOUT 192.178.211.109:465
+
+    [0m [90m 45 |[39m   transporter[33m.[39mverify((err[33m,[39m success) [33m=>[39m {
+     [90m 46 |[39m     [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail transporter error (verify):'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº Email delivery unavailable - using console OTP in development mode'[39m)[33m;[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter ready'[39m)[33m;[39m[0m
+
+      at error (routes/auth.js:47:15)
+      at SMTPConnection.<anonymous> (node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError (node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError (node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "≡ƒôº Email delivery unavailable - using console OTP in 
+development mode".
+
+    [0m [90m 46 |[39m     [36mif[39m (err) {
+     [90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail 
+transporter error (verify):'[39m[33m,[39m err [33m&&[39m 
+err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m 
+err)[33m;[39m
+    [31m[1m>[22m[39m[90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº 
+Email delivery unavailable - using console OTP in development 
+mode'[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter 
+ready'[39m)[33m;[39m
+     [90m 51 |[39m     }[0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at log (routes/auth.js:48:15)
+      at SMTPConnection.<anonymous> 
+(node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f0390',
+      hasCurrentPassword: true,
+      newEmail: '@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f0390',
+      hasCurrentPassword: true,
+      newEmail: 'test@',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28ea583282c1d6f0390',
+      hasCurrentPassword: true,
+      newEmail: 'test@.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f0397',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f0397',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f0397',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f0397',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f039e',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f03a2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f03a2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user@name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f03a2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user<name>',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f03a2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'user/name',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb28fa583282c1d6f03a2',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'ab',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb290a583282c1d6f03aa',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb290a583282c1d6f03ae',
+      hasCurrentPassword: true,
+      newEmail: 'taken@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb291a583282c1d6f03b5',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'takenusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb291a583282c1d6f03bc',
+      hasCurrentPassword: true,
+      newEmail: 'admin@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ΓÅ¡∩╕Å Email unchanged, skipping validation
+
+      at log (routes/adminManagement.js:88:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb292a583282c1d6f03c0',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead): connect ETIMEDOUT 192.178.211.109:465".
+
+    [0m [90m  98 |[39m         console[33m.[39mlog([32m'Γ£à Email sent 
+successfully to'[39m[33m,[39m toEmail)[33m;[39m
+     [90m  99 |[39m       } [36mcatch[39m (emailError) {
+    [31m[1m>[22m[39m[90m 100 |[39m         
+console[33m.[39mlog([32m'ΓÜá∩╕Å  Email sending failed (using console OTP 
+instead):'[39m[33m,[39m emailError[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 101 |[39m       }
+     [90m 102 |[39m     }[33m,[39m [35m100[39m)[33m;[39m [90m// Try 
+in background, don't block[39m
+     [90m 103 |[39m     [0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at Timeout.log [as _onTimeout] (routes/auth.js:100:17)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb292a583282c1d6f03c7',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb292a583282c1d6f03ce',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: '(empty)',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb293a583282c1d6f03d4',
+      hasCurrentPassword: true,
+      newEmail: 'newemail@test.com',
+      newUsername: 'newusername',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: true
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb293a583282c1d6f03dc',
+      hasCurrentPassword: true,
+      newEmail: '  trimmed@test.com  ',
+      newUsername: '  trimmeduser  ',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb293a583282c1d6f03e4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent0',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb293a583282c1d6f03e4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent1',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+  console.log
+    ≡ƒöÉ Update credentials request: {
+      adminId: '69afb293a583282c1d6f03e4',
+      hasCurrentPassword: true,
+      newEmail: '(empty)',
+      newUsername: 'concurrent2',
+      newPhoneNumber: '(empty)',
+      hasNewPassword: false
+    }
+
+      at log (routes/adminManagement.js:19:13)
+
+PASS tests/adminManagement.test.js (8.198 s)
+  PUT /api/admin/update-credentials
+    Authentication & Authorization
+      ΓêÜ should reject requests without token (177 ms)
+      ΓêÜ should reject requests with invalid token (132 ms)
+      ΓêÜ should reject requests from non-admin users (123 ms)
+      ΓêÜ should reject requests with expired token (132 ms)
+    Input Validation
+      ΓêÜ should reject request without current password (127 ms)
+      ΓêÜ should reject request with empty current password (122 ms)
+      ΓêÜ should reject request with no fields to update (120 ms)
+      ΓêÜ should reject invalid email format (658 ms)
+      ΓêÜ should reject weak passwords (549 ms)
+      ΓêÜ should reject mismatched password confirmation (252 ms)
+      ΓêÜ should reject username with invalid characters (707 ms)
+    Password Verification
+      ΓêÜ should reject incorrect current password (231 ms)
+    Duplicate Prevention
+      ΓêÜ should reject email already taken by another user (481 ms)
+      ΓêÜ should reject username already taken by another user (487 ms)
+      ΓêÜ should allow updating to same email (no change) (243 ms)
+    Successful Updates
+      ΓêÜ should successfully update email (294 ms)
+      ΓêÜ should successfully update username (291 ms)
+      ΓêÜ should successfully update password and hash it (438 ms)
+      ΓêÜ should successfully update multiple fields at once (390 ms)
+      ΓêÜ should trim whitespace from inputs (236 ms)
+    Concurrent Updates
+      ΓêÜ should handle concurrent update attempts (493 ms)
+  GET /api/admin/profile
+    ΓêÜ should return admin profile with valid token (125 ms)
+    ΓêÜ should not return password in profile (124 ms)
+    ΓêÜ should reject requests without admin token (121 ms)
+
+  console.error
+    ΓÜá∩╕Å  Mail transporter error (verify): connect ETIMEDOUT 192.178.211.109:465
+
+    [0m [90m 45 |[39m   transporter[33m.[39mverify((err[33m,[39m success) [33m=>[39m {
+     [90m 46 |[39m     [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail transporter error (verify):'[39m[33m,[39m err [33m&&[39m err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m err)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº Email delivery unavailable - using console OTP in development mode'[39m)[33m;[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter ready'[39m)[33m;[39m[0m
+
+      at error (routes/auth.js:47:15)
+      at SMTPConnection.<anonymous> (node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError (node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError (node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+
+  ΓùÅ  Cannot log after tests are done. Did you forget to wait for something 
+async in your test?
+    Attempted to log "≡ƒôº Email delivery unavailable - using console OTP in 
+development mode".
+
+    [0m [90m 46 |[39m     [36mif[39m (err) {
+     [90m 47 |[39m       console[33m.[39merror([32m'ΓÜá∩╕Å  Mail 
+transporter error (verify):'[39m[33m,[39m err [33m&&[39m 
+err[33m.[39mmessage [33m?[39m err[33m.[39mmessage [33m:[39m 
+err)[33m;[39m
+    [31m[1m>[22m[39m[90m 48 |[39m       console[33m.[39mlog([32m'≡ƒôº 
+Email delivery unavailable - using console OTP in development 
+mode'[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 49 |[39m     } [36melse[39m {
+     [90m 50 |[39m       console[33m.[39mlog([32m'Γ£à Mail transporter 
+ready'[39m)[33m;[39m
+     [90m 51 |[39m     }[0m
+
+      at console.log (node_modules/@jest/console/build/index.js:311:10)
+      at log (routes/auth.js:48:15)
+      at SMTPConnection.<anonymous> 
+(node_modules/nodemailer/lib/smtp-transport/index.js:352:24)
+      at SMTPConnection._onError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:804:14)
+      at TLSSocket.SMTPConnection._onSocketError 
+(node_modules/nodemailer/lib/smtp-connection/index.js:196:45)
+
+(node:13920) [MONGOOSE] Warning: mongoose: the `new` option for 
+`findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use 
+`returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13920) [MONGOOSE] Warning: mongoose: the `new` option for 
+`findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use 
+`returnDocument: 'after'` instead.
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+PASS tests/wishlist.test.js
+  Wishlist API
+    GET /api/wishlist
+      ΓêÜ TC-W01: returns empty wishlist for new user (57 ms)
+      ΓêÜ TC-W02: requires authentication (25 ms)
+      ΓêÜ TC-W03: returns count of 0 for empty wishlist (20 ms)
+      ΓêÜ TC-W04: returns items after adding a product (66 ms)
+    POST /api/wishlist/add
+      ΓêÜ TC-W05: adds a product to wishlist (31 ms)
+      ΓêÜ TC-W06: requires authentication (11 ms)
+      ΓêÜ TC-W07: rejects missing productId (12 ms)
+      ΓêÜ TC-W08: rejects non-existent product (15 ms)
+      ΓêÜ TC-W09: rejects duplicate add (product already in wishlist) (19 ms)
+      ΓêÜ TC-W10: wishlist count increases by 1 after add (30 ms)
+    DELETE /api/wishlist/remove/:productId
+      ΓêÜ TC-W11: removes a product from wishlist (23 ms)
+      ΓêÜ TC-W12: requires authentication to remove (12 ms)
+      ΓêÜ TC-W13: wishlist is empty after removing the only item (29 ms)
+    DELETE /api/wishlist/clear
+      ΓêÜ TC-W14: clears entire wishlist (20 ms)
+      ΓêÜ TC-W15: requires authentication to clear (11 ms)
+      ΓêÜ TC-W16: wishlist count is 0 after clear (26 ms)
+    Wishlist Isolation
+      ΓêÜ TC-W17: two users have isolated wishlists (30 ms)
+      ΓêÜ TC-W18: can add multiple different products (73 ms)
+      ΓêÜ TC-W19: returns success + correct structure from GET (17 ms)
+      ΓêÜ TC-W20: expired token is rejected (16 ms)
+
+  console.log
+    Image storage: MongoDB GridFS (productImages bucket)
+
+      at Object.log (routes/upload.js:16:9)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:62:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at router.handle (node_modules/router/index.js:186:3)
+      at app.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'large.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: File too large
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.pdf',
+      mimetype: 'application/pdf',
+      extension: '.pdf'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .pdf
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.php',
+      mimetype: 'application/x-httpd-php',
+      extension: '.php'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .php
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.exe',
+      mimetype: 'application/x-msdos-program',
+      extension: '.exe'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .exe
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test.js',
+      mimetype: 'application/javascript',
+      extension: '.js'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Upload error: Invalid file type. Allowed formats: JPG, JPEG, PNG, GIF, WEBP. You uploaded: .js
+
+    [0m [90m 30 |[39m     [36mtry[39m {
+     [90m 31 |[39m       [36mif[39m (err) {
+    [31m[1m>[22m[39m[90m 32 |[39m         console[33m.[39merror([32m'Upload error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 33 |[39m         [36mif[39m (err[33m.[39mcode [33m===[39m [32m'LIMIT_FILE_SIZE'[39m)
+     [90m 34 |[39m           [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'File too large. Maximum size is 5MB.'[39m[33m,[39m errorType[33m:[39m [32m'FILE_TOO_LARGE'[39m })[33m;[39m
+     [90m 35 |[39m         [36mif[39m (err[33m.[39mmessage[33m.[39mincludes([32m'Invalid file type'[39m))[0m
+
+      at error (routes/upload.js:32:17)
+      at IncomingMessage.onFinished (node_modules/multer/lib/make-middleware.js:44:9)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpeg', mimetype: 'image/jpeg', extension: '.jpeg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.png', mimetype: 'image/png', extension: '.png' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.gif', mimetype: 'image/gif', extension: '.gif' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.webp', mimetype: 'image/webp', extension: '.webp' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'passwd.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'config.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'secret.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: {
+      filename: 'test<script>alert.jpg',
+      mimetype: 'image/jpeg',
+      extension: '.jpg'
+    }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+  console.error
+    Delete error: MongoRuntimeError: File not found for id 69afb29786021e617c0b1929
+        at GridFSBucket.delete (D:\consultancy\backend\node_modules\mongoose\node_modules\mongodb\src\gridfs\index.ts:187:13)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at D:\consultancy\backend\routes\upload.js:86:5 {
+      errorLabelSet: Set(0) {}
+    }
+
+    [0m [90m 88 |[39m     res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m msg[33m:[39m [32m'Image deleted successfully'[39m })[33m;[39m
+     [90m 89 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 90 |[39m     console[33m.[39merror([32m'Delete error:'[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 91 |[39m     [36mif[39m (error[33m.[39mmessage [33m&&[39m error[33m.[39mmessage[33m.[39mincludes([32m'File not found'[39m))
+     [90m 92 |[39m       [36mreturn[39m res[33m.[39mstatus([35m404[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Image not found'[39m })[33m;[39m
+     [90m 93 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Failed to delete image'[39m })[33m;[39m[0m
+
+      at error (routes/upload.js:90:13)
+
+  console.log
+    ≡ƒô╕ File upload attempt: { filename: 'test.jpg', mimetype: 'image/jpeg', extension: '.jpg' }
+
+      at log (config/upload.js:29:11)
+
+  console.error
+    Image processing error: Input buffer contains unsupported image format
+
+    [0m [90m 48 |[39m         meta [33m=[39m [36mawait[39m sharp(buf)[33m.[39mmetadata()[33m;[39m
+     [90m 49 |[39m       } [36mcatch[39m (pe) {
+    [31m[1m>[22m[39m[90m 50 |[39m         console[33m.[39merror([32m'Image processing error:'[39m[33m,[39m pe[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 51 |[39m         [36mreturn[39m res[33m.[39mstatus([35m422[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m msg[33m:[39m [32m'Invalid or corrupted image file. Please upload a valid image.'[39m[33m,[39m errorType[33m:[39m [32m'INVALID_IMAGE'[39m })[33m;[39m
+     [90m 52 |[39m       }
+     [90m 53 |[39m[0m
+
+      at error (routes/upload.js:50:17)
+
+PASS tests/upload.test.js
+  POST /api/upload/image - Image Upload Tests
+    Authentication & Authorization
+      ΓêÜ should reject upload without token (29 ms)
+      ΓêÜ should reject upload with invalid token (12 ms)
+      ΓêÜ should reject upload from non-admin user (8 ms)
+    File Validation
+      ΓêÜ should reject upload without file (8 ms)
+      ΓêÜ should reject file larger than 5MB (51 ms)
+      ΓêÜ should reject invalid file types (51 ms)
+      ΓêÜ should accept valid image formats (jpg, png, gif, webp) (60 ms)
+    Security Tests
+      ΓêÜ should reject filename with path traversal attempts (32 ms)
+      ΓêÜ should sanitize special characters in filenames (11 ms)
+      ΓêÜ should generate unique filenames for concurrent uploads (46 ms)
+    Image Processing
+      ΓêÜ should strip EXIF metadata from images (1 ms)
+      ΓêÜ should optimize and resize large images (1 ms)
+  DELETE /api/upload/image/:filename - Image Deletion Tests
+    Authentication & Authorization
+      ΓêÜ should reject deletion without token (5 ms)
+      ΓêÜ should reject deletion from non-admin (7 ms)
+    Security Tests
+      ΓêÜ should reject path traversal in filename (17 ms)
+      ΓêÜ should reject deletion of files with directory separators (6 ms)
+    Functionality
+      ΓêÜ should return 404 for non-existent file (24 ms)
+  Error Handling
+    ΓêÜ should handle disk full errors gracefully
+    ΓêÜ should clean up files on processing failure (12 ms)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:70:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:83:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:96:7)
+
+  console.error
+    Auth middleware error: invalid token
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:118:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:181:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware.test.js:197:7)
+
+PASS tests/middleware.test.js
+  Auth Middleware
+    verifyToken
+      ΓêÜ TC-M01: allows request with valid token (5 ms)
+      ΓêÜ TC-M02: rejects request with no Authorization header (2 ms)
+      ΓêÜ TC-M03: rejects token that does not start with Bearer (2 ms)
+      ΓêÜ TC-M04: rejects expired token (9 ms)
+      ΓêÜ TC-M05: rejects token signed with wrong secret (4 ms)
+      ΓêÜ TC-M06: rejects tampered token payload (4 ms)
+      ΓêÜ TC-M07: attaches decoded user data to req.user (1 ms)
+      ΓêÜ TC-M08: rejects completely malformed token string (3 ms)
+    verifyAdmin
+      ΓêÜ TC-M09: allows admin with isAdmin:true in token (1 ms)
+      ΓêÜ TC-M10: rejects regular user (isAdmin:false) (2 ms)
+      ΓêÜ TC-M11: rejects token missing isAdmin field (1 ms)
+      ΓêÜ TC-M12: rejects request with no token
+      ΓêÜ TC-M13: rejects expired admin token (4 ms)
+      ΓêÜ TC-M14: rejects admin token signed with wrong secret (3 ms)
+      ΓêÜ TC-M15: attaches decoded user info to req.user on success (1 ms)
+
+  console.error
+    Auth middleware error: jwt malformed
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:48:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:66:7)
+
+  console.error
+    Auth middleware error: jwt expired
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:216:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:246:7)
+
+  console.error
+    Auth middleware error: invalid signature
+
+    [0m [90m 26 |[39m     next()[33m;[39m
+     [90m 27 |[39m   } [36mcatch[39m (err) {
+    [31m[1m>[22m[39m[90m 28 |[39m     console[33m.[39merror([32m'Auth middleware error:'[39m[33m,[39m err[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 29 |[39m
+     [90m 30 |[39m     [36mif[39m (err[33m.[39mname [33m===[39m [32m'TokenExpiredError'[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ msg[33m:[39m [32m'Token has expired'[39m })[33m;[39m[0m
+
+      at error (middleware/auth.js:28:13)
+      at Object.verifyToken (tests/middleware/auth.test.js:277:7)
+
+PASS tests/middleware/auth.test.js
+  Authentication Middleware Tests
+    verifyToken middleware
+      ΓêÜ should reject requests without authorization header (2 ms)
+      ΓêÜ should reject requests with malformed authorization header (1 ms)
+      ΓêÜ should reject requests with invalid token (6 ms)
+      ΓêÜ should reject requests with expired token (5 ms)
+      ΓêÜ should accept requests with valid token (1 ms)
+      ΓêÜ should handle case-insensitive Bearer prefix (2 ms)
+    verifyAdmin middleware
+      ΓêÜ should reject requests without token (1 ms)
+      ΓêÜ should reject requests from non-admin users (2 ms)
+      ΓêÜ should reject requests without isAdmin flag (1 ms)
+      ΓêÜ should accept requests from admin users (2 ms)
+      ΓêÜ should set both user and userId on request (1 ms)
+      ΓêÜ should reject expired admin tokens (3 ms)
+    Token Security
+      ΓêÜ should reject token signed with different secret (4 ms)
+      ΓêÜ should reject tampered tokens (3 ms)
+
+Test Suites: 8 passed, 8 total
+Tests:       141 passed, 141 total
+Snapshots:   0 total
+Time:        44.467 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect 
+async operations that kept running after all tests finished?
+

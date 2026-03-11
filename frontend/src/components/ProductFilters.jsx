@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 export default function ProductFilters({
   onFilterChange,
   onSortChange,
-  categories = [],
-  selectedCategory,
+  categories: _categories = [],
+  selectedCategory: _selectedCategory,
   totalProducts = 0
 }) {
   const [priceRange, setPriceRange] = useState([0, 10000]);

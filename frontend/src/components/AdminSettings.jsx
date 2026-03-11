@@ -77,6 +77,7 @@ export default function AdminSettings() {
     }
 
     fetchAdminProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -359,8 +360,7 @@ export default function AdminSettings() {
       background: 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
       boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-      transition: 'all 0.3s ease',
-      transition: 'all 0.2s'
+      transition: 'all 0.3s ease'
     },
     content: {
       maxWidth: '900px',

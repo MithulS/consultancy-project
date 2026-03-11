@@ -54,7 +54,7 @@ describe('Review Rating System Tests', () => {
       name: 'Test Product',
       description: 'Test description',
       price: 100,
-      category: 'Tools',
+      category: 'Tools & Equipment',
       stock: 50,
       rating: 0,
       numReviews: 0
@@ -63,9 +63,15 @@ describe('Review Rating System Tests', () => {
     // Create test order
     testOrder = await Order.create({
       user: testUser._id,
-      items: [{ product: testProduct._id, quantity: 1, price: 100 }],
+      items: [{ product: testProduct._id, name: 'Test Product', quantity: 1, price: 100 }],
       totalAmount: 100,
-      status: 'delivered'
+      status: 'delivered',
+      shippingAddress: {
+        address: '123 Test St',
+        city: 'Test City',
+        postalCode: '12345',
+        country: 'India'
+      }
     });
 
     // Mock auth token
@@ -76,12 +82,18 @@ describe('Review Rating System Tests', () => {
     test('should calculate correct average for multiple reviews', async () => {
       const ratings = [5, 4, 5, 3, 4];
 
-      for (const rating of ratings) {
+      for (let i = 0; i < ratings.length; i++) {
+        const reviewUser = await User.create({
+          name: `Reviewer ${i}`,
+          email: `reviewer${i}@example.com`,
+          password: 'hash',
+          isVerified: true
+        });
         await Review.create({
           product: testProduct._id,
-          user: testUser._id,
+          user: reviewUser._id,
           order: testOrder._id,
-          rating
+          rating: ratings[i]
         });
       }
 

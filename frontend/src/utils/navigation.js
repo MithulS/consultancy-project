@@ -76,7 +76,7 @@ export const preloadRoute = async (route) => {
       // Preload cart data if needed
       break;
     
-    case 'profile':
+    case 'profile': {
       const token = localStorage.getItem('token');
       if (token) {
         try {
@@ -89,6 +89,7 @@ export const preloadRoute = async (route) => {
         }
       }
       break;
+    }
   }
 };
 

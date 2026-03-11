@@ -109,7 +109,7 @@ export default function AdminOrderTracking() {
           const data = await res.json();
           if (data.success) successCount++;
           else failCount++;
-        } catch (err) {
+        } catch (_err) {
           failCount++;
         }
       }

@@ -148,6 +148,22 @@ router.post('/register', registrationLimiter, async (req, res) => {
     let { username, name, email, password } = req.body;
     if (!name || !email || !password) return res.status(400).json({ msg: 'Missing fields' });
 
+    // Input length validation
+    if (email.length > 255) return res.status(400).json({ msg: 'Email is too long' });
+    if (username && username.length > 50) return res.status(400).json({ msg: 'Username is too long' });
+    if (name.length > 200) return res.status(400).json({ msg: 'Name is too long' });
+
+    // Password strength validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ msg: 'Password must be at least 8 characters with uppercase, lowercase, number, and special character' });
+    }
+
+    // Sanitize HTML from name and username
+    const stripHtml = (str) => str.replace(/<[^>]*>/g, '').replace(/javascript:/gi, '');
+    name = stripHtml(name);
+    if (username) username = stripHtml(username);
+
     // Auto-generate username from email if not provided
     if (!username) {
       username = email.split('@')[0] + '_' + Math.random().toString(36).substr(2, 6);
@@ -158,6 +174,14 @@ router.post('/register', registrationLimiter, async (req, res) => {
     if (existingEmail) {
       await logAuditEvent({ email, action: 'REGISTER_FAILED', req, details: 'Email already registered' });
       return res.status(400).json({ msg: 'Email already registered' });
+    }
+
+    // Check if username already exists
+    if (username) {
+      const existingUsername = await User.findOne({ username });
+      if (existingUsername) {
+        return res.status(400).json({ msg: 'Username already taken' });
+      }
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -207,7 +231,7 @@ router.post('/verify-otp', otpLimiter, async (req, res) => {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ msg: 'Missing fields' });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+otp +otpExpiresAt +otpAttempts +otpLockedUntil');
     if (!user) {
       await logAuditEvent({ email, action: 'OTP_VERIFY_FAILED', req, details: 'User not found' });
       return res.status(400).json({ msg: 'No user found with this email' });
@@ -286,7 +310,7 @@ router.post('/resend-otp', resendOtpLimiter, async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ msg: 'Missing email' });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+otp +otpExpiresAt +otpAttempts +otpLockedUntil');
     if (!user) {
       await logAuditEvent({ email, action: 'OTP_RESEND', req, details: 'User not found' });
       return res.status(400).json({ msg: 'No user found' });
@@ -353,8 +377,9 @@ router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ msg: 'Missing fields' });
+    if (typeof email !== 'string' || typeof password !== 'string') return res.status(400).json({ msg: 'Invalid credentials' });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       await logAuditEvent({ email, action: 'LOGIN_FAILED', req, details: 'User not found' });
       return res.status(400).json({ msg: 'Invalid credentials' });
@@ -390,7 +415,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ msg: 'Email is required' });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+resetPasswordToken +resetPasswordExpiresAt');
     if (!user) {
       // Don't reveal if user exists for security
       return res.json({ msg: 'If that email exists, a password reset link has been sent.' });
@@ -446,7 +471,7 @@ router.post('/reset-password', authLimiter, async (req, res) => {
     const { email, token, newPassword } = req.body;
     if (!email || !token || !newPassword) return res.status(400).json({ msg: 'Missing fields' });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+resetPasswordToken +resetPasswordExpiresAt +password');
     if (!user) return res.status(400).json({ msg: 'Invalid or expired reset link' });
 
     if (!user.resetPasswordToken || !user.resetPasswordExpiresAt) {
