@@ -309,3 +309,24 @@ textarea:disabled {
     scroll-behavior: auto !important;
   }
 }
+
+/* Runtime adaptive mode for low-end devices or reduced motion users */
+html.low-performance-mode {
+  scroll-behavior: auto;
+}
+
+html.low-performance-mode *,
+html.low-performance-mode *::before,
+html.low-performance-mode *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.12s !important;
+}
+
+html.low-performance-mode .page-transition,
+html.low-performance-mode .reveal-on-scroll,
+html.low-performance-mode .reveal-animating {
+  animation: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}

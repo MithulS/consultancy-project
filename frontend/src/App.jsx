@@ -7,7 +7,7 @@ import ExitIntentPopup from './components/ExitIntentPopup';
 import ChatWidget from './components/ChatWidget';
 import analytics from './utils/analytics';
 import { initializeAuth } from './utils/navigation';
-import { initializePerformanceOptimizations } from './utils/performanceOptimizations';
+import { initializePerformanceOptimizations, runWhenIdle } from './utils/performanceOptimizations';
 import UserRouter from './components/UserRouter';
 import AdminRouter from './components/AdminRouter';
 import SmoothScrollProvider from './components/SmoothScrollProvider';
@@ -18,6 +18,22 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Loading...');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isLowPerformanceMode, setIsLowPerformanceMode] = useState(false);
+  const [showDeferredWidgets, setShowDeferredWidgets] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = navigator.connection?.saveData === true;
+    const lowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+    const lowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+    const lowPerformance = prefersReducedMotion || saveData || lowCpu || lowMemory;
+
+    setIsLowPerformanceMode(lowPerformance);
+    document.documentElement.classList.toggle('low-performance-mode', lowPerformance);
+    window.__lowPerformanceMode = lowPerformance;
+  }, []);
 
   useEffect(() => {
     // Initialize authentication on app load
@@ -60,7 +76,7 @@ export default function App() {
   // Initialize performance optimizations
   useEffect(() => {
     initializePerformanceOptimizations({
-      enableMonitoring: true,
+      enableMonitoring: !isLowPerformanceMode,
       logNetwork: import.meta.env.DEV,
       analyticsCallback: (metric, data) => {
         if (import.meta.env.DEV) {
@@ -75,7 +91,63 @@ export default function App() {
         }
       }
     });
+  }, [isLowPerformanceMode]);
+
+  // Lightweight profiling pass in development to inspect scroll jank risks.
+  useEffect(() => {
+    if (!import.meta.env.DEV || typeof window === 'undefined') return;
+
+    let frameCount = 0;
+    let rafId;
+    let sampleStart = performance.now();
+
+    const tick = (now) => {
+      frameCount += 1;
+      if (now - sampleStart >= 2000) {
+        const fps = Math.round((frameCount * 1000) / (now - sampleStart));
+        console.log('🎯 FPS sample (2s):', fps);
+        frameCount = 0;
+        sampleStart = now;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    let longTaskObserver;
+    if ('PerformanceObserver' in window) {
+      try {
+        longTaskObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            console.warn('⚠️ Long task:', Math.round(entry.duration), 'ms');
+          });
+        });
+        longTaskObserver.observe({ entryTypes: ['longtask'] });
+      } catch {
+        // longtask observer not supported in all browsers
+      }
+    }
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      longTaskObserver?.disconnect();
+    };
   }, []);
+
+  useEffect(() => {
+    if (isLowPerformanceMode) {
+      setShowDeferredWidgets(false);
+      return;
+    }
+
+    const id = runWhenIdle(() => setShowDeferredWidgets(true), { timeout: 1500 });
+    return () => {
+      if ('cancelIdleCallback' in window) {
+        cancelIdleCallback(id);
+      } else {
+        clearTimeout(id);
+      }
+    };
+  }, [isLowPerformanceMode]);
 
   useEffect(() => {
     // Handle hash-based routing
@@ -179,21 +251,19 @@ export default function App() {
     }, {
       root: null,
       threshold: 0.0,
-      rootMargin: '100px 0px 0px 0px' // Trigger a little above the viewport top too
+      rootMargin: '40px 0px 0px 0px'
     });
 
     // Observer function to attach classes to new elements dynamically
     const applyRevealClasses = () => {
       const targetSelectors = [
-        'section',
-        'article',
         '.product-card:not(.reveal-on-scroll)',
+        '.product-card-enhanced:not(.reveal-on-scroll)',
         '.category-card:not(.reveal-on-scroll)',
         '.stat-card:not(.reveal-on-scroll)',
         '.feature-item:not(.reveal-on-scroll)',
         '.info-card:not(.reveal-on-scroll)',
-        '.chartCard:not(.reveal-on-scroll)',
-        '.hero-content:not(.reveal-on-scroll)'
+        '.chartCard:not(.reveal-on-scroll)'
       ].join(',');
 
       const elements = document.querySelectorAll(targetSelectors);
@@ -213,7 +283,13 @@ export default function App() {
       });
     };
 
+    if (isLowPerformanceMode) {
+      applyRevealClasses();
+      return () => observer.disconnect();
+    }
+
     // Use MutationObserver for continuous coverage without heavy re-rendering
+    let applyScheduled = false;
     const mutationObserver = new MutationObserver((mutations) => {
       let shouldApply = false;
       mutations.forEach(mutation => {
@@ -221,8 +297,12 @@ export default function App() {
           shouldApply = true;
         }
       });
-      if (shouldApply) {
-        applyRevealClasses();
+      if (shouldApply && !applyScheduled) {
+        applyScheduled = true;
+        requestAnimationFrame(() => {
+          applyRevealClasses();
+          applyScheduled = false;
+        });
       }
     });
 
@@ -230,13 +310,14 @@ export default function App() {
 
     // Apply immediately and also after a short delay for lazy-loaded content
     applyRevealClasses();
-    setTimeout(applyRevealClasses, 150);
+    const delayedApply = setTimeout(applyRevealClasses, 200);
 
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
+      clearTimeout(delayedApply);
     };
-  }, [currentPage]);
+  }, [currentPage, isLowPerformanceMode]);
 
   const renderContent = () => {
     const adminPages = [
@@ -284,8 +365,8 @@ export default function App() {
             {renderContent()}
             <ToastNotification />
             <LoadingOverlay show={isLoading} message={loadingMessage} />
-            <ExitIntentPopup />
-            <ChatWidget />
+            {showDeferredWidgets && !isLowPerformanceMode && <ExitIntentPopup />}
+            {showDeferredWidgets && <ChatWidget />}
           </div>
         </SmoothScrollProvider>
       </AccessibilityWrapper>

@@ -4,10 +4,18 @@
  * Features: Hero section, brand highlights, CTAs, benefits panel
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ParticleBackground from './ParticleBackground';
 
 export default function CommercialHeroBanner() {
+  const [lowPerformanceMode, setLowPerformanceMode] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lowPerf = reducedMotion || window.__lowPerformanceMode === true;
+    setLowPerformanceMode(lowPerf);
+  }, []);
 
   const styles = {
     heroSection: {
@@ -146,21 +154,21 @@ export default function CommercialHeroBanner() {
     <section style={styles.heroSection}>
       {/* Enhanced Interactive Particle Background Animation */}
       <ParticleBackground
-        particleCount={120}
+        particleCount={lowPerformanceMode ? 18 : 36}
         particleColor="rgba(255, 255, 255, 0.9)"
         lineColor="rgba(147, 197, 253, 0.4)"
-        particleSize={3.5}
-        speed={0.6}
-        connectionDistance={160}
-        enableWaveEffect={true}
-        enableParallax={true}
+        particleSize={lowPerformanceMode ? 2 : 2.5}
+        speed={0.45}
+        connectionDistance={lowPerformanceMode ? 90 : 110}
+        enableWaveEffect={false}
+        enableParallax={false}
         enableMouseRepel={true}
       />
 
       <div style={styles.heroBackground}></div>
 
       {/* Floating Animated Icons */}
-      <div style={{
+      {!lowPerformanceMode && <div style={{
         position: 'absolute',
         top: '10%',
         right: '15%',
@@ -168,8 +176,8 @@ export default function CommercialHeroBanner() {
         opacity: 0.15,
         animation: 'float 6s ease-in-out infinite',
         zIndex: 4
-      }}>⚡</div>
-      <div style={{
+      }}>⚡</div>}
+      {!lowPerformanceMode && <div style={{
         position: 'absolute',
         bottom: '15%',
         left: '10%',
@@ -177,8 +185,8 @@ export default function CommercialHeroBanner() {
         opacity: 0.15,
         animation: 'float 8s ease-in-out infinite 1s',
         zIndex: 4
-      }}>🔧</div>
-      <div style={{
+      }}>🔧</div>}
+      {!lowPerformanceMode && <div style={{
         position: 'absolute',
         top: '25%',
         left: '12%',
@@ -186,8 +194,8 @@ export default function CommercialHeroBanner() {
         opacity: 0.12,
         animation: 'float 7s ease-in-out infinite 2s',
         zIndex: 4
-      }}>💡</div>
-      <div style={{
+      }}>💡</div>}
+      {!lowPerformanceMode && <div style={{
         position: 'absolute',
         bottom: '20%',
         right: '18%',
@@ -195,11 +203,11 @@ export default function CommercialHeroBanner() {
         opacity: 0.12,
         animation: 'float 9s ease-in-out infinite 3s',
         zIndex: 4
-      }}>🔌</div>
+      }}>🔌</div>}
 
       {/* Decorative Elements */}
-      <div style={{ ...styles.decorativeBox, width: '150px', height: '150px', top: '50px', right: '200px', transform: 'rotate(15deg)' }}></div>
-      <div style={{ ...styles.decorativeBox, width: '100px', height: '100px', bottom: '80px', left: '100px', transform: 'rotate(-10deg)' }}></div>
+      {!lowPerformanceMode && <div style={{ ...styles.decorativeBox, width: '150px', height: '150px', top: '50px', right: '200px', transform: 'rotate(15deg)' }}></div>}
+      {!lowPerformanceMode && <div style={{ ...styles.decorativeBox, width: '100px', height: '100px', bottom: '80px', left: '100px', transform: 'rotate(-10deg)' }}></div>}
 
       <div style={styles.heroContainer}>
         {/* Hero Content */}
